@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>each example 05</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="each-data.js"></script>
+<body>
+<div th:each="entry : ${capitals}">
+  <span th:text="${entry.key}">region</span> : <span th:text="${entry.value}">city</span>
+</div>
+</body>
+</html>
+<!--
+
+<div>
+  <span>Galicia</span> : <span>Santiago de Compostela</span>
+</div>
+
+
+<div>
+  <span>Asturias</span> : <span>Oviedo</span>
+</div><div>
+  <span>Cantabria</span> : <span>Santander</span>
+</div>
+
+-->

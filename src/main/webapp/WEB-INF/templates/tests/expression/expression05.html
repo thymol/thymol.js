@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>expression example 05</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js"></script>
+<script th:remove="all" type="text/javascript">
+	thDebug=true;
+</script>
+<body>
+<div th:with="p=${#httpServletRequest.getParameterValues('a')}">
+    <p th:each="pi : ${p}" th:text="${pi}">...</p>
+</div>
+<div th:with="p=${#httpServletRequest.getParameterValues('b')}">
+    <p th:each="pi : ${p}" th:text="${pi}">...</p>
+</div>
+<div th:with="p=${#httpServletRequest.getParameterValues('c')}">
+    <p th:each="pi : ${p}" th:text="${pi}">...</p>
+</div>
+</body>
+</html>
+<!--
+
+<div>
+   <p>Some text</p>
+</div>
+<div>
+   <p>123</p>
+</div>
+<div>
+   <p>Hello</p>
+   <p>World</p>
+   <p>0</p>
+</div>
+
+-->

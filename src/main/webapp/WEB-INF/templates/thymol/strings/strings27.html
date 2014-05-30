@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 27</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p th:text="${#strings.trim(ps1)}">...</p>
+		<p th:text="${#strings.trim(ps2)}">...</p>
+		<p th:text="${#strings.trim(ps3)}">...</p>
+		<p th:text="${#strings.trim(ps4)}">...</p>
+		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arrayTrim(psArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Set of strings: <span id="sort"><!--/*/<th:block th:each="d,dStat : ${#strings.setTrim(psSet)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+		<p>Bonjour tout le monde!</p>
+		<p>Hello world!</p>
+		<p>Hola mundo!</p>
+		<p>Kaixo mundua!</p>
+		<p>Array of strings: <span>Bonjour tout le monde!,Hello world!,Hola mundo!,Kaixo mundua!</span></p>		 
+		<p>Set of strings: <span id="sort">Bonjour tout le monde!,Hello world!,Hola mundo!,Kaixo mundua!</span></p>
+	
+-->

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="../fragment/common::headerFragment" >
+    <script th:remove="all" type="text/javascript" src="../assets/js/thymol.js" data-thymol-load="pages.js"></script>		
+</head>
+<body>
+<div class="container">
+	<br/>
+	<br/>
+	<br/>
+	<div class="hero-unit span9">
+	    <h1>ThymeLeaf is awesome !</h1>
+	    <p>This is a simple hero-unit layout to demonstrate the fragment inclusion system</p>
+	    <p>
+	    	<a class="btn btn-primary btn-large" href="http://www.thymeleaf.org" target="_blank">
+	    	Learn more about ThymeLeaf ...
+	    	</a>
+	    </p>
+    </div>
+    <div th:include="../fragment/common::footer"></div>
+</div>
+</body>
+</html>

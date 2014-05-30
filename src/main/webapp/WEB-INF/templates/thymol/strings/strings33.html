@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>Strings example 33</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+
+<body>
+	<p th:text="${#strings.escapeJavaScript(xs1)}">...</p>
+	<p th:text="${#strings.escapeJavaScript(xs2)}">...</p>
+	<p th:text="${#strings.escapeJavaScript(xs3)}">...</p>
+	<p th:text="${#strings.escapeJavaScript(xs4)}">...</p>
+	<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arrayEscapeJavaScript(xsArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	<p>Set of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.setEscapeJavaScript(xsSet)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+</body>
+
+</html>
+
+<!--
+
+-->

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 24</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p th:text="${#strings.multipleReplace(p1,bArray,aArray)}">...</p>
+		<p th:text="${#strings.multipleReplace(p2,bArray,aArray)}">...</p>
+		<p th:text="${#strings.multipleReplace(p3,bArray,aArray)}">...</p>
+		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arrayMultipleReplace(pArray,bArray,aArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Set of strings: <span id="sort"><!--/*/<th:block th:each="d,dStat : ${#strings.setMultipleReplace(pSet,bArray,aArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+	<p>HellO wOrld!</p>
+	<p>Bonjourtoutlemonde!</p>
+	<p>Hola mundo!</p>
+	<p>62E'↔\\(RH'EJ'H09€_H@D"G+_$?B&lt;\\£'%\\)</p>
+	<p>62E↔\\(RHEJ'H09€_H@D"G+_$?B&lt;\\£%\\)</p>
+	<p>Array of strings: <span>BOnjOur tOut le mOnde!,HellO wOrld!,HOla mundO!,KaixO mundua!</span></p>		 
+	<p>Set of strings: <span id="sort">Bonjourtoutlemonde!,Helloworld!,Holamundo!,Kaixomundua!</span></p>
+
+-->

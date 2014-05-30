@@ -1,0 +1,33 @@
+  883  uglifyjs --help
+  884  yum info uglifyjs
+  915  npm install uglify-js
+  919  uglifyjs thymol.js
+  922  uglifyjs --help
+  926  ls -alsrt node_modules/uglify-js/
+  927  ls -alsrt node_modules/uglify-js/bin/
+  928  ./node_modules/uglify-js/bin/uglifyjs 
+  931  ~/node_modules/uglify-js/bin/uglifyjs --help
+  932  ~/node_modules/uglify-js/bin/uglifyjs thymol.js
+  933  ~/node_modules/uglify-js/bin/uglifyjs thymol.js --lint
+  934  ~/node_modules/uglify-js/bin/uglifyjs thymol.js > thymol-min.js
+  936  ~/node_modules/uglify-js/bin/uglifyjs thymol.js -o thymol-min.js -m
+  941  ~/node_modules/uglify-js/bin/uglifyjs thymol.js -o thymol-min.js -m -r thymol
+  943  ~/node_modules/uglify-js/bin/uglifyjs thymol.js -o thymol-min.js -m -r thymol -v
+  944  ~/node_modules/uglify-js/bin/uglifyjs thymol.js -o thymol-min.js -m -v
+  946  ~/node_modules/uglify-js/bin/uglifyjs thymol-min.js -b
+  947  ~/node_modules/uglify-js/bin/uglifyjs thymol-min.js -b -o thymol-b.js
+  949  ~/node_modules/uglify-js/bin/uglifyjs thymol.js -o thymol-min.js -m
+  950  ~/node_modules/uglify-js/bin/uglifyjs thymol-min.js -b -o thymol-b.js
+  954  ~/node_modules/uglify-js/bin/uglifyjs --version
+ 1005  history|grep ugli
+
+
+
+~/node_modules/uglify-js/bin/uglifyjs thymol.js -o thymol-min.js -m
+
+
+
+
+~/node_modules/uglify-js/bin/uglifyjs thymol.js obj/web/httpServletRequest-object.js  -m -o thymol.all.min.js
+
+~/node_modules/uglify-js/bin/uglifyjs thymol.js obj/web/httpServletRequest-object.js obj/web/httpSession-object.js obj/util/aggregates-object.js obj/util/arrays-object.js obj/util/bools-object.js obj/util/dates-object.js obj/util/calendars-object.js obj/util/ids-object.js obj/util/lists-object.js obj/util/maps-object.js obj/util/messages-object.js obj/util/numbers-object.js obj/util/objects-object.js obj/util/sets-object.js obj/util/strings-object.js  -m -o thymol.all.min.js

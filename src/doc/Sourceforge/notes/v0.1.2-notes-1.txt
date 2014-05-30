@@ -1,0 +1,51 @@
+One of the many useful features of Thymeleaf is the TemplateResolver, the mechanism by which templates are located in a web application.
+At them moment, Thymol has no such facility but takes a much simpler approach.
+
+//Thymol will first attempt to find any referenced template as a l in the same directory as the html page currently being processed (the local directory).
+
+A Thymeleaf template reference takes the form: "template-name::fragment-name".
+
+If the template-name part of the template specification (the part preceding the "::") contains no path separator characters ("/"), then the template reference is deemed to be a local directory reference and will be treated as a path relative to the directory containing the html page currently being processed.
+
+If the template-name contains one or more path separator characters then the template reference is treated as a path relative to a pre-determined root directory known as the "page location path".
+
+
+head content
+
+     include	substituteby
+ie		y*			y
+ff		y			y
+ch		y			n
+
+
+There are 2 javascript variables that you can use to control the page location path.
+
+	var thRoot;
+	var thPath;
+	
+You can set these on a page by page basis within script elements:
+
+<script>
+	var thRoot = "c:/root/business/projects/thymetest/";
+</script>
+
+Or you can put the value in a javascript file and import it wherever it's needed.
+
+
+The latest version of thymol uses a page location path variable that is used as the base directory for template look-ups.
+
+The value assigned to the page location path variable is determined on a page-by-page basis
+
+variable called thRoot to hold a value
+
+If you don't set the thRoot value for a page, thymol attempts to find a sensible value for you.
+
+This works as follows:
+
+1. The current document's location is determined.
+2. The thymol script's location is determined.
+3. The longest path common to both current document and thymol script is determined.
+
+The longest common path is used as the value of thRoot.
+
+This procedure works best within java webapp structured directories.

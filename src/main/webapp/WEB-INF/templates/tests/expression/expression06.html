@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>expression example 04</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js"></script>
+<script th:remove="all" type="text/javascript">
+	thDebug=true;
+</script>
+<body>
+<p th:text="${a6.class.name}">...</p>
+<p th:text="${a6}">...</p>
+<p th:text="${b6.class.name}">...</p>
+<p th:text="${b6}">...</p>
+<p th:text="${c6}">...</p>
+</body>
+</html>
+<!--
+
+<p>java.lang.String</p>
+<p>Some text</p>
+<p>java.lang.Integer</p>
+<p>123</p>
+<p>Hello</p>
+
+-->

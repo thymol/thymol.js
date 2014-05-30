@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Sets example 04</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="sets-data.js"></script>
+	<!--script th:remove="all" type="text/javascript" src="sets-data.js"></script-->
+	
+  	<body>
+		<p th:text="${#sets.contains(as1,57)}">...</p>
+		<p th:text="${#sets.contains(as5,'fifty-seven')}">...</p>
+		<p th:text="${#sets.contains(as9,57)}">...</p>
+		<p th:text="${#sets.contains(as11,'fifty-seven')}">...</p>
+	</body>
+
+</html>
+
+<!--
+
+
+-->

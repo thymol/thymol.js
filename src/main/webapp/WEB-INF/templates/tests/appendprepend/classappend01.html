@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>class append example 01</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="append-prepend-data.js"></script>
+<style>
+	.intro {background-color:yellow;}
+	.outro {color:purple;}
+</style>
+<body>
+<div th:classappend="${three}">doh</div>
+<div th:classappend="'intro'">reh</div>
+<div th:classappend="${null}">mi</div>
+<div th:classappend="''">fa</div>
+
+<div class="outro" th:classappend="${three}">doh</div>
+<div class="outro" th:classappend="'intro'">reh</div>
+<div class="outro" th:classappend="${null}">mi</div>
+<div class="outro" th:classappend="''">fa</div>
+
+<div class="" th:classappend="${three}">doh</div>
+<div class="" th:classappend="'intro'">reh</div>
+<div class="" th:classappend="${null}">mi</div>
+<div class="" th:classappend="''">fa</div>
+</body>
+</html>
+<!--
+
+<div class="one!">..</div>
+<div class="hello">..</div>
+<div>..</div>
+<div>..</div>
+
+<div class="old one!">..</div>
+<div class="old hello">..</div>
+<div class="old">..</div>
+<div class="old">..</div>
+
+<div class="one!">..</div>
+<div class="hello">..</div>
+<div class="">..</div>
+<div class="">..</div>
+
+-->

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>include example 02</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="include-data.js"></script>
+<body>
+<table>
+  <tr th:each="product : ${productList}" th:include="product :: productTemplate" 
+      th:with="productName=${product.name}, productPrice=${product.price}" />
+</table>
+</body>
+</html>
+<!--
+
+<table>
+  <tr>
+    <td>Lettuce</td>
+    <td>12.0</td>
+  </tr>
+  <tr>
+    <td>Apricot</td>
+    <td>8.0</td>
+  </tr>
+</table>
+
+-->

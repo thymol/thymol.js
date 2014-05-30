@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>inline example 02</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="inline-data.js"></script>
+<body>
+<script th:inline="javascript"> 
+    var foo1 = /*[[${foo}]]*/; 
+    var foo2 = /*[[${foo}]]*/; // some comment like "will be replaced by thymeleaf"
+</script> 
+</body>
+</html>
+<!-- 
+
+<script> 
+    var foo1 = 'fooo!';
+    var foo2 = 'fooo!'; // some comment like "will be replaced by thymeleaf"
+</script>
+
+ -->

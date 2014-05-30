@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>tests21 replace example 04</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js"></script>
+<body>
+<div>
+  <p>This is some text</p>
+  <div th:replace=" this   ::frag">...</div>
+  <p th:fragment="frag">This is some text</p>
+</div>
+</body>
+</html>
+<!--
+
+<div>
+  <p>This is some text</p>
+  <p>This is some text</p>
+  <p>This is some text</p>
+</div>
+
+-->

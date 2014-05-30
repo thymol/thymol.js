@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Bools example 01</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="bools-data.js"></script>
+	
+  	<body>
+		<p th:text="${#bools.isTrue(null)}">...</p>
+		<p th:text="${#bools.isTrue('')}">...</p>
+		<p th:text="${#bools.isTrue('0')}">...</p>
+		<p th:text="${#bools.isTrue(fred)}">...</p>
+		<p th:text="${#bools.isTrue(bx1)}">...</p>
+		<p th:text="${#bools.isTrue(bx2)}">...</p>
+		<p th:text="${#bools.isTrue(bx3)}">...</p>
+		<p th:text="${#bools.isTrue(bx4)}">...</p>
+		<p th:text="${#bools.isTrue(bx5)}">...</p>
+		<p th:text="${#bools.isTrue(bx6)}">...</p>
+		<p>Array of booleans: <span><!--/*/<th:block th:each="d,dStat : ${#bools.arrayIsTrue(bxArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+		<p>Set of booleans: <span id="sort"><!--/*/<th:block th:each="d,dStat : ${#bools.setIsTrue(bxSet)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+
+-->

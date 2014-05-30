@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragment/common::headerFragment" >
+    <script th:remove="all" type="text/javascript" src="../assets/js/thymol.js" data-thymol-load="pages.js"></script>		
+</head>
+<body>
+	<div id="main-div" class="container-fluid">
+		<div class="span10 offset2">
+			<div class="alert alert-error alert-block" th:if="${!#strings.isEmpty(error)}">
+				 <h4 class="alert-heading">Error!</h4>
+				 An unexpected error occurs, please contact the support team
+			</div>
+			<form class="form-search" action="#" 
+				th:action="@{/search}" 
+				th:object="${search}" method="post">
+				<fieldset>
+					<table class="centerAlign">
+						<tr>
+							<td colspan="4"><legend>Artist Search</legend></td>
+						</tr>
+						<tr>
+							<td class="inputLabel"><label for="name">Name</label></td>
+							<td><input id="name" type="text" placeholder="name" th:field="*{name}"/></td>										
+							<td class="inputLabel"><label for="style">Style</label></td>
+							<td>
+								<select id="style" th:field="*{style}">
+										<option selected="selected" value="">------------ Please Select -----------</option>
+										<option th:each="style : ${styleList}" th:value="${style}" th:text="${style}"  value="Pop">Pop</option>
+										<option th:remove="all" value="Rock">Rock</option>
+										<option th:remove="all" value="RnB">RnB</option>
+										<option th:remove="all" value="Metal">House</option>
+										<option th:remove="all" value="Classical">Classical</option>
+										
+								</select>
+							</td>
+						</tr>
+						<tr>
+							<td class="inputLabel"><label for="title">Title</label></td>
+							<td><input id="title" type="text" placeholder="title" th:field="*{title}"/></td>
+							<td class="inputLabel"><label for="country">Country</label></td>
+							<td>
+								<select id="country" th:field="*{country}">
+										<option selected="selected" value="">------------ Please Select -----------</option>
+										<option th:each="country : ${countryList}" th:value="${country}" th:text="${country}" value="United States">United States</option>
+										<option th:remove="all" value="United Kingdom">United Kingdom</option>
+										<option th:remove="all" value="France">France</option>
+										<option th:remove="all" value="Japan">Japan</option>
+										<option th:remove="all" value="Canada">Canada</option>
+										<option th:remove="all" value="Australia">Australia</option>
+								</select>						
+							</td>											
+						</tr>
+						<tr><td colspan="4">&nbsp;</td></tr>
+						<tr>
+							<td colspan="2" class="right"><button type="submit" class="btn btn-primary">Search</button></td>
+							<td colspan="2" class="left"><a class="btn" href="#" th:href="@{/example2}" >Reset</a></td>
+						</tr>				
+					</table>
+				</fieldset>
+			</form>	
+
+		<div class="alert" 
+			th:if="${results != null and #lists.isEmpty(results) and searchAction != null}">
+		    	<strong>No result found!</strong> Please retry with different search filter(s).
+	    </div>
+		<br/>
+		<br/>									
+		<section id="searchResult">
+			<table id="resultTable" 
+				class="table table-bordered"
+				th:if="${results != null and not #lists.isEmpty(results)}">
+				<thead>
+					<tr class="center middle">
+						<th>#</th>
+						<th>Name</th>
+						<th>Discography</th>
+						<th>Bio</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="artist,rowStat : ${results}">
+						<td class="center middle" th:text="${rowStat.count}">1</td>
+						<td th:text="${artist.name}">Mariah Carey</td>
+						<td th:text="${#strings.abbreviate(#strings.listJoin(artist.discography,', '),30)}">
+							Mariah Carey, Emotions, Music Box, Merry Christmas, DayDream, Butter...
+						</td>
+						<td th:text="${#strings.abbreviate(artist.bio,100)}">Mariah Carey (born March 27, 1970) is an American singer, songwriter, record producer, and actress. She made her recording debut in 1990 under the guidance of Columbia Re...</td>
+					</tr>
+					<tr th:remove="all">
+						<td class="center middle" >2</td>
+						<td>Phil Collins</td>
+						<td>Face Value, Hello, I Must Be Going!, No Jacket Required, ...But Ser...</td>
+						<td>Philip David Charles "Phil" Collins, LVO (born 30 January 1951) is an English singer-songwriter, drummer, pianist and actor best known as a drummer and vocalist for British progressive rock group Genesis and as a solo...</td>
+					</tr>
+					<tr th:remove="all">
+						<td class="center middle" >3</td>
+						<td>Celine Dion</td>
+						<td>Face Value, Hello, I Must Be Going!, No Jacket Required, ...But Ser...</td>
+						<td>Céline Marie Claudette Dion, (born March 30, 1968), is a Canadian singer. Born to a large family from Charlemagne, Quebec, Dion emerged as a teen star in the French-speaking world after her manager and future husband Re...</td>
+					</tr>											
+				</tbody>
+			</table>		
+		</section>						
+		</div>
+		
+		
+	</div>		
+</body>
+</html>

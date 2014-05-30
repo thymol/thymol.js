@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>strings example 01</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../../js/thymol.js" data-thymol-load="strings-common.js, strings-common2.js"></script>
+<body>
+<p th:text="${#strings.equals(oney, anotherOney)}">...</p>
+<p th:text="${#strings.equals(oney, anotherOne2y)}">...</p>
+<p th:text="${#strings.equals(twoy, anotherTwoy)}">...</p>
+<p th:text="${#strings.equalsIgnoreCase(oney, anotherOney)}">...</p>
+<p th:text="${#strings.equalsIgnoreCase(oney, anotherOneOney)}">...</p>
+<p th:text="${#strings.equalsIgnoreCase(twoy, anotherTwoy)}">...</p>
+</body>
+</html>
+<!--
+
+<p>true</p>
+<p>false</p>
+<p>false</p>
+<p>true</p>
+<p>false</p>
+<p>true</p>
+
+-->

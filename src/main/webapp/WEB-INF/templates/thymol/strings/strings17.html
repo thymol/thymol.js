@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 17</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p th:text="${#strings.concatReplaceNulls('nil',p1,p2)}">...</p>
+		<p th:text="${#strings.concatReplaceNulls('nil',p1,' or in French, ',p2)}">...</p>
+		<p th:text="${#strings.concatReplaceNulls('nil',p4,' is Basque, ',p2,' is French')}">...</p>
+		<p th:text="${#strings.concatReplaceNulls('nil',p1,null)}">...</p>
+		<p th:text="${#strings.concatReplaceNulls('nil',null,' (null) or not null ',p2)}">...</p>
+		<p th:text="${#strings.concatReplaceNulls('nil',p4,' is Basque ',null,', (null) is null')}">...</p>
+	</body>
+
+</html>
+
+<!--
+
+		<p>true</p>
+		<p>true</p>
+		<p>true</p>
+		<p>true</p>
+
+-->

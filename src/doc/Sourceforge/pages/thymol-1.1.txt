@@ -1,0 +1,129 @@
+Thymol 1.1
+==========
+
+Thymol 1.1.0 is a javascript implementation of Thymeleaf 2.1 standard dialect functionality, providing static support for all Thymeleaf 2.1 attributes.
+
+Download the latest snapshot version of Thymol 1.1 [here](http://sourceforge.net/projects/jjbenson.u/files/thymol/thymol-1.1.0-SNAPSHOT-2013-12-03.zip).
+
+What's New in 1.1
+-----------------
+
+* Support for all Thymeleaf 2.1 standard dialect functionality
+    +  Same-template fragments
+    +  Parameterizable fragment signatures    
+    +  Literal tokens
+    +  Boolean and null literals
+    +  Literal substitutions
+    +  Protocol-relative URLs    
+    +  Parser-level comment blocks
+    +  Prototype-only comment blocks
+    +  Improved th:remove attribute
+    +  Synthetic &lt;th:block&gt; tag
+    +  Support for HTML5-friendly attribute and element names
+    +  New th:assert for in-template assertions
+    +  New th:replace as a synonym of th:substituteby
+    +  Reuse variables in th:with
+* There is now support for DOM Selectors (up to and including V2.1 style selectors).
+* There is now support for inlining.
+
+New Examples
+----------------
+
+There are a number of new examples of Thymol 1.1 usage in the distribution download file.
+
+Of particular note are the data prefix/th namespace equivalence examples in the examples/templates/v21/stsm directory.
+
+Known Issues
+------------
+
+* &lt;th:block&gt; and &lt;tbody&gt;
+
+If you use &lt;th:block&gt; in conjunction with prototype-only comment blocks within a &lt;table&gt; element, you may encounter a problem with the resultant html.
+When you define a table with no &lt;tbody&gt; elements, the native html parser in most browsers will create &lt;tbody&gt; element(s) for you. A problem can arise because the parser generated &lt;tbody&gt; is usually inserted inside the pre-existing &lt;th:block&gt; and prototype-only comment blocks. As a result, the Thymol output html will probably not be exactly as Thymeleaf would produce it.
+
+Here is an example:
+
+      <table>
+	  <!--/*/ <th:block th:each="user : ${users}"> /*/-->
+	  <tr>
+	      <td th:text="${user.login}">...</td>
+	      <td th:text="${user.name}">...</td>
+	  </tr>
+	  <tr>
+	      <td col span="2" th:text="${user.address}">...</td>
+	  </tr>
+	  <!--/*/ </th:block> /*/-->
+      </table>
+
+If we process this block with Thymol and the following thVars:
+
+	var thVars = [
+		["user1",		"#{'login' : 'admin', 'name' : 'John Jones', 'address' : 'London'}"],
+		["user2",		"#{'login' : 'manager', 'name' : 'Fred Bloggs', 'address' : 'New York'}"],
+		["users",		"#[ #user1, #user2 ]"],		
+	];
+
+The result is:	
+
+	<table>
+		<tbody>
+			<tr>
+				<td>admin</td>
+				<td>John Jones</td>
+			</tr>
+			<tr>
+				<td colspan="2">London</td>
+			</tr>
+		</tbody>
+		<tbody>
+			<tr>
+				<td>manager</td>
+				<td>Fred Bloggs</td>
+			</tr>
+			<tr>
+				<td colspan="2">New York</td>
+			</tr>
+		</tbody>
+	</table>
+
+A work-around is to adopt a slightly different template style, if you want to use &lt;th:block&gt; with prototype-only comments then manually define the &lt;tbody&gt; element too:
+
+	<table>
+	  <tbody>
+	    <!--/*/ <th:block th:each="user : ${users}"> /*/-->
+	    <tr>
+		<td th:text="${user.login}">...</td>
+		<td th:text="${user.name}">...</td>
+	    </tr>
+	    <tr>
+		<td colspan="2" th:text="${user.address}">...</td>
+	    </tr>
+	    <!--/*/ </th:block> /*/-->
+	  </tbody>
+	</table>
+
+This results in the following output:
+
+	<table>
+		<tbody>
+			<tr>
+				<td>admin</td>
+				<td>John Jones</td>
+			</tr>
+			<tr>
+				<td colspan="2">London</td>
+			</tr>
+			<tr>
+				<td>manager</td>
+				<td>Fred Bloggs</td>
+			</tr>
+			<tr>
+				<td colspan="2">New York</td>
+			</tr>
+		</tbody>
+	</table>
+	
+Download
+--------
+
+You can obtain the latest snapshot version of Thymol 1.1 [here](http://sourceforge.net/projects/jjbenson.u/files/thymol/thymol-1.1.0-SNAPSHOT-2013-12-03.zip).

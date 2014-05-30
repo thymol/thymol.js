@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>object example 01</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="object-data.js"></script>
+<body>
+<p th:object="${product}" th:with="x=*{prices}" th:text="${x.euros}">...</p>
+<p th:object="${product}" th:with="x=*{prices}">
+<span th:text="${x.euros}">...</span>
+</p>
+<p th:object="${product}">
+<span th:with="x=*{prices}" th:text="${x.euros}">...</span>
+</p>
+<p th:object="${product}">
+<span th:with="x=*{prices}">
+<span th:text="${x.euros}">...</span>
+</span>
+</p>
+</body>
+</html>

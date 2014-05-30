@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>numbers example 11</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../../js/thymol.js" data-thymol-load="numbers-common.js"></script>
+<body>
+<p th:text="${#numbers.formatDecimal(onex, 5, 4, 'NONE')}">...</p>
+<p th:text="${#numbers.formatDecimal(twox, 5, 4, 'NONE')}">...</p>
+<p th:text="${#numbers.formatDecimal(threex, 5, 4, 'NONE')}">...</p>
+<p th:text="${#numbers.formatDecimal(fourx, 5, 4, 'NONE')}">...</p>
+<p th:text="${#numbers.formatDecimal(fivex, 5, 4, 'NONE')}">...</p>
+</body>
+</html>
+<!--
+
+<p>00123?0000</p>
+<p>25412315412312412312545213?0000</p>
+<p>00000?1240</p>
+<p>00000?1244</p>
+<p>25412315412312412312545213?1244</p>
+
+-->

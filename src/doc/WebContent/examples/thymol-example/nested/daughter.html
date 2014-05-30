@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Daughter</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../js/jquery.min.js"></script>
+	<script th:remove="all" type="text/javascript" src="../../js/thymol.js"></script>
+	<body>
+		<div th:fragment="aged-36">
+			<p>Woman</p>
+			<p>Age 36</p>
+			<p>Brown Eyes</p>
+			<div th:include="child::aged-16">cannot load template: child, fragment: aged-16</div>
+			<div th:include="child::aged-18">cannot load template: child, fragment: aged-18</div>
+		</div>
+		<p><a href="index.html">Back</a></p>
+	</body>
+</html>

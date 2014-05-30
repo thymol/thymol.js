@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Numbers example 01</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js"></script>
+  	<body>
+		<div th:each="i : ${#numbers.sequence(0,10,1)}">
+		  <p>Count: <span th:text="${i}">i</span></p>
+		</div>
+		<p><br/></p>
+ 		<div th:each="i : ${#numbers.sequence(0,10)}">
+		  <p>Count: <span th:text="${i}">i</span></p>
+		</div>
+		<p><br/></p>
+		<div th:each="i : ${#numbers.sequence(10,0)}">
+		  <p>Count: <span th:text="${i}">i</span></p>
+		</div>
+		<p><br/></p>
+		<div th:each="i : ${#numbers.sequence(-2,-10)}">
+		  <p>Count: <span th:text="${i}">i</span></p>
+		</div>
+		<p><br/></p>
+		<div th:each="i : ${#numbers.sequence(-5,5)}">
+		  <p>Count: <span th:text="${i}">i</span></p>
+		</div>
+		<p><br/></p>
+		<div th:each="i : ${#numbers.sequence(5,-5)}">
+		  <p>Count: <span th:text="${i}">i</span></p>
+		</div>
+		<p><br/></p>
+		<div th:each="i : ${#numbers.sequence(15,-15,2)}">
+		  <p>Count: <span th:text="${i}">i</span></p>
+		</div>
+	</body>
+</html>

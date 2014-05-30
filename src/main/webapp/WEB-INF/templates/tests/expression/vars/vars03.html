@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>vars example 03</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../../js/thymol.js"></script>
+<script th:remove="all" type="text/javascript">
+var	thVars = [        
+     	   	  	["prices",	"#{ 'euros': 9.00, 'dollars': 12.00 }" ],
+       	   	  	["product",	"#{ 'name': 'Lettuce', 'prices': #prices }" ]
+       ];
+var thDebug = true;       
+</script>
+<body>
+<div th:object="${product}">
+  <p th:text="${#vars.product.name}">...</p>
+</div>
+</body>
+</html>
+<!-- 
+
+<div>
+  <p>Lettuce</p>
+</div>
+
+ -->

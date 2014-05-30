@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>tests21 link example 01 derived from link01.thtest</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="link-data.js"></script>
+<body>
+<a th:href="@{//www.thymeleaf.org}">go</a>
+<a th:href="@{${base_url}(a[0]='b')}">go</a>
+</body>
+</html>
+<!--
+
+<a href="//www.thymeleaf.org">go</a>
+<a href="//www.thymeleaf.org/documentation.html?a[0]=b">go</a>
+
+-->

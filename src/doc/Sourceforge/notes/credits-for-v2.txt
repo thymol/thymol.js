@@ -1,0 +1,7 @@
+Matthew Crumley for the basis of Thymol's expression parser/evaluator (http://silentmatt.com/javascript-expression-evaluator) thank you so much Matthew! Thanks are also due to Raphael Graf for the precursor ActionScript parser project.
+Thomas Frank for the idea behind Thymol's session context - Thymol doesn't use Thomas' code (see http://www.thomasfrank.se/sessionvars.html), but principles of operation of session persistence are the same. Many thanks Thomas!
+The Date formatting code is reproduced from "Date Format 1.2.3 (c) 2007-2009 Steven Levithan <stevenlevithan.com>" and is published under the MIT license. This code includes enhancements by Scott Trenda <scott.trenda.net> and Kris Kowal <cixar.com/~kris.kowal/>
+(and lots of hacks from Jim Benson!).
+
+Thanks again to Daniel and the rest of the Thymeleaf team for their help and encouragement!
+

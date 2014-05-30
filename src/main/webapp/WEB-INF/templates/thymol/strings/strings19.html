@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 19</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p th:text="${#strings.isEmpty(p1)}">...</p>
+		<p th:text="${#strings.isEmpty('')}">...</p>
+		<p th:text="${#strings.isEmpty('   ')}">...</p>
+		<p th:text="${#strings.isEmpty('\t\n')}">...</p>
+ 		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arrayIsEmpty(pArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+  		<p>Set of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.setIsEmpty(pSet)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+ 		<p>Another array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arrayIsEmpty(#strings.arraySubstringAfter(pArray,'on'))}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+  		<p>Another set of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.setIsEmpty(#strings.setSubstringAfter(pSet,'on'))}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+		<p>false</p>
+		<p>true</p>
+		<p>true</p>
+		<p>true</p>
+ 		<p>Array of strings: <span>false,false,false,false</span></p>
+  		<p>Set of strings: <span>false</span></p>
+ 		<p>Another array of strings: <span>false,true,true,true</span></p>
+  		<p>Another set of strings: <span>false,true</span></p>
+
+-->

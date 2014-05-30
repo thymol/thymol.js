@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>each example 01</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="each-data.js"></script>
+<body>
+<table>
+  <tr th:each="product : ${products}">
+    <td th:text="${product.name}">name</td>
+    <td th:text="${product.price}">price</td>
+  </tr>
+</table>
+</body>
+</html>
+<!--
+
+
+<table>
+  <tbody><tr>
+    <td>Lettuce</td>
+    <td>12</td>
+  </tr>
+<tr>
+    <td>Apricot</td>
+    <td>8</td>
+  </tr><tr>
+    <td>Thyme</td>
+    <td>1.23</td>
+  </tr><tr>
+    <td>Carrot</td>
+    <td>2</td>
+  </tr></tbody></table>
+</table>
+
+-->

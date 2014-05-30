@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Objects example 01</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="objects-data.js"></script>
+	
+  	<body>
+		<p th:text="${#objects.nullSafe(null,'ex1-default')}">...</p>
+		<p th:text="${#objects.nullSafe('',ox1)}">...</p>
+		<p th:text="${#objects.nullSafe(fred,ox1)}">...</p>
+		<p th:text="${#objects.nullSafe(ox2,'')}">...</p>
+		<p th:text="${#objects.nullSafe(ox3,null)}">...</p>
+		<p th:text="${#objects.nullSafe(null,ox4)}">...</p>
+	</body>
+
+</html>
+
+<!--
+
+
+-->

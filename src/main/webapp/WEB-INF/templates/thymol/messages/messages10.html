@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<title>Messages example 10</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="messages-data.js"></script>
+		
+<body>
+<p>Message List 1: <span><!--/*/<th:block th:each="d,dStat : ${#messages.listMsg(msgList1,'John Smith','Bradford','Vindaloo')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+<p>Message List 2: <span><!--/*/<th:block th:each="d,dStat : ${#messages.listMsgWithParams(msgList1,var07)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+<p>Message List 3: <span><!--/*/<th:block th:each="d,dStat : ${#messages.listMsgWithParams(msgList1,var08)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+<p>Message List 4: <span><!--/*/<th:block th:each="d,dStat : ${#messages.listMsgWithParams(msgList1,var09)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+<p>Message List 5: <span><!--/*/<th:block th:each="d,dStat : ${#messages.listMsgWithParams(msgList1,var10)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+</body>
+
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragment/common::headerFragment" >
+    <script th:remove="all" type="text/javascript" src="../assets/js/thymol.js" data-thymol-load="pages.js"></script>		
+</head>
+<body>
+<div class="container">
+	<br/>
+	<div class="span10 offset1">
+<!-- 		<span th:inline="text">[[${'Current date is : '+beans.dateFormatter.getCurrentDate()}]]</span> -->
+		<span th:inline="text">[[${'Current date is : '+ #dates.dateFormat(#dates.createToday(),'dd-MMM-yyyy')}]]</span>
+		<br/><br/>
+		<div>
+			<button id="actionButton" type="button" onclick="displayApplicationName();">Get Application name</button>
+			<br/><br/>
+			<span id="displaySpan">Application name : </span>
+		</div>
+		<script th:inline="javascript">
+		/*<![CDATA[*/
+		
+			var applicationName = /*[[${T(doan.thymeleaf.demo.util.Constants).APPLICATION_NAME}]]*/ "Test";
+			
+			function displayApplicationName()
+			{
+				document.getElementById('displaySpan').innerHTML='Application name : '+applicationName;
+			}
+		/*]]>*/		
+		</script>				
+	</div>
+    <div th:include="fragment/common::footer"></div>
+</div>
+
+</body>
+</html>

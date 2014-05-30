@@ -1,0 +1,31 @@
+Hi All,
+
+  I'm very pleased to announce the publication of Thymol 1.1. The initial version is Thymol 1.1.0-SNAPSHOT. You can find the documentation and a download link here http://sourceforge.net/u/jjbenson/wiki/thymol-1.1.
+
+  What's in 1.1 :-
+
+  * Support for all new Thymeleaf 2.1 standard dialect functionality
+      +  Same-template fragments
+      +  Parameterizable fragment signatures    
+      +  Literal tokens
+      +  Boolean and null literals
+      +  Literal substitutions
+      +  Protocol-relative URLs    
+      +  Parser-level comment blocks
+      +  Prototype-only comment blocks
+      +  Improved th:remove attribute
+      +  Synthetic &lt;th:block&gt; tag
+      +  Support for HTML5-friendly attribute and element names
+      +  New th:assert for in-template assertions
+      +  New th:replace as a synonym of th:substituteby
+      +  Reuse variables in th:with
+  * Support for DOM Selectors (up to and including V2.1 style selectors).
+  * Support for inlining.
+  
+  Please post Thymol related questions and/or report any problems on the Thymol forum at http://sourceforge.net/u/jjbenson/discussion/thymol/thread/b6a162c5/.
+  
+  Special thanks are due to Daniel for his invaluable help with the development of the DOM selector implementation and test cases - thanks again Daniel!
+  
+  Regards,
+
+    Jim

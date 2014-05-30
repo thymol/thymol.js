@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Calendars example 01</title>
+	</head>
+
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js"></script>
+	<script type="text/javascript">
+		thDebug = true;
+	    thymol.ready(function () {
+	    	thymol.configurePreExecution( function() {
+	            thymol.applicationContext.createVariable("onecalendar", thymol.objects.thDatesObject.create(1992,10,12) );
+	            thymol.applicationContext.createVariable("twocalendar", thymol.objects.thDatesObject.create(1732,10,12) );
+	    	});
+	    });                                
+	</script>
+	
+  	<body>
+		<p th:text="${#calendars.format(onecalendar)}">...</p>
+		<p th:text="${#calendars.format(twocalendar)}">...</p>
+	</body>
+</html>
+
+<!--
+
+<p>Fri Oct 12 00:00:00 1492</p>
+<p>The calendars is Fri Oct 12 00:00:00 1492</p>
+<p>1492-10/12</p>
+<p>The calendars is 1492-10/12</p>
+
+
+Wed Oct 12 1492 00:00:00 GMT+0100 (LMT)
+
+The calendars is Wed Oct 12 1492 00:00:00 GMT+0100 (LMT)
+
+Sun Oct 12 1732 00:00:00 GMT+0100 (LMT)
+
+The calendars is Sun Oct 12 1732 00:00:00 GMT+0100 (LMT)
+
+
+-->

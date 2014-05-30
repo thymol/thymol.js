@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Thymol specific example 01</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../js/head.min.js" data-headjs-load="../../js/thymol-head.js" data-thymol-load="thymol-data.js"></script>
+  	<!--script type="text/javascript">
+		var	thDisable= [ "text", "utext" ];
+	</script-->
+  	<body>
+		<div th:text="${value1}">Hello World!</div><span th:text="${value2}"> Hi!</span>
+	</body>
+</html>

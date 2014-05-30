@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Dates example 10</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="dates-data.js"></script>
+	
+  	<body>
+		<p th:text="${#dates.dayOfWeekName(date0)}">...</p>
+		<p th:text="${#dates.dayOfWeekName(date1)}">...</p>
+		<p th:text="${#dates.dayOfWeekName(date2)}">...</p>
+		<p th:text="${#dates.dayOfWeekName(date3)}">...</p>
+		<p th:text="${#dates.dayOfWeekName(date4)}">...</p>
+		<p>Array of days of week: <span><!--/*/<th:block th:each="d,dStat : ${#dates.arrayDayOfWeekName(dateArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Set of days of week: <span id="sort"><!--/*/<th:block th:each="d,dStat : ${#dates.setDayOfWeekName(dateSet)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+<p>1732-12/10</p>
+
+-->

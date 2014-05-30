@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Arrays example 07</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="arrays-data.js"></script>
+	
+  	<body>
+		<p th:text="${#arrays.containsAll(ar1,ar9)}">...</p>
+		<p th:text="${#arrays.containsAll(ar5,ar11)}">...</p>
+		<p th:text="${#arrays.containsAll(ar10,ar1)}">...</p>
+		<p th:text="${#arrays.containsAll(ar12,ar5)}">...</p>		
+		<p th:text="${#arrays.containsAll(ar9,ar1)}">...</p>
+		<p th:text="${#arrays.containsAll(ar11,ar5)}">...</p>
+		<p th:text="${#arrays.containsAll(ar1,ar10)}">...</p>
+		<p th:text="${#arrays.containsAll(ar5,ar12)}">...</p>		
+		<p th:text="${#arrays.containsAll(ar1,as9)}">...</p>
+		<p th:text="${#arrays.containsAll(ar5,as11)}">...</p>
+		<p th:text="${#arrays.containsAll(ar10,as1)}">...</p>
+		<p th:text="${#arrays.containsAll(ar12,as5)}">...</p>		
+		<p th:text="${#arrays.containsAll(ar9,as1)}">...</p>
+		<p th:text="${#arrays.containsAll(ar11,as5)}">...</p>
+		<p th:text="${#arrays.containsAll(ar1,as10)}">...</p>
+		<p th:text="${#arrays.containsAll(ar5,as12)}">...</p>
+	</body>
+
+</html>
+
+<!--
+
+
+-->

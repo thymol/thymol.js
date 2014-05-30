@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Lists example 02</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="lists-data.js"></script>
+	
+  	<body>
+		<p th:text="${#lists.size(ar1List)}">...</p>
+		<p th:text="${#lists.isEmpty(ar6List)}">...</p>
+		<p th:text="${#lists.isEmpty(ar8List)}">...</p>
+	</body>
+
+</html>
+
+<!--
+
+
+-->

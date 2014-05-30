@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>tests21 include example 09 derived from include09.thtest</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="include-data.js"></script>
+<body>
+<div>
+  <p>This is some text before</p>
+  <div th:include="templates/template-09 :: frag-1 ('Message for you!',${m22})">...</div>
+  <p>This is some text after</p>
+</div>
+</body>
+</html>
+<!--
+
+<div>
+  <p>This is some text before</p>
+  <div>
+    <p>Message for you!</p>
+    <p>...and for you too!</p>
+  </div>
+  <p>This is some text after</p>
+</div>
+
+-->

@@ -1,0 +1,398 @@
+package org.thymoljs.thymol.test.selenium.v21cases;
+
+import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
+
+import org.junit.Test;
+
+public class IncludeCases21 extends SeleniumCases {
+
+	String include01Result = 		
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text</p>\n" +
+			"  <div>This is some text</div>\n" +
+			"  <p>This is some text</p>\n" +
+			"</div>\n" +
+			"\n\n";	 
+	
+	String include02Result = 		
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text</p>\n" +
+			"  <div>This is some text</div>\n" +
+			"  <p>This is some text</p>\n" +
+			"</div>\n" +
+			"\n\n";	 
+	
+	String include03Result = 		
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text</p>\n" +
+			"  <div>This is some text</div>\n" +
+			"  <p>This is some text</p>\n" +
+			"</div>\n" +
+			"\n\n";	 
+	
+	String include04Result =
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text</p>\n" +
+			"  <div>This is some text</div>\n" +
+			"  <p>This is some text</p>\n" +
+			"</div>\n" +
+			"\n\n";	 
+
+	String include05Result = 		
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text before</p>\n" +
+			"  <div>\n" +
+			"  <p>Message for you!</p>\n" +
+			"</div>\n" +
+			"  <p>This is some text after</p>\n" +
+			"</div>\n" +
+			"\n\n";	 			
+	
+	String include06Result =
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text before</p>\n" +
+			"  <div>\n" +
+			"  <p>Message for you!</p>\n" +
+			"</div>\n" +
+			"  <p>This is some text after</p>\n" +
+			"</div>\n" +
+			"\n\n";	 			
+
+	String include07Result =
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text before</p>\n" +
+			"  <div><footer>\n" +
+			"  <p>Message for you!</p>\n" +
+			"</footer>\n" +
+			"</div>\n" +
+			"  <p>This is some text after</p>\n" +
+			"</div>\n" +
+			"\n\n";	 			
+	
+	String include08Result =
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text before</p>\n" +
+			"  <div>\n" +
+			"  <p>Message for you!</p>\n" +
+			"</div>\n" +
+			"  <p>This is some text after</p>\n" +
+			"</div>\n" +
+			"\n\n";	 			
+
+	String include09Result =
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text before</p>\n" +
+			"  <div>\n" +
+			"  <p>Message for you!</p>\n" +
+			"  <p>...and for you too!</p>\n" +
+			"</div>\n" +
+			"  <p>This is some text after</p>\n" +
+			"</div>\n" +
+			"\n\n";	 			
+
+	String include10ResultThymol = 		
+			"ThError: getImportNode cannot match fragment: \"frag-1\"";	 			
+	
+	String include10ResultThymeleaf = 		
+			"<h2>HTTP ERROR 500</h2>\n" +
+			"<p>Problem accessing /include10.html. Reason:\n" +
+			"</p><pre>    Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares 2 parameters, but fragment selection specifies 1 parameters. Fragment selection does not correctly match. (include10:11)<";
+
+	String include11Result =
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text before</p>\n" +
+			"  <div>\n" +
+			"  <p>uuuh - Message for you!</p>\n" +
+			"</div>\n" +
+			"  <p>This is some text after</p>\n" +
+			"</div>\n" +
+			"\n\n";	 			
+
+	String include12Result =
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text before</p>\n" +
+			"  <div>\n" +
+			"  <p>uuuh - Message for you!</p>\n" +
+			"</div>\n" +
+			"  <p>This is some text after</p>\n" +
+			"</div>\n" +
+			"\n\n";	 			
+
+	String include13Result =
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text before</p>\n" +
+			"  <div>\n" +
+			"  <p>oh! - Message for you!</p>\n" +
+			"</div>\n" +
+			"  <p>This is some text after</p>\n" +
+			"</div>\n" +
+			"\n\n";	 			
+
+	String include14ResultThymol = 		
+			"ThError: getImportNode cannot match fragment: \"frag-1\"";	 			
+	
+	String include14ResultThymeleaf = 		
+			"<h2>HTTP ERROR 500</h2>\n" +
+			"<p>Problem accessing /include14.html. Reason:\n" +
+			"</p><pre>    Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mss2\", which is not specified at the fragment selection. (include14:11)<";
+
+	String include15ResultThymol = 		
+			"ThError: getImportNode cannot match fragment: \"frag-1\"";	 			
+	
+	String include15ResultThymeleaf = 		
+			"<h2>HTTP ERROR 500</h2>\n" +
+			"<p>Problem accessing /include15.html. Reason:\n" +
+			"</p><pre>    Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mesg\", which is not specified at the fragment selection. (include15:11)<";
+
+	String include16Result =
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text before</p>\n" +
+			"  <div>\n" +
+			"  <p>oh! - Message for you!</p>\n" +
+			"</div>\n" +
+			"  <p>This is some text after</p>\n" +
+			"</div>\n" +
+			"\n\n";	 			
+
+	String include17Result =
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text before</p>\n" +
+			"  <div>\n" +
+			"  <p>oh! - Message for you!</p>\n" +
+			"</div>\n" +
+			"  <p>This is some text after</p>\n" +
+			"</div>\n" +
+			"\n\n";	 			
+
+	String include18Result =
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text before</p>\n" +
+			"  <div>\n" +
+			"  <p>oh! - Message for you!</p>\n" +
+			"</div>\n" +
+			"  <p>This is some text after</p>\n" +
+			"</div>\n" +
+			"\n\n";	 			
+
+	String include19Result =
+			"\n" +
+			"<div>\n" +
+			"  <p>This is some text before</p>\n" +
+			"  <div>\n" +
+			"  <p>oh! - Message for you!</p>\n" +
+			"</div>\n" +
+			"  <p>This is some text after</p>\n" +
+			"</div>\n" +
+			"\n\n";	 			
+
+	String include20ResultThymol = 		
+			"Error: Syntax error, unrecognized expression: %frag-1";	 			
+	
+	String include20ResultThymeleaf = 		
+			"<h2>HTTP ERROR 500</h2>\n" +
+			"<p>Problem accessing /include20.html. Reason:\n" +
+			"</p><pre>    Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mss2\", which is not specified at the fragment selection. (include20:11)<";
+
+	String include21ResultThymol = 		
+			"Error: Syntax error, unrecognized expression: %frag-1";	 			
+	
+	String include21ResultThymeleaf = 		
+			"<h2>HTTP ERROR 500</h2>\n" +
+			"<p>Problem accessing /include21.html. Reason:\n" +
+			"</p><pre>    Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mss2\", which is not specified at the fragment selection. (include21:11)<";
+
+	@Test
+	public void include01() {
+		localise("tests21/include/");
+		String result = getResult( "include01.html", false );
+		assertEquals( clean( include01Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include02() {
+		localise("tests21/include/");
+		String result = getResult( "include02.html", false );
+		assertEquals( clean( include02Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include03() {
+		localise("tests21/include/");
+		String result = getResult( "include03.html", false );
+		assertEquals( clean( include03Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include04() {
+		localise("tests21/include/");
+		String result = getResult( "include04.html", false );
+		assertEquals( clean( include04Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include05() {
+		localise("tests21/include/");
+		String result = getResult( "include05.html", false );
+		assertEquals( clean( include05Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include06() {
+		localise("tests21/include/");
+		String result = getResult( "include06.html", false );
+		assertEquals( clean( include06Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include07() {
+		localise("tests21/include/");
+		String result = getResult( "include07.html", false );
+		assertEquals( clean( include07Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include08() {
+		localise("tests21/include/");
+		String result = getResult( "include08.html", false );
+		assertEquals( clean( include08Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include09() {
+		localise("tests21/include/");
+		String result = getResult( "include09.html", false );
+		assertEquals( clean( include09Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include10() {
+		localise("tests21/include/");
+		String result = getResult( "include10.html", false );
+		if( expectThymolResult() ) {
+			assertEquals( include10ResultThymol, clean( result ) );			
+		}
+		else {			
+			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			assertEquals( include10ResultThymeleaf, subs );			
+		}
+	}
+	
+	@Test
+	public void include11() {
+		localise("tests21/include/");
+		String result = getResult( "include11.html", false );
+		assertEquals( clean( include11Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include12() {
+		localise("tests21/include/");
+		String result = getResult( "include12.html", false );
+		assertEquals( clean( include12Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include13() {
+		localise("tests21/include/");
+		String result = getResult( "include13.html", false );
+		assertEquals( clean( include13Result ), clean( result ) );
+	}
+		
+	@Test
+	public void include14() {
+		localise("tests21/include/");
+		String result = getResult( "include14.html", false );
+		if( expectThymolResult() ) {
+			assertEquals( clean( include14ResultThymol ), clean( result ) );			
+		}
+		else {			
+			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			assertEquals( include14ResultThymeleaf, subs );			
+		}
+	}
+	
+	@Test
+	public void include15() {
+		localise("tests21/include/");
+		String result = getResult( "include15.html", false );
+		if( expectThymolResult() ) {
+			assertEquals( clean( include15ResultThymol ), clean( result ) );			
+		}
+		else {			
+			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			assertEquals( include15ResultThymeleaf, subs );			
+		}
+	}
+	
+	@Test
+	public void include16() {
+		localise("tests21/include/");
+		String result = getResult( "include16.html", false );
+		assertEquals( clean( include16Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include17() {
+		localise("tests21/include/");
+		String result = getResult( "include17.html", false );
+		assertEquals( clean( include17Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include18() {
+		localise("tests21/include/");
+		String result = getResult( "include18.html", false );
+		assertEquals( clean( include18Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include19() {
+		localise("tests21/include/");
+		String result = getResult( "include19.html", false );
+		assertEquals( clean( include19Result ), clean( result ) );
+	}
+	
+	@Test
+	public void include20() {
+		localise("tests21/include/");
+		String result = getResult( "include20.html", false );
+		if( expectThymolResult() ) {
+			assertEquals( clean( include20ResultThymol ), clean( result ) );			
+		}
+		else {			
+			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			assertEquals( include20ResultThymeleaf, subs );			
+		}
+	}
+	
+	@Test
+	public void include21() {
+		localise("tests21/include/");
+		String result = getResult( "include21.html", false );
+		if( expectThymolResult() ) {
+			assertEquals( clean( include21ResultThymol ), clean( result ) );			
+		}
+		else {			
+			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			assertEquals( include21ResultThymeleaf, subs );			
+		}
+	}
+
+}

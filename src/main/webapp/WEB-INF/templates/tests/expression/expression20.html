@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>expression example 20</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="expression-20-data.js"></script>
+<body>
+
+<p th:text="${ca1} ? (${cb1} ?: ${cb2})">...</p>
+<p th:text="${ca1} ? (${cb1} ?: ${cb2}) : (${cb1} ?: ${cb2})">...</p>
+<p th:text="${ca2} ? (${cb1} ?: ${cb2})">...</p>
+<p th:text="${ca2} ? (${cb1} ?: ${cb2}) : (${cb2} ? 'two')">...</p>
+
+</body>
+</html>
+<!--
+
+<p>one</p>
+<p>one</p>
+<p></p>
+<p>two</p>
+
+-->

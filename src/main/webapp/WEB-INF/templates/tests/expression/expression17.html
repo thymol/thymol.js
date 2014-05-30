@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>expression example 17</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="expression-17-data.js"></script>
+<body>
+
+<p th:text="${aa1} ? ${ab1}">...</p>
+<p th:text="${aa1} ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa1} == 'a') ? ${ab1}">...</p>
+<p th:text="(${aa1} == 'a') ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa1} != 'a') ? ${ab1}">...</p>
+<p th:text="(${aa1} != 'a') ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa1} == 'b') ? ${ab1}">...</p>
+<p th:text="(${aa1} == 'b') ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa1} != 'b') ? ${ab1}">...</p>
+<p th:text="(${aa1} != 'b') ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa1} == 'aa') ? ${ab1}">...</p>
+<p th:text="(${aa1} == 'aa') ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa1} != 'aa') ? ${ab1}">...</p>
+<p th:text="(${aa1} != 'aa') ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa1} == 'ba') ? ${ab1}">...</p>
+<p th:text="(${aa1} == 'ba') ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa1} != 'ba') ? ${ab1}">...</p>
+<p th:text="(${aa1} != 'ba') ? ${ab1} : ${ac1}">...</p>
+
+<p th:text="${aa4} ? ${ab1}">...</p>
+<p th:text="${aa4} ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa4} == 'a') ? ${ab1}">...</p>
+<p th:text="(${aa4} == 'a') ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa4} != 'a') ? ${ab1}">...</p>
+<p th:text="(${aa4} != 'a') ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa4} == 'b') ? ${ab1}">...</p>
+<p th:text="(${aa4} == 'b') ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa4} != 'b') ? ${ab1}">...</p>
+<p th:text="(${aa4} != 'b') ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa4} == 'aa') ? ${ab1}">...</p>
+<p th:text="(${aa4} == 'aa') ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa4} != 'aa') ? ${ab1}">...</p>
+<p th:text="(${aa4} != 'aa') ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa4} == 'ba') ? ${ab1}">...</p>
+<p th:text="(${aa4} == 'ba') ? ${ab1} : ${ac1}">...</p>
+<p th:text="(${aa4} != 'ba') ? ${ab1}">...</p>
+<p th:text="(${aa4} != 'ba') ? ${ab1} : ${ac1}">...</p>
+
+<p th:text="${aa2} ? ${ab1}">...</p>
+<p th:text="${aa2} ? ${ab1} : ${ac1}">...</p>
+
+<p th:text="${aa3} ? ${ab1}">...</p>
+<p th:text="${aa3} ? ${ab1} : ${ac1}">...</p>
+
+<p th:text="${aa1} ? ${ab2}">...</p>
+<p th:text="${aa1} ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa1} == 'a') ? ${ab2}">...</p>
+<p th:text="(${aa1} == 'a') ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa1} != 'a') ? ${ab2}">...</p>
+<p th:text="(${aa1} != 'a') ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa1} == 'b') ? ${ab2}">...</p>
+<p th:text="(${aa1} == 'b') ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa1} != 'b') ? ${ab2}">...</p>
+<p th:text="(${aa1} != 'b') ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa1} == 'aa') ? ${ab2}">...</p>
+<p th:text="(${aa1} == 'aa') ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa1} != 'aa') ? ${ab2}">...</p>
+<p th:text="(${aa1} != 'aa') ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa1} == 'ba') ? ${ab2}">...</p>
+<p th:text="(${aa1} == 'ba') ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa1} != 'ba') ? ${ab2}">...</p>
+<p th:text="(${aa1} != 'ba') ? ${ab2} : ${ac2}">...</p>
+
+<p th:text="${aa4} ? ${ab2}">...</p>
+<p th:text="${aa4} ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa4} == 'a') ? ${ab2}">...</p>
+<p th:text="(${aa4} == 'a') ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa4} != 'a') ? ${ab2}">...</p>
+<p th:text="(${aa4} != 'a') ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa4} == 'b') ? ${ab2}">...</p>
+<p th:text="(${aa4} == 'b') ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa4} != 'b') ? ${ab2}">...</p>
+<p th:text="(${aa4} != 'b') ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa4} == 'aa') ? ${ab2}">...</p>
+<p th:text="(${aa4} == 'aa') ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa4} != 'aa') ? ${ab2}">...</p>
+<p th:text="(${aa4} != 'aa') ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa4} == 'ba') ? ${ab2}">...</p>
+<p th:text="(${aa4} == 'ba') ? ${ab2} : ${ac2}">...</p>
+<p th:text="(${aa4} != 'ba') ? ${ab2}">...</p>
+<p th:text="(${aa4} != 'ba') ? ${ab2} : ${ac2}">...</p>
+
+<p th:text="${aa2} ? ${ab2}">...</p>
+<p th:text="${aa2} ? ${ab2} : ${ac2}">...</p>
+
+<p th:text="${aa3} ? ${ab2}">...</p>
+<p th:text="${aa3} ? ${ab2} : ${ac2}">...</p>
+
+</body>
+</html>
+<!--
+
+<p>1</p>
+<p>1</p>
+<p>1</p>
+<p>1</p>
+<p></p>
+<p>2</p>
+<p></p>
+<p>2</p>
+<p>1</p>
+<p>1</p>
+<p></p>
+<p>2</p>
+<p>1</p>
+<p>1</p>
+<p></p>
+<p>2</p>
+<p>1</p>
+<p>1</p>
+
+<p>1</p>
+<p>1</p>
+<p></p>
+<p>2</p>
+<p>1</p>
+<p>1</p>
+<p></p>
+<p>2</p>
+<p>1</p>
+<p>1</p>
+<p>1</p>
+<p>1</p>
+<p></p>
+<p>2</p>
+<p></p>
+<p>2</p>
+<p>1</p>
+<p>1</p>
+
+<p>1</p>
+<p>1</p>
+
+<p></p>
+<p>2</p>
+
+
+
+<p>one</p>
+<p>one</p>
+<p>one</p>
+<p>one</p>
+<p></p>
+<p>two</p>
+<p></p>
+<p>two</p>
+<p>one</p>
+<p>one</p>
+<p></p>
+<p>two</p>
+<p>one</p>
+<p>one</p>
+<p></p>
+<p>two</p>
+<p>one</p>
+<p>one</p>
+
+<p>one</p>
+<p>one</p>
+<p></p>
+<p>two</p>
+<p>one</p>
+<p>one</p>
+<p></p>
+<p>two</p>
+<p>one</p>
+<p>one</p>
+<p>one</p>
+<p>one</p>
+<p></p>
+<p>two</p>
+<p></p>
+<p>two</p>
+<p>one</p>
+<p>one</p>
+
+<p>one</p>
+<p>one</p>
+
+<p></p>
+<p>two</p>
+
+-->

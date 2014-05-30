@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Calendars example 04</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="calendars-data.js"></script>
+	
+  	<body>
+		<p th:text="${#calendars.day(calendar0)}">...</p>
+		<p th:text="${#calendars.day(calendar1)}">...</p>
+		<p th:text="${#calendars.day(calendar2)}">...</p>
+		<p th:text="${#calendars.day(calendar3)}">...</p>
+		<p th:text="${#calendars.day(calendar4)}">...</p>
+		<p>Array of days: <span><!--/*/<th:block th:each="d,dStat : ${#calendars.arrayDay(calendarArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Set of days: <span id="sort"><!--/*/<th:block th:each="d,dStat : ${#calendars.setDay(calendarSet)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+<p>1732-12/10</p>
+
+-->

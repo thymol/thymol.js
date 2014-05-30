@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>simple example</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+	<script th:remove="all" type="text/javascript" src="../../js/thymol.js"></script>
+	<body>
+		<div th:include="footer :: copy">hello</div>
+		<div th:include="footer :: copy">good evening</div>
+		<div th:include="footer :: copy">welcome</div>
+		<span id="subs1" th:substituteby="footer :: copy" style="color: green;">hello again</span>
+		<div th:substituteby="other">Can I put a matrix here?</div>
+		<span id="subs1" th:substituteby="footer :: copy" style="color: blue;">hello again</span>
+		<div th:substituteby="other">Can I put a matrix here?</div>
+		<span id="subs1" th:substituteby="footer :: copy" style="color: orange;">hello again</span>
+		<div th:include="footer :: copy">goodbye</div>
+		<p><a href="index.html">Back</a></p>
+	</body>
+</html>

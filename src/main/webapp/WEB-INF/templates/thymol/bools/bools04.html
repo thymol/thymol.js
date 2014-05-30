@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Bools example 04</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="bools-data.js"></script>
+	
+  	<body>
+		<p>Array of booleans: <span th:text="${#bools.arrayOr(bxArray)}">...</span></p>
+		<p>Set of booleans: <span th:text="${#bools.setOr(bxSet)}">...</span></p>
+		<p>Array of booleans: <span th:text="${#bools.arrayOr(bx2Array)}">...</span></p>
+		<p>Set of booleans: <span th:text="${#bools.setOr(bx2Set)}">...</span></p>
+		<p>Array of booleans: <span th:text="${#bools.arrayOr(bx3Array)}">...</span></p>
+		<p>Set of booleans: <span th:text="${#bools.setOr(bx3Set)}">...</span></p>
+	</body>
+
+</html>
+
+<!--
+
+
+-->

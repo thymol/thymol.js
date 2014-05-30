@@ -1,0 +1,225 @@
+#Thymol 2.0#
+
+
+Thymol 2.0 is a javascript emulation of Thymeleaf 2.1.
+
+Thymol 2.0 simulates the Thymeleaf 2.1 templating system front end and allows you to prototype Thymeleaf developments in a "stand alone" environment.
+
+Download the latest snapshot version of Thymol 2.0 [here](http://sourceforge.net/projects/jjbenson.u/files/thymol/thymol-2.0.0-SNAPSHOT-2014-04-??.zip).
+
+##What's New in 2.0.0##
+
+
+  * Support for all Thymeleaf 2.1 "Expression basic objects"
+  * Support for all Thymeleaf 2.1 "Expression utility objects"
+  * Support for expression pre-processing.
+  * Supports user extensions:
+    * Custom attributes - implement your own dialects!
+    * Custom utility objects - functional prototyping
+  * Optionally uses head.js for "unobtrusive javascript"
+  * Many bug fixes - thanks to all Thymol users!
+  * Improved execution speed
+  * Minimised version available  
+
+##New Examples##
+
+There are a number of new examples of Thymol usage in the 2.0 distribution download file.
+
+Of particular note are
+
+* the persistent session examples in the examples/templates/thymol/2.0/sessions directory.
+* the extending Thymeleaf in 5 minutes example (Thymol style) in the examples/templates/thymol/2.0/say-hello directory.
+* the extending Thymol to implement some Thymeleaf + Spring examples in the examples/templates/v21/stsm directory.
+
+##Thymol 2.0 Javascript Files##
+
+The Thymol 2.0 distribution contains 2 distinct variants of the Thymol library these are: "thymol.js" and "thymol-lite.js". The first, "thymol.js" provides the full range of functionality of previous versions of Thymol as well as that described in the "What's New" section of this document. The other file "thymol-lite.js", provides all of that functionality apart from the support for expression utility objects.
+The reduced functionality version has been included as a direct replacement for earlier (pre-2.0) versions of Thymol for users who don't need support for expression utility objects, and who may have concerns over javascript file load times.
+
+As well as these variants, the distribution also contains "minimised" versions of each of the above: "thymol.min.js" and "thymol-lite.min.js".
+
+There is another javascript file provided with the distribution that is "thymol-head.js".
+
+##Use of "thymol-head.js"
+
+The extra javascript file "thymol-head.js" is intended for assist in the use of "unobtrusive" scripting.
+
+The traditional way of defining javascript inclusions in a web page looks like this:
+
+	<script th:remove="all" type="text/javascript" src="../../../js/jquery.min.js"></script>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js"></script>
+	<script th:remove="all" type="text/javascript" src="strings-data2.js"></script>
+
+The scripts are elaborated and loaded in sequence.
+
+A tidier way of achieving the same effect is to use the new "thymol-head.js" script like this:
+
+	<script th:remove="all" type="text/javascript" src="../../../js/head.min.js" data-headjs-load="../../../js/thymol-head.js" data-thymol-load="strings-data.js"></script>
+	
+This way, the "head.min.js" script is loaded first and the loading of all others is delegated to "thymol-head.js".
+
+You may download "head.js" etc from [here](http://headjs.com/site/download.html).
+
+You will need to configure the local copy "thymol-head.js" correctly in order that it may find the JQuery and Thymol libraries, but that is quite easy (see the distribution file).
+
+The "thymol-head.js" script may be used to load any number of additional script files specified by a comma separated list value for the "data-thymol-load" attribute.
+
+You may also pass command-line parameters to Thymol by using the "data-thymol-parameters" attribute. This should be specified as a standard request parameter string (a name/value pair list starting with a "?" and separated by "&").
+
+Of course, once loaded by "head.js", you scripts may make use any of the functionality provided by the "head" object. The head.load and head.ready functions are particularly useful (see "Execution Order" below).
+
+
+##Expression Basic Objects##
+
+Thymol 2.0 supports all of the Thymeleaf standard dialect Expression Basic Objects, including implementations of all the Base objects, Web context namespaces for request/session attributes and the Web context objects #httpServletRequest and #httpSession. 
+
+Support for #httpServletRequest and #httpSession methods is limited to those that have meaning in a web client javascript environment.  
+
+##Expression Utility Objects##
+
+All Thymeleaf standard dialect Expression Utility Objects are supported by Thymol 2.0. There are implementations equivalent to most methods of each Expression Utility Object, but support for locale related functionality is extremely limited.
+
+In creating a javascript emulation of a Java framework, it has been necessary to make some compromises with the use of data types associated with the Expression Utility Objects, these are summarised below:
+
+###List and Array Types###
+  
+As far as Thymol is concerned, List and Array types are interchangeable and are represented by the javascript native Array type.
+		  
+###Date and Calendar Types###
+
+As far as Thymol is concerned, Date and Calendar types are interchangeable and are represented by the javascript native Date type.
+
+###Set and Map Types###
+  
+Thymol includes implementations Set and Map that emulate the Java equivalents as far as is necessary for the Expression Utility Objects to work. These implementations are ThSet and ThMap respectively. 
+  
+ThSet exports the following functions:
+  	
+	add = function(key)
+	addAll = function(other)
+	clear = function()
+	contains = function(key)
+	containsAll = function(keys)
+	isEmpty = function()
+	size = function()
+	remove = function(key)
+	toArray = function()
+	toString = function()
+		
+There is another utility function that constructs a ThSet from an Array (removing duplicate keys in the process)
+	
+	fromArray = function(array)
+		
+ThMap extends ThSet and additionally exports the following functions:
+	
+	containsKey = function(key)
+	containsValue = function(value)
+	entrySet = function()
+	get = function(key)
+	keySet = function()
+	put = function(key, value)
+	putAll = function(collection)
+	values = function()
+	    		  
+##Thymol API##
+
+Using Thymol will almost inevitably require a developer to create some custom support javascript sooner or later. The Thymol API offers some help when it comes to interfacing with Thymol internals.
+
+Structures in the Thymol API are accessed via a globally defined variable "thymol".
+
+###Properties###
+
+* thymol.applicationContext
+* thymol.sessionContext
+* thymol.requestContext
+		
+These provide access to the context objects used by Thymol internally.
+		
+Each of these contexts exports a useful set of functions:
+
+* context.createVariable = function(name, value)                   - creates a variable that may be used in Thymol expressions		
+* context.getAttribute = function(name)                            - returns the named value (a generic object, possibly a variable, possibly not)
+* context.addAttribute = function(name, value)                     - adds a generic object with a given name
+
+###Functions###
+	
+* thymol.getMessage = function(varName,parameters,returnStringAlways) - returns the value form ThMessages keyed by "varName" with placeholders substituted by parameters in given array
+* thymol.getLocale = function()                                       - for future use
+* thymol.getExpression = function(expression,element)                 - parses and resolves the given Thymol expression in the context of the given DOM element
+	  	  
+* thymol.configurePreExecution = function(callback)                   - Injects a callback function that will be executed before Thymol main processing, repeated calls add callback that will be executed in order of creation
+* thymol.configurePostExecution = function(callback)                  - Injects a callback function that will be executed after Thymol main processing, repeated calls add callback that will be executed in order of creation
+
+* thymol.configureModule = function(module)                           - For the creation of custom Expression Utility Objects.  See "Extension Framework" below. 
+* thymol.configureProcessor = function(prefix, suffix, func, prec)    - For the creation of custom attributes (custom dialects). See "Extension Framework" below. 
+
+##Execution Order##
+
+Use of head.load and head.ready can give you more certainty about the order of execution of your scripts.
+
+Use of thymol.configurePreExecution and thymol.configurePostExecution can give you control over the life-cycle of objects in your Thymol system.
+
+The following example creates some Thymol expression variables in the session context after all javascript files have been loaded, but before the template execution is started. When template execution is complete, all session context variables are deleted.
+
+	head.ready(function () {
+		thymol.configurePreExecution( function() {
+			thymol.sessionContext.createVariable("a","Some text");
+			thymol.sessionContext.createVariable("b",123);
+			thymol.sessionContext.createVariable("c","Hello");
+		});
+		thymol.configurePostExecution( function() {
+			thymol.sessionContext = [];
+		});
+	});                
+
+##Extension Framework##
+
+###Custom Attributes###
+	
+Thymol custom attributes allow you to extend Thymol in a way that's similar to Thymeleaf's custom dialects.
+
+Custom attributes are defined by invoking the "thymol.configureProcessor" function.
+
+  thymol.configureProcessor = function(prefix, suffix, attrProcessorFunction, precedence)
+              
+* prefix - specifies the "namespace" prefix value that introduces the attribute definition in the template. This is normally a short string ending with a ":", may be null to signify no prefix.
+* suffix - the name of the attribute being defined.
+* attrProcessorFunction - the definition of a callback function that is executed when the attribute is encountered during template processing.
+    
+	* attrProcessorFunction = function(element, attr, thAttr)
+      
+		* element - the DOM element that the attribute is associated with.
+		* attr    - the DOM Attr being processed
+		* thAttr  - the Thymol internal object representation of the attribute.  
+
+The body of the attrProcessorFunction performs the intent of the custom attribute and may do what you will.	  
+
+The attrProcessorFunction should return a boolean result value that is "true" if the function changed the DOM in any way and "false" if not.              
+	  
+###Custom Expression Objects###
+	
+Custom expression objects allow you to define and use groups of related functions in the same way that Expression Basic Objects and Expression Utility Objects are defined and used.
+
+  thymol.configureModule = function(module)
+  
+* module -  defines an injected function variable.
+
+The module function must specify a public string property "thExpressionObjectName" whose value is the name of the Expression Object (this name must begin with '#').
+
+Groups of functions may be added to the body of the module function at the developer's discretion.
+	    
+##Known Issues##
+
+There are no new known issues in Thymol 2.0, the implicit Thymol 1.1 (thBlock and tbody) isssue still remains.
+
+##Credits##
+
+Matthew Crumley for the basis of Thymol's expression parser/evaluator (http://silentmatt.com/javascript-expression-evaluator) thank you so much Matthew! Thanks are also due to Raphael Graf for the precursor ActionScript parser project.
+
+Thomas Frank for the idea behind Thymol's session context - Thymol doesn't use Thomas' code (see http://www.thomasfrank.se/sessionvars.html), but the principle of operation of session persistence is the same. Many thanks Thomas!
+
+The Date formatting code is reproduced from "Date Format 1.2.3 (c) 2007-2009 Steven Levithan <stevenlevithan.com>" and is published under the MIT license. This code includes enhancements by Scott Trenda and Kris Kowal.
+	
+##Download##
+
+You can obtain the latest snapshot version of Thymol 2.0 [here](http://sourceforge.net/projects/jjbenson.u/files/thymol/thymol-2.0.0-SNAPSHOT-2014-04-??.zip).

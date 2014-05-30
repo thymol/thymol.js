@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>expression example 11</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="session-data.js"></script>
+<script th:remove="all" type="text/javascript">
+	thDebug=true;
+</script>
+<body>
+<p th:text="${#httpSession.getAttribute('a')}">...</p>
+<p th:text="${#httpSession.getAttribute('b')}">...</p>
+<p th:text="${#httpSession.getAttribute('c')}">...</p>
+</body>
+</html>
+<!--
+
+<p>Some text</p>
+<p>123</p>
+<p>Hello</p>
+
+-->

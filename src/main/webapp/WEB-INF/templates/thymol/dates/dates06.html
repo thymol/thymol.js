@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Dates example 06</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="dates-data.js"></script>
+	
+  	<body>
+		<p th:text="${#dates.monthName(date0)}">...</p>
+		<p th:text="${#dates.monthName(date1)}">...</p>
+		<p th:text="${#dates.monthName(date2)}">...</p>
+		<p th:text="${#dates.monthName(date3)}">...</p>
+		<p th:text="${#dates.monthName(date4)}">...</p>
+		<p>Array of month names: <span><!--/*/<th:block th:each="d,dStat : ${#dates.arrayMonthName(dateArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Set of month names: <span id="sort"><!--/*/<th:block th:each="d,dStat : ${#dates.setMonthName(dateSet)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+<p>1732-12/10</p>
+
+-->

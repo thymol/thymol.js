@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<!--script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script-->
+</head>
+<body>
+
+<div>
+  <ul>
+    <p>this p shouldn't be here, but anyway...</p>
+    <li>List 1, item 1</li>
+    <li>List 1, item 2</li>
+    <li>List 1, item 3</li>
+  </ul>
+  <ul>
+    <p>this p shouldn't be here, but anyway...</p>
+    <li>List 2, item 1</li>
+    <li>List 2, item 2</li>
+    <li>List 2, item 3</li>
+  </ul>
+</div>
+
+<script>
+$( "ul" ).each(function( index ) {
+  $( this ).find( "li:eq(2)" ).css( "color", "blue" );
+});
+</script>
+
+</body>
+</html>

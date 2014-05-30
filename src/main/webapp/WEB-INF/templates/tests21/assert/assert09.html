@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>tests21 assert example 09 derived from assert09.thtest</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="assert-data.js"></script>
+<body>
+<div>
+  <div th:object="${fourvar01}" th:assert="*{value} &gt; 21" class="a"
+       th:remove="tag">tururu</div>
+</div>
+</body>
+</html>
+<!--
+
+<div>
+  tururu
+</div>
+
+-->

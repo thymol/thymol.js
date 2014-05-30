@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Maps example 06</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="maps-data.js"></script>
+	
+   	<body>
+		<p th:text="'containsKey(ar1) for tm3: '+${#maps.containsKey(tm3,'ar1')}">...</p>
+		<p th:text="'containsKey(ar2) for tm3: '+${#maps.containsKey(tm3,'ar2')}">...</p>
+		<p th:text="'containsKey(ar3) for tm3: '+${#maps.containsKey(tm3,'ar3')}">...</p>
+		<p th:text="'containsKey(ar4) for tm3: '+${#maps.containsKey(tm3,'ar4')}">...</p>
+		<p th:text="'containsKey(ar5) for tm3: '+${#maps.containsKey(tm3,'ar5')}">...</p>
+	</body>
+
+</html>
+
+<!--
+
+
+-->

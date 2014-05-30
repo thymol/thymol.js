@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Arrays example 01</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="arrays-data.js"></script>
+	
+  	<body>
+		<p>Array 1: <span><!--/*/<th:block th:each="d,dStat : ${#arrays.toArray(ar1)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+		<p>Array 2: <span><!--/*/<th:block th:each="d,dStat : ${#arrays.toArray(ar2)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+		<p>Array 3: <span><!--/*/<th:block th:each="d,dStat : ${#arrays.toArray(ar3)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+		<p>Array 4: <span><!--/*/<th:block th:each="d,dStat : ${#arrays.toArray(ar4)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+		<p>Array 5: <span><!--/*/<th:block th:each="d,dStat : ${#arrays.toArray(ar5)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+		<p>Array 6: <span><!--/*/<th:block th:each="d,dStat : ${#arrays.toArray(ar6)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+
+		<p>Set 1: <span><!--/*/<th:block th:each="d,dStat : ${#arrays.toArray(as1)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+		<p>Set 2: <span><!--/*/<th:block th:each="d,dStat : ${#arrays.toArray(as2)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+		<p>Set 3: <span><!--/*/<th:block th:each="d,dStat : ${#arrays.toArray(as3)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+		<p>Set 4: <span><!--/*/<th:block th:each="d,dStat : ${#arrays.toArray(as4)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+		<p>Set 5: <span><!--/*/<th:block th:each="d,dStat : ${#arrays.toArray(as5)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+		<p>Set 6: <span><!--/*/<th:block th:each="d,dStat : ${#arrays.toArray(as6)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+
+-->

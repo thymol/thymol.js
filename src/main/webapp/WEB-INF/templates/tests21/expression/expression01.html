@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>tests21 expression example 01 derived from expression01.thtest</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js"></script>
+<body>
+<p th:text="true">...</p>
+<p th:text="false">...</p>
+<p th:text="!true">...</p>
+<p th:text="!false">...</p>
+
+<p th:text="((2 == 2) == true)">...</p>
+<p th:text="((2 == 2) != true)">...</p>
+<p th:text="((2 == 2) == false)">...</p>
+<p th:text="((2 == 2) != false)">...</p>
+<p th:text="((2 > 2) == true)">...</p>
+<p th:text="((2 > 2) != true)">...</p>
+<p th:text="((2 > 2) == false)">...</p>
+<p th:text="((2 > 2) != false)">...</p>
+
+<p th:text="((2 == 2) ==true )">...</p>
+<p th:text="((2 == 2) !=true )">...</p>
+<p th:text="((2 == 2) ==false )">...</p>
+<p th:text="((2 == 2) !=false )">...</p>
+<p th:text="((2 > 2) ==true )">...</p>
+<p th:text="((2 > 2) !=true )">...</p>
+<p th:text="((2 > 2) ==false )">...</p>
+<p th:text="((2 > 2) !=false )">...</p>
+</body>
+</html>
+
+<!--
+
+<p>true</p>
+<p>false</p>
+<p>false</p>
+<p>true</p>
+
+<p>true</p>
+<p>false</p>
+
+n/a <p>true</p>
+n/a <p>true</p>
+
+<p>false</p>
+<p>true</p>
+<p>false</p>
+<p>true</p>
+<p>true</p>
+<p>false</p>
+
+<p>true</p>
+<p>false</p>
+<p>false</p>
+<p>true</p>
+<p>false</p>
+<p>true</p>
+<p>true</p>
+<p>false</p>
+
+-->

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 09</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p th:text="${#strings.substring(p1,6)}">...</p>
+		<p th:text="${#strings.substring(p2,16)}">...</p>
+		<p th:text="${#strings.substring(p3,10)}">...</p>
+		<p th:text="${#strings.substring(p4,0)}">...</p>
+		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arraySubstring(pArray,6)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+ 		<p>Set of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.setSubstring(pSet,6)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+		<p>world!</p>
+		<p>monde!</p>
+		<p>!</p>
+		<p>Kaixo mundua!</p>
+		<p>Array of strings: <span>r tout le monde!,world!,undo!,mundua!</span></p>		 
+ 		<p>Set of strings: <span>r tout le monde!,world!,undo!,mundua!</span></p>		
+-->

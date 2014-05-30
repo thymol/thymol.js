@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 26</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p th:text="${#strings.toLowerCase(p1)}">...</p>
+		<p th:text="${#strings.toLowerCase(p2)}">...</p>
+		<p th:text="${#strings.toLowerCase(p3)}">...</p>
+		<p th:text="${#strings.toLowerCase(p4)}">...</p>
+		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arrayToLowerCase(pArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Set of strings: <span id="sort"><!--/*/<th:block th:each="d,dStat : ${#strings.setToLowerCase(pSet)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+		<p>hello world!</p>
+		<p>bonjour tout le monde!</p>
+		<p>hola mundo!</p>
+		<p>kaixo mundua!</p>
+		<p>Array of strings: <span>bonjour tout le monde!,hello world!,hola mundo!,kaixo mundua!</span></p>		 
+		<p>Set of strings: <span id="sort">bonjour tout le monde!,hello world!,hola mundo!,kaixo mundua!</span></p>
+
+-->

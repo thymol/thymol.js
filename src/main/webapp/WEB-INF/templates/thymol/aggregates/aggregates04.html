@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Aggregates example 04</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="aggregates-data.js"></script>
+	
+  	<body>
+		<p th:text="${#numbers.formatDecimal(#aggregates.avg(as1),1,3)}">...</p>
+		<p th:text="${#numbers.formatDecimal(#aggregates.avg(as2),1,3)}">...</p>
+		<p th:text="${#numbers.formatDecimal(#aggregates.avg(as9),1,3)}">...</p>
+		<p th:text="${#numbers.formatDecimal(#aggregates.avg(as10),1,3)}">...</p>
+		<p th:text="${#numbers.formatDecimal(#aggregates.avg(as13),1,3)}">...</p>
+		<p th:text="${#numbers.formatDecimal(#aggregates.avg(as14),1,3)}">...</p>
+	</body>
+
+</html>
+
+<!--
+
+
+-->

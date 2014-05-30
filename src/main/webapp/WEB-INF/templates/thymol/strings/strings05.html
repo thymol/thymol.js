@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 05</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p th:text="${#strings.contains(p1,'or')}">...</p>
+		<p th:text="${#strings.contains(p2,'bout')}">...</p>
+		<p th:text="${#strings.contains(p3,'!')}">...</p>
+		<p th:text="${#strings.contains(p4,'K')}">...</p>
+		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arrayContains(pArray,'x')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Set of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.setContains(pSet,'y')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+		<p>true</p>
+		<p>false</p>
+		<p>true</p>
+		<p>true</p>
+		<p>Array of strings: <span>false,false,false,true</span></p>		 
+		<p>Set of strings: <span>false</span></p>
+
+-->

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>tests21 parsing remove 03 derived from remove03.thtest</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="remove-data.js"></script>
+<body>
+<div th:object="${test}" th:remove="${condition}? tag">
+    <span th:text="*{text}">Text</span> 
+</div> 
+</body>
+</html>
+<!--
+
+    <span>Hi there!</span> 
+
+-->

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>allexpressionutil01 example</title>
+</head>
+<!--script th:remove="all" type="text/javascript" src="../../../../js/head.min.js" data-headjs-load="../../../../js/thymol-head.js" data-thymol-parameters="thProtocol="></script-->
+<script th:remove="all" type="text/javascript" src="../../../../js/thymol.js"></script>
+<script th:remove="all" type="text/javascript">
+var thDebug = true;       
+</script>
+<body>
+
+<p th:text="${#dates} ? 'dates exists' : 'dates does not exist'">...</p>
+<!-- <p th:text="${@org.thymeleaf.expression.Dates@class.isAssignableFrom(#dates.class)}">...</p> -->
+
+<p th:text="${#calendars} ? 'calendars exists' : 'calendars does not exist'">...</p>
+<!-- <p th:text="${@org.thymeleaf.expression.Calendars@class.isAssignableFrom(#calendars.class)}">...</p> -->
+
+<p th:text="${#numbers} ? 'numbers exists' : 'numbers does not exist'">...</p>
+<!-- <p th:text="${@org.thymeleaf.expression.Numbers@class.isAssignableFrom(#numbers.class)}">...</p> -->
+
+<p th:text="${#strings} ? 'strings exists' : 'strings does not exist'">...</p>
+<!-- <p th:text="${@org.thymeleaf.expression.Strings@class.isAssignableFrom(#strings.class)}">...</p> -->
+
+<p th:text="${#objects} ? 'objects exists' : 'objects does not exist'">...</p>
+<!-- <p th:text="${@org.thymeleaf.expression.Objects@class.isAssignableFrom(#objects.class)}">...</p> -->
+ 
+<p th:text="${#bools} ? 'bools exists' : 'bools does not exist'">...</p>
+<!-- <p th:text="${@org.thymeleaf.expression.Bools@class.isAssignableFrom(#bools.class)}">...</p> -->
+
+<p th:text="${#arrays} ? 'arrays exists' : 'arrays does not exist'">...</p>
+<!-- <p th:text="${@org.thymeleaf.expression.Arrays@class.isAssignableFrom(#arrays.class)}">...</p> -->
+
+<p th:text="${#lists} ? 'lists exists' : 'lists does not exist'">...</p>
+<!-- <p th:text="${@org.thymeleaf.expression.Lists@class.isAssignableFrom(#lists.class)}">...</p> -->
+
+<p th:text="${#sets} ? 'sets exists' : 'sets does not exist'">...</p>
+<!-- <p th:text="${@org.thymeleaf.expression.Sets@class.isAssignableFrom(#sets.class)}">...</p> -->
+
+<p th:text="${#maps} ? 'maps exists' : 'maps does not exist'">...</p>
+<!-- <p th:text="${@org.thymeleaf.expression.Maps@class.isAssignableFrom(#maps.class)}">...</p> -->
+
+<p th:text="${#aggregates} ? 'aggregates exists' : 'aggregates does not exist'">...</p>
+<!-- <p th:text="${@org.thymeleaf.expression.Aggregates@class.isAssignableFrom(#aggregates.class)}">...</p> -->
+
+<p th:text="${#messages} ? 'messages exists' : 'messages does not exist'">...</p>
+<!-- <p th:text="${@org.thymeleaf.expression.Messages@class.isAssignableFrom(#messages.class)}">...</p> -->
+
+<p th:text="${#ids} ? 'ids exists' : 'ids does not exist'">...</p>
+<!-- <p th:text="${@org.thymeleaf.expression.Ids@class.isAssignableFrom(#ids.class)}">...</p> -->
+</body>
+</html>
+<!--
+
+<p>dates exists</p>
+<p>true</p>
+
+<p>calendars exists</p>
+<p>true</p>
+
+<p>numbers exists</p>
+<p>true</p>
+
+<p>strings exists</p>
+<p>true</p>
+
+<p>objects exists</p>
+<p>true</p>
+
+<p>bools exists</p>
+<p>true</p>
+
+<p>arrays exists</p>
+<p>true</p>
+
+<p>lists exists</p>
+<p>true</p>
+
+<p>sets exists</p>
+<p>true</p>
+
+<p>maps exists</p>
+<p>true</p>
+
+<p>aggregates exists</p>
+<p>true</p>
+
+<p>messages exists</p>
+<p>true</p>
+
+<p>ids exists</p>
+<p>true</p>
+
+-->

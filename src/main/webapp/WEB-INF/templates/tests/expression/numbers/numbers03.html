@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>numbers example 03</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../../js/thymol.js" data-thymol-load="numbers-common.js"></script>
+<body>
+<p th:text="${#numbers.formatInteger(onex, 5, 'POINT')}">...</p>
+<p th:text="${#numbers.formatInteger(twox, 5, 'POINT')}">...</p>
+<p th:text="${#numbers.formatInteger(threex, 5, 'POINT')}">...</p>
+<p th:text="${#numbers.formatInteger(fourx, 5, 'POINT')}">...</p>
+<p th:text="${#numbers.formatInteger(fivex, 5, 'POINT')}">...</p>
+</body>
+</html>
+<!--
+
+<p>00.123</p>
+<p>25.412.315.412.312.412.312.545.213</p>
+<p>00.000</p>
+<p>00.000</p>
+<p>25.412.315.412.312.412.312.545.213</p>
+
+-->

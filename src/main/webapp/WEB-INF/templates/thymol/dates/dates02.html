@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Dates example 02</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js"></script>
+	<script type="text/javascript">
+		thDebug = true;
+        thymol.ready(function () {
+        	thymol.configurePreExecution( function() {
+                thymol.applicationContext.createVariable("twodate", thymol.objects.thDatesObject.create(1732,10,12) );
+        	});
+        });                
+	</script>
+	
+  	<body>
+		<p th:text="${#dates.format(twodate,'dd/MMM/yyyy HH:mm')}">...</p>
+		<p th:text="${#dates.format(twodate,'yyyy-dd/MM')}">...</p>
+		<p th:text="${#dates.format(twodate)}">...</p>
+	</body>
+</html>
+
+<!-- 		<p th:text="${#dates.format(twodate,#dates.dateFormat.masks.isoUtcDateTime)}">...</p> -->
+
+<!--
+
+<p>12/Oct/1732 00:00</p>
+<p>1732-12/10</p>
+<p>Sun Oct 12 1732 00:00:00</p>
+<p>1732-10-11T23:00:00Z</p>
+	
+-->

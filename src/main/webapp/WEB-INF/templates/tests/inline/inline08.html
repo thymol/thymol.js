@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>inline example 08</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="inline-data.js"></script>
+<body>
+<p>before</p>
+<data th:inline="text" th:remove="tag">
+[[${someVar}]]
+</data>
+<p>after</p>
+</body>
+</html>
+<!-- 
+
+<p>before</p>
+Hi there!
+<p>after</p>
+
+ -->

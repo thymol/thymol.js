@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Dates example 13</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="times-data.js"></script>
+	
+  	<body>
+		<p th:text="${#dates.minute(time1)}">...</p>
+		<p th:text="${#dates.minute(time2)}">...</p>
+		<p th:text="${#dates.minute(time3)}">...</p>
+		<p th:text="${#dates.minute(time4)}">...</p>
+		<p>Array of minutes values: <span><!--/*/<th:block th:each="d,dStat : ${#dates.arrayMinute(timeArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Set of minutes values: <span id="sort"><!--/*/<th:block th:each="d,dStat : ${#dates.setMinute(timeSet)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+<p>1732-12/10</p>
+
+-->

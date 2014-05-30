@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 30</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p th:text="${#strings.capitalizeWords(s1)}">...</p>
+		<p th:text="${#strings.capitalizeWords(s2)}">...</p>
+		<p th:text="${#strings.capitalizeWords(s3)}">...</p>
+		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arrayCapitalizeWords(sArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Set of strings: <span id="sort"><!--/*/<th:block th:each="d,dStat : ${#strings.setCapitalizeWords(sSet)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+    <p>the quick brown fox jumps	over the&#x0A;lazy dog</p>
+    <p>&#x09;&#x09;every&#x09;good&#x09;boy&#x09;deserves&#x09;favour&#x09;&#x09;</p>
+    <p>&#x0A;a&#x0A;\"rose\"&#x0A;by&#x0A;any&#x0A;'other'&#x0A;name would n'ere smell&#x0B;as&#x0C;sweet&#x0A;</p>
+
+-->

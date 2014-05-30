@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>remove example 06</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="remove-data.js"></script>
+<body>
+<div th:object="${test}" th:remove="all">
+<span th:text="*{text}">Text</span>
+</div>
+<span>Nothing before this!</span>
+</body>
+</html>

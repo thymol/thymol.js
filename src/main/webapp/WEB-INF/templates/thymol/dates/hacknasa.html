@@ -1,0 +1,414 @@
+<!DOCTYPE html PUBLIC "-//W3C//Dtd XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/Dtd/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <title>NASA - Julian Day Number and Civil Date Calculator</title>
+   <script language="JavaScript" type="text/javascript" src="../style/header.js"></script>
+   <meta name="author" content="F. Espenak" />
+   <meta name="keywords" content="eclipse, lunar, moon, phases, solar, sun, total" />
+   <meta name="description" content="This is NASA's official moon phases page." />
+   <script type="text/javascript" language="JavaScript">
+<!-- hide script from old browsers.  See Copyright Notice at end of file.
+var IGREG = (14+31*(10+12*1582));
+var JGREG = 2299160;
+var civcheck = new Civil(5,23,1948,1);
+var istwo = false;
+function Initialize() {
+  if ((navigator.appName == "Netscape") &&
+      (navigator.appVersion.substring(0,1) == "2")) {
+      alert("Requires browser later than Netscape 2.X\nValues displayed in this browser may be incorrect.");
+      istwo = true;
+  }
+  SetToday(document.ThisForm);
+  SetToday(document.ThatForm);
+  SetDelta();
+}
+function SetToday(form) {
+  var now = new Date();
+  var day = now.getDate();
+  var month = now.getMonth()+1;
+  var year = now.getYear();
+  if (year < 199) {year += 1900};
+  if (year < 2000) {year += 100};
+  form.MonthList.selectedIndex = month-1;
+  form.DayList.selectedIndex = day-1;
+  if (istwo == true) {
+    form.MonthList.selectedIndex = 0;
+    form.DayList.selectedIndex = 0;
+  }
+  form.YearBox.value = year;
+  form.ADBC.selectedIndex = 0;
+  form.JD.value = "not set";
+  form.IGREG=IGREG;
+  form.JGREG=JGREG;
+  EvalJD(form);
+}
+function SetGreg(form) {
+  form.IGREG=IGREG;
+  form.JGREG=JGREG;
+  EvalCiv(form);
+}
+function SetJulian(form) {
+  form.IGREG=1.e30;
+  form.JGREG=1.e30;
+  EvalCiv(form);
+}
+function CancelSubmit(){ return false; }
+function tolong(val) {
+  if (val >= 0) {return Math.floor(val);}
+  else {return Math.ceil(val);}
+}
+function EvalJD(form) {
+  var id = form.DayList.selectedIndex+1;
+  var mm = form.MonthList.selectedIndex+1;
+  var iyyy = tolong(form.YearBox.value);
+  var ysgn = 1-2*form.ADBC.selectedIndex;
+  var jy=ysgn*iyyy, ja, jm, jul;
+  if (iyyy < 1) {
+    alert("Enter positive year, then specify A.D. or B.C.\n(There was no year 0.)")
+    return;
+  }
+  if (jy<0) ++jy;
+  if (mm > 2) jm=mm+1;
+  else { --jy; jm=mm+13;}
+  jul = tolong(Math.floor(365.25*jy)+Math.floor(30.6001*jm)+id+1720995);
+  if (id+31*(mm+12*ysgn*iyyy) >= form.IGREG) {
+    ja = tolong(0.01*jy);
+    jul += 2-ja+tolong(0.25*ja);
+  }
+  form.JD.value = jul;
+  civcheck=caldat(jul,form);
+  SetDoW(form,jul);
+  SetDelta();
+  if (civcheck.mm != mm || civcheck.dd != id || civcheck.yyyy != iyyy
+      || civcheck.ab != ysgn) {
+      form.JD.value = "no such!";
+      form.dayofweek.value = "???";
+      document.Delta.delta.value = "???";
+  }
+}
+function EvalCiv(form) {
+  civcheck=caldat(form.JD.value,form);
+  form.MonthList.selectedIndex = civcheck.mm-1;
+  form.DayList.selectedIndex = civcheck.dd-1;
+  form.YearBox.value = civcheck.yyyy;
+  form.ADBC.selectedIndex = (civcheck.ab>0 ? 0 : 1) ;
+  SetDoW(form,Math.round(form.JD.value));
+  SetDelta();
+  }
+function Civil(mm,dd,yyyy,ab) {
+  this.mm=mm; this.dd=dd; this.yyyy=yyyy; this.ab=ab;
+}
+function caldat(julian,form) {
+  var civ = new Civil(5,23,1948,1);
+  var ja,jalpha,jb,jc,jd,je;
+  julian = tolong(julian);
+  if (julian > form.JGREG) {
+    jalpha = tolong(((julian-1867216)-0.25)/36524.25);
+    ja=julian+1+jalpha-tolong(0.25*jalpha);
+  } else { ja = julian; }
+  jb=ja+1524;
+  jc=tolong(6680+((jb-2439870)-122.1)/365.25);
+  jd=tolong(365*jc+0.25*jc);
+  je=tolong((jb-jd)/30.6001);
+  civ.dd=jb-jd-tolong(30.6001*je);
+  civ.mm=je-1
+  if (civ.mm>12) civ.mm -= 12;
+  civ.yyyy=jc-4715;
+  if (civ.mm>2) --civ.yyyy;
+  civ.ab=1;
+  if (civ.yyyy <= 0) { civ.yyyy=1-civ.yyyy; civ.ab=-1;}
+  return civ;
+}
+/* for older browsers: */
+dowstr = new Object;
+dowstr[0]="Sunday";
+dowstr[1]="Monday";
+dowstr[2]="Tuesday";
+dowstr[3]="Wednesday";
+dowstr[4]="Thursday";
+dowstr[5]="Friday";
+dowstr[6]="Saturday";
+function SetDoW(form,jull) {
+/*  var dowstr = new Array("Sun","Mon","Tue","Wed","Thu","Fri","Sat"); */
+  var dow=Math.round((jull+1) % 7);
+  form.dayofweek.value=dowstr[dow];  
+}
+function SetDelta() {
+  var diff = parseFloat(document.ThatForm.JD.value)
+    - parseFloat(document.ThisForm.JD.value);
+  document.Delta.delta.value = "  "+diff;
+}
+function SetDiff() {
+  document.ThatForm.JD.value =
+    Math.round(parseFloat(document.ThisForm.JD.value)
+    + parseFloat(document.Delta.delta.value));
+  EvalCiv(document.ThatForm);
+}
+// end hiding script from old browsers -->
+   </script>
+</head>
+
+<body class="lnfiveon">
+<script language="JavaScript" type="text/javascript" src="../style/highlighter.js"></script>
+
+<script language="JavaScript" type="text/javascript" src="../style/navbar.js"></script>
+<noscript>
+<h1><a href="http://www.nasa.gov/">NASA (National Aeronautics and Space Administration)</a></h1>
+<ul>
+   <li id="one"><a href="../eclipse.html"><span>Home</span></a></li>
+   <li id="two"><a href="../solar.html"><span>Solar Eclipses</span></a></li>
+   <li id="three"><a href="../lunar.html"><span>Lunar Eclipses</span></a></li>
+   <li id="four"><a href="../transit/transit.html"><span>Planetary Transits</span></a></li>
+   <li id="five"><a href="../TYPE/TYPE.html"><span>12-Year Ephemeris</span></a></li>
+   <li id="six"><a href="../phase/phase2001gmt.html"><span>Moon Phases</span></a></li>
+</ul>
+<h1><a href="../eclipse.html">Eclipse Home Page</a></h1>
+<h2>by Fred Espenak, GSFC Planetary Systems Laboratory</h2>
+</noscript>
+
+<div id="contentwrapper">
+<div id="singlecolumn">
+
+<h1 class="box">Julian day Number and Civil Date Calculator</h1>
+
+<table border="0" cellspacing="0" cellpadding="5" width="100" align="center">
+<tr>
+<td>
+<form name="ThisForm">
+<table cellspacing="0">
+<tr>
+<td><select name="MonthList" onchange="EvalJD(document.ThisForm)">
+<option selected="selected">Jan</option>
+<option>Feb</option>
+<option>Mar</option>
+<option>Apr</option>
+<option>May</option>
+<option>Jun</option>
+<option>Jul</option>
+<option>Aug</option>
+<option>Sep</option>
+<option>Oct</option>
+<option>Nov</option>
+<option>Dec</option>
+</select></td>
+<td><b><select name="DayList" onchange="EvalJD(document.ThisForm)">
+<option selected="selected">1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+<option>6</option>
+<option>7</option>
+<option>8</option>
+<option>9</option>
+<option>10</option>
+<option>11</option>
+<option>12</option>
+<option>13</option>
+<option>14</option>
+<option>15</option>
+<option>16</option>
+<option>17</option>
+<option>18</option>
+<option>19</option>
+<option>20</option>
+<option>21</option>
+<option>22</option>
+<option>23</option>
+<option>24</option>
+<option>25</option>
+<option>26</option>
+<option>27</option>
+<option>28</option>
+<option>29</option>
+<option>30</option>
+<option>31</option>
+</select></b></td>
+<td><input type="text" name="YearBox" size="4"
+onblur="EvalJD(document.ThisForm)" /></td>
+<td><select name="ADBC" onchange="EvalJD(document.ThisForm)">
+<option selected="selected">A.D.</option>
+<option>B.C.</option>
+</select></td>
+<td>is&nbsp;a</td>
+<td><input type="text" name="dayofweek" size="9"
+onchange="EvalJD(document.ThisForm)" /></td>
+</tr>
+
+<tr>
+<td colspan="5" align="right">&nbsp;whose Julian Day Number
+is&nbsp;</td>
+<td><input type="text" name="JD" size="8"
+onblur="EvalCiv(document.ThisForm)" /></td>
+</tr>
+
+<tr>
+<td colspan="6">Calendar: <input type="radio" name="thiscal"
+value="auto" checked="checked"
+onclick="SetGreg(document.ThisForm)" />Auto (Julian/Gregorian)
+<input type="radio" name="thiscal" value="julian"
+onclick="SetJulian(document.ThisForm)" />Julian Only</td>
+</tr>
+</table>
+</form>
+</td>
+</tr>
+
+<tr align="center" valign="center">
+<td>(Edit the following field for interval calculations.)<br />
+<form name="Delta" onsubmit="CancelSubmit()">is followed <input
+type="text" name="delta" size="10" onblur="SetDiff()"
+onchange="SetDiff()" />days later by</form>
+</td>
+</tr>
+
+<tr>
+<td>
+<form name="ThatForm">
+<table cellspacing="0">
+<tr>
+<td><select name="MonthList" onchange="EvalJD(document.ThatForm)">
+<option selected="selected">Jan</option>
+<option>Feb</option>
+<option>Mar</option>
+<option>Apr</option>
+<option>May</option>
+<option>Jun</option>
+<option>Jul</option>
+<option>Aug</option>
+<option>Sep</option>
+<option>Oct</option>
+<option>Nov</option>
+<option>Dec</option>
+</select></td>
+<td><b><select name="DayList" onchange="EvalJD(document.ThatForm)">
+<option selected="selected">1</option>
+<option>2</option>
+<option>3</option>
+<option>4</option>
+<option>5</option>
+<option>6</option>
+<option>7</option>
+<option>8</option>
+<option>9</option>
+<option>10</option>
+<option>11</option>
+<option>12</option>
+<option>13</option>
+<option>14</option>
+<option>15</option>
+<option>16</option>
+<option>17</option>
+<option>18</option>
+<option>19</option>
+<option>20</option>
+<option>21</option>
+<option>22</option>
+<option>23</option>
+<option>24</option>
+<option>25</option>
+<option>26</option>
+<option>27</option>
+<option>28</option>
+<option>29</option>
+<option>30</option>
+<option>31</option>
+</select></b></td>
+<td><input type="text" name="YearBox" size="4"
+onblur="EvalJD(document.ThatForm)" /></td>
+<td><select name="ADBC" onchange="EvalJD(document.ThatForm)">
+<option selected="selected">A.D.</option>
+<option>B.C.</option>
+</select></td>
+<td>is&nbsp;a</td>
+<td><input type="text" name="dayofweek" size="9"
+onchange="EvalJD(document.ThatForm)" /></td>
+</tr>
+
+<tr>
+<td colspan="5" align="right">&nbsp;whose Julian Day Number
+is&nbsp;</td>
+<td><input type="text" name="JD" size="8"
+onblur="EvalCiv(document.ThatForm)" /></td>
+</tr>
+
+<tr>
+<td colspan="6">Calendar: <input type="radio" name="thatcal"
+value="auto" checked="checked"
+onclick="SetGreg(document.ThatForm)" />Auto (Julian/Gregorian)
+<input type="radio" name="thatcal" value="julian"
+onclick="SetJulian(document.ThatForm)" />Julian Only</td>
+</tr>
+</table>
+</form>
+</td>
+</tr>
+
+<tr>
+<td colspan="6">
+<ol>
+<li>You must have JavaScript enabled in your browser for this
+calculator to work. Requires Netscape 3.0 or Internet Explorer 3.0
+or later for correct operation.</li>
+
+<li>All fields are editable. Change civil date to calculate Julian
+Day Number and day-of-week, or vice versa.</li>
+
+<li>After changing a text box, click outside of the calculator, or
+press tab, to update all other data. (Don't press return.)</li>
+
+<li>In Auto mode, civil calendar changes from Julian to Gregorian
+between October 4/15, 1582. For Julian civil dates after that date,
+as in England and colonies until 1753, select Julian Only.</li>
+</ol>
+</td>
+</tr>
+</table>
+
+<p>Copyright (C) 1998 by Numerical Recipes Software. Permission is
+granted for unlimited copying and redistribution, provided that
+this copyright notice, and the following link are preserved. All
+calculations are embedded as JavaScript, so an exact copy of <a
+href="julian.txt">this page's source code</a> will generally work
+from any server (no CGI script needed).</p>
+
+<p align="center"><a href="http://www.nr.com" target="_blank">Numerical Recipes home page</a></p>
+
+<script language="JavaScript" type="text/javascript">
+   <!--
+   document.write('</div>');
+   -->
+</script>
+</div>
+</div>
+
+<script language="JavaScript" type="text/javascript" src="../style/footer-1.js"></script>
+2005 July 11
+<script language="JavaScript" type="text/javascript" src="../style/footer-2.js"></script>
+<noscript>
+<hr class="blue" />
+<h3 align="center">Go to <a href="../solar.html">NASA Solar Eclipse
+Page</a></h3>
+<h3 align="center">Go to <a href="../lunar.html">NASA Lunar Eclise Page</a></h3>
+<h3 align="center">Go to <a href="../transit/transit.html">NASA Planetary Transit Page</a></h3>
+<h3 align="center">Go to <a href="../resource.html">NASA Eclipse Resource Page</a></h3>
+<hr class="blue" />
+<table border="5" cellspacing="5" align="center">
+<tr>
+<th>
+<table align="center"><tr><td><img src="../image/NASAlogo.tiny.gif" alt="NASA logo" /></td>
+<td><p>Webmaster: Fred Espenak<br />
+Email: <a href="mailto:espenak@gsfc.nasa.gov">espenak@gsfc.nasa.gov</a></p>
+<p>Official NASA Representative: Dr. Drake Deming<br />
+Email: <a
+href="mailto:ddeming@pop600.gsfc.nasa.gov">ddeming@pop600.gsfc.nasa.gov</a></p></td></tr>
+</table>
+<p align="center">Planetary Systems Laboratory &#8211; Code 693.0<br />
+NASA's Goddard Space Flight Center, Greenbelt, Maryland 20771, USA</p>
+</th>
+</tr>
+</table>
+</noscript>
+
+</body>
+</html>

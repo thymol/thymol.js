@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>tests21 parsing example 07a derived from parsing07.thtest</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="parsing-data.js"></script>
+<body>
+<table>
+  <tbody>
+	  <!--/*/ <th:block th:each="c : ${caps}"> /*/-->
+	  <tr>
+	    <td th:text="${c['city']}">City</td>
+	  </tr>
+	  <tr>
+	    <td th:text="${c['country']}">Country</td>
+	  </tr>
+	  <!--/*/ </th:block> /*/-->
+	  <!--/*-->
+	  <tr>
+	    <td>Another city</td>
+	  </tr>
+	  <tr>
+	    <td>Another country</td>
+	  </tr>
+	  <tr>
+	    <td>Another city more</td>
+	  </tr>
+	  <tr>
+	    <td>Another country more</td>
+	  </tr>
+	  <!--*/-->
+  </tbody>
+</table>
+</body>
+</html>
+<!--
+
+<table>
+  <tr>
+    <td>Madrid</td>
+  </tr>
+  <tr>
+    <td>Spain</td>
+  </tr>
+  <tr>
+    <td>Lisboa</td>
+  </tr>
+  <tr>
+    <td>Portugal</td>
+  </tr>
+  <tr>
+    <td>Paris</td>
+  </tr>
+  <tr>
+    <td>France</td>
+  </tr>
+</table>
+
+-->

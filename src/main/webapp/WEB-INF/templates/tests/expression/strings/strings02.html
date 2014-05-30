@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>strings example 01</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../../js/thymol.js" data-thymol-load="strings-common.js"></script>
+<script th:remove="all" type="text/javascript">
+thymol.ready(function () {
+	thymol.configurePreExecution( function() {
+		thymol.applicationContext.createVariable("anotherOney", "one");
+		thymol.applicationContext.createVariable("anotherOne2y", "oneone");
+		thymol.applicationContext.createVariable("anotherTwoy", "TWO");
+		thymol.applicationContext.createVariable("anully", null);
+	});
+});                
+</script>
+<body>
+<p th:text="${#strings.concat(oney, anotherOney)}">...</p>
+<p th:text="${#strings.concat(oney, anotherOne2y)}">...</p>
+<p th:text="${#strings.concat(twoy, anotherTwoy)}">...</p>
+<p th:text="${#strings.concatReplaceNulls('**', null, oney, null)}">...</p>
+<p th:text="${#strings.concatReplaceNulls('**', 'one', null, 'two')}">...</p>
+</body>
+</html>
+<!--
+
+<p>oneone</p>
+<p>oneoneone</p>
+<p>twoTWO</p>
+# If it weren't for the mentioned OGNL bug, results should be the following:
+#<p>**one**</p>
+#<p>one**two</p>
+# But while this OGNL bug exists results will be:
+<p>one</p>
+<p>onetwo</p>
+
+-->

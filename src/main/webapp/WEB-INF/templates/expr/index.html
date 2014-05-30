@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>Invocation list for expressions example</title>
+	</head>
+	<body>
+			<p>ex5 links<p>
+			<ul>
+				<li><a href="ex5.html">Click here for "ex5.html" no parameters</a></li>
+				<li><a href="ex5.html?visited=true">Click here for "ex5.html?visited=true"</a></li>
+				<li><a href="ex5.html?firstName='Solly'&amp;visited=false">Click here for "ex5.html?firstName='Solly'&amp;visited=false"</a></li>
+				<li><a href="ex5.html?firstName='junk'&amp;visited=false">Click here for "ex5.html?firstName='junk'&amp;visited=false"</a></li>
+			</ul>
+			<p>ex6 links<p>
+			<ul>
+				<li><a href="ex6.html">Click here for "ex6.html" no parameters</a></li>
+				<li><a href="ex6.html?visited=true">Click here for "ex6.html?visited=true"</a></li>
+				<li><a href="ex6.html?visited=false">Click here for "ex6.html?visited=false"</a></li>
+				<li><a href="ex6.html?visited=junk">Click here for "ex6.html?visited=junk"</a></li>
+				<li><a href="ex6.html?firstName='Fred'">Click here for "ex6.html?firstName='Fred'"</a></li>
+				<li><a href="ex6.html?firstName='Solly'">Click here for "ex6.html?firstName='Solly'"</a></li>
+				<li><a href="ex6.html?firstName='junk'">Click here for "ex6.html?firstName='junk'"</a></li>
+				<li><a href="ex6.html?firstName='Fred'&amp;visited=true">Click here for "ex6.html?firstName='Fred'&amp;visited=true"</a></li>
+				<li><a href="ex6.html?firstName='Solly'&amp;visited=true">Click here for "ex6.html?firstName='Solly'&amp;visited=true"</a></li>
+				<li><a href="ex6.html?firstName='junk'&amp;visited=true">Click here for "ex6.html?firstName='junk'&amp;visited=true"</a></li>
+				<li><a href="ex6.html?firstName='Fred'&amp;visited=false">Click here for "ex6.html?firstName='Fred'&amp;visited=false"</a></li>
+				<li><a href="ex6.html?firstName='Solly'&amp;visited=false">Click here for "ex6.html?firstName='Solly'&amp;visited=false"</a></li>
+				<li><a href="ex6.html?firstName='junk'&amp;visited=false">Click here for "ex6.html?firstName='junk'&amp;visited=false"</a></li>
+			</ul>
+			<p>ex7 links<p>
+			<ul>
+				<li><a href="ex7.html">Click here for "ex7.html" no parameters</a></li>
+				<li><a href="ex7.html?visited=true">Click here for "ex7.html?visited=true"</a></li>
+				<li><a href="ex7.html?visited=false">Click here for "ex7.html?visited=false"</a></li>
+				<li><a href="ex7.html?visited=junk">Click here for "ex7.html?visited=junk"</a></li>
+				<li><a href="ex7.html?firstFile=fred&visited=true">Click here for "ex7.html?firstFile=fred&visited=true"</a></li>
+				<li><a href="ex7.html?firstFile=fred&visited=false">Click here for "ex7.html?firstFile=fred&visited=false"</a></li>
+				<li><a href="ex7.html?firstFile=fred&visited=junk">Click here for "ex7.html?firstFile=fred&visited=junk"</a></li>
+				<li><a href="ex7.html?firstFile=footer&visited=true">Click here for "ex7.html?firstFile=footer&visited=true"</a></li>
+				<li><a href="ex7.html?firstFile=footer&visited=false">Click here for "ex7.html?firstFile=footer&visited=false"</a></li>
+				<li><a href="ex7.html?firstFile=footer&visited=junk">Click here for "ex7.html?firstFile=footer&visited=junk"</a></li>
+				<li><a href="ex7.html?firstFile=footer&secondFile=other&visited=true">Click here for "ex7.html?firstFile=footer&secondFile=other&visited=true"</a></li>
+				<li><a href="ex7.html?firstFile=footer&secondFile=other&visited=false">Click here for "ex7.html?firstFile=footer&secondFile=other&visited=false"</a></li>
+				<li><a href="ex7.html?firstFile=footer&secondFile=other&visited=junk">Click here for "ex7.html?firstFile=footer&secondFile=other&visited=junk"</a></li>
+			</ul>
+			<p>failsafe cases<p>
+			<ul>
+				<li><a href="ex7.html?firstFile=footer&firstName='Fred'&visited=true">Click here for "ex7.html?firstFile=footer&firstName='Fred'&visited=true"</a></li>
+				<li><a href="ex7.html?secondFile=other&firstName='Fred'&visited=true">Click here for "ex7.html?secondFile=other&firstName='Fred'&visited=true"</a></li>
+				<li><a href="ex7.html?firstFile=footer&secondFile=other&firstName='Fred'&visited=true">Click here for "ex7.html?firstFile=footer&secondFile=other&firstName='Fred'&visited=true"</a></li>
+			</ul>
+			<p>remove cases<p>
+			<ul>
+				<li><a href="ex8-1.html?text=Hi%20there!">Click here for "ex8-1.html?text=Hi%20there!"</a></li>
+				<li><a href="ex8-2.html?text=Hi%20there!">Click here for "ex8-2.html?text=Hi%20there!"</a></li>
+				<li><a href="ex8-3.html?text=Hi%20there!">Click here for "ex8-3.html?text=Hi%20there!"</a></li>
+				<li><a href="ex8-4.html?text=Hi%20there!">Click here for "ex8-4.html?text=Hi%20there!"</a></li>
+				<li><a href="ex8-5.html?text=Hi%20there!">Click here for "ex8-5.html?text=Hi%20there!"</a></li>
+				<li><a href="ex8-6.html?text=Hi%20there!">Click here for "ex8-6.html?text=Hi%20there!"</a></li>
+			</ul>
+			<br/><br/>
+			<p><a href="../index.html">Back</a></p>
+	</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Arrays example 06</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="arrays-data.js"></script>
+	
+  	<body>
+		<p th:text="${#arrays.contains(ar1,57)}">...</p>
+		<p th:text="${#arrays.contains(ar5,'fifty-seven')}">...</p>
+		<p th:text="${#arrays.contains(ar9,57)}">...</p>
+		<p th:text="${#arrays.contains(ar11,'fifty-seven')}">...</p>
+	</body>
+
+</html>
+
+<!--
+
+
+-->

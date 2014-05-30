@@ -1,0 +1,68 @@
+Template Resolution
+-------------------
+
+One of the many useful features of Thymeleaf is the TemplateResolver, the mechanism by which templates are located in a web application.
+At them moment, Thymol has no such facility but takes a much simpler approach.
+
+A Thymeleaf template locator takes the form: "template-name::fragment-name".
+
+Thymol treats all template-name references as relative file locations, they will be relative to either a (user) defined root directory or relative to the enclosing file's directory location. 
+    
+After parameter processing, Thymol resolves template locators as follows:
+
+	If a template-name starts with a period character ('.'), the entire URI is treated as a path relative to the directory of the template containing the reference.
+	
+		e.g. template-name values like "./pages/header/foobar" or "../parent/sibling1/other" are treated as child or cousin directory tree references as the host operating system would treat them.
+		
+	If a template-name doesn't start with a '.', but it contains no path separator characters ('/'), it's also treated as relative to the enclosing file's directory.
+	
+	    e.g. template-name references like "family" are treated as siblings of the current template, "dynasty/bloggs" are treated as being relative to root. 
+
+Root Directory Specification
+----------------------------
+
+Thymol provides two parameters that are used to specify the location to be applied to root relative resolved templates. These parameters are thRoot and thPath. Like other Thymol parameters, they 
+may be set as javascript variables or (more unusually) as request parameters.
+
+When a root relative path is required during template resolution, Thymol uses the concatenation of thRoot + thPath + template-name + ".html" to construct the final file URI.
+
+The usual way of defining these values is by setting either or both values in javascript source file(s) and importing the file(s).
+
+	var	thRoot="D:/projects/thymol/distr/Webcontent";
+	var	thPath="examples/thymol-example/hierarchy";
+    
+It's common practice to use separate files to set thRoot and thPath, using thRoot as a project wide setting, and thPath to set a finer grain value for groups of related files within a project.
+
+Browser Constraints
+-------------------
+As Thymol is intended for use in a static (non web container) environment, it uses "file:" protocol URIs to access templates. The accessibility of referenced
+templates is subject to the constraints imposed by the javascript host within which Thymol is being executed, this is normally a web-browser.
+To view Thymeleaf templates using Thymol your browser must be configured to allow access to local (file-store) files.
+
+Firefox:
+
+"go into your FF 3.0 config panel (type 'about:config') and set the following property to 'false' by double clicking on it:
+
+security.fileuri.strict_origin_policy"
+
+(Thanks to http://jquery-howto.blogspot.co.uk/2008/12/access-to-restricted-uri-denied-code.html)
+
+Chrome:
+
+The simplest way to enable local file access is to add the "allow-file-access-from-files" command line parameter to your Chrome start-up command:
+
+	e.g. <path-to-chrome-home>chrome.exe --allow-file-access-from-files
+
+Internet Explorer:
+
+	Local file access is enabled by default by Internet Explorer
+
+(Need to take advice on configuring Safari, Opera etc..)
+ 
+Known Limitations of include/substituteby
+-----------------------------------------
+
+You cannot use th:substituteby to replace the content of the head element of an html file using the Chrome browser, if possible, use th:include instead.
+
+
+

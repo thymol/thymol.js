@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>if example 05</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="if-data.js"></script>
+<body>
+Text before
+
+<div th:if="${value13}"> 
+    First value
+</div>
+
+<div th:if="${value14}"> 
+    Second value
+</div>
+
+<div th:if="${value15}"> 
+    Third value
+</div>
+
+<div th:if="${value16}"> 
+    Fourth value
+</div>
+
+<div th:if="${value17}"> 
+    Fifth value
+</div>
+
+Text after 
+</body>
+<!-- 
+Text before
+
+<div> 
+    First value
+</div>
+
+<div> 
+    Second value
+</div>
+
+<div> 
+    Fifth value
+</div>
+
+Text after 
+-->
+</html>

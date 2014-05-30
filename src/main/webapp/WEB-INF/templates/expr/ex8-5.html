@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>remove example 05</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../js/thymol.js"></script>
+<body>
+	<div th:remove="all-but-first">
+		<!-- This will be a bit weird because only the bold text will be removed
+         (it is the only element) -->
+		Some text here and counting: <b>one</b>, <b>two</b>, three
+	</div>
+</body>
+</html>

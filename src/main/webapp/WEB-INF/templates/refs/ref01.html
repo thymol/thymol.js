@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>refs example 01</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../js/thymol.js" data-thymol-load="ref-data.js"></script>
+<body>
+Text before
+<div th:if="${person.father == person['father']}" th:text="'Is Equal 1'">
+    Not equal
+</div>
+<div th:if="${person['father'] == person.father}" th:text="'Is Equal 2'">
+    Not equal
+</div>
+<div th:if="${person.father.name == person['father']['name']}" th:text="'Is Equal 3'"> 
+    Not equal
+</div>
+<div th:if="${person.father.name == person.father['name']}" th:text="'Is Equal 4'">
+    Not equal
+</div>
+<div th:if="${person.father.name == person.father.name}" th:text="'Is Equal 4a'">
+    Not equal
+</div>
+<div th:if="${person['father']['name'] == person['father'].name}" th:text="'Is Equal 4b'">
+    Not equal
+</div>
+<div th:if="${person['father'].name == person.father['name']}" th:text="'Is Equal 5'"> 
+    Not equal
+</div>
+<div th:if="${person['father']['name'] == person.father.name}" th:text="'Is Equal 5a'">
+    Not equal
+</div>
+Text after 
+</body>
+</html>
+<!-- 
+
+Text before
+<div>Is Equal 1</div>
+<div>Is Equal 2</div>
+<div>Is Equal 3</div>
+<div>Is Equal 4</div>
+<div>Is Equal 4a</div>
+<div>Is Equal 4b</div>
+<div>Is Equal 5</div>
+<div>Is Equal 5a</div>
+Text after 
+
+ -->
+
+

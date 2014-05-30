@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>each example 06</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="each-data.js"></script>
+<body>
+<div th:each="entry :${map}" th:text="${entry}"></div>
+</body>
+</html>
+<!--
+
+<div>MILLISECONDS=2</div><div>SECONDS=1</div>
+
+-->

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<title>Messages example 05</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="messages-data.js"></script>
+	
+<body>
+<span th:text="${#messages.msgOrNullWithParams('msg02',var04)}">Some text</span><br/>
+<span th:text="${#messages.msgOrNullWithParams('msg03',var04)}">Some text</span><br/>
+<span th:text="${#messages.msgOrNullWithParams('msg04',var04)}">Some text</span><br/>
+<span th:text="${#messages.msgOrNullWithParams('msg02',var05)}">Some text</span><br/>
+<span th:text="${#messages.msgOrNullWithParams('msg03',var05)}">Some text</span><br/>
+<span th:text="${#messages.msgOrNullWithParams('msg04',var05)}">Some text</span><br/>
+<span th:text="${#messages.msgOrNullWithParams('msg02',var06)}">Some text</span><br/>
+<span th:text="${#messages.msgOrNullWithParams('msg03',var06)}">Some text</span><br/>
+<span th:text="${#messages.msgOrNullWithParams('msg04',var06)}">Some text</span><br/>
+<span th:text="${#messages.msgOrNullWithParams('msg99',var06)}">Some text</span><br/>
+</body>
+
+</html>
+
+<!--
+
+
+-->

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 15</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p th:text="${#strings.append('A Big ',p1)}">...</p>
+		<p th:text="${#strings.append('Un Grand ',p2)}">...</p>
+		<p th:text="${#strings.append('Una Gran ',p3)}">...</p>
+		<p th:text="${#strings.append('',p4)}">...</p>
+		<p th:text="${#strings.append(p1,' from Everyone!')}">...</p>
+		<p th:text="${#strings.append(p2,' de tout le monde!')}">...</p>
+		<p th:text="${#strings.append(p3,' de todos!')}">...</p>
+		<p th:text="${#strings.append(#strings.substring(p4,0,5),' denek mundu!')}">...</p>
+		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arrayAppend(pArray,'!')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+ 		<p>Set of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.setAppend(pSet,p1)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+		<p>A Big Hello world!</p>
+		<p>Un Grand Bonjour tout le monde!</p>
+		<p>Una Gran Hola mundo!</p>
+		<p>Kaixo mundua!</p>
+		<p>Hello world! from Everyone!</p>
+		<p>Bonjour tout le monde! de tout le monde!</p>
+		<p>Hola mundo! de todos!</p>
+		<p>Kaixo denek mundu!</p>
+		<p>Array of strings: <span>Bonjour tout le monde!!,Hello world!!,Hola mundo!!,Kaixo mundua!!</span></p>		 
+ 		<p>Set of strings: <span>Bonjour tout le monde!Hello world!,Hello world!Hello world!,Hola mundo!Hello world!,Kaixo mundua!Hello world!</span></p>
+
+-->

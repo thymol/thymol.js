@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>expression example 04</title>
+</head>
+
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js"></script>
+<script th:remove="all" type="text/javascript">
+	thDebug=true;
+</script>
+<body>
+<p th:text="${param.a.class.name}">...</p>
+<p th:text="${param.a.length}">...</p>
+<p th:text="${param.a[0]}">...</p>
+<p th:text="${param.b.class.name}">...</p>
+<p th:text="${param.b.length}">...</p>
+<p th:text="${param.b[0]}">...</p>
+<p th:text="${param.c.class.name}">...</p>
+<p th:text="${param.c.length}">...</p>
+<p th:text="${param.c[0]}">...</p>
+<p th:text="${param.c[1]}">...</p>
+<p th:text="${param.c[2]}">...</p>
+</body>
+</html>
+<!--
+
+<p>[Ljava.lang.String;</p>
+<p>1</p>
+<p>Some text</p>
+<p>[Ljava.lang.String;</p>
+<p>1</p>
+<p>123</p>
+<p>[Ljava.lang.String;</p>
+<p>3</p>
+<p>Hello</p>
+<p>World</p>
+<p>0</p>
+
+-->

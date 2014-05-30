@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<script th:remove="all" type="text/javascript" src="../../js/head.min.js" data-headjs-load="../../js/thymol-head.js" data-thymol-parameters="thProtocol=" data-thymol-load="thymol-project.js"></script>
+<body>
+
+<div class="container">
+
+<!--     <div th:include="/fragments/bodyHeader :: bodyHeader"></div> -->
+    
+    <h2>Owners</h2>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th style="width: 150px;">Name</th>
+                <th style="width: 200px;">Address</th>
+                <th>City</th>
+                <th>Telephone</th>
+                <th style="width: 100px;">Pets</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="owner : ${selections}">
+                <td><!-- th:href="@{'/owners/' + ${owner.id}}"  doesn't work! -->
+                    <a href="ownerDetails.html"
+                       th:href="@{'/owners/' + ${owner.id}}" 
+                       th:text="${owner.firstName + ' ' + owner.lastName}">Mary Smith</a>
+                </td>
+                <td th:text="${owner.address}">461, Ocean Boulevard</td>
+                <td th:text="${owner.city}">Golden Beach, Florida</td>
+                <td th:text="${owner.telephone}">555-555-555</td>
+                <td>
+                    <span th:each="pet : ${owner.pets}" th:text="${pet.name}" th:remove="tag">
+                       Rob&nbsp;
+                    </span>
+                </td>
+            </tr>
+        </tbody>
+    </table>    
+    
+<!--     <table th:substituteby="fragments/footer :: footer" class="footer"></table> -->
+
+</div>
+
+</body>
+
+</html>

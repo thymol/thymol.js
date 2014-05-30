@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 18</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p th:text="${#strings.indexOf(p1,'o')}">...</p>
+		<p th:text="${#strings.indexOf(p2,'x')}">...</p>
+		<p th:text="${#strings.indexOf(p3,'o')}">...</p>
+		<p th:text="${#strings.indexOf(p4,'Kaixo mundua!')}">...</p>
+		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arrayIndexOf(pArray,'o')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+ 		<p>Set of strings: <span id="sort"><!--/*/<th:block th:each="d,dStat : ${#strings.setIndexOf(pSet,'!')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+		<p>4</p>
+		<p>-1</p>
+		<p>1</p>
+		<p>0</p>
+		<p>Array of strings: <span>1,4,1,4</span></p>		 
+ 		<p>Set of strings: <span id="sort">10,11,12,21</span></p>
+
+-->

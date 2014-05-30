@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<title>simple iframes example</title>
+		<style type="text/css">
+			.red-text {color:red;}
+			.big-text {font-size:xx-large;}
+			.underlined-text {text-decoration:underline;}
+			body iframe {border-style: none; margin: 0px; overflow-y: visible;}
+		</style>
+	</head>
+	<body>
+		<div class="red-text">
+			<div class="big-text">
+				<div class="underlined-text">
+					<div th:include="footer::copy">
+						    <iframe src="footer.html">Your browser does not support iframes</iframe>
+					</div>
+				</div>
+			</div>
+			<div th:include="footer::copy">
+					<iframe src="footer.html">Your browser does not support iframes</iframe>
+			</div>
+		</div>
+	</body>
+</html>

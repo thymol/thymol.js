@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>ctx example 02</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../../js/thymol.js"></script>
+<script th:remove="all" type="text/javascript">
+var	thVars = [        
+   	   	  	["a",	"Letter A"],
+ 	   	  	["b",	"Letter B"]
+       ];
+var thDebug = true;       
+</script>
+<body>
+<p th:text="${#ctx.variables.a}">...</p>
+<p th:text="${#ctx.variables.b}">...</p>
+</body>
+</html>
+<!--
+
+<p th:text="${#ctx.variables.class == null}">...</p>
+
+<p>ctx.variables exists</p>
+<p>true</p>
+<p>Letter A</p>
+<p>Letter B</p>
+
+-->

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 35b</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-jquery-src="../../../../../bower_components/jquery/dist/jquery.min.js" data-thymol-load="strings-data2.js"></script>
+	
+  	<body>
+		<p th:text="${#strings.escapeJava(s1)}">...</p>
+		<p th:text="${#strings.escapeJava(s2)}">...</p>
+		<p th:text="${#strings.escapeJava(s3)}">...</p>
+		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arrayEscapeJava(sArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Set of strings: <span id="sort"><!--/*/<th:block th:each="d,dStat : ${#strings.setEscapeJava(sSet)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+-->

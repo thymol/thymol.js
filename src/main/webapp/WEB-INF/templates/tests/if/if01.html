@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>if example 01</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="if-data.js"></script>
+<body>
+Text before
+<div th:if="${user.age > 24}"> 
+    Bigger
+</div>
+<div th:if="${user.age} > 24"> 
+    Bigger
+</div>
+<div th:if="${user.age} > 24.0"> 
+    Bigger
+</div>
+<div th:if="${user.age >= 24}"> 
+    Or equal
+</div>
+<div th:if="${user.age} >= 24"> 
+    Or equal
+</div>
+<div th:if="${user.age} >= 24.0"> 
+    Or equal
+</div>
+Text after 
+</body>
+<!-- 
+ext before
+<div> 
+    Or equal
+</div>
+<div> 
+    Or equal
+</div>
+<div> 
+    Or equal
+</div>
+Text after 
+ -->
+</html>

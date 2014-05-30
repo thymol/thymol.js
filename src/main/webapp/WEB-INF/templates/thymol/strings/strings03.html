@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 03</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p th:text="${#strings.equals(p1,'Hello world!')}">...</p>
+		<p th:text="${#strings.equals(p2,'Bonjour tout le Monde!')}">...</p>
+		<p th:text="${#strings.equals(p3,'Hola mundo!')}">...</p>
+		<p th:text="${#strings.equals(p4,'Kaixo Mundua!')}">...</p>
+	</body>
+
+</html>
+
+<!--
+
+		<p>true</p>
+		<p>false</p>
+		<p>true</p>
+		<p>false</p>
+
+-->

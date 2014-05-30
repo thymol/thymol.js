@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 06</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p th:text="${#strings.containsIgnoreCase(p1,'OR')}">...</p>
+		<p th:text="${#strings.containsIgnoreCase(p2,'B')}">...</p>
+		<p th:text="${#strings.containsIgnoreCase(p3,'A')}">...</p>
+		<p th:text="${#strings.containsIgnoreCase(p4,'k')}">...</p>
+		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arrayContainsIgnoreCase(pArray,'X')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Set of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.setContainsIgnoreCase(pSet,'Y')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+		<p>true</p>
+		<p>true</p>
+		<p>true</p>
+		<p>true</p>
+		<p>Array of strings: <span>false,false,false,true</span></p>		 
+		<p>Set of strings: <span>false</span></p>
+
+-->

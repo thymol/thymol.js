@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 21</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arraySplit(#strings.arrayJoin(pArray,' and '),' and ')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Another array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arraySplit(#strings.arrayJoin(#strings.arraySubstringAfter(pArray,'o'),' &amp; '),' &amp; ')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Set of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.setSplit(#strings.setJoin(pSet,' and '),' and ')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Another set of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.setSplit(#strings.setJoin(#strings.setSubstringAfter(pSet,'o'),' &amp; '),' &amp; ')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+	</body>
+
+</html>
+
+<!--
+
+		<p>Array of strings: <span>Bonjour tout le monde!,Hello world!,Hola mundo!,Kaixo mundua!</span></p>		 
+		<p>Another array of strings: <span>njour tout le monde!, world!,la mundo!, mundua!</span></p>		 
+		<p>Set of strings: <span>Bonjour tout le monde!,Hello world!,Hola mundo!,Kaixo mundua!,true</span></p>		 
+		<p>Another set of strings: <span>njour tout le monde!, world!,la mundo!, mundua!,null</span></p>		 
+
+-->

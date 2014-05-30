@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 20</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p>Joined array of strings: <span th:text="${#strings.arrayJoin(pArray,' and ')}">[empty]</span></p>
+		<p>Another joined array of strings: <span th:text="${#strings.arrayJoin(#strings.arraySubstringAfter(pArray,'o'),' &amp; ')}">[empty]</span></p>
+		<p>Joined set of strings: <span th:text="${#strings.setJoin(pSet,' and ')}">[empty]</span></p>
+		<p>Another joined set of strings: <span th:text="${#strings.setJoin(#strings.setSubstringAfter(pSet,'o'),' &amp; ')}">[empty]</span></p>
+	</body>
+
+</html>
+
+<!--
+
+		<p>Joined array of strings: <span>Bonjour tout le monde! and Hello world! and Hola mundo! and Kaixo mundua!</span></p>
+		<p>Another joined array of strings: <span>njour tout le monde! &amp;  world! &amp; la mundo! &amp;  mundua!</span></p>
+		<p>Joined set of strings: <span>Bonjour tout le monde! and Hello world! and Hola mundo! and Kaixo mundua!</span></p>
+		<p>Another joined set of strings: <span>njour tout le monde! &amp;  world! &amp; la mundo! &amp;  mundua!</span></p>
+
+-->

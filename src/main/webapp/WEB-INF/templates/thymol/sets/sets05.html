@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Sets example 05</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="sets-data.js"></script>
+	
+  	<body>
+		<p th:text="${#sets.containsAll(as1,ar9List)}">...</p>
+		<p th:text="${#sets.containsAll(as5,ar11List)}">...</p>
+		<p th:text="${#sets.containsAll(as10,ar1List)}">...</p>
+		<p th:text="${#sets.containsAll(as12,ar5List)}">...</p>
+		<p th:text="${#sets.containsAll(as9,ar1List)}">...</p>
+		<p th:text="${#sets.containsAll(as11,ar5List)}">...</p>
+		<p th:text="${#sets.containsAll(as1,ar10List)}">...</p>
+		<p th:text="${#sets.containsAll(as5,ar12List)}">...</p>
+		<p th:text="${#sets.containsAll(as1,as9)}">...</p>
+		<p th:text="${#sets.containsAll(as5,as11)}">...</p>
+		<p th:text="${#sets.containsAll(as10,as1)}">...</p>
+		<p th:text="${#sets.containsAll(as12,as5)}">...</p>
+		<p th:text="${#sets.containsAll(as9,as1)}">...</p>
+		<p th:text="${#sets.containsAll(as11,as5)}">...</p>
+		<p th:text="${#sets.containsAll(as1,as10)}">...</p>
+		<p th:text="${#sets.containsAll(as5,as12)}">...</p>
+	</body>
+
+</html>
+
+<!--
+
+
+-->

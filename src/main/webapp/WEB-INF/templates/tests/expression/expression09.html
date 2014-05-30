@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>expression example 09</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="session-data.js"></script>
+<body>
+<p th:text="${session[&quot;a&quot;].class.name}">...</p>
+<p th:text="${session[&quot;a&quot;]}">...</p>
+<p th:text="${session[&quot;b&quot;].class.name}">...</p>
+<p th:text="${session[&quot;b&quot;]}">...</p>
+<p th:text="${session[&quot;c&quot;]}">...</p>
+</body>
+</html>
+<!--
+
+<p>java.lang.String</p>
+<p>Some text</p>
+<p>java.lang.Integer</p>
+<p>123</p>
+<p>Hello</p>
+
+-->

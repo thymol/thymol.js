@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>tests21 block example b for the sourceforge pages</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="block10-data.js"></script>
+<body>
+<table>
+  <tbody>
+    <!--/*/ <th:block th:each="user : ${users}"> /*/-->
+    <tr>
+        <td th:text="${user.login}">...</td>
+        <td th:text="${user.name}">...</td>
+    </tr>
+    <tr>
+        <td colspan="2" th:text="${user.address}">...</td>
+    </tr>
+    <!--/*/ </th:block> /*/-->
+  </tbody>
+</table>
+</body>
+</html>
+<!--
+
+
+<table>
+  <tbody>
+      
+    <tr>
+        <td>admin</td>
+        <td>John Smith</td>
+    </tr>
+    <tr>
+        <td colspan="2">London</td>
+    </tr>
+       
+    <tr>
+        <td>manager</td>
+        <td>Fred Bloggs</td>
+    </tr>
+    <tr>
+        <td colspan="2">Birmingham</td>
+    </tr>
+      
+    <tr>
+        <td>worker1</td>
+        <td>Adman Smith</td>
+    </tr>
+    <tr>
+        <td colspan="2">Liverpool</td>
+    </tr>
+      
+    <tr>
+        <td>workr2</td>
+        <td>Joe Bloggs</td>
+    </tr>
+    <tr>
+        <td colspan="2">Manchester</td>
+    </tr>
+    
+  </tbody>
+</table>
+
+
+
+-->

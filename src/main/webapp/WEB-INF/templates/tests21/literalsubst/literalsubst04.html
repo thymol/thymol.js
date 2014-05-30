@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>tests21 literalsubst example 04 derived from literalsubst04.thtest</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="literalsubst-data.js"></script>
+<body>
+<ul>
+  <li th:each="p : ${planets}" th:text="'We say hello' + | to planet: | + ${p}">...</li>
+</ul>
+</body>
+</html>
+<!--
+
+<ul>
+  <li>We say hello to planet: Mercury</li>
+  <li>We say hello to planet: Venus</li>
+  <li>We say hello to planet: Earth</li>
+  <li>We say hello to planet: Mars</li>
+  <li>We say hello to planet: Jupiter</li>
+  <li>We say hello to planet: Saturn</li>
+  <li>We say hello to planet: Uranus</li>
+  <li>We say hello to planet: Neptune</li>
+</ul>
+
+-->

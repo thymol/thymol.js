@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>each example 03</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="each-data.js"></script>
+<body>
+<table>
+  <tr th:each="product, ps : ${products}">
+    <td th:text="${ps.index}">index</td>
+    <td th:text="${ps.count}">count</td>
+    <td th:text="${ps.size}">size</td>
+    <td th:text="${ps.current.name}">name</td>
+    <td th:text="${ps.current.price}">price</td>
+    <td th:text="${ps.even} ? 'T' : 'F'">even</td>
+    <td th:text="${ps.odd} ? 'T' : 'F'">odd</td>
+    <td th:text="${ps.first} ? 'T' : 'F'">first</td>
+    <td th:text="${ps.last} ? 'T' : 'F'">last</td>
+    <td th:text="${product.name}">name</td>
+    <td th:text="${product.price}">price</td>
+  </tr>
+</table>
+</body>
+</html>
+<!--
+
+
+<table>
+  <tbody><tr>
+    <td>0</td>
+    <td>1</td>
+    <td>4</td>
+    <td>Lettuce</td>
+    <td>12</td>
+    <td>T</td>
+    <td>F</td>
+    <td>T</td>
+    <td>F</td>
+    <td>Lettuce</td>
+    <td>12</td>
+  </tr>
+<tr>
+    <td>1</td>
+    <td>2</td>
+    <td>4</td>
+    <td>Apricot</td>
+    <td>8</td>
+    <td>F</td>
+    <td>T</td>
+    <td>F</td>
+    <td>F</td>
+    <td>Apricot</td>
+    <td>8</td>
+  </tr><tr>
+    <td>2</td>
+    <td>3</td>
+    <td>4</td>
+    <td>Thyme</td>
+    <td>1.23</td>
+    <td>T</td>
+    <td>F</td>
+    <td>F</td>
+    <td>F</td>
+    <td>Thyme</td>
+    <td>1.23</td>
+  </tr><tr>
+    <td>3</td>
+    <td>4</td>
+    <td>4</td>
+    <td>Carrot</td>
+    <td>2</td>
+    <td>F</td>
+    <td>T</td>
+    <td>F</td>
+    <td>T</td>
+    <td>Carrot</td>
+    <td>2</td>
+  </tr></tbody></table>
+
+-->

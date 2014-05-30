@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>inline-body example</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="inline-data.js"></script>
+<body th:inline="text">
+<div>
+    Hello, [[(${value} &gt; 25)? 'bigger!' : 'lower :-(']]
+	<div>
+	    Also, [[(${value} > 20)? 'bigger!' : 'lower :-(']]
+	</div>
+	<div>
+		<span>Hello, [[${foo}]]!</span>
+		<div>
+			<span>Somevar Test!</span>
+			<data th:remove="tag">[[${someVar}]]</data>
+		</div>
+	</div>
+</div>
+</body>
+</html>
+<!-- 
+
+<div>
+    Hello, bigger!
+</div>
+
+ -->

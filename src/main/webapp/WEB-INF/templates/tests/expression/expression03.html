@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>expression example 03</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="expression-02-data.js"></script>
+<body>
+<p th:text="${eValue1}*3.000">...</p>
+<p th:text="${eValue1}*3.0">...</p>
+<p th:text="${eValue1}*3">...</p>
+<p th:with="number=(${eValue2}*3.000)" th:text="${#numbers.formatDecimal(number, 0, 6)}">...</p>
+<p th:with="number=(${eValue2}*3.0)" th:text="${#numbers.formatDecimal(number, 0, 6)}">...</p>
+<p th:with="number=(${eValue2}*3)" th:text="${#numbers.formatDecimal(number, 0, 6)}">...</p>
+</body>
+</html>
+<!--
+
+<p>300.000</p>
+<p>300.0</p>
+<p>300</p>
+<p>112.192308</p>
+<p>112.192308</p>
+<p>112.192308</p>
+
+-->

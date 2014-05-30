@@ -1,0 +1,37 @@
+
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>refs example 03</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../js/thymol.js" data-thymol-load="ref-data.js"></script>
+<body>
+Text before
+<div th:text="${productList[${v1 * 2 + 1 }].name}">
+    Nothing to show from productList
+</div>
+<div th:text="${productList[ v1 * 2 + 2 ].name}">
+    Nothing to show from productList
+</div>
+<div th:text="${productList[ (v1 * 2 + 3) ].name}">
+    Nothing to show from productList
+</div>
+<div th:text="${productList[7].name}">
+    Nothing to show from productList
+</div>
+<div th:text="${product2.name}">
+    Nothing to show from productList
+</div>
+Text after 
+</body>
+</html>
+<!-- 
+
+Text before
+Peach
+Text after 
+
+ -->
+
+

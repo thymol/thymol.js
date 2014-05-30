@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>expression example 27</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js"></script>
+<body>
+<p th:text="0.02 + 2">...</p>
+<p th:text="1.02 + 2">...</p>
+<p th:text="1234.02 + 2">...</p>
+<p th:text="-351.02 + 2">...</p>
+<p th:text="-1000.02 + 2">...</p>
+<p th:text="-0.02 + 2">...</p>
+<p th:text="351.02 + -2">...</p>
+<p th:text="1000.02 + -2">...</p>
+<p th:text="0.02 + -2">...</p>
+<p th:text="-351.02 + -2">...</p>
+<p th:text="-1000.02 + -2">...</p>
+<p th:text="-0.02 + -2">...</p>
+</body>
+</html>
+<!--
+
+<p>2.02</p>
+<p>3.02</p>
+<p>1236.02</p>
+<p>-349.02</p>
+<p>-998.02</p>
+<p>1.98</p>
+<p>349.02</p>
+<p>998.02</p>
+<p>-1.98</p>
+<p>-353.02</p>
+<p>-1002.02</p>
+<p>-2.02</p>
+
+-->

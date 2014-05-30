@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>tests21 block example 05 derived from block05.thtest</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="block-data.js"></script>
+<body>
+<div>
+  <th:block th:text="${text}">
+    <span th:text="${cStat.count}">0</span>
+    <p th:text="${c.city}">City</p>
+    <span th:text="${c.country}">Country</span>
+  </th:block>
+</div>
+</body>
+</html>
+<!--
+
+<div>
+    Hello!
+</div>
+
+-->

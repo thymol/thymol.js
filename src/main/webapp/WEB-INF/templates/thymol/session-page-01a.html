@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Thymol session example 01a</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../js/head.min.js" data-headjs-load="../../js/thymol-head.js" data-thymol-load="session-data-a.js"></script>
+  	<body>
+		<p>Hi! This is page 1</p>
+		<p>The request parameter is: <span th:text="${element}">unset</span></p>
+		<p><a href="#" onclick="doCopyToSession('element','session_element');">Click to set in session</a></p>
+		<p><a th:href="@{/session02}">To page 2</a></p>
+		<p><a href="?element=Praseodymium">Click to select Praseodymium</a></p>
+		<p><a href="?element=Neodymium">Click to select Neodymium</a></p>
+		<p><a href="?element=Promethium">Click to select Promethium</a></p>
+		<p>The session parameter is: <span th:text="${session_element}">unset</span></p>
+	</body>
+</html>

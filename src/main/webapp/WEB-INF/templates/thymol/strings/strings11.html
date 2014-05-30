@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Strings example 11</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="strings-data.js"></script>
+	
+  	<body>
+		<p th:text="${#strings.substringAfter(p1,'l ')}">...</p>
+		<p th:text="${#strings.substringAfter(p2,'e ')}">...</p>
+		<p th:text="${#strings.substringAfter(p3,'!')}">...</p>
+		<p th:text="${#strings.substringAfter(p4,'')}">...</p>
+		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arraySubstringAfter(pArray,'l')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+ 		<p>Set of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.setSubstringAfter(pSet,'o')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
+	</body>
+
+</html>
+
+<!--
+
+		<p>true</p>
+		<p>false</p>
+		<p>true</p>
+		<p>true</p>
+		<p>Array of strings: <span>true,true,true,true</span></p>		 
+		<p>Set of strings: <span id="sort">true</span></p>
+
+-->

@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>include example 05</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="include-data.js"></script>
+<body>
+<div class="one" th:substituteby="frag01">
+  <p>Some text over here</p>
+</div>
+</body>
+</html>
+<!--
+
+<div>
+	  This is a text <b>with some parts in bold</b> and a text: <span>Lorem ipsum blah blah</span>.
+</div>
+
+-->

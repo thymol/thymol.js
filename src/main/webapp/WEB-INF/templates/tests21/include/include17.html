@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>tests21 include example 01 derived from with01.thtest</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="include-data.js"></script>
+<body>
+<div>
+  <p>This is some text before</p>
+  <div th:include="templates/template-13 :: //footer#f1 (msg='Message for you!',m2='oh!')">...</div>
+  <p>This is some text after</p>
+</div>
+</body>
+</html>
+<!--
+
+<div>
+  <p>This is some text before</p>
+  <div>
+    <p>oh! - Message for you!</p>
+  </div>
+  <p>This is some text after</p>
+</div>
+
+-->

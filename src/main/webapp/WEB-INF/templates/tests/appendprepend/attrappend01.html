@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>attr append example 01</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="append-prepend-data.js"></script>
+<body>
+<div th:attrappend="style=${one}">..</div>
+<div th:attrappend="style='width:300px;'">..</div>
+<div th:attrappend="style=${null}">..</div>
+<div th:attrappend="style=''">..</div>
+
+<div style="color:blue;" th:attrappend="style=${two}">..</div>
+<div style="color:blue;" th:attrappend="style='width:300px;'">..</div>
+<div style="color:blue;" th:attrappend="style=${null}">..</div>
+<div style="color:blue;" th:attrappend="style=''">..</div>
+
+<div style="" th:attrappend="style=${two}">..</div>
+<div style="" th:attrappend="style='width:300px;'">..</div>
+<div style="" th:attrappend="style=${null}">..</div>
+<div style="" th:attrappend="style=''">..</div>
+</body>
+</html>
+<!--
+
+<div style="one!">..</div>
+<div style="hello">..</div>
+<div>..</div>
+<div>..</div>
+
+<div style="oldone!">..</div>
+<div style="oldhello">..</div>
+<div style="old">..</div>
+<div style="old">..</div>
+
+<div style="one!">..</div>
+<div style="hello">..</div>
+<div style="">..</div>
+<div style="">..</div>
+
+-->

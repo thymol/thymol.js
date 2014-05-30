@@ -1,0 +1,454 @@
+Thymol
+======
+
+***NEWS*** **Thymol 1.1.0-SNAPSHOT Static Emulation of Thymeleaf 2.1 is now available for download! Click [here](thymol-1.1) to read more!**
+
+Thymol is a javascript implementation of Thymeleaf 2.0 standard dialect functionality, providing static support for most Thymeleaf attributes.
+
+Download the production release of Thymol 1.0 [here](files/thymol/thymol-1.0.0.zip).
+
+For other Thymol downloads click [here](files).
+
+Overview
+--------
+
+[Thymeleaf](http://www.thymeleaf.org) is a very powerful, but easy to learn html/xml templating system with excellent support for the Spring framework. 
+
+One of Thymeleaf's most attractive features is that Thymeleaf enhanced html files are implicitly viewable as static prototypes i.e. you can inspect a Thymeleaf template via a browser using file|open and see a reasonable representation of it's content without requiring deployment to a live web application server.
+
+Unfortunately, Thymeleaf's control flow attributes don't work very well for static pages, that's what inspired Thymol.
+
+Thymol was created in order to provide a more accurate static representation of Thymeleaf's dynamic templating capabilities by offering support for Thymeleaf attributes through a statically accessible javascript library.     
+
+The latest production release of Thymol (version 1.0.0) supports most Thymeleaf Standard Dialect attributes.
+
+The most notable omissions from Thymol (as compared to Thymeleaf running on the server side) are:
+
+* There is no support for "Expression basic objects"
+* There is no support for "Expression utility objects" (1)
+* There is no support for inlining.
+* There is no support for locales.
+
+(1) *Although you may use "#object" to refer to the currently selected object.*
+
+Usage
+-----
+
+Simply download and unzip the Thymol distribution file, and place the file "thymol.js" in a directory accessible by your web project (changing the src path below as appropriate). Do the same for the jquery source,
+or use a remote URI.
+
+Then insert the following (or something similar) into your html source:
+
+    <!-- embed example -->
+    <script th:remove="all" type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+    <script th:remove="all" type="text/javascript" src="<path-to-thymol-source>/thymol.js"></script>
+
+You can obtain the jquery library [here](http://code.jquery.com).
+
+You can also use a Thymol configuration file:
+
+    <script th:remove="all" type="text/javascript" src="<path-to-config-script>/thymol-config.js"></script>
+
+Further Examples
+----------------
+
+There are a number of simple examples of Thymol usage in the distribution download file.
+
+For more complex example of Thymeleaf prototyping with Thymol, you can find a complete working example of a Thymol/Thymeleaf/Spring-Framework Petclinic integration here [thymol-petclinic](files/thymol/petclinic-with-thymol-1.0.0.zip). 
+
+
+Static Imports
+--------------
+
+Here is an example of a template intended for static import:
+
+    <!--footer.html-->
+	<!DOCTYPE html>
+	<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+		<body>
+			<div th:fragment="copy" style="color: green;">&#169; 2011 The Good Thymes Virtual Grocery</div>
+		</body>
+	</html>
+
+Here is an example snippet using the footer.html template:
+
+    <!--main.html-->
+		<body>
+		...
+			<div th:include="footer::copy">
+				cannot load template: footer, fragment: copy
+			</div>
+		...
+		</body>
+
+For a more complete example and further explanation please visit [static-imports].
+
+
+Thymol Variables 
+----------------
+ 
+There are two ways of defining and initialising Thymol variables, by using request parameters or via javascript declarations.
+ 
+The value of an expression variable may be defined through the use of request parameters attached to the URL by which the static template is invoked.
+
+Request parameters are specified by using the usual "http get" mechanism:
+
+	file:///C:/Users/jjb/project/big-example/page5.html?firstName=Fred&surName=Bloggs
+	
+Thymol allows the definition of variables as structures and name/value pairs using a javascript string array with a json-like syntax.
+
+The Thymol variables definition javascript array must be given the identifier "thVars".
+
+Here is an example:
+
+	var	thVars = [
+		      ...
+		    [ "home",			"/home/fred" ],
+		    [ "valueIndex",		345 ],
+		    [ "product",		"#{ 'name': 'Lettuce', 'prices': { 'euros': '9.00', 'dollars': '12.00' } }" ],
+		      ...
+		];
+
+This example causes the creation of three Thymol variables.
+
+The first is called "home" and has the string value "/home/fred". 
+
+The second is called "valueIndex" and has a primitive integer value of 345. 
+
+The third is an object variable called "product". The "product" object has two properties, a scalar called "name" and a map called "prices". 
+
+The "name" field has a primitive string value of "Lettuce".
+
+The "prices" map comprises two fields: "euros" and "dollars" with values 9.00 and 12.00 respectively.
+
+Following their definition, we may refer to these variables in expressions by using the terms "${home}", "${valueIndex}" or "${product}" respectively.
+
+The values of the "product" object's internal properties may be referenced using the familiar "dot" notation ("${product.prices.euros}" etc ). Alternatively, expressions may refer to properties of the "product" 
+object using the associative-array style as "${product\['name'\]}".
+
+
+Thymol Collections 
+----------------
+
+Collections are also supported in the thVars structure.
+
+To define an array of text values use the following json-like syntax:
+
+	var	thVars = [
+			...
+		    ["types",		"#[ 'Cat', 'Dog', 'Bird', 'Reptile', 'Amphibian' ]"],
+			...
+		];
+
+Thymol collection object members may be referenced using (zero based) index values.
+
+For example, with the above thVars definition, the following span should be rendered with the value "Bird":
+
+        <span th:text="${types[2]}">default</span>
+
+Thymol collections are most useful for prototyping values to be used in elements with Thymeleaf th:each attributes.
+
+		
+Thymol Object References 
+------------------------
+
+The Thymol thVars structure allows the definition and use of object references in the "style" of OGNL by prefixing the name of the object variable with a single "#" character.
+
+	var	thVars = [
+			...
+		    ["c1",				"#{ 'key': 'Galicia',	'value': 'Santiago de Compostela' }"],   	        
+		    ["c2",				"#{ 'key': 'Asturias',	'value': 'Oviedo' }"],   	        
+		    ["c3",				"#{ 'key': 'Cantabria',	'value': 'Santander' }"],   	             	
+		    ["capitals",		"#[ #c1, #c2, #c3 ]"],
+		    ["data",			"#{ 'regions': #capitals, 'extras': {} }",
+			...
+		];
+
+In the above example, we have defined a list of objects called "capitals" that holds three name/value pairs, 
+
+Thymol object references may be used in the thVars structure wherever a variable name may be used, but not within templates.
+
+Thymol object references may be used as URL parameters, but the "#" prefix must be escaped (URL encoded) in order for this to work:
+
+	e.g.
+	
+		/page5.html?regions=%23capitals
+
+
+Thymol Expressions 
+------------------
+
+Thymol 1.0 allows the use of the complete standard dialect expression syntax. 
+
+The evaluation of boolean expressions is consistent with that of Thymeleaf's ObjectUtils.evaluateAsBoolean() function.
+
+
+Thymol Mappings
+---------------
+
+Another feature of Thymol 1.0 is Thymol mappings. Mapping are intended mainly to simplify the translation between URI values within a Thymeleaf template and real world URLs.
+Mapping URLs may locate resources in the local file system or on the network.
+Mappings are defined in a javascript array or key/value pairs called "thMappings".
+The mapping translation is applied to template locator values and to URLs defined by Thymeleaf @{...} URL expressions after any variable substitutions and expression evaluations have been calculated.
+
+The translation made is as follows: if the leading part of an expression (either URL or template locator) matches a mapping key, then that part of the expression is replaced by the mapping value.
+If two or more mapping keys share some leading text in common, then the longest matching fragment is taken in preference to any shorter segments.
+
+Here is an example mappings definition set:
+
+	var	thMappings = [
+		    ["/webjars/bootstrap/2.3.0/css/bootstrap.min.css",		"http://netdna.bootstrapcdn.com/twitter-bootstrap/2.3.0/css/bootstrap.min.css"],
+		    ["/jquery",							"http://code.jquery.com/mobile/1.3.1"],
+		    ["/thymeleaf",						"/home/fred/projects/new-site/templates"],
+		    ["/thymeleaf/welcome",					"/home/live/distr/WEB-INF/thymeleaf/welcome"],
+		    ["/resources",						"/home/fred/projects/new-site/resources"],
+		    ["/",							"/home/live/distr/WEB-INF/thymeleaf/welcome.html"]
+		];
+
+With this example, a reference to "@{/thymleaf/hello.html}" would be translated into:
+
+ "/home/fred/projects/new-site/templates/hello.html"
+ 
+and a reference to "@{/}" would translate to
+ 
+ "/home/live/distr/WEB-INF/thymeleaf/welcome.html".
+
+Tip:
+
+An effect similar to mapping can be accomplished using thVars, by defining a variable that simulates a URI or even a Thymeleaf function.
+
+For example:
+
+	var	thVars = [
+		    ...
+		    ["#dates.format(visit.date.toDate(), \'yyyy-MM-dd\')",		"2013-07-12"],
+		    ...
+                ];
+
+This variable simulates the effect of a particular Thymeleaf #dates expression utility.
+
+Thymol Messages
+---------------
+
+You may use a javascript structure called thMessages to define message values for use in templates:
+
+	var	thMessages = [
+		    ...
+		    ["welcome",								"Welcome to Thymeleaf (with Thymol)!"],
+		    ...
+		];
+		
+.. and refer to messages so defined by:
+
+		   <h2 th:text="#{welcome}">Welcome!</h2>
+		   
+At the moment, there is no support for parameter placeholder substitution ("{N}" replacement) in Thymol.
+
+As stated in the Overview section, there is no support for locales in Thymol. 		   
+		
+
+Thymol Control Parameters
+-------------------------
+
+The are a number of pre-defined javascript variable names that define parameters that may be used to control the way that Thymol behaves when running, these parameters have names the beginning with the prefix "th".
+
+Parameters for Thymol 1.0 are:
+
+Scalar Valued parameters
+
+* thProtocol
+* thDebug
+* thRoot
+* thPath
+* thAllowNullText
+* thShowNullOperands
+
+Structure Valued parameters
+
+* thMappings
+* thVars
+* thMessages
+* thDisable
+
+The effect of each of these parameters is discussed in the following sections. The way in which they may be defined is discussed here.
+
+You may set any of the scalar valued parameters by one of the following mechanisms:
+
+* Set them using a javascript element in each template source file.
+* Set them using a javascript element in include javascript source file.
+* Set them as URL parameters on the src attribute of the html script element that defines the Thymol import.
+* Allow them to default!
+	
+e.g. The value of thProtocol may be set to "http://" for a particular template using: 
+	
+	<script type="text/javascript" src="../../../js/thymol.js?thProtocol=http://"></script>
+			
+Each Thymol control parameter will now be described in detail.			
+
+thProtocol
+----------
+
+The parameter sets the default protocol to apply to generated URIs. The default value for this parameter is "file:///" which is a good choice for file-systems based developments.
+Using "http://" may be appropriate for Thymol-enabled Thymeleaf templates that are loaded from a non-local web server.
+
+thDebug - Debug Mode
+--------------------
+
+Thymol includes a very basic debugging facility. When running in debug mode, Thymol will open an alert window each time an unrecognisable conditional expression is encountered or whenever an include/substituteby
+template cannot be opened.
+To enable debug mode, set the "thDebug" parameter to "true".
+
+	<script th:remove="all" type="text/javascript">
+           var thDebug = true;
+ 	</script>
+ 	
+ or:
+
+	file:///C:/Users/jjb/project/big-example/page5.html?firstName=Fred&surName=Bloggs&thDebug=true
+	
+In the case where a value for thDebug is defined by both a javascript variable and a request parameter, the value supplied as a request parameter will take precedence.
+	 
+thRoot & thPath - Template Resolution
+-------------------------------------
+
+One of the many useful features of Thymeleaf is the TemplateResolver, the mechanism by which templates are located in a web application.
+At the moment, Thymol has no such facility but takes a much simpler approach.
+
+A Thymeleaf template locator takes the form: "template-name::fragment-name".
+
+In the absence of any matching Thymol mappings, Thymol treats all template-name references as relative file locations, they will be relative to either a (user) defined root directory or relative to the enclosing
+file's directory location. 
+    
+After parameter processing, Thymol resolves template locators as follows:
+
+	If a template-name starts with a period character ('.'), the entire URI is treated as a path relative to the directory of the template containing the reference.
+	
+	e.g. template-name values like "./pages/header/foobar" or "../parent/sibling1/other" are treated as child or cousin directory tree references as the host operating system would treat them.
+		
+	If a template-name doesn't start with a '.', but it contains no path separator characters ('/'), it's also treated as relative to the enclosing file's directory.
+	
+	e.g. template-name references like "family" are treated as siblings of the current template, "dynasty/bloggs" are treated as being relative to root.
+
+	All other template-name values are considered to be root relative references. 
+
+Thymol provides two parameters that are used to specify the location to be applied to root relative resolved templates. These parameters are thRoot and thPath.
+
+When a root relative path is required during template resolution, in the absence of any matching Thymol mappings, Thymol uses the concatenation of thRoot + thPath + template-name + ".html" to construct the final
+file URI.
+
+	Examples:
+
+	<script th:remove="all" type="text/javascript">
+    	  var thRoot="~/projects/thymol/distr/Webcontent";
+		  var thPath="examples/thymol-example/hierarchy";
+	</script>
+
+     and in your template:
+
+       	<script th:remove="all" type="text/javascript" src="../assets/js/setThPath.js"></script>
+
+Tip - An alternate template resolution strategy is to use thMappings !!!
+
+thAllowNullText
+---------------
+
+While developing Thymeleaf templates, it's quite easy to unintentionally define expressions that can't be resolved or that resolve to null and when developing with Thymol, it can sometimes be difficult to identify
+where such problems are occurring. 
+
+In the event that Thymol encounters a "th:text" attribute that resolves to null, by default Thymol will proceed regardless. However, if you set the value of the "thAllowNullText" flag to false, Thymol will raise
+a window alert whenever this happens.
+
+thShowNullOperands
+------------------
+
+The Thymol implementation of expression parsing and evaluation are simple and limited in their capabilities, as a consequence, Thymol will usually ignore any null values that are encountered during expression
+evaluations. This can lead to inconsistencies between Thymeleaf and Thymol, particularly when rendering expressions comprising concatenations that include null values.
+
+Setting the value of the "thShowNullOperands" flag to true forces any null value in text concatenation expressions to be rendered as text value "null".
+
+thMappings
+----------
+
+Used to define Thymol mappings (see "Thymol Mappings" above).
+
+thVars
+------
+
+Used to define Thymol variables (see "Thymol Variables" above).
+
+thMessages
+----------
+
+Used to define Thymol messages (see "Thymol Messages" above).
+
+thDisable
+---------
+
+Can be used to "turn off" (disable) Thymol processing of any particular Thymeleaf attribute. This can be very useful when debugging.
+
+thDisable specifies an array of Thymeleaf attribute names that are to be disabled at run-time.
+
+For example, if you don't want to process th:remove attributes define the following:
+
+    var thDisable = [ "remove" ];
+    
+Or if you wish to turn off template inclusion/substitution define the following:
+
+    var thDisable = [ "include", "substituteby", "replace" ];	
+
+Browser Constraints
+-------------------
+Thymol was originally intended for use in a static (non web container) environment, because of this, by default it uses "file://" protocol URIs to access templates.
+
+In local file system based developments, the accessibility of referenced templates is subject to the constraints imposed by the javascript host within which Thymol is being executed, this is normally a web-browser.
+
+To view Thymeleaf templates loaded form the file system your browser must be configured to allow access to local (file-store) files.
+
+Firefox:
+
+	"go into your FF 3.0 config panel (type 'about:config') and set the following property to 'false' by double clicking on it: security.fileuri.strict_origin_policy"
+
+(Thanks to http://jquery-howto.blogspot.co.uk/2008/12/access-to-restricted-uri-denied-code.html)
+
+Chrome:
+
+The simplest way to enable local file access is to add the "allow-file-access-from-files" command line parameter to your Chrome start-up command:
+
+	e.g. <path-to-chrome-home>chrome.exe --allow-file-access-from-files
+
+Internet Explorer:
+
+	Local file access is enabled by default by Internet Explorer
+
+(Need to take advice on configuring Safari, Opera etc..)
+ 
+None of these restrictions apply to files served via http, so if you're running into too many problems in a file-system based development you may consider deploying your templates and javascript files on a web server. 
+
+
+Known Limitations of include/substituteby
+-----------------------------------------
+
+You cannot use th:substituteby to replace the content of the head element of an html file using the Chrome browser, if possible, use th:include instead.
+
+
+General Limitations
+-------------------
+
+0) This document attempts to describe the behaviour of the current latest release version of Thymol - at present this is thymol-1.0.0.
+
+1) The specification parts of th:include or th:substituteby (i.e. the "template-name::fragment-name" part), may contain expressions, but any template/fragment delimiter ("::") must be part of the static content
+of the specifier.
+
+2) Only simple expressions may be used in any Thymol processed Thymeleaf attributes. For example, "template-name::`[domselector]`" variants of the th:include or th:substituteby specification are not processed
+by Thymol.
+
+3) I make no claims about the quality of my javascript programming or my knowledge of jquery!
+
+If time allows and demand is sufficient some progress may be made on alleviating the effects of limitations 1 and 2, any contributed code and/or bug fixes from users would be much appreciated. However, only
+time will tell if I will ever make any headway on point 3.
+
+
+Download
+--------
+
+You can obtain the latest production release of Thymol [here](files/thymol/thymol-1.0.0.zip).
