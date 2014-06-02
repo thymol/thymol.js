@@ -1,11 +1,11 @@
 {
   "name": "thymol",
-  "version": "2.0.0-SNAPSHOT",
+  "version": "2.0.0-pre",
   "authors": [
     "jjbenson@users.sf.net"
   ],
   "description": "Javascript Thymeleaf Emulation",
-  "main": "thymol.js",
+  "main": "dist/thymol.js",
   "keywords": [
     "thymeleaf",
     "template",
@@ -14,13 +14,14 @@
   ],
   "license": "Apache 2.0",
   "homepage": "www.thymoljs.org",
-  "private": true,
   "ignore": [
+    "dist/Webcontent",
+    "src",
     "**/.*",
-    "node_modules",
-    "bower_components",
-    "test",
-    "tests"
+    "Gruntfile.js",
+    "README.md",
+    "package.json",
+    "pom.xml"
   ],
   "dependencies": {
     "jquery": "~2.1.1"

@@ -324,6 +324,7 @@
 								<resource>
 									<directory>src/doc/WebContent</directory>
 									<includes>
+										<include>README.txt</include>
 										<include>LICENSE-2.0.txt</include>
 										<include>images/**/*.*</include>
 										<include>css/**/*.*</include>
