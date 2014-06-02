@@ -3,7 +3,7 @@
 <head>
 <title>simple example</title>
 </head>
-<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="setThPath.js"></script>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"   data-thymol-load="setThPath.js"></script>
 <body>
   <p><img src="../../images/gtvglogo.png" th:attr="src=@{/images/gtvglogo.png},title=#{logo},alt=#{logo}"/></p>
   <p><img src="../../images/gtvglogo.png" th:src="@{/images/gtvglogo.png}" th:title="#{logo}" th:alt="#{logo}"/></p>

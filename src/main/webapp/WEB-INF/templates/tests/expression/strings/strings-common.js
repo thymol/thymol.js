@@ -1,4 +1,4 @@
-var	thRoot="${thRoot}";
+var	thRoot="${thDeploy}";
 var	thPath="templates/tests/expression/strings";
 
 var	thDebug=true;

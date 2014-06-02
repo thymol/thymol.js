@@ -4,7 +4,7 @@
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 		<title>Dates example 15</title>
 	</head>
-	<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="times-data.js"></script>
+	<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"   data-thymol-load="times-data.js"></script>
 	
   	<body>
 		<p th:text="${#dates.millisecond(time1)}">...</p>

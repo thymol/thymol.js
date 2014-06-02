@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <title>numbers example 10</title>
 </head>
-<script th:remove="all" type="text/javascript" src="../../../../js/thymol.js" data-thymol-load="numbers-common.js"></script>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"   data-thymol-load="numbers-common.js"></script>
 <body>
 <p th:text="${#numbers.formatDecimal(onex, 5, 4, 'COMMA')}">...</p>
 <p th:text="${#numbers.formatDecimal(twox, 5, 4, 'COMMA')}">...</p>

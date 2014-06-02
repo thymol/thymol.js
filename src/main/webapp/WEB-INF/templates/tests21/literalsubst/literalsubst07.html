@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <title>tests21 literalsubst example 07 derived from literalsubst07.thtest</title>
 </head>
-<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="literalsubst-data.js"></script>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"   data-thymol-load="literalsubst-data.js"></script>
 <body>
 <span th:text="'|' + ${msg} + '|'">...</span>
 <span th:text="'\'|\\' + ${msg} + '|'">...</span>

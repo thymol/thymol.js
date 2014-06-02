@@ -3,7 +3,7 @@
 <head>
 <title>simple example</title>
 </head>
-<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="setThPath.js"></script>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"   data-thymol-load="setThPath.js"></script>
 <body>
   <p>Welcome to our <b>fantastic</b> grocery store!</p>
   <p th:text="${home.welcome}">Good day!</p>

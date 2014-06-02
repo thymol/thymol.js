@@ -3,7 +3,7 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <title>tests21 with example 01 derived from with01.thtest</title>
-<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="with-data.js"></script>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"   data-thymol-load="with-data.js"></script>
 </head>
 <body>
 <div th:with="a=${user},b=${a.name}" th:text="${b}">...</div>

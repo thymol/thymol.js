@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 <title>Messages example 11</title>
 </head>
-<script th:remove="all" type="text/javascript" src="../../../js/thymol.js" data-thymol-load="messages-data.js"></script>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"   data-thymol-load="messages-data.js"></script>
 	
 <body>
 <p>Message List 1: <span><!--/*/<th:block th:each="d,dStat : ${#messages.listMsgOrNull(msgList1,'John Smith','Bradford','Vindaloo')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>

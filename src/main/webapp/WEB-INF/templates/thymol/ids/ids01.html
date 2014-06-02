@@ -5,7 +5,7 @@
 <title>Ids example 01</title>
 </head>
 
-<script th:remove="all" type="text/javascript" src="../../../js/thymol.js"></script>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"  ></script>
 
 <body>
 <div th:each="i : ${#numbers.sequence(1,10)}" th:id="${#ids.seq('thing')}">

@@ -4,7 +4,7 @@
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 		<title>Thymol session example 02</title>
 	</head>
-	<script th:remove="all" type="text/javascript" src="../../../../../js/thymol.js" data-thymol-load="session-data.js"></script>
+	<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"   data-thymol-load="session-data.js"></script>
 	<body>
 		<p>Hi! This is page 2</p>
 		<p>The request parameter is: <span th:text="${element}">unset</span></p>
