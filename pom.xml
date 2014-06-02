@@ -37,11 +37,12 @@
 		<webDriver>nonesuch</webDriver>
 		<filtering-value>true</filtering-value>
 
-		<thRoot>${project.build.directory}/test-classes</thRoot>
+		<thInstall>file://${project.basedir}/bower_components/thymol/dist</thInstall>
 		<theWarName>${project.artifactId}-${project.version}</theWarName>
-		<thThymolPath>${thRoot}/js/</thThymolPath>
+		<thThymolPath>${thInstall}/</thThymolPath>
 		<thThymolSource>thymol-full.js</thThymolSource>
-		<thJQuerySource>file://${project.basedir}/bower_components/jquery/dist/jquery.min.js</thJQuerySource>
+		<thJQuerySource>jquery.min.js</thJQuerySource>
+		<thDeploy>${project.build.directory}/test-classes</thDeploy>
 
 	</properties>
 
@@ -107,7 +108,9 @@
 		<profile>
 			<id>release</id>
 			<properties>
-				<thThymolSource>thymol-full.min.js</thThymolSource>
+				<webDriver>firefox</webDriver>
+			    <thThymolSource>thymol-full.min.js</thThymolSource>
+				<thJQuerySource>../../jquery/dist/jquery.min.js</thJQuerySource>
 				<filtering-value>false</filtering-value>
 			</properties>
 		</profile>
@@ -120,7 +123,7 @@
 				</os>
 			</activation>
 			<properties>
-				<thThymolPath>file:///${thRoot}/js/</thThymolPath>
+				<thThymolPath>file:///${thThymolPath}</thThymolPath>
 			</properties>
 		</profile>
 	</profiles>
@@ -133,7 +136,7 @@
 				<targetPath>${project.build.directory}/test-classes/templates</targetPath>
 				<filtering>true</filtering>
 			</resource>
-			<resource>
+			<!--resource>
 				<directory>src/main/resources/js</directory>
 				<targetPath>${project.build.directory}/test-classes/js</targetPath>
 				<filtering>true</filtering>
@@ -141,14 +144,14 @@
 					<include>thymol.js</include>
 					<include>thymol-full.js</include>
 				</includes>
-			</resource>
-			<resource>
+			</resource-->
+			<!--resource>
 				<directory>src/main/resources</directory>
 				<targetPath>${project.build.directory}/${project.build.finalName}</targetPath>
 				<excludes>
 					<exclude>js/**</exclude>
 				</excludes>
-			</resource>
+			</resource-->
 		</resources>
 
 		<pluginManagement>
@@ -189,8 +192,10 @@
 				<configuration>
 					<filesets>
 						<fileset>
-							<directory>${project.basedir}/distr</directory>
-							<directory>${project.basedir}/target-grunt</directory>
+							<directory>dist</directory>
+						</fileset>
+						<fileset>
+							<directory>target-grunt</directory>
 						</fileset>
 					</filesets>
 				</configuration>
@@ -307,7 +312,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/distr/Webcontent</outputDirectory>
+							<outputDirectory>${basedir}/dist/Webcontent</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/doc/Sourceforge/attachments</directory>
@@ -320,6 +325,9 @@
 									<directory>src/doc/WebContent</directory>
 									<includes>
 										<include>LICENSE-2.0.txt</include>
+										<include>images/**/*.*</include>
+										<include>css/**/*.*</include>
+										<include>js/**/*.*</include>
 									</includes>
 								</resource>
 							</resources>
@@ -332,7 +340,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/distr/Webcontent/examples</outputDirectory>
+							<outputDirectory>${basedir}/dist/Webcontent/examples</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/main/webapp/WEB-INF</directory>
@@ -361,10 +369,11 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/distr/Webcontent/examples/templates/issue-245</outputDirectory>
+							<outputDirectory>${basedir}/dist/Webcontent/examples/templates/issue-245</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/main/webapp/WEB-INF/templates/tests21/syntax</directory>
+									<filtering>${filtering-value}</filtering>
 									<includes>
 										<include>index.html</include>
 										<include>issue*.html</include>
@@ -380,138 +389,16 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/distr/Webcontent/examples</outputDirectory>
+							<outputDirectory>${basedir}/dist/Webcontent/examples</outputDirectory>
 							<resources>
 								<resource>
-									<filtering>${filtering-value}</filtering>
 									<directory>src/doc/WebContent/examples/thymol-example</directory>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>copy-resources5</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/distr/Webcontent</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/main/resources</directory>
-									<excludes>
-										<exclude>js/**</exclude>
-									</excludes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>copy-resources6</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.basedir}/distr/Webcontent/js</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/main/resources/js</directory>
 									<filtering>${filtering-value}</filtering>
-									<includes>
-										<include>thymol.js</include>
-										<include>thymol-full.js</include>
-										<include>thymol-full.min.js</include>
-									</includes>
 								</resource>
 							</resources>
 						</configuration>
 					</execution>
-					<execution>
-						<id>copy-resources7</id>
-						<phase>validate</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/distr/Webcontent/examples/hierarchy/assets/js</outputDirectory>
-							<resources>
-								<resource>
-									<directory>src/main/resources/js</directory>
-									<filtering>${filtering-value}</filtering>
-									<includes>
-										<include>thymol.js</include>
-										<include>thymol.min.js</include>
-										<include>thymol-full.js</include>
-										<include>thymol-full.min.js</include>
-										<include>thymol-lite.js</include>
-										<include>thymol-lite.min.js</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>copy-resources8</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/distr/Webcontent/js</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${project.build.directory}/test-classes/js</directory>
-									<includes>
-										<include>thymol.js</include>
-										<include>thymol.min.js</include>
-										<include>thymol-full.js</include>
-										<include>thymol-full.min.js</include>
-										<include>thymol-lite.js</include>
-										<include>thymol-lite.min.js</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>copy-resources9</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/distr/Webcontent/examples/hierarchy/assets/js</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${project.build.directory}/test-classes/js</directory>
-									<includes>
-										<include>${thThymolSource}</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>copy-resources10</id>
-						<phase>post-integration-test</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${basedir}/distr/Webcontent/examples/templates/v21/extrathyme/thymol</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${project.build.directory}/test-classes/js</directory>
-									<includes>
-										<include>thymol.js</include>
-										<include>thymol-full.js</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
+
 				</executions>
 			</plugin>
 		</plugins>
