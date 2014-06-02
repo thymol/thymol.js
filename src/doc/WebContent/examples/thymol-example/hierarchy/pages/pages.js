@@ -1,4 +1,4 @@
-var	thRoot="${project.basedir}/distr/Webcontent/examples/hierarchy";		// In an exploded war, this is usually webapp root
+var	thRoot="${project.basedir}/dist/Webcontent/examples/hierarchy";		// In an exploded war, this is usually webapp root
 var	thPath="";		// In an exploded war, this is usually WEB-INF/<some-path>
 
 var thDebug = true;

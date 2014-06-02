@@ -4,7 +4,7 @@
 		<title>simple example</title>
 	</head>
 	<script th:remove="all" type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
-	<script th:remove="all" type="text/javascript" src="../../js/thymol.js"></script>
+	<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"></script>
 	<body>
 		<div th:include="footer :: copy">hello</div>
 		<div th:include="footer :: copy">good evening</div>
