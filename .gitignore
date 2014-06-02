@@ -1,0 +1,11 @@
+/target
+/target
+/.settings
+/bower_components
+/dist
+/node_modules
+/.classpath
+/.project
+/RunSureFire.launch
+/SeleniumFailSafe.launch
+/thymol-jettyrun.launch
