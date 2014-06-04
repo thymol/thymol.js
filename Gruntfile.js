@@ -73,6 +73,7 @@ module.exports = function(grunt) {
 			"src/main/js/obj/objects-object.js",
 			"src/main/js/obj/sets-object.js",
 			"src/main/js/obj/strings-object.js",
+			"src/main/js/obj/objects-modules-config.js",
 			"src/main/js/thymol-config.js"
 			];
 

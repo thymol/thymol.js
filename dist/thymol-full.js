@@ -7439,7 +7439,7 @@ thymol.objects.thStringsObject = function() {
     };
 }();
 
-thObjectsConfigureModules = function() {
+thymol.thObjectsConfigureModules = function() {
     thymol.addDialect({
         objects: [ {
             object: thymol.objects.thAggregatesObject
@@ -7474,8 +7474,8 @@ thObjectsConfigureModules = function() {
 $(function() {
     thymol.configureModule(thymol.objects.thHttpServletRequestObject);
     thymol.configureModule(thymol.objects.thHttpSessionObject);
-    if (typeof thObjectsConfigureModules !== "undefined") {
-        thObjectsConfigureModules();
+    if (typeof thymol.thObjectsConfigureModules !== "undefined") {
+        thymol.thObjectsConfigureModules();
     }
     var scripts = document.getElementsByTagName("script");
     for (var i = 0, iLimit = scripts.length; i < iLimit; i++) {
