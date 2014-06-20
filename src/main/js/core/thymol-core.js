@@ -40,7 +40,6 @@ thymol = function() {
 			}
 		  }
 	    },
-	    100000,
 	    thymol.thPrefix);
 	
 	var
@@ -200,13 +199,18 @@ thymol = function() {
 		this.applicationContext.resolveJSONReferences();
 		preExecute(this.applicationContext);
 
-		this.thExpressionObjects["#ctx"]["variables"] = this.applicationContext;
 		this.thExpressionObjects["#vars"] = this.applicationContext;
 		this.thExpressionObjects["#root"] = this.applicationContext;
 
 		this.sessionContext.init();
 		this.sessionContext.resolveJSONReferences();
 
+		this.thExpressionObjects["#ctx"]["variables"] = this.applicationContext;
+		this.thExpressionObjects["#ctx"]["requestParameters"] = this.requestContext;
+		this.thExpressionObjects["#ctx"]["servletContext"] = this.applicationContext;
+		this.thExpressionObjects["#ctx"]["httpServletRequest"] = this.thExpressionObjects["#httpServletRequest"];
+		this.thExpressionObjects["#ctx"]["httpSession"] = this.thExpressionObjects["#httpSession"];
+		
 		this.protocol = Thymol.prototype.override("thProtocol", this.protocol);
 		this.debug = Thymol.prototype.override("thDebug", this.debug);
 		this.root = Thymol.prototype.override("thRoot", this.root);
@@ -271,8 +275,8 @@ thymol = function() {
 		p = new ThAttr(suffix, func, prec, thymol.thThymeleafPrefixList, prefix, dataAttr);
 	}
 
-	function configureElementProcessor(prefix, suffix, func, prec, dataAttr) {
-		var p = new ThElement(suffix, func, prec, prefix);
+	function configureElementProcessor(prefix, suffix, func) {
+		var p = new ThElement(suffix, func, prefix);
 	}
 
 	function configurePreExecution(func) {
@@ -551,38 +555,28 @@ thymol = function() {
 	};
 	
 	function getWith(element, content) {
-		var argValue = content.trim(), argCount = 0, i, iLimit, assigs, term, pair, varName, varVal, localVar, val;
-		if (argValue) {
-			assigs = argValue.split(",");
-			for (i = 0, iLimit = assigs.length; i < iLimit; i++) {
-				term = assigs[i];
-				if (term) {
-					pair = term.split("=");
-					if (pair) {
-						varName = pair[0].trim();
-						if (varName) {
-							argCount++;
-							varVal = pair[1].trim();
-							if (varVal) {
-								localVar = null;
-								val = this.getExpression(varVal, element);
-								if (val != null) {
-									localVar = val;
-								}
-								else {
-									varVal = ThUtils.unQuote(varVal);
-									localVar = varVal;
-								}
-								if (!element.thLocalVars) {
-									element.thLocalVars = {};
-
-								}
-								element.thLocalVars[varName] = localVar;
-							}
+		var argValue = content.trim(), argCount = 0;
+		if (argValue) {		
+			do {
+				var argsExpr = ThParser.parse(argValue,true);
+				var identifier = argsExpr.tokens.shift();
+				if( identifier.type_ === 3 ) {
+					var result = argsExpr.evaluate(element, thymol.substituteParam);				
+					var varName = identifier.index_;
+					if (!!varName) {
+						argCount++;
+						if (!element.thLocalVars) {
+							element.thLocalVars = {};
+		
 						}
+						element.thLocalVars[varName] = result;
 					}
+					argValue = argValue.substring(argsExpr.position);					
 				}
-			}
+				else {
+					break;
+				}				
+			} while(argValue.length > 0);
 		}
 		return argCount;
 	};
@@ -1635,21 +1629,18 @@ thymol = function() {
 			}
 			if (spec.elementProcessors !== null && typeof spec.elementProcessors !== "undefined") {
 				for (i = 0, iLimit = spec.elementProcessors.length; i < iLimit; i++) {
-					if (spec.elementProcessors[i].precedence !== null && typeof spec.elementProcessors[i].precedence !== "undefined") {
-						prec = spec.elementProcessors[i].precedence;
-					}
-					else {
-						prec = thymol.thDefaultPrecedence;
-					}
-					configureElementProcessor(spec.prefix, spec.elementProcessors[i].name, spec.elementProcessors[i].processor, prec, null );
+					configureElementProcessor(spec.prefix, spec.elementProcessors[i].name, spec.elementProcessors[i].processor);
 				}
 			}
 			if (spec.objects !== null && typeof spec.objects !== "undefined") {
 				for (i = 0, iLimit = spec.objects.length; i < iLimit; i++) {
 					if (spec.objects[i].name !== null && typeof spec.objects[i].name !== "undefined") {
 						spec.objects[i].object.thExpressionObjectName = spec.objects[i].name;
+						configureModule(spec.objects[i].object);
 					}
-					configureModule(spec.objects[i].object);
+					else {
+						configureModule(spec.objects[i]);						
+					}
 				}
 			}
 		}
