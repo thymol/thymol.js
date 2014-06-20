@@ -59,8 +59,8 @@
 		};
 	}
 
-	function ThElement(suffix, func, prec, pref) {
-		var tha =  new ThAttr(suffix, null, prec, null, pref);
+	function ThElement(suffix, func, pref) {
+		var tha =  new ThAttr(suffix, null, 0, null, pref);
 		this.name = tha.name;		
 		this.synonym = tha.synonym;		
 		this.endName = "/" + tha.name;
