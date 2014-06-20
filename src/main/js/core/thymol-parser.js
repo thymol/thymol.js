@@ -43,12 +43,13 @@ ThParser = (function(scope) {
 		};
 	}
 
-	function Expression(tokens, ops1, ops2, functions, precision) {
+	function Expression(tokens, ops1, ops2, functions, precision, position) {
 		this.tokens = tokens;
 		this.ops1 = ops1;
 		this.ops2 = ops2;
 		this.functions = functions;
 		this.precision = precision;
+		this.position = position;
 	}
 
 	Expression.prototype = {
@@ -280,6 +281,9 @@ ThParser = (function(scope) {
 	function add(a, b) {
 		return a + b;
 	}
+	function assign(a) {
+		return a;
+	}
 	function sub(a, b) {
 		return a - b;
 	}
@@ -488,7 +492,8 @@ ThParser = (function(scope) {
 			"-" : neg,
 			"!" : not,
 			"not" : not,
-			"exp" : Math.exp
+			"exp" : Math.exp,
+			"=" : assign
 		};
 
 		this.ops2 = {
@@ -540,12 +545,12 @@ ThParser = (function(scope) {
 		};
 	}
 
-	ThParser.parse = function(expr) {
-		return new ThParser().parse(expr);
+	ThParser.parse = function(expr,partial) {
+		return new ThParser().parse(expr,partial);
 	};
 
-	ThParser.evaluate = function(expr, element, func) {
-		return ThParser.parse(expr).evaluate(element, func);
+	ThParser.evaluate = function(expr, partial, element, func) {
+		return ThParser.parse(expr,partial).evaluate(element, func);
 	};
 
 	ThParser.Expression = Expression;
@@ -587,9 +592,10 @@ ThParser = (function(scope) {
 	var LVARBRK = 1 << 11;
 	var RVARBRK = 1 << 11;
 	var OPTION = 1 << 12;
+	var ASSIGN = 1 << 13;
 
 	ThParser.prototype = {
-		parse : function(expr) {
+		parse : function(expr,partial) {
 			this.errormsg = "";
 			this.success = true;
 			var operstack = [];
@@ -614,6 +620,10 @@ ThParser = (function(scope) {
 							noperators++;
 							this.addfunc(tokenstack, operstack, TOP1);
 						}
+						expected = (PRIMARY | LPAREN | LVARBRK | FUNCTION | SIGN | OPTION);
+					}
+					else if (this.isAssign() && (expected & ASSIGN)) {
+						noperators++;
 						expected = (PRIMARY | LPAREN | LVARBRK | FUNCTION | SIGN | OPTION);
 					}
 					else if (this.isComment()) {
@@ -718,6 +728,9 @@ ThParser = (function(scope) {
 					if ((expected & COMMA) === 0) {
 						this.error_parsing(this.pos, "unexpected \",\"");
 					}					
+					if( !!partial ) {
+						break;
+					}
 					if( this.mode === 5 ) {
 						this.tmpprio -= 10;
 					}					
@@ -775,7 +788,7 @@ ThParser = (function(scope) {
 						}
 						var vartoken = new Token(TVAR, this.tokenindex, 0, 0, this.mode);
 						tokenstack.push(vartoken);
-						expected = (FUNCTION | OPERATOR | RPAREN | RBRACK | RVARBRK | COMMA | LPAREN | RVARBRK | LBRACK | CALL | OPTION);
+						expected = (FUNCTION | OPERATOR | RPAREN | RBRACK | RVARBRK | COMMA | LPAREN | RVARBRK | LBRACK | CALL | OPTION | ASSIGN);
 					}
 					else {
 						if (this.errormsg === "") {
@@ -797,7 +810,7 @@ ThParser = (function(scope) {
 			if (noperators + 1 !== tokenstack.length) {
 				this.error_parsing(this.pos, "parity");
 			}
-			var res = new Expression(tokenstack, object(this.ops1), object(this.ops2), object(this.functions), this.precision);
+			var res = new Expression(tokenstack, object(this.ops1), object(this.ops2), object(this.functions), this.precision, this.pos);
 			return res;
 		},
 
@@ -926,6 +939,9 @@ ThParser = (function(scope) {
 					this.tokenprio = 6;
 					this.tokenindex = "!";
 				}
+				else if (ch === "=") {
+					this.tokenindex = "=";
+				}
 				else {
 					return false;
 				}
@@ -974,6 +990,22 @@ ThParser = (function(scope) {
 		isSign : function() {
 			var code = this.expression.charCodeAt(this.pos - 1);
 			if (code === 45 || code === 43) { // - or +
+				return true;
+			}
+			return false;
+		},
+
+		isAssign : function() {
+			var code = this.expression.charCodeAt(this.pos - 1);
+			if (code === 61) { // =
+				var cha = this.expression.charAt(this.pos - 2);
+				if( cha === '!' || cha === '>' || cha === '<' || cha === '=' ) {
+					return false;
+				}
+				cha = this.expression.charAt(this.pos);
+				if( cha === '>' || cha === '<' || cha === '=' ) {
+					return false;
+				}
 				return true;
 			}
 			return false;
