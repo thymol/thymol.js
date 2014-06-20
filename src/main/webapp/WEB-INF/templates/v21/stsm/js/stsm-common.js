@@ -58,20 +58,20 @@ var  thMessages = [
     ];
 
 thymol.ready(function() {
-	thymol.configurePreExecution( function() {
-	    thymol.applicationContext.createVariable("dateplanted",thymol.objects.thDatesObject.createToday());
-	    thymol.addDialect({
-	   	 prefix: 'th',
-	   	 processors: [
-	   	   {
-	   	     name: 'field',
-	   	     processor: fieldAttrProcessor,
-	   	     precedence : 1200
-	   	   }
-	   	 ]
-	   }); 
-	    	    
-	    thymol.configureModule(fieldsObject);	
+	thymol.configurePreExecution(function() {
+		thymol.applicationContext.createVariable("dateplanted", thymol.objects.thDatesObject.createToday());
+		thymol.addDialect({
+			prefix : 'th',
+			attributeProcessors : [ {
+					name : 'field',
+					processor : fieldAttrProcessor,
+					precedence : 1200
+				} 
+			],
+			objects : [
+			        fieldsObject
+			]
+		});
 	});
 });
 
