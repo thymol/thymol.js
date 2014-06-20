@@ -144,28 +144,21 @@ thymol.configurePreExecution( function() {
        new Team("ROS", "Rosemary 75ers", 32, 7, 11, 18),
        new Team("SHU", "Saffron Hunters", 31, 8, 7, 21)
     ];
-    thymol.applicationContext.createVariable("teams",teams);    
-  
-    thymol.addDialect({
-	   	 prefix: 'score',
-	   	 attributeProcessors: [
-	   	   {
-	   	     name: 'classforposition',
-	   	     processor: classForPositionAttrProcessor,
-	   	     precedence : 12000
-	   	   },
-	   	   {
-	   	     name: 'remarkforposition',
-	   	     processor: remarkForPositionAttrProcessor,
-	   	     precedence : 12000
-	   	   }
-	   	 ],
-	   	 elementProcessors: [
-	   	   {
-	   	     name: 'headlines',
-	   	     processor: headlinesElementProcessor,
-	   	     precedence : 1000
-	   	   }
-	   	 ]
-	   }); 	
+    thymol.applicationContext.createVariable("teams",teams);      
+	thymol.addDialect({
+		prefix : 'score',
+		attributeProcessors : [ {
+			name : 'classforposition',
+			processor : classForPositionAttrProcessor,
+			precedence : 12000
+		}, {
+			name : 'remarkforposition',
+			processor : remarkForPositionAttrProcessor,
+			precedence : 12000
+		} ],
+		elementProcessors : [ {
+			name : 'headlines',
+			processor : headlinesElementProcessor,
+		} ]
+	});
 });
