@@ -1,19 +1,19 @@
 thymol.thObjectsConfigureModules = function() {
     thymol.addDialect({
     	objects: [
-			{object: thymol.objects.thAggregatesObject},
-			{object: thymol.objects.thArraysObject},
-			{object: thymol.objects.thBoolsObject},
-			{object: thymol.objects.thDatesObject},
-			{object: thymol.objects.thCalendarsObject},
-			{object: thymol.objects.thIdsObject},
-			{object: thymol.objects.thListsObject},
-			{object: thymol.objects.thMapsObject},
-			{object: thymol.objects.thMessagesObject},
-			{object: thymol.objects.thNumbersObject},
-			{object: thymol.objects.thObjectsObject},
-			{object: thymol.objects.thSetsObject},
-			{object: thymol.objects.thStringsObject}
+			thymol.objects.thAggregatesObject,
+			thymol.objects.thArraysObject,
+			thymol.objects.thBoolsObject,
+			thymol.objects.thDatesObject,
+			thymol.objects.thCalendarsObject,
+			thymol.objects.thIdsObject,
+			thymol.objects.thListsObject,
+			thymol.objects.thMapsObject,
+			thymol.objects.thMessagesObject,
+			thymol.objects.thNumbersObject,
+			thymol.objects.thObjectsObject,
+			thymol.objects.thSetsObject,
+			thymol.objects.thStringsObject
 	   	 ]
 	   });
 };
