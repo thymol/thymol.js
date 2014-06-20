@@ -1054,7 +1054,9 @@ public class ThymolTestFilter implements Filter {
 				
 		ctx.setVariable( "thing1", 1 );
 		ctx.setVariable( "thing2", 10 );
-				
+		
+		ctx.setVariable( "level", "../../" );
+		
 //		int x = 0;
 		
 	}
