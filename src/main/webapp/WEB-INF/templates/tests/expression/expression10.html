@@ -9,9 +9,9 @@
 	thDebug=true;
 </script>
 <body>
-<p th:text="${#httpServletRequest.getSession(true).getAttribute('a')}">...</p>
-<p th:text="${#httpServletRequest.getSession(true).getAttribute('b')}">...</p>
-<p th:text="${#httpServletRequest.getSession(true).getAttribute('c')}">...</p>
+<p th:text="${#ctx.httpServletRequest.getSession(true).getAttribute('a')}">...</p>
+<p th:text="${#ctx.httpServletRequest.getSession(true).getAttribute('b')}">...</p>
+<p th:text="${#ctx.httpServletRequest.getSession(true).getAttribute('c')}">...</p>
 </body>
 </html>
 <!--
