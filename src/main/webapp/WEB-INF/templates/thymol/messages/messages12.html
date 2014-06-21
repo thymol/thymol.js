@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<title>Messages example 11</title>
+</head>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"   data-thymol-load="messages-data.js"></script>
+	
+<body>
+<span th:text="${#messages.msgOrNullWithParams('msg07',var08)}">Some text</span><br/>
+<span th:text="${#messages.msgOrNullWithParams('msg07',var09)}">Some text</span><br/>
+<span th:text="${#messages.msgOrNullWithParams('msg07',var10)}">Some text</span><br/>
+</body>
+
+</html>

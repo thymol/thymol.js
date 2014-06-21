@@ -27,6 +27,7 @@ import org.thymoljs.thymol.test.selenium.cases.ReplaceCases;
 import org.thymoljs.thymol.test.selenium.cases.SetsCases;
 import org.thymoljs.thymol.test.selenium.cases.StringsCases;
 import org.thymoljs.thymol.test.selenium.cases.WithCases;
+import org.thymoljs.thymol.test.selenium.thymol20.Thymol20Cases;
 import org.thymoljs.thymol.test.selenium.v21cases.AssertCases21;
 import org.thymoljs.thymol.test.selenium.v21cases.BlockCases21;
 import org.thymoljs.thymol.test.selenium.v21cases.DomSelectorCases21;
@@ -38,7 +39,6 @@ import org.thymoljs.thymol.test.selenium.v21cases.ParsingCases21;
 import org.thymoljs.thymol.test.selenium.v21cases.RemoveCases21;
 import org.thymoljs.thymol.test.selenium.v21cases.ReplaceCases21;
 import org.thymoljs.thymol.test.selenium.v21cases.SyntaxCases21;
-
 import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 
@@ -82,7 +82,8 @@ import org.junit.runners.Suite;
 	MapsCases.class,
 	AggregatesCases.class,
 	MessagesCases.class,
-	IdsCases.class
+	IdsCases.class,
+	Thymol20Cases.class
 })
 
 public class SeleniumSuite  {

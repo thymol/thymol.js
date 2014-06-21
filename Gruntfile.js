@@ -165,10 +165,10 @@ module.exports = function(grunt) {
 		},
 
 		copy : {
-			first : {
+			thymol : {
 				expand : true,
 				cwd : "target/dist-tmp/",
-				src : [ "**/*.js" ],
+				src : [ "**/thymol.js" ],
 				dest : "dist/",
 				options : {
 					flatten : true,
@@ -178,19 +178,31 @@ module.exports = function(grunt) {
 					}
 				}
 			},
-			second : {
+		    thymol_min : {
+			    expand : true,
+     			cwd : "target/dist-tmp/",
+	    		src : [ "**/thymol.min.js" ],
+		    	dest : "dist/",
+			    options : {
+				    flatten : true,
+				    process : function(content, srcpath) {
+				   	    content = content.replace("${thThymolSource}", fullFileMin);
+					    return content.replace("${thJQuerySource}", jquerySourceDefault);
+				    }
+			    }
+		    },
+		    thymol_main : {
+			    expand : true,
+     			cwd : "target/dist-tmp/",
+	    		src : [ "**/thymol-full*.js", "**/thymol-lite*.js" ],
+		    	dest : "dist/",
+		    },		    
+			bower_dist : {
 				expand : true,
-				cwd : "target/dist-tmp/",
+				cwd : "dist/",
 				src : [ "**/*.js" ],
-				dest : thymolDistPath,
-				options : {
-					flatten : true,
-					process : function(content, srcpath) {
-						content = content.replace("${thThymolSource}", thymolSource);
-						return content.replace("${thJQuerySource}", jquerySource);
-					}
-				}
-			}
+				dest : thymolDistPath
+			}		    
 		}
 
 	});

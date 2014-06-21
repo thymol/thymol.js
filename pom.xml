@@ -21,7 +21,7 @@
 		<thymeleaf-version>2.1.3.RELEASE</thymeleaf-version>
 		<slf4j-version>1.6.4</slf4j-version>
 		<junit-version>4.10</junit-version>
-		<selenium-java-version>2.40.0</selenium-java-version>
+		<selenium-java-version>2.42.2</selenium-java-version>
 		<jetty-version>8.1.8.v20121106</jetty-version>
 
 		<maven-clean-plugin-version>2.5</maven-clean-plugin-version>
@@ -136,22 +136,6 @@
 				<targetPath>${project.build.directory}/test-classes/templates</targetPath>
 				<filtering>true</filtering>
 			</resource>
-			<!--resource>
-				<directory>src/main/resources/js</directory>
-				<targetPath>${project.build.directory}/test-classes/js</targetPath>
-				<filtering>true</filtering>
-				<includes>
-					<include>thymol.js</include>
-					<include>thymol-full.js</include>
-				</includes>
-			</resource-->
-			<!--resource>
-				<directory>src/main/resources</directory>
-				<targetPath>${project.build.directory}/${project.build.finalName}</targetPath>
-				<excludes>
-					<exclude>js/**</exclude>
-				</excludes>
-			</resource-->
 		</resources>
 
 		<pluginManagement>

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>thymol20 with 01</title>
+</head>
+<script type="text/javascript">var thDebug = true;</script>
+<script type="text/javascript" src="${thInstall}/thymol.js"></script>
+<body>
+<div th:with="fred='Frederick'+' '+'Bloggs',joe='Joseph'+' '+'Smith'">
+<div>First name is: <span th:text="${fred}">name1</span></div>
+<div>Other name is: <span th:text="${joe}">name2</span></div>
+</div>
+</body>
+</html>

@@ -693,6 +693,13 @@ public class ExpressionCases extends SeleniumCases {
 	}
 
 	@Test
+	public void expression07a() {
+		localise( "tests/expression/" );
+		String result = getResult( "expression07a.html?a7='Some text'&b7=123&c7='Hello'", false );
+		assertEquals( clean( expression07Result ), clean( result ) );
+	}
+
+	@Test
 	public void expression08() {
 		localise( "tests/expression/" );
 		String result = getResult( "expression08.html", false );
@@ -724,9 +731,23 @@ public class ExpressionCases extends SeleniumCases {
 	}
 
 	@Test
+	public void expression10a() {
+		localise( "tests/expression/" );
+		String result = getResult( "expression10a.html", false );
+		assertEquals( clean( expression10Result ), clean( result ) );
+	}
+
+	@Test
 	public void expression11() {
 		localise( "tests/expression/" );
 		String result = getResult( "expression11.html", false );
+		assertEquals( clean( expression10Result ), clean( result ) );
+	}
+
+	@Test
+	public void expression11a() {
+		localise( "tests/expression/" );
+		String result = getResult( "expression11a.html", false );
 		assertEquals( clean( expression10Result ), clean( result ) );
 	}
 
@@ -777,6 +798,13 @@ public class ExpressionCases extends SeleniumCases {
 	public void expression15() {
 		localise( "tests/expression/" );
 		String result = getResult( "expression15.html", false );
+		assertEquals( clean( expression10Result ), clean( result ) );
+	}
+
+	@Test
+	public void expression15a() {
+		localise( "tests/expression/" );
+		String result = getResult( "expression15a.html", false );
 		assertEquals( clean( expression10Result ), clean( result ) );
 	}
 

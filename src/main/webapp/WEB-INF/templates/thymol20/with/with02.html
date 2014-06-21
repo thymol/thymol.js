@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>thymol20 with 01</title>
+</head>
+<script type="text/javascript">var thDebug = true;</script>
+<script type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="with01-data.js"></script>
+<body>
+<div class="margin" th:with="levelIndex=${level}?${level+'index.html'}:'index.html',clkIndx='clickthing(this,\''+${levelIndex}+'\')'">
+<div><a th:onclick="${clkIndx}" th:href="${level}?${level+'documentation.html'}:'documentation.html'">documentation</a></div>
+</div>
+</body>
+</html>
+

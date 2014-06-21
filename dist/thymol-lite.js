@@ -156,8 +156,8 @@ function ThAttr(suffix, func, prec, list, pref, dataAttr) {
     };
 }
 
-function ThElement(suffix, func, prec, pref) {
-    var tha = new ThAttr(suffix, null, prec, null, pref);
+function ThElement(suffix, func, pref) {
+    var tha = new ThAttr(suffix, null, 0, null, pref);
     this.name = tha.name;
     this.synonym = tha.synonym;
     this.endName = "/" + tha.name;
@@ -425,7 +425,7 @@ thymol = function() {
                 element.childNodes[i].isBlockChild = true;
             }
         }
-    }, 1e5, thymol.thPrefix);
+    }, thymol.thPrefix);
     var textFuncSynonym = "~~~~", varRefExpr = /([$#]{.*?})/, literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/, startParserLevelCommentExpr = /^\s*\/\*\s*$/, endParserLevelCommentExpr = /^\s*\*\/\s*$/, startParserLevelCommentExpr2 = /^\/\*[^\/].*/, endParserLevelCommentExpr2 = /.*[^\/]\*\/$/, prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//, varExpr3 = /[\$\*#@]{1}\{(.*)\}$/, nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/, numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/, varParExpr = /([^(]*)\s*[(]([^)]*?)[)]/, domSelectExpr = /([\/]{1,2})?([A-Za-z0-9_\-]*(?:[\(][\)])?)?([^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*(?:[\.\/#]?[^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*)*)?([\[][^\]]*?[\]])?/, litSubstExpr = /\.*?([\|][^\|]*?[\|])\.*?/;
     function Thymol() {}
     function ThNode(thDocParam, visitedParam, parentDocParam, firstChildParam, nextSiblingParam, fileNameParam, fragNameParam, isNodeParam, elementParam) {
@@ -546,11 +546,15 @@ thymol = function() {
         })(this.applicationContext, this.requestContext);
         this.applicationContext.resolveJSONReferences();
         preExecute(this.applicationContext);
-        this.thExpressionObjects["#ctx"]["variables"] = this.applicationContext;
         this.thExpressionObjects["#vars"] = this.applicationContext;
         this.thExpressionObjects["#root"] = this.applicationContext;
         this.sessionContext.init();
         this.sessionContext.resolveJSONReferences();
+        this.thExpressionObjects["#ctx"]["variables"] = this.applicationContext;
+        this.thExpressionObjects["#ctx"]["requestParameters"] = this.requestContext;
+        this.thExpressionObjects["#ctx"]["servletContext"] = this.applicationContext;
+        this.thExpressionObjects["#ctx"]["httpServletRequest"] = this.thExpressionObjects["#httpServletRequest"];
+        this.thExpressionObjects["#ctx"]["httpSession"] = this.thExpressionObjects["#httpSession"];
         this.protocol = Thymol.prototype.override("thProtocol", this.protocol);
         this.debug = Thymol.prototype.override("thDebug", this.debug);
         this.root = Thymol.prototype.override("thRoot", this.root);
@@ -603,8 +607,8 @@ thymol = function() {
         }
         p = new ThAttr(suffix, func, prec, thymol.thThymeleafPrefixList, prefix, dataAttr);
     }
-    function configureElementProcessor(prefix, suffix, func, prec, dataAttr) {
-        var p = new ThElement(suffix, func, prec, prefix);
+    function configureElementProcessor(prefix, suffix, func) {
+        var p = new ThElement(suffix, func, prefix);
     }
     function configurePreExecution(func) {
         if (typeof thymol.thPreExecutionFunctions === "undefined" || thymol.thPreExecutionFunctions === null) {
@@ -861,36 +865,26 @@ thymol = function() {
         return result;
     }
     function getWith(element, content) {
-        var argValue = content.trim(), argCount = 0, i, iLimit, assigs, term, pair, varName, varVal, localVar, val;
+        var argValue = content.trim(), argCount = 0;
         if (argValue) {
-            assigs = argValue.split(",");
-            for (i = 0, iLimit = assigs.length; i < iLimit; i++) {
-                term = assigs[i];
-                if (term) {
-                    pair = term.split("=");
-                    if (pair) {
-                        varName = pair[0].trim();
-                        if (varName) {
-                            argCount++;
-                            varVal = pair[1].trim();
-                            if (varVal) {
-                                localVar = null;
-                                val = this.getExpression(varVal, element);
-                                if (val != null) {
-                                    localVar = val;
-                                } else {
-                                    varVal = ThUtils.unQuote(varVal);
-                                    localVar = varVal;
-                                }
-                                if (!element.thLocalVars) {
-                                    element.thLocalVars = {};
-                                }
-                                element.thLocalVars[varName] = localVar;
-                            }
+            do {
+                var argsExpr = ThParser.parse(argValue, true);
+                var identifier = argsExpr.tokens.shift();
+                if (identifier.type_ === 3) {
+                    var result = argsExpr.evaluate(element, thymol.substituteParam);
+                    var varName = identifier.index_;
+                    if (!!varName) {
+                        argCount++;
+                        if (!element.thLocalVars) {
+                            element.thLocalVars = {};
                         }
+                        element.thLocalVars[varName] = result;
                     }
+                    argValue = argValue.substring(argsExpr.position);
+                } else {
+                    break;
                 }
-            }
+            } while (argValue.length > 0);
         }
         return argCount;
     }
@@ -1842,20 +1836,17 @@ thymol = function() {
             }
             if (spec.elementProcessors !== null && typeof spec.elementProcessors !== "undefined") {
                 for (i = 0, iLimit = spec.elementProcessors.length; i < iLimit; i++) {
-                    if (spec.elementProcessors[i].precedence !== null && typeof spec.elementProcessors[i].precedence !== "undefined") {
-                        prec = spec.elementProcessors[i].precedence;
-                    } else {
-                        prec = thymol.thDefaultPrecedence;
-                    }
-                    configureElementProcessor(spec.prefix, spec.elementProcessors[i].name, spec.elementProcessors[i].processor, prec, null);
+                    configureElementProcessor(spec.prefix, spec.elementProcessors[i].name, spec.elementProcessors[i].processor);
                 }
             }
             if (spec.objects !== null && typeof spec.objects !== "undefined") {
                 for (i = 0, iLimit = spec.objects.length; i < iLimit; i++) {
                     if (spec.objects[i].name !== null && typeof spec.objects[i].name !== "undefined") {
                         spec.objects[i].object.thExpressionObjectName = spec.objects[i].name;
+                        configureModule(spec.objects[i].object);
+                    } else {
+                        configureModule(spec.objects[i]);
                     }
-                    configureModule(spec.objects[i].object);
                 }
             }
         }
@@ -2557,12 +2548,13 @@ ThParser = function(scope) {
             }
         };
     }
-    function Expression(tokens, ops1, ops2, functions, precision) {
+    function Expression(tokens, ops1, ops2, functions, precision, position) {
         this.tokens = tokens;
         this.ops1 = ops1;
         this.ops2 = ops2;
         this.functions = functions;
         this.precision = precision;
+        this.position = position;
     }
     Expression.prototype = {
         simplify: function(valuesParam) {
@@ -2771,6 +2763,9 @@ ThParser = function(scope) {
     function add(a, b) {
         return a + b;
     }
+    function assign(a) {
+        return a;
+    }
     function sub(a, b) {
         return a - b;
     }
@@ -2955,7 +2950,8 @@ ThParser = function(scope) {
             "-": neg,
             "!": not,
             not: not,
-            exp: Math.exp
+            exp: Math.exp,
+            "=": assign
         };
         this.ops2 = {
             "?": binary,
@@ -3003,11 +2999,11 @@ ThParser = function(scope) {
             PI: Math.PI
         };
     }
-    ThParser.parse = function(expr) {
-        return new ThParser().parse(expr);
+    ThParser.parse = function(expr, partial) {
+        return new ThParser().parse(expr, partial);
     };
-    ThParser.evaluate = function(expr, element, func) {
-        return ThParser.parse(expr).evaluate(element, func);
+    ThParser.evaluate = function(expr, partial, element, func) {
+        return ThParser.parse(expr, partial).evaluate(element, func);
     };
     ThParser.Expression = Expression;
     ThParser.values = {
@@ -3046,8 +3042,9 @@ ThParser = function(scope) {
     var LVARBRK = 1 << 11;
     var RVARBRK = 1 << 11;
     var OPTION = 1 << 12;
+    var ASSIGN = 1 << 13;
     ThParser.prototype = {
-        parse: function(expr) {
+        parse: function(expr, partial) {
             this.errormsg = "";
             this.success = true;
             var operstack = [];
@@ -3068,6 +3065,9 @@ ThParser = function(scope) {
                             noperators++;
                             this.addfunc(tokenstack, operstack, TOP1);
                         }
+                        expected = PRIMARY | LPAREN | LVARBRK | FUNCTION | SIGN | OPTION;
+                    } else if (this.isAssign() && expected & ASSIGN) {
+                        noperators++;
                         expected = PRIMARY | LPAREN | LVARBRK | FUNCTION | SIGN | OPTION;
                     } else if (this.isComment()) {} else {
                         if (this.tokenindex == "!") {
@@ -3150,6 +3150,9 @@ ThParser = function(scope) {
                     if ((expected & COMMA) === 0) {
                         this.error_parsing(this.pos, 'unexpected ","');
                     }
+                    if (!!partial) {
+                        break;
+                    }
                     if (this.mode === 5) {
                         this.tmpprio -= 10;
                     }
@@ -3200,7 +3203,7 @@ ThParser = function(scope) {
                         }
                         var vartoken = new Token(TVAR, this.tokenindex, 0, 0, this.mode);
                         tokenstack.push(vartoken);
-                        expected = FUNCTION | OPERATOR | RPAREN | RBRACK | RVARBRK | COMMA | LPAREN | RVARBRK | LBRACK | CALL | OPTION;
+                        expected = FUNCTION | OPERATOR | RPAREN | RBRACK | RVARBRK | COMMA | LPAREN | RVARBRK | LBRACK | CALL | OPTION | ASSIGN;
                     } else {
                         if (this.errormsg === "") {
                             this.error_parsing(this.pos, "unknown character");
@@ -3220,7 +3223,7 @@ ThParser = function(scope) {
             if (noperators + 1 !== tokenstack.length) {
                 this.error_parsing(this.pos, "parity");
             }
-            var res = new Expression(tokenstack, object(this.ops1), object(this.ops2), object(this.functions), this.precision);
+            var res = new Expression(tokenstack, object(this.ops1), object(this.ops2), object(this.functions), this.precision, this.pos);
             return res;
         },
         evaluate: function(expr, element, func) {
@@ -3327,6 +3330,8 @@ ThParser = function(scope) {
                 } else if (ch === "!") {
                     this.tokenprio = 6;
                     this.tokenindex = "!";
+                } else if (ch === "=") {
+                    this.tokenindex = "=";
                 } else {
                     return false;
                 }
@@ -3367,6 +3372,21 @@ ThParser = function(scope) {
         isSign: function() {
             var code = this.expression.charCodeAt(this.pos - 1);
             if (code === 45 || code === 43) {
+                return true;
+            }
+            return false;
+        },
+        isAssign: function() {
+            var code = this.expression.charCodeAt(this.pos - 1);
+            if (code === 61) {
+                var cha = this.expression.charAt(this.pos - 2);
+                if (cha === "!" || cha === ">" || cha === "<" || cha === "=") {
+                    return false;
+                }
+                cha = this.expression.charAt(this.pos);
+                if (cha === ">" || cha === "<" || cha === "=") {
+                    return false;
+                }
                 return true;
             }
             return false;
