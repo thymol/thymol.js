@@ -1057,6 +1057,49 @@ public class ThymolTestFilter implements Filter {
 		
 		ctx.setVariable( "level", "../../" );
 		
+	
+		
+		Map< String, Object > product5Var = new LinkedHashMap< String, Object >();
+		product5Var.put("name", "Cucumber");
+		product5Var.put("price", "1.0");
+
+		Map< String, Object > product6Var = new LinkedHashMap< String, Object >();
+		product6Var.put("name", "Melon");
+		product6Var.put("price", "6.0");
+
+		Map< String, Object > product7Var = new LinkedHashMap< String, Object >();
+		product7Var.put("name", "Beetroot");
+		product7Var.put("price", "1.45");
+
+		Map< String, Object > product8Var = new LinkedHashMap< String, Object >();
+		product8Var.put("name", "Peach");
+		product8Var.put("price", "0.75");
+
+		Map< String, Object > product9Var = new LinkedHashMap< String, Object >();
+		product9Var.put("name", "Celery");
+		product9Var.put("price", "2.0");
+
+		Map< String, Object > product10Var = new LinkedHashMap< String, Object >();
+		product10Var.put("name", "Pineapple");
+		product10Var.put("price", "28.0");
+
+		List< Object > productList2 = new LinkedList< Object >(products);
+		productList2.add(product5Var);
+		productList2.add(product6Var);
+		productList2.add(product7Var);
+		productList2.add(product8Var);
+		productList2.add(product9Var);
+		productList2.add(product10Var);
+		
+		ctx.setVariable( "productList2", productList2 );		
+		ctx.setVariable( "product2", product2Var );		
+		ctx.setVariable( "v1", new Integer(3) );		
+		
+		Integer[] numListArray = {5, 3, 9, 4, 1, 6, 2, 10, 8, 7};
+		List< Integer > numList = Arrays.asList( numListArray );
+		ctx.setVariable( "numList", numList );		
+		
+		
 //		int x = 0;
 		
 	}
