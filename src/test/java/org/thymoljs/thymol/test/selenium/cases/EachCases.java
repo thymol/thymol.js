@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static org.junit.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class EachCases extends SeleniumCases {
@@ -202,35 +203,35 @@ public class EachCases extends SeleniumCases {
 	@Test
 	public void each01() {
 		localise("tests/each/");
-		String result = getResult( "each01.html", false );
+		String result = getResult( "each01.html", ResultMode.HTML );
 		assertEquals( clean(each01Result), clean(result) );
 	}
 
 	@Test
 	public void each02() {
 		localise("tests/each/");
-		String result = getResult( "each02.html", false );
+		String result = getResult( "each02.html", ResultMode.HTML );
 		assertEquals( clean(each02Result), clean(result) );
 	}
 
 	@Test
 	public void each03() {
 		localise("tests/each/");
-		String result = getResult( "each03.html", false );
+		String result = getResult( "each03.html", ResultMode.HTML );
 		assertEquals( clean(each03Result), clean(result) );
 	}
 
 	@Test
 	public void each04() {
 		localise("tests/each/");
-		String result = getResult( "each04.html", false );
+		String result = getResult( "each04.html", ResultMode.HTML );
 		assertEquals( clean(each04Result), clean(result) );
 	}
 
 	@Test
 	public void each05() {
 		localise("tests/each/");
-		String result = getResult( "each05.html", false );
+		String result = getResult( "each05.html", ResultMode.HTML );
 		assertEquals( clean(each05Result), clean(result) );
 	}
 

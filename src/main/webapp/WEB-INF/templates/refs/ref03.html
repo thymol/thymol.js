@@ -5,23 +5,23 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <title>refs example 03</title>
 </head>
-<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"   data-thymol-load="ref-data.js"></script>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="ref-data.js"></script>
 <body>
 Text before
-<div th:text="${productList[${v1 * 2 + 1 }].name}">
-    Nothing to show from productList
+<div th:text="${productList2[ v1 * 2 + 1 ].name}">
+    Nothing to show from productList2
 </div>
-<div th:text="${productList[ v1 * 2 + 2 ].name}">
-    Nothing to show from productList
+<div th:text="${productList2[ (v1 * 2 + 2) ].name}">
+    Nothing to show from productList2
 </div>
-<div th:text="${productList[ (v1 * 2 + 3) ].name}">
-    Nothing to show from productList
+<div th:text="${productList2[ v1 * 2 + 3 ].name}">
+    Nothing to show from productList2
 </div>
-<div th:text="${productList[7].name}">
-    Nothing to show from productList
+<div th:text="${productList2[7].name}">
+    Nothing to show from productList2
 </div>
 <div th:text="${product2.name}">
-    Nothing to show from productList
+    Nothing to show from productList2
 </div>
 Text after 
 </body>

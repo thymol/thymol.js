@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class BoolsCases extends SeleniumCases {
@@ -66,28 +67,28 @@ public class BoolsCases extends SeleniumCases {
 	@Test
 	public void bools01() {
 		localise( "thymol/bools/" );
-		String result = getResult( "bools01.html", false );
+		String result = getResult( "bools01.html", ResultMode.HTML );
 		assertEquals( clean( bools01Result ), clean( result ) );
 	}
 
 	@Test
 	public void bools02() {
 		localise( "thymol/bools/" );
-		String result = getResult( "bools02.html", false );
+		String result = getResult( "bools02.html", ResultMode.HTML );
 		assertEquals( clean( bools02Result ), clean( result ) );
 	}
 
 	@Test
 	public void bools03() {
 		localise( "thymol/bools/" );
-		String result = getResult( "bools03.html", false );
+		String result = getResult( "bools03.html", ResultMode.HTML );
 		assertEquals( clean( bools03Result ), clean( result ) );
 	}
 
 	@Test
 	public void bools04() {
 		localise( "thymol/bools/" );
-		String result = getResult( "bools04.html", false );
+		String result = getResult( "bools04.html", ResultMode.HTML );
 		assertEquals( clean( bools04Result ), clean( result ) );
 	}
 

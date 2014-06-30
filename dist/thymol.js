@@ -44,7 +44,7 @@
             el.src = script;
         }
         if (typeof params !== "undefined" && params !== null) {
-            el.src += "?" + params;
+            el.src += params;
         }
         el.type = "text/javascript";
         (document.getElementsByTagName("HEAD")[0] || document.body).appendChild(el);
@@ -58,7 +58,7 @@
         path = scriptSrc.substring(0, 1 + pathEnd);
     }
     var jquerySrc = script.getAttribute("data-jquery-src");
-    if (!!jquerySrc) {
+    if (!!jquerySrc || "" === jquerySrc) {
         thymol.thJQuerySource = jquerySrc;
         if ("" !== thymol.thJQuerySource) {
             loadScript(thymol.thJQuerySource);

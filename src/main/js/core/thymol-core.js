@@ -337,7 +337,7 @@ thymol = function() {
 				fp = result.indexOf("__");
 			}
 		} while (fp >= 0);
-		result = result.replace("\\_\\_", "__", "g");
+        result = result.replace(/\\_\\_/g, "__");                
 		return result;
 	};	
 	

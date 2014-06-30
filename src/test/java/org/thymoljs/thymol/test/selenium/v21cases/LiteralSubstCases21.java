@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.v21cases;
 
 import static org.junit.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class LiteralSubstCases21 extends SeleniumCases {
@@ -53,56 +54,56 @@ public class LiteralSubstCases21 extends SeleniumCases {
 	@Test
 	public void literalSubst01() {
 		localise("tests21/literalsubst/");
-		String result = getResult( "literalsubst01.html", false );
+		String result = getResult( "literalsubst01.html", ResultMode.HTML );
 		assertEquals( clean( literalsubst01Result ), clean( result ) );
 	}
 
 	@Test
 	public void literalSubst02() {
 		localise("tests21/literalsubst/");
-		String result = getResult( "literalsubst02.html", false );
+		String result = getResult( "literalsubst02.html", ResultMode.HTML );
 		assertEquals( clean( literalsubst02Result ), clean( result ) );
 	}
 
 	@Test
 	public void literalSubst03() {
 		localise("tests21/literalsubst/");
-		String result = getResult( "literalsubst03.html", false );
+		String result = getResult( "literalsubst03.html", ResultMode.HTML );
 		assertEquals( clean( literalsubst03Result ), clean( result ) );
 	}
 
 	@Test
 	public void literalSubst03a() {
 		localise("tests21/literalsubst/");
-		String result = getResult( "literalsubst03a.html", false );
+		String result = getResult( "literalsubst03a.html", ResultMode.HTML );
 		assertEquals( clean( literalsubst03Result ), clean( result ) );
 	}
 
 	@Test
 	public void literalSubst04() {
 		localise("tests21/literalsubst/");
-		String result = getResult( "literalsubst04.html", false );
+		String result = getResult( "literalsubst04.html", ResultMode.HTML );
 		assertEquals( clean( literalsubst04Result ), clean( result ) );
 	}
 
 	@Test
 	public void literalSubst05() {
 		localise("tests21/literalsubst/");
-		String result = getResult( "literalsubst05.html", false );
+		String result = getResult( "literalsubst05.html", ResultMode.HTML );
 		assertEquals( clean( literalsubst05Result ), clean( result ) );
 	}
 
 	@Test
 	public void literalSubst06() {
 		localise("tests21/literalsubst/");
-		String result = getResult( "literalsubst06.html", false );
+		String result = getResult( "literalsubst06.html", ResultMode.HTML );
 		assertEquals( clean( literalsubst06Result ), clean( result ) );
 	}
 
 	@Test
 	public void literalSubst07() {
 		localise("tests21/literalsubst/");
-		String result = getResult( "literalsubst07.html", false );
+		String result = getResult( "literalsubst07.html", ResultMode.HTML );
 		assertEquals( clean( literalsubst07Result ), clean( result ) );
 	}
 

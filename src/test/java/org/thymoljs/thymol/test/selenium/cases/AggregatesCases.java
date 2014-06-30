@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class AggregatesCases extends SeleniumCases {
@@ -117,14 +118,14 @@ public class AggregatesCases extends SeleniumCases {
 	@Test
 	public void aggregates01() {
 		localise( "thymol/aggregates/" );
-		String result = getResult( "aggregates01.html", false );
+		String result = getResult( "aggregates01.html", ResultMode.HTML );
 		assertEquals( clean( aggregates01Result ), clean( result ) );
 	}
 
 	@Test
 	public void aggregates02() {
 		localise( "thymol/aggregates/" );
-		String result = getResult( "aggregates02.html", false );
+		String result = getResult( "aggregates02.html", ResultMode.HTML );
 		assertEquals( clean( aggregates02ResultThymol ), clean( result ) );			
 //		if( expectThymolResult() ) {
 //			assertEquals( clean( aggregates02ResultThymol ), clean( result ) );			
@@ -138,14 +139,14 @@ public class AggregatesCases extends SeleniumCases {
 	@Test
 	public void aggregates03() {
 		localise( "thymol/aggregates/" );
-		String result = getResult( "aggregates03.html", false );
+		String result = getResult( "aggregates03.html", ResultMode.HTML );
 		assertEquals( clean( aggregates03Result ), clean( result ) );
 	}
 
 	@Test
 	public void aggregates04() {
 		localise( "thymol/aggregates/" );
-		String result = getResult( "aggregates04.html", false );
+		String result = getResult( "aggregates04.html", ResultMode.HTML );
 		assertEquals( clean( aggregates04ResultThymol ), clean( result ) );			
 //		if( expectThymolResult() ) {
 //			assertEquals( clean( aggregates04ResultThymol ), clean( result ) );			
@@ -159,35 +160,35 @@ public class AggregatesCases extends SeleniumCases {
 /*	@Test
 	public void aggregates05() {
 		localise( "thymol/aggregates/" );
-		String result = getResult( "aggregates05.html", false );		
+		String result = getResult( "aggregates05.html", ResultMode.HTML );		
 		assertEquals( clean( aggregates05Result ), clean( result ) );
 	}
 
 	@Test
 	public void aggregates06() {
 		localise( "thymol/aggregates/" );
-		String result = getResult( "aggregates06.html", false );		
+		String result = getResult( "aggregates06.html", ResultMode.HTML );		
 		assertEquals( clean( aggregates06Result ), clean( result ) );
 	}
 
 	@Test
 	public void aggregates07() {
 		localise( "thymol/aggregates/" );
-		String result = getResult( "aggregates07.html", false );		
+		String result = getResult( "aggregates07.html", ResultMode.HTML );		
 		assertEquals( clean( aggregates07Result ), clean( result ) );
 	}
 
 	@Test
 	public void aggregates08() {
 		localise( "thymol/aggregates/" );
-		String result = getResult( "aggregates08.html", false );		
+		String result = getResult( "aggregates08.html", ResultMode.HTML );		
 		assertEquals( clean( aggregates08Result ), clean( result ) );
 	}
 
 	@Test
 	public void aggregates09() {
 		localise( "thymol/aggregates/" );
-		String result = getResult( "aggregates09.html", false );		
+		String result = getResult( "aggregates09.html", ResultMode.HTML );		
 		assertEquals( clean( aggregates09Result ), clean( result ) );
 	}*/
 

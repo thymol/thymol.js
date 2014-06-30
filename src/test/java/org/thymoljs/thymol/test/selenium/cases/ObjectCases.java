@@ -1,9 +1,10 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
+
+import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.thymoljs.thymol.test.selenium.SureFireEnv;
-
 import org.junit.Test;
 
 public class ObjectCases extends SeleniumCases {
@@ -59,14 +60,14 @@ public class ObjectCases extends SeleniumCases {
 	@Test
 	public void object01() {
 		localise("tests/object/");
-		String result = getResult( "object01.html", false );
+		String result = getResult( "object01.html", ResultMode.HTML );
 		assertEquals( object01Result, result );
 	}
 
 	@Test
 	public void object02() {
 		localise("tests/object/");
-		String result = getResult( "object02.html", false );
+		String result = getResult( "object02.html", ResultMode.ALERT );
 		if( getter.getClass().isAssignableFrom( SureFireEnv.class ) ) {
 			assertEquals( object02ResultThymol, result );			
 		}
@@ -79,14 +80,14 @@ public class ObjectCases extends SeleniumCases {
 	@Test
 	public void object03() {
 		localise("tests/object/");
-		String result = getResult( "object03.html", false );
+		String result = getResult( "object03.html", ResultMode.HTML );
 		assertEquals( object03Result, result );
 	}
 
 	@Test
 	public void object04() {
 		localise("tests/object/");
-		String result = getResult( "object04.html", false );
+		String result = getResult( "object04.html", ResultMode.HTML );
 		assertEquals( object04Result, result );
 	}
 

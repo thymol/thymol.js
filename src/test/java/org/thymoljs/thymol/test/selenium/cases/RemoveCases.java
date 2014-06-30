@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class RemoveCases extends SeleniumCases {
@@ -67,42 +68,42 @@ public class RemoveCases extends SeleniumCases {
 	@Test
 	public void remove01() {
 		localise("tests/remove/");
-		String result = getResult( "remove01.html", false );
-		assertEquals( remove01Result, result );
+		String result = getResult( "remove01.html", ResultMode.HTML );
+		assertEquals( clean(remove01Result), clean(result) );
 	}
 
 	@Test
 	public void remove02() {
 		localise("tests/remove/");
-		String result = getResult( "remove02.html", false );
+		String result = getResult( "remove02.html", ResultMode.HTML );
 		assertEquals( remove02Result, result );
 	}
 
 	@Test
 	public void remove03() {
 		localise("tests/remove/");
-		String result = getResult( "remove03.html", false );
+		String result = getResult( "remove03.html", ResultMode.HTML );
 		assertEquals( remove03Result, result );
 	}
 
 	@Test
 	public void remove04() {
 		localise("tests/remove/");
-		String result = getResult( "remove04.html", false );
+		String result = getResult( "remove04.html", ResultMode.HTML );
 		assertEquals( remove04Result, result );
 	}
 
 	@Test
 	public void remove05() {
 		localise("tests/remove/");
-		String result = getResult( "remove05.html", false );
+		String result = getResult( "remove05.html", ResultMode.HTML );
 		assertEquals( remove05Result, result );
 	}
 
 	@Test
 	public void remove06() {
 		localise("tests/remove/");
-		String result = getResult( "remove06.html", false );
+		String result = getResult( "remove06.html", ResultMode.HTML );
 		assertEquals( remove06Result, result );
 	}
 

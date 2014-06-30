@@ -663,7 +663,7 @@ thymol = function() {
                 fp = result.indexOf("__");
             }
         } while (fp >= 0);
-        result = result.replace("\\_\\_", "__", "g");
+        result = result.replace(/\\_\\_/g, "__");
         return result;
     }
     function substituteParam(argValue, mode, element) {
@@ -3084,7 +3084,7 @@ ThParser = function(scope) {
                             this.addfunc(tokenstack, operstack, TOP2);
                         }
                         if (this.expression.charAt(this.pos - 1) === "[") {
-                            this.tmpprio += 10;
+                            this.tmpprio += 20;
                         }
                         expected = PRIMARY | OPERATOR | LPAREN | LVARBRK | FUNCTION | SIGN | OPTION;
                     }
@@ -3364,7 +3364,7 @@ ThParser = function(scope) {
             var code = this.expression.charCodeAt(this.pos);
             if (code === 93) {
                 this.pos++;
-                this.tmpprio -= 10;
+                this.tmpprio -= 20;
                 return true;
             }
             return false;
