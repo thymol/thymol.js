@@ -18,7 +18,7 @@ public class ChromeFactory implements WebDriverFactory {
 		options.addArguments("disable-web-security");			
 		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 		WebDriver driver = new ChromeDriver(capabilities);								
-		driver.manage().timeouts().implicitlyWait( 4, TimeUnit.SECONDS );
+		driver.manage().timeouts().implicitlyWait( 2, TimeUnit.SECONDS );
 		return driver;
 	}
 
