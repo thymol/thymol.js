@@ -4,11 +4,6 @@ import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import org.thymoljs.thymol.test.selenium.webdriver.ChromeFactory;
-import org.thymoljs.thymol.test.selenium.webdriver.FirefoxFactory;
-import org.thymoljs.thymol.test.selenium.webdriver.InternetExplorerFactory;
-import org.thymoljs.thymol.test.selenium.webdriver.WebDriverFactory;
-
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.openqa.selenium.Alert;
@@ -20,6 +15,10 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.thymoljs.thymol.test.selenium.webdriver.ChromeFactory;
+import org.thymoljs.thymol.test.selenium.webdriver.FirefoxFactory;
+import org.thymoljs.thymol.test.selenium.webdriver.InternetExplorerFactory;
+import org.thymoljs.thymol.test.selenium.webdriver.WebDriverFactory;
 
 public class SeleniumCases {
 
@@ -27,7 +26,7 @@ public class SeleniumCases {
 	protected static WebDriver driver = null;
 
 	protected static URIGetter getter;
-	
+		
 	public static void setup(URIGetter g) {
 		getter = g;		
 		String webDriverProperty = System.getProperty( "webDriver" );
@@ -76,15 +75,71 @@ public class SeleniumCases {
 			return errorMessage;
 		}
 	}
-		
-	public WebElement getResultBody( String relative ) {
+	
+	
+	private class PageResponse implements ExpectedCondition<WebElement> {
+		ResultMode mode = null;
+
+		PageResponse(ResultMode modeValue) {
+			super();
+			mode = modeValue;
+		}
+
+		@Override
+		public WebElement apply(WebDriver d) {
+			WebElement e = null;
+			Alert a = null;
+			WebDriver.TargetLocator locator = d.switchTo();
+			try {
+				switch (mode) {
+					case HTML:
+					case TEXT: {
+						e = locator.activeElement();
+						break;
+					}
+					case ALERT: {
+						a = locator.alert();
+						if (a != null) {
+							e = handleAlert(a);
+						}
+						break;
+					}
+				}
+			} catch (UnhandledAlertException uae) {
+				String alertText = uae.getAlertText();
+				if (alertText == null) {
+					alertText = "cannot read alert text!";
+				}
+				e = new AnnotatedWebElement(alertText);
+				try {
+					a = locator.alert();
+					if (a != null) {
+						e = handleAlert(a);
+					}
+				} catch (NoAlertPresentException nape) {
+					System.out.println("NoAlertPresentException2!");
+				}
+			} catch (NoAlertPresentException nape) {
+				e = d.findElement(By.tagName("body"));
+			}
+			return e;
+		}
+	}		
+
+	
+	// TODO need to add a control parameter that says we are expecting an alert or a normal page
+	// We can no longer do the "one size fits all" solution because the firefox driver is broken.
+	// There is a work-around but it's very slow because it means waiting for a 500 server error when there is no alert to dismiss.
+	// This takes 2 seconds and there doesn't seem to be any way of changing it.
+	// It's a real shame that it's firefox (v30 and up) that screwed up the simple solution
+	
+	public WebElement getResultBody( String relative, ResultMode mode ) {
 		String location = ( new StringBuilder( getURI("") ) ).append( relative ).toString();
 		try {
 			driver.get( location );
 		}
 		catch(UnhandledAlertException uae) {
 			uae.printStackTrace();
-//			WebElement e = new AnnotatedWebElement(uae.getAlertText());
 			try {
 				Alert alert = driver.switchTo().alert();
 				alert.dismiss();
@@ -94,44 +149,51 @@ public class SeleniumCases {
 			}
 			driver.get( location );
 		}		
-		WebElement body = ( new WebDriverWait( driver, 1 ) ).until( new ExpectedCondition< WebElement >() {
-			@Override
-			public WebElement apply( WebDriver d ) {
-				WebElement e = null;
-				try {
-					e = d.findElement( By.tagName( "body" ) );
-				}
-				catch(UnhandledAlertException uae) {
-					e = new AnnotatedWebElement(uae.getAlertText());
-					try {
-						Alert alert = driver.switchTo().alert();
-						alert.dismiss();
-					}
-					catch(NoAlertPresentException nape) {
-						System.out.println("NoAlertPresentException2!");
-					}
-				}
-				return e;				
-			}
-		} );
+		WebElement body = ( new WebDriverWait( driver, 1 ) ).until( new PageResponse(mode) );
 		return body;
 	}
 
-	public String getResult( String relative, boolean textMode ) {
+	private WebElement handleAlert(Alert a) throws NoAlertPresentException {
+		WebElement e = null;
+		String alertText = a.getText();
+		if( alertText == null ) {
+			alertText = "cannot read alert text!";
+		}
+		e = new AnnotatedWebElement(alertText);							
+		a.dismiss();
+		return e;
+	}
+	
+	
+	public String getResult( String relative, ResultMode mode ) {
 		String result = null;
-		WebElement body = getResultBody( relative );
-		if( body != null ) {
-			if( body instanceof AnnotatedWebElement ) {
-				result = ((AnnotatedWebElement)body).getErrorMessage();
-			}
-			else {
-				if( textMode ) {
-					result = body.getText();
-				}
-				else {
+		WebElement body = getResultBody( relative, mode );
+		if( body != null ) {			
+			switch( mode ) {
+				case HTML: {
 					result = body.getAttribute( "innerHTML" );
+					break;
 				}
-			}
+				case TEXT: {
+					result = body.getText();
+					break;				
+				}
+				case ALERT: {
+					if( body instanceof AnnotatedWebElement ) {
+						result = ((AnnotatedWebElement)body).getErrorMessage();
+					}
+					else if( body instanceof RemoteWebElement ) {
+						result = body.getAttribute( "innerHTML" );
+					}
+					else {
+						result = "**Result Processing Error incorrect type**";
+					}
+					break;				
+				}
+			}		
+		}
+		else {
+			result = "**Result Processing Error no result**";			
 		}
 		return result;
 	}
