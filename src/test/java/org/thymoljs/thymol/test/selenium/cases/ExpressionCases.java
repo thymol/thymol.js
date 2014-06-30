@@ -2,8 +2,9 @@ package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class ExpressionCases extends SeleniumCases {
@@ -636,28 +637,28 @@ public class ExpressionCases extends SeleniumCases {
 	@Test
 	public void expression01() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression01.html", false );
+		String result = getResult( "expression01.html", ResultMode.HTML );
 		assertEquals( clean( expression01Result ), clean( result ) );
 	}
 	
 	@Test
 	public void expression02() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression02.html", false );
+		String result = getResult( "expression02.html", ResultMode.HTML );
 		assertEquals( clean( expression02Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression03() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression03.html", false );
+		String result = getResult( "expression03.html", ResultMode.HTML );
 		assertEquals( clean( expression03Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression04() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression04.html?a='Some text'&b=123&c='Hello'&c='World'&c=0", false );
+		String result = getResult( "expression04.html?a='Some text'&b=123&c='Hello'&c='World'&c=0", ResultMode.HTML );
 		if( expectThymolResult() ) {
 			assertEquals( clean( expression04ResultThymol ), clean( result ) );
 		}
@@ -669,14 +670,14 @@ public class ExpressionCases extends SeleniumCases {
 	@Test
 	public void expression05() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression05.html?a='Some text'&b=123&c='Hello'&c='World'&c=0", false );
+		String result = getResult( "expression05.html?a='Some text'&b=123&c='Hello'&c='World'&c=0", ResultMode.HTML );
 		assertEquals( clean( expression05Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression06() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression06.html?a6='Some text'&b6=123&c6='Hello'", false );
+		String result = getResult( "expression06.html?a6='Some text'&b6=123&c6='Hello'", ResultMode.HTML );
 		if( expectThymolResult() ) {
 			assertEquals( clean( expression06ResultThymol ), clean( result ) );
 		}
@@ -688,21 +689,21 @@ public class ExpressionCases extends SeleniumCases {
 	@Test
 	public void expression07() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression07.html?a7='Some text'&b7=123&c7='Hello'", false );
+		String result = getResult( "expression07.html?a7='Some text'&b7=123&c7='Hello'", ResultMode.HTML );
 		assertEquals( clean( expression07Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression07a() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression07a.html?a7='Some text'&b7=123&c7='Hello'", false );
+		String result = getResult( "expression07a.html?a7='Some text'&b7=123&c7='Hello'", ResultMode.HTML );
 		assertEquals( clean( expression07Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression08() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression08.html", false );
+		String result = getResult( "expression08.html", ResultMode.HTML );
 		if( expectThymolResult() ) {
 			assertEquals( clean( expression08ResultThymol ), clean( result ) );
 		}
@@ -714,7 +715,7 @@ public class ExpressionCases extends SeleniumCases {
 	@Test
 	public void expression09() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression09.html", false );
+		String result = getResult( "expression09.html", ResultMode.HTML );
 		if( expectThymolResult() ) {
 			assertEquals( clean( expression08ResultThymol ), clean( result ) );
 		}
@@ -726,35 +727,35 @@ public class ExpressionCases extends SeleniumCases {
 	@Test
 	public void expression10() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression10.html", false );
+		String result = getResult( "expression10.html", ResultMode.HTML );
 		assertEquals( clean( expression10Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression10a() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression10a.html", false );
+		String result = getResult( "expression10a.html", ResultMode.HTML );
 		assertEquals( clean( expression10Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression11() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression11.html", false );
+		String result = getResult( "expression11.html", ResultMode.HTML );
 		assertEquals( clean( expression10Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression11a() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression11a.html", false );
+		String result = getResult( "expression11a.html", ResultMode.HTML );
 		assertEquals( clean( expression10Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression12() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression12.html", false );
+		String result = getResult( "expression12.html", ResultMode.HTML );
 		if( expectThymolResult() ) {
 			assertEquals( clean( expression12ResultThymol ), clean( result ) );
 		}
@@ -766,7 +767,7 @@ public class ExpressionCases extends SeleniumCases {
 	@Test
 	public void expression12a() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression12a.html", false );
+		String result = getResult( "expression12a.html", ResultMode.HTML );
 		if( expectThymolResult() ) {
 			assertEquals( clean( expression12ResultThymol ), clean( result ) );
 		}
@@ -778,7 +779,7 @@ public class ExpressionCases extends SeleniumCases {
 	@Test
 	public void expression13() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression13.html", false );
+		String result = getResult( "expression13.html", ResultMode.HTML );
 		if( expectThymolResult() ) {
 			assertEquals( clean( expression12ResultThymol ), clean( result ) );
 		}
@@ -790,210 +791,210 @@ public class ExpressionCases extends SeleniumCases {
 	@Test
 	public void expression14() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression14.html", false );
+		String result = getResult( "expression14.html", ResultMode.HTML );
 		assertEquals( clean( expression10Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression15() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression15.html", false );
+		String result = getResult( "expression15.html", ResultMode.HTML );
 		assertEquals( clean( expression10Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression15a() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression15a.html", false );
+		String result = getResult( "expression15a.html", ResultMode.HTML );
 		assertEquals( clean( expression10Result ), clean( result ) );
 	}
 
 //	@Test
-	public void expression16() {
-		localise( "tests/expression/" );
-		String result = getResult( "expression16.html", false );
-		assertEquals( clean( expression16Result ), clean( result ) );
-	}
+//	public void expression16() {
+//		localise( "tests/expression/" );
+//		String result = getResult( "expression16.html", ResultMode.HTML );
+//		assertEquals( clean( expression16Result ), clean( result ) );
+//	}
 
 	@Test
 	public void expression17() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression17.html", false );
+		String result = getResult( "expression17.html", ResultMode.HTML );
 		assertEquals( clean( expression17Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression18() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression18.html", false );
+		String result = getResult( "expression18.html", ResultMode.HTML );
 		assertEquals( clean( expression18Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression19() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression19.html", false );
+		String result = getResult( "expression19.html", ResultMode.HTML );
 		assertEquals( clean( expression19Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression20() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression20.html", false );
+		String result = getResult( "expression20.html", ResultMode.HTML );
 		assertEquals( clean( expression20Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression21() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression21.html", false );
+		String result = getResult( "expression21.html", ResultMode.HTML );
 		assertEquals( clean( expression21Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression22() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression22.html", false );
+		String result = getResult( "expression22.html", ResultMode.HTML );
 		assertEquals( clean( expression22Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression23() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression23.html", false );
+		String result = getResult( "expression23.html", ResultMode.HTML );
 		assertEquals( clean( expression23Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression24() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression24.html", false );
+		String result = getResult( "expression24.html", ResultMode.HTML );
 		assertEquals( clean( expression24Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression25() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression25.html", false );
+		String result = getResult( "expression25.html", ResultMode.HTML );
 		assertEquals( clean( expression25Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression26() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression26.html", false );
+		String result = getResult( "expression26.html", ResultMode.HTML );
 		assertEquals( clean( expression26Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression27() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression27.html", false );
+		String result = getResult( "expression27.html", ResultMode.HTML );
 		assertEquals( clean( expression27Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression28() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression28.html", false );
+		String result = getResult( "expression28.html", ResultMode.HTML );
 		assertEquals( clean( expression28Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression29() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression29.html", false );
+		String result = getResult( "expression29.html", ResultMode.HTML );
 		assertEquals( clean( expression29Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression30() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression30.html", false );
+		String result = getResult( "expression30.html", ResultMode.HTML );
 		assertEquals( clean( expression30Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression31() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression31.html", false );
+		String result = getResult( "expression31.html", ResultMode.HTML );
 		assertEquals( clean( expression31Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression32() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression32.html", false );
+		String result = getResult( "expression32.html", ResultMode.HTML );
 		assertEquals( clean( expression32Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression33() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression33.html", false );
+		String result = getResult( "expression33.html", ResultMode.HTML );
 		assertEquals( clean( expression33Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression34() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression34.html", false );
+		String result = getResult( "expression34.html", ResultMode.HTML );
 		assertEquals( clean( expression34Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression35() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression35.html", false );
+		String result = getResult( "expression35.html", ResultMode.HTML );
 		assertEquals( clean( expression35Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression36() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression36.html", false );
+		String result = getResult( "expression36.html", ResultMode.HTML );
 		assertEquals( clean( expression36Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression37() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression37.html", false );
+		String result = getResult( "expression37.html", ResultMode.HTML );
 		assertEquals( clean( expression37Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression38() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression38.html", false );
+		String result = getResult( "expression38.html", ResultMode.HTML );
 		assertEquals( clean( expression38Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression39() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression39.html", false );
+		String result = getResult( "expression39.html", ResultMode.HTML );
 		assertEquals( clean( expression39Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression40() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression40.html", false );
+		String result = getResult( "expression40.html", ResultMode.HTML );
 		assertEquals( clean( expression40Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression41() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression41.html", false );
+		String result = getResult( "expression41.html", ResultMode.HTML );
 		assertEquals( clean( expression41Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression42() {
 		localise( "tests/expression/" );
-		String result = getResult( "expression42.html", false );
+		String result = getResult( "expression42.html", ResultMode.HTML );
 		assertEquals( clean( expression42Result ), clean( result ) );
 	}
 

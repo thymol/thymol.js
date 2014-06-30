@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static org.junit.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class AppendPrependCases extends SeleniumCases {
@@ -64,22 +65,22 @@ public class AppendPrependCases extends SeleniumCases {
 	@Test
 	public void attrAppend01() {
 		localise("tests/appendprepend/");
-		String result = getResult( "attrappend01.html", false );
-		assertEquals( attrappend01Result, result );
+		String result = getResult( "attrappend01.html", ResultMode.HTML );
+		assertEquals( clean(attrappend01Result), clean(result) );
 	}
 
 	@Test
 	public void attrPrepend01() {
 		localise("tests/appendprepend/");
-		String result = getResult( "attrprepend01.html", false );
-		assertEquals( attrprepend01Result, result );
+		String result = getResult( "attrprepend01.html", ResultMode.HTML );
+		assertEquals( clean(attrprepend01Result), clean(result) );
 	}
 
 	@Test
 	public void classAppend01() {
 		localise("tests/appendprepend/");
-		String result = getResult( "classappend01.html", false );
-		assertEquals( classappend01Result, result );
+		String result = getResult( "classappend01.html", ResultMode.HTML );
+		assertEquals( clean(classappend01Result), clean(result) );
 	}
 
 }

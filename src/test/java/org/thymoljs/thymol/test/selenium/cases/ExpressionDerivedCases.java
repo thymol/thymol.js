@@ -2,8 +2,9 @@ package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class ExpressionDerivedCases extends SeleniumCases {
@@ -309,42 +310,42 @@ public class ExpressionDerivedCases extends SeleniumCases {
 	@Test
 	public void allexpressionutil01() {
 		localise( "tests/expression/allexpressionutil/" );
-		String result = getResult( "allexpressionutil01.html", false );
+		String result = getResult( "allexpressionutil01.html", ResultMode.HTML );
 		assertEquals( clean( allexpressionutil01Result ), clean( result ) );
 	}
 
 	@Test
 	public void ctx01() {
 		localise( "tests/expression/ctx/" );
-		String result = getResult( "ctx01.html", false );
+		String result = getResult( "ctx01.html", ResultMode.HTML );
 		assertEquals( clean( ctx01Result ), clean( result ) );
 	}
 
 	@Test
 	public void ctx02() {
 		localise( "tests/expression/ctx/" );
-		String result = getResult( "ctx02.html", false );
+		String result = getResult( "ctx02.html", ResultMode.HTML );
 		assertEquals( clean( ctx02Result ), clean( result ) );
 	}
 
 	@Test
 	public void ctx03() {
 		localise( "tests/expression/ctx/" );
-		String result = getResult( "ctx03.html", false );
+		String result = getResult( "ctx03.html", ResultMode.HTML );
 		assertEquals( clean( ctx03Result ), clean( result ) );
 	}
 
 	@Test
 	public void ctx04() {
 		localise( "tests/expression/ctx/" );
-		String result = getResult( "ctx04.html", false );
+		String result = getResult( "ctx04.html", ResultMode.HTML );
 		assertEquals( clean( ctx04Result ), clean( result ) );
 	}
 
 	@Test
 	public void numbers01() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers01.html", false );
+		String result = getResult( "numbers01.html", ResultMode.HTML );
 		if( expectThymolResult() ) {
 			assertEquals( clean( numbers01ResultThymol ), clean( result ) );			
 		}
@@ -356,133 +357,133 @@ public class ExpressionDerivedCases extends SeleniumCases {
 	@Test
 	public void numbers02() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers02.html", false );
+		String result = getResult( "numbers02.html", ResultMode.HTML );
 		assertEquals( clean( numbers02Result ), clean( result ) );
 	}
 
 	@Test
 	public void numbers03() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers03.html", false );
+		String result = getResult( "numbers03.html", ResultMode.HTML );
 		assertEquals( clean( numbers03Result ), clean( result ) );
 	}
 
 	@Test
 	public void numbers04() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers04.html", false );
+		String result = getResult( "numbers04.html", ResultMode.HTML );
 		assertEquals( clean( numbers04Result ), clean( result ) );
 	}
 
 	@Test
 	public void numbers05() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers05.html", false );
+		String result = getResult( "numbers05.html", ResultMode.HTML );
 		assertEquals( clean( numbers05Result ), clean( result ) );
 	}
 
 	@Test
 	public void numbers06() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers06.html", false );
+		String result = getResult( "numbers06.html", ResultMode.HTML );
 		assertEquals( clean( numbers06Result ), clean( result ) );
 	}
 
 	@Test
 	public void numbers07() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers07.html", false );
+		String result = getResult( "numbers07.html", ResultMode.HTML );
 		assertEquals( clean( numbers07Result ), clean( result ) );
 	}
 
 	@Test
 	public void numbers08() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers08.html", false );
+		String result = getResult( "numbers08.html", ResultMode.HTML );
 		assertEquals( clean( numbers08Result ), clean( result ) );
 	}
 
 	@Test
 	public void numbers09() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers09.html", false );
+		String result = getResult( "numbers09.html", ResultMode.HTML );
 		assertEquals( clean( numbers09Result ), clean( result ) );
 	}
 
 	@Test
 	public void numbers10() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers10.html", false );
+		String result = getResult( "numbers10.html", ResultMode.HTML );
 		assertEquals( clean( numbers10Result ), clean( result ) );
 	}
 
 	@Test
 	public void numbers11() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers11.html", false );
+		String result = getResult( "numbers11.html", ResultMode.HTML );
 		assertEquals( clean( numbers11Result ), clean( result ) );
 	}
 
 	@Test
 	public void numbers12() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers12.html", false );
+		String result = getResult( "numbers12.html", ResultMode.HTML );
 		assertEquals( clean( numbers12Result ), clean( result ) );
 	}
 
 	@Test
 	public void numbers13() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers13.html", false );
+		String result = getResult( "numbers13.html", ResultMode.HTML );
 		assertEquals( clean( numbers13Result ), clean( result ) );
 	}
 
 	@Test
 	public void numbers14() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers14.html", false );
+		String result = getResult( "numbers14.html", ResultMode.HTML );
 		assertEquals( clean( numbers14Result ), clean( result ) );
 	}
 
 	@Test
 	public void numbers15() {
 		localise( "tests/expression/numbers/" );
-		String result = getResult( "numbers15.html", false );
+		String result = getResult( "numbers15.html", ResultMode.HTML );
 		assertEquals( clean( numbers15Result ), clean( result ) );
 	}
 
 	@Test
 	public void root01() {
 		localise( "tests/expression/root/" );
-		String result = getResult( "root01.html", false );
+		String result = getResult( "root01.html", ResultMode.HTML );
 		assertEquals( clean( root01Result ), clean( result ) );
 	}
 
 	@Test
 	public void root02() {
 		localise( "tests/expression/root/" );
-		String result = getResult( "root02.html", false );
+		String result = getResult( "root02.html", ResultMode.HTML );
 		assertEquals( clean( root02Result ), clean( result ) );
 	}
 
 	@Test
 	public void root03() {
 		localise( "tests/expression/root/" );
-		String result = getResult( "root03.html", false );
+		String result = getResult( "root03.html", ResultMode.HTML );
 		assertEquals( clean( root03Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings01() {
 		localise( "tests/expression/strings/" );
-		String result = getResult( "strings01.html", false );
+		String result = getResult( "strings01.html", ResultMode.HTML );
 		assertEquals( clean( strings01Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings02() {
 		localise( "tests/expression/strings/" );
-		String result = getResult( "strings02.html", false );
+		String result = getResult( "strings02.html", ResultMode.HTML );
 		if( expectThymolResult() ) {
 			assertEquals( clean( strings02ResultThymol ), clean( result ) );
 		}
@@ -494,21 +495,21 @@ public class ExpressionDerivedCases extends SeleniumCases {
 	@Test
 	public void vars01() {
 		localise( "tests/expression/vars/" );
-		String result = getResult( "vars01.html", false );
+		String result = getResult( "vars01.html", ResultMode.HTML );
 		assertEquals( clean( vars01Result ), clean( result ) );
 	}
 
 	@Test
 	public void vars02() {
 		localise( "tests/expression/vars/" );
-		String result = getResult( "vars02.html", false );
+		String result = getResult( "vars02.html", ResultMode.HTML );
 		assertEquals( clean( vars02Result ), clean( result ) );
 	}
 
 	@Test
 	public void vars03() {
 		localise( "tests/expression/vars/" );
-		String result = getResult( "vars03.html", false );
+		String result = getResult( "vars03.html", ResultMode.HTML );
 		assertEquals( clean( vars03Result ), clean( result ) );
 	}
 

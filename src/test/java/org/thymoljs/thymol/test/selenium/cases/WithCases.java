@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class WithCases extends SeleniumCases {
@@ -29,7 +30,7 @@ public class WithCases extends SeleniumCases {
 	@Test
 	public void with01() {
 		localise("tests/with/");
-		String result = getResult( "with01.html", false );
+		String result = getResult( "with01.html", ResultMode.ALERT );
 		if( expectThymolResult() ) {
 			assertEquals( with01ResultThymol, result );			
 		}
@@ -42,14 +43,14 @@ public class WithCases extends SeleniumCases {
 	@Test
 	public void with02() {
 		localise("tests/with/");
-		String result = getResult( "with02.html", false );
+		String result = getResult( "with02.html", ResultMode.HTML );
 		assertEquals( with02Result, result );
 	}
 	
 	@Test
 	public void with03() {
 		localise("tests/with/");
-		String result = getResult( "with03.html", false );
+		String result = getResult( "with03.html", ResultMode.HTML );
 		assertEquals( with03Result, result );
 	}
 

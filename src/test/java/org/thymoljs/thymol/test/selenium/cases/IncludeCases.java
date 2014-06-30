@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static org.junit.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class IncludeCases extends SeleniumCases {
@@ -122,49 +123,49 @@ public class IncludeCases extends SeleniumCases {
 	@Test
 	public void include01() {
 		localise("tests/include/");
-		String result = getResult( "include01.html", false );
+		String result = getResult( "include01.html", ResultMode.HTML );
 		assertEquals( clean( include01Result ), clean( result ) );
 	}
 
 	@Test
 	public void include02() {
 		localise("tests/include/");
-		String result = getResult( "include02.html", false );
+		String result = getResult( "include02.html", ResultMode.HTML );
 		assertEquals( clean( include02Result ), clean( result ) );
 	}
 
 	@Test
 	public void include03() {
 		localise("tests/include/");
-		String result = getResult( "include03.html", false );
+		String result = getResult( "include03.html", ResultMode.HTML );
 		assertEquals( clean( include03Result ), clean( result ) );
 	}
 
 	@Test
 	public void include04() {
 		localise("tests/include/");
-		String result = getResult( "include04.html", false );
+		String result = getResult( "include04.html", ResultMode.HTML );
 		assertEquals( clean( include04Result ), clean( result ) );
 	}
 
 	@Test
 	public void include05() {
 		localise("tests/include/");
-		String result = getResult( "include05.html", false );
+		String result = getResult( "include05.html", ResultMode.HTML );
 		assertEquals( clean( include05Result ), clean( result ) );
 	}
 
 	@Test
 	public void include06() {
 		localise("tests/include/");
-		String result = getResult( "include06.html", false );
+		String result = getResult( "include06.html", ResultMode.HTML );
 		assertEquals( clean( include06Result ), clean( result ) );
 	}
 
 	@Test
 	public void include07() {
 		localise("tests/include/");
-		String result = getResult( "include07.html", false );
+		String result = getResult( "include07.html", ResultMode.HTML );
 		assertEquals( clean( include07Result ), clean( result ) );
 	}
 

@@ -2,8 +2,9 @@ package org.thymoljs.thymol.test.selenium.v21cases;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class AssertCases21 extends SeleniumCases {
@@ -87,7 +88,7 @@ public class AssertCases21 extends SeleniumCases {
 	@Test
 	public void assert01() {
 		localise("tests21/assert/");
-		String result = getResult( "assert01.html", false );
+		String result = getResult( "assert01.html", ResultMode.ALERT );
 		if( expectThymolResult() ) {
 			assertEquals( assert01ResultThymol, clean( result ) );			
 		}
@@ -100,7 +101,7 @@ public class AssertCases21 extends SeleniumCases {
 	@Test
 	public void assert02() {
 		localise("tests21/assert/");
-		String result = getResult( "assert02.html", false );
+		String result = getResult( "assert02.html", ResultMode.ALERT );
 		if( expectThymolResult() ) {
 			assertEquals( assert02ResultThymol, clean( result ) );			
 		}
@@ -113,7 +114,7 @@ public class AssertCases21 extends SeleniumCases {
 	@Test
 	public void assert03() {
 		localise("tests21/assert/");
-		String result = getResult( "assert03.html", false );
+		String result = getResult( "assert03.html", ResultMode.ALERT );
 		if( expectThymolResult() ) {
 			assertEquals( assert03ResultThymol, clean( result ) );			
 		}
@@ -126,14 +127,14 @@ public class AssertCases21 extends SeleniumCases {
 	@Test
 	public void assert04() {
 		localise("tests21/assert/");
-		String result = getResult( "assert04.html", false );
+		String result = getResult( "assert04.html", ResultMode.HTML );
 		assertEquals( clean( assert04Result ), clean( result ) );
 	}
 
 	@Test
 	public void assert05() {
 		localise("tests21/assert/");
-		String result = getResult( "assert05.html", false );
+		String result = getResult( "assert05.html", ResultMode.ALERT );
 		if( expectThymolResult() ) {
 			assertEquals( assert05ResultThymol, clean( result ) );			
 		}
@@ -146,35 +147,35 @@ public class AssertCases21 extends SeleniumCases {
 	@Test
 	public void assert06() {
 		localise("tests21/assert/");
-		String result = getResult( "assert06.html", false );
+		String result = getResult( "assert06.html", ResultMode.HTML );
 		assertEquals( clean( assert06Result ), clean( result ) );
 	}
 
 	@Test
 	public void assert07() {
 		localise("tests21/assert/");
-		String result = getResult( "assert07.html", false );
+		String result = getResult( "assert07.html", ResultMode.HTML );
 		assertEquals( clean( assert07Result ), clean( result ) );
 	}
 
 	@Test
 	public void assert08() {
 		localise("tests21/assert/");
-		String result = getResult( "assert08.html", false );
+		String result = getResult( "assert08.html", ResultMode.HTML );
 		assertEquals( clean( assert08Result ), clean( result ) );
 	}
 
 	@Test
 	public void assert09() {
 		localise("tests21/assert/");
-		String result = getResult( "assert09.html", false );
+		String result = getResult( "assert09.html", ResultMode.HTML );
 		assertEquals( clean( assert09Result ), clean( result ) );
 	}
 
 	@Test
 	public void assert10() {
 		localise("tests21/assert/");
-		String result = getResult( "assert10.html", false );
+		String result = getResult( "assert10.html", ResultMode.ALERT );
 		if( expectThymolResult() ) {
 			assertEquals( assert10ResultThymol, clean( result ) );			
 		}

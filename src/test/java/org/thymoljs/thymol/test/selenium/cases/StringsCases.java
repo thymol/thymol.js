@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class StringsCases extends SeleniumCases {
@@ -477,119 +478,119 @@ public class StringsCases extends SeleniumCases {
 	@Test
 	public void strings01() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings01.html", false );
+		String result = getResult( "strings01.html", ResultMode.HTML );
 		assertEquals( clean( strings01Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings02() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings02.html", false );
+		String result = getResult( "strings02.html", ResultMode.HTML );
 		assertEquals( clean( strings02Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings03() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings03.html", false );
+		String result = getResult( "strings03.html", ResultMode.HTML );
 		assertEquals( clean( strings03Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings04() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings04.html", false );
+		String result = getResult( "strings04.html", ResultMode.HTML );
 		assertEquals( clean( strings04Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings05() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings05.html", false );
+		String result = getResult( "strings05.html", ResultMode.HTML );
 		assertEquals( clean( strings05Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings06() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings06.html", false );
+		String result = getResult( "strings06.html", ResultMode.HTML );
 		assertEquals( clean( strings06Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings07() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings07.html", false );
+		String result = getResult( "strings07.html", ResultMode.HTML );
 		assertEquals( clean( strings07Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings08() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings08.html", false );
+		String result = getResult( "strings08.html", ResultMode.HTML );
 		assertEquals( clean( strings08Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings09() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings09.html", false );
+		String result = getResult( "strings09.html", ResultMode.HTML );
 		assertEquals( clean( strings09Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings10() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings10.html", false );
+		String result = getResult( "strings10.html", ResultMode.HTML );
 		assertEquals( clean( strings10Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings11() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings11.html", false );
+		String result = getResult( "strings11.html", ResultMode.HTML );
 		assertEquals( clean( strings11Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings12() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings12.html", false );
+		String result = getResult( "strings12.html", ResultMode.HTML );
 		assertEquals( clean( strings12Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings13() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings13.html", false );
+		String result = getResult( "strings13.html", ResultMode.HTML );
 		assertEquals( clean( strings13Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings14() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings14.html", false );
+		String result = getResult( "strings14.html", ResultMode.HTML );
 		assertEquals( clean( strings14Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings15() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings15.html", false );
+		String result = getResult( "strings15.html", ResultMode.HTML );
 		assertEquals( clean( strings15Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings16() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings16.html", false );
+		String result = getResult( "strings16.html", ResultMode.HTML );
 		assertEquals( clean( strings16Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings17() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings17.html", false );
+		String result = getResult( "strings17.html", ResultMode.HTML );
 		if( expectThymolResult() ) {
 			assertEquals( clean( strings17ResultThymol ), clean( result ) );
 		}
@@ -601,119 +602,119 @@ public class StringsCases extends SeleniumCases {
 	@Test
 	public void strings18() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings18.html", false );
+		String result = getResult( "strings18.html", ResultMode.HTML );
 		assertEquals( clean( strings18Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings19() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings19.html", false );
+		String result = getResult( "strings19.html", ResultMode.HTML );
 		assertEquals( clean( strings19Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings19a() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings19a.html", false );
+		String result = getResult( "strings19a.html", ResultMode.HTML );
 		assertEquals( clean( strings19aResult ), clean( result ) );
 	}
 
 	@Test
 	public void strings20() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings20.html", false );
+		String result = getResult( "strings20.html", ResultMode.HTML );
 		assertEquals( clean( strings20Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings20a() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings20a.html", false );
+		String result = getResult( "strings20a.html", ResultMode.HTML );
 		assertEquals( clean( strings20aResult ), clean( result ) );
 	}
 
 	@Test
 	public void strings21() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings21.html", false );
+		String result = getResult( "strings21.html", ResultMode.HTML );
 		assertEquals( clean( strings21Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings22() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings22.html", false );
+		String result = getResult( "strings22.html", ResultMode.HTML );
 		assertEquals( clean( strings22Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings23() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings23.html", false );
+		String result = getResult( "strings23.html", ResultMode.HTML );
 		assertEquals( clean( strings23Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings24() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings24.html", false );
+		String result = getResult( "strings24.html", ResultMode.HTML );
 		assertEquals( clean( strings24Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings25() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings25.html", false );
+		String result = getResult( "strings25.html", ResultMode.HTML );
 		assertEquals( clean( strings25Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings26() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings26.html", false );
+		String result = getResult( "strings26.html", ResultMode.HTML );
 		assertEquals( clean( strings26Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings27() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings27.html", false );
+		String result = getResult( "strings27.html", ResultMode.HTML );
 		assertEquals( clean( strings27Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings28() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings28.html", false );
+		String result = getResult( "strings28.html", ResultMode.HTML );
 		assertEquals( clean( strings28Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings29() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings29.html", false );
+		String result = getResult( "strings29.html", ResultMode.HTML );
 		assertEquals( clean( strings29Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings30() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings30.html", false );
+		String result = getResult( "strings30.html", ResultMode.HTML );
 		assertEquals( clean( strings30Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings31() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings31.html", false );
+		String result = getResult( "strings31.html", ResultMode.HTML );
 		assertEquals( clean( strings31Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings32() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings32.html", false );
+		String result = getResult( "strings32.html", ResultMode.HTML );
 		assertEquals( clean( strings32Result ), clean( result ) );
 	}
 
@@ -721,7 +722,7 @@ public class StringsCases extends SeleniumCases {
 	public void strings32a() {
 		localise( "thymol/strings/" );
 		if( expectThymolResult() ) {
-			String result = getResult( "strings32a.html", false );
+			String result = getResult( "strings32a.html", ResultMode.HTML );
 			assertEquals( clean( strings32aResult ), clean( result ) );
 		}
 	}
@@ -729,63 +730,63 @@ public class StringsCases extends SeleniumCases {
 	@Test
 	public void strings33() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings33.html", false );
+		String result = getResult( "strings33.html", ResultMode.HTML );
 		assertEquals( clean( strings33Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings33a() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings33a.html", false );
+		String result = getResult( "strings33a.html", ResultMode.HTML );
 		assertEquals( clean( strings33aResult ), clean( result ) );
 	}
 
 	@Test
 	public void strings34() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings34.html", false );
+		String result = getResult( "strings34.html", ResultMode.HTML );
 		assertEquals( clean( strings34Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings34a() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings34a.html", false );
-		assertEquals( strings34aResult, result );			
+		String result = getResult( "strings34a.html", ResultMode.HTML );
+		assertEquals( clean(strings34aResult), clean(result) );			
 	}
 
 	@Test
 	public void strings35() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings35.html", false );
+		String result = getResult( "strings35.html", ResultMode.HTML );
 		assertEquals( clean( strings35Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings35a() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings35a.html", false );
+		String result = getResult( "strings35a.html", ResultMode.HTML );
 		assertEquals( clean( strings35aResult ), clean( result ) );
 	}
 
 	@Test
 	public void strings35b() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings35b.html", false );
+		String result = getResult( "strings35b.html", ResultMode.HTML );
 		assertEquals( clean( strings35aResult ), clean( result ) );
 	}
 
 	@Test
 	public void strings37() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings37.html", false );
+		String result = getResult( "strings37.html", ResultMode.HTML );
 		assertEquals( clean( strings37Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings38() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings38.html", false );
+		String result = getResult( "strings38.html", ResultMode.HTML );
 		assertEquals( clean( strings38Result ), clean( result ) );
 	}
 

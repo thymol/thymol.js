@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class SetsCases extends SeleniumCases {
@@ -116,7 +117,7 @@ public class SetsCases extends SeleniumCases {
 	@Test
 	public void sets01() {
 		localise( "thymol/sets/" );
-		String result = getResult( "sets01.html", false );
+		String result = getResult( "sets01.html", ResultMode.HTML );
 		if( expectThymolResult() ) {
 			assertEquals( clean( sets01ResultThymol ), clean( result ) );
 		}
@@ -128,28 +129,28 @@ public class SetsCases extends SeleniumCases {
 	@Test
 	public void sets02() {
 		localise( "thymol/sets/" );
-		String result = getResult( "sets02.html", false );
+		String result = getResult( "sets02.html", ResultMode.HTML );
 		assertEquals( clean( sets02Result ), clean( result ) );
 	}
 
 	@Test
 	public void sets03() {
 		localise( "thymol/sets/" );
-		String result = getResult( "sets03.html", false );
+		String result = getResult( "sets03.html", ResultMode.HTML );
 		assertEquals( clean( sets03Result ), clean( result ) );
 	}
 
 	@Test
 	public void sets04() {
 		localise( "thymol/sets/" );
-		String result = getResult( "sets04.html", false );
+		String result = getResult( "sets04.html", ResultMode.HTML );
 		assertEquals( clean( sets04Result ), clean( result ) );
 	}
 
 	@Test
 	public void sets05() {
 		localise( "thymol/sets/" );
-		String result = getResult( "sets05.html", false );		
+		String result = getResult( "sets05.html", ResultMode.HTML );		
 		assertEquals( clean( sets05Result ), clean( result ) );
 	}
 

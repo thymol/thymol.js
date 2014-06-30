@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class ExprCases extends SeleniumCases {
@@ -705,28 +706,28 @@ public class ExprCases extends SeleniumCases {
 	@Test
 	public void noParameters() {
 		localise("expr/");
-		String result = getResult( "ex6.html", true );
+		String result = getResult( "ex6.html", ResultMode.TEXT );
 		assertEquals( noParametersResult, result );
 	}
 
 	@Test
 	public void visitedTrue() {
 		localise("expr/");
-		String result = getResult( "ex6.html?visited=true", true );
+		String result = getResult( "ex6.html?visited=true", ResultMode.TEXT );
 		assertEquals( visitedTrueResult, result );
 	}
 
 	@Test
 	public void visitedFalse() {
 		localise("expr/");
-		String result = getResult( "ex6.html?visited=false", true );
+		String result = getResult( "ex6.html?visited=false", ResultMode.TEXT );
 		assertEquals( visitedFalseResult, result );
 	}
 
 	@Test
 	public void visitedJunk() {
 		localise("expr/");
-		String result = getResult( "ex6.html?visited=junk", true );
+		String result = getResult( "ex6.html?visited=junk", ResultMode.TEXT );
 		assertEquals( visitedJunkResult, result );
 	}
 
@@ -734,14 +735,14 @@ public class ExprCases extends SeleniumCases {
 	@Test
 	public void firstNameFred() {
 		localise("expr/");
-		String result = getResult( "ex6.html?firstName='Fred'", true );
+		String result = getResult( "ex6.html?firstName='Fred'", ResultMode.TEXT );
 		assertEquals( firstNameFredResult, result );
 	}
 
 	@Test
 	public void firstNameSolly() {
 		localise("expr/");
-		String result = getResult( "ex6.html?firstName='Solly'", true );
+		String result = getResult( "ex6.html?firstName='Solly'", ResultMode.TEXT );
 		assertEquals( firstNameSollyResult, result );
 	}
 
@@ -749,77 +750,77 @@ public class ExprCases extends SeleniumCases {
 	@Test
 	public void userRoleJunk() {
 		localise("expr/");
-		String result = getResult( "ex6.html?firstName=junk", true );
+		String result = getResult( "ex6.html?firstName=junk", ResultMode.TEXT );
 		assertEquals( firstNameJunkResult, result );
 	}
 
 	@Test
 	public void visitedTrueAndFred() {
 		localise("expr/");
-		String result = getResult( "ex6.html?firstName='Fred'&visited=true", true );
+		String result = getResult( "ex6.html?firstName='Fred'&visited=true", ResultMode.TEXT );
 		assertEquals( visitedTrueAndFredResult, result );
 	}
 
 	@Test
 	public void visitedTrueAndSolly() {
 		localise("expr/");
-		String result = getResult( "ex6.html?firstName='Solly'&visited=true", true );
+		String result = getResult( "ex6.html?firstName='Solly'&visited=true", ResultMode.TEXT );
 		assertEquals( visitedTrueAndSollyResult, result );
 	}
 
 	@Test
 	public void visitedTrueAndJunk() {
 		localise("expr/");
-		String result = getResult( "ex6.html?firstName=junk&visited=true", true );
+		String result = getResult( "ex6.html?firstName=junk&visited=true", ResultMode.TEXT );
 		assertEquals( visitedTrueAndJunkResult, result );
 	}
 
 	@Test
 	public void visitedFalseAndFred() {
 		localise("expr/");
-		String result = getResult( "ex6.html?firstName='Fred'&visited=false", true );
+		String result = getResult( "ex6.html?firstName='Fred'&visited=false", ResultMode.TEXT );
 		assertEquals( visitedFalseAndFredResult, result );
 	}
 
 	@Test
 	public void visitedFalseAndSolly() {
 		localise("expr/");
-		String result = getResult( "ex6.html?firstName='Solly'&visited=false", true );
+		String result = getResult( "ex6.html?firstName='Solly'&visited=false", ResultMode.TEXT );
 		assertEquals( visitedFalseAndSollyResult, result );
 	}
 
 	@Test
 	public void visitedFalseAndJunk() {
 		localise("expr/");
-		String result = getResult( "ex6.html?firstName=junk&visited=false", true );
+		String result = getResult( "ex6.html?firstName=junk&visited=false", ResultMode.TEXT );
 		assertEquals( visitedFalseAndJunkResult, result );
 	}
 	
 	@Test
 	public void noImportsVisitedTrueAndFred() {
 		localise("expr/");
-		String result = getResult( "ex7.html?firstFile=nil&secondFile=nil&firstName='Fred'&visited=true", true );
+		String result = getResult( "ex7.html?firstFile=nil&secondFile=nil&firstName='Fred'&visited=true", ResultMode.TEXT );
 		assertEquals( noImportsResult, result );
 	}
 
 	@Test
 	public void firstFileNameVisitedTrueAndFred() {
 		localise("expr/");
-		String result = getResult( "ex7.html?firstFile=footer&secondFile=nil&firstName='Fred'&visited=true", true );
+		String result = getResult( "ex7.html?firstFile=footer&secondFile=nil&firstName='Fred'&visited=true", ResultMode.TEXT );
 		assertEquals( firstFileNameVisitedTrueAndFredResult, result );
 	}
 
 	@Test
 	public void secondFileNameVisitedTrueAndFred() {
 		localise("expr/");
-		String result = getResult( "ex7.html?firstFile=nil&secondFile=other&firstName='Fred'&visited=true", true );		
+		String result = getResult( "ex7.html?firstFile=nil&secondFile=other&firstName='Fred'&visited=true", ResultMode.TEXT );		
 		assertEquals( secondFileNameVisitedTrueAndFredResult, result );
 	}
 
 	@Test
 	public void fileNamesVisitedTrueAndFred() {
 		localise("expr/");
-		String result = getResult( "ex7.html?firstFile=footer&secondFile=other&firstName='Fred'&visited=true", true );
+		String result = getResult( "ex7.html?firstFile=footer&secondFile=other&firstName='Fred'&visited=true", ResultMode.TEXT );
 		assertEquals( visitedTrueAndFredResult, result );
 	}
 	

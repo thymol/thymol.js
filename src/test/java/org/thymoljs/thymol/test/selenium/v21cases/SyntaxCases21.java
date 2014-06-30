@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.v21cases;
 
 import static org.junit.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class SyntaxCases21 extends SeleniumCases {
@@ -147,70 +148,70 @@ public class SyntaxCases21 extends SeleniumCases {
 	@Test
 	public void fragments01() {
 		localise("tests21/syntax/");
-		String result = getResult( "fragments01.html", false );
+		String result = getResult( "fragments01.html", ResultMode.HTML );
 		assertEquals( clean( fragments01Result ), clean( result ) );
 	}
 
 	@Test
 	public void fragments02() {
 		localise("tests21/syntax/");
-		String result = getResult( "fragments02.html", false );
+		String result = getResult( "fragments02.html", ResultMode.HTML );
 		assertEquals( clean( fragments02Result ), clean( result ) );
 	}
 
 	@Test
 	public void issue245() {
 		localise("tests21/syntax/");
-		String result = getResult( "issue245.html", false );
+		String result = getResult( "issue245.html", ResultMode.HTML );
 		assertEquals( clean( issue245Result ), clean( result ) );
 	}
 
 	@Test
 	public void issue245a() {
 		localise("tests21/syntax/");
-		String result = getResult( "issue245a.html", false );
+		String result = getResult( "issue245a.html", ResultMode.HTML );
 		assertEquals( clean( issue245aResult ), clean( result ) );
 	}
 
 	@Test
 	public void issue245b() {
 		localise("tests21/syntax/");
-		String result = getResult( "issue245b.html", false );
+		String result = getResult( "issue245b.html", ResultMode.HTML );
 		assertEquals( clean( issue245bResult ), clean( result ) );
 	}
 
 /*	@Test
 	public void replace02() {
 		localise("tests21/replace/");
-		String result = getResult( "replace02.html", false );
+		String result = getResult( "replace02.html", ResultMode.HTML );
 		assertEquals( clean( replace02Result ), clean( result ) );
 	}
 
 	@Test
 	public void replace03() {
 		localise("tests21/replace/");
-		String result = getResult( "replace03.html", false );
+		String result = getResult( "replace03.html", ResultMode.HTML );
 		assertEquals( clean( replace03Result ), clean( result ) );
 	}
 
 	@Test
 	public void replace04() {
 		localise("tests21/replace/");
-		String result = getResult( "replace04.html", false );
+		String result = getResult( "replace04.html", ResultMode.HTML );
 		assertEquals( clean( replace04Result ), clean( result ) );
 	}
 
 	@Test
 	public void replace05() {
 		localise("tests21/replace/");
-		String result = getResult( "replace05.html", false );
+		String result = getResult( "replace05.html", ResultMode.HTML );
 		assertEquals( clean( replace05Result ), clean( result ) );
 	}
 
 	@Test
 	public void replace05a() {
 		localise("tests21/replace/");
-		String result = getResult( "replace05a.html", false );
+		String result = getResult( "replace05a.html", ResultMode.HTML );
 		assertEquals( clean( replace05Result ), clean( result ) );
 	}
 */
@@ -218,14 +219,14 @@ public class SyntaxCases21 extends SeleniumCases {
 	@Test
 	public void replace06() {
 		localise("tests/replace/");
-		String result = getResult( "replace06.html", false );
+		String result = getResult( "replace06.html", ResultMode.HTML );
 		assertEquals( clean( replace06Result ), clean( result ) );
 	}
 
 	@Test
 	public void replace07() {
 		localise("tests/replace/");
-		String result = getResult( "replace07.html", false );
+		String result = getResult( "replace07.html", ResultMode.HTML );
 		assertEquals( clean( replace07Result ), clean( result ) );
 	}
 */

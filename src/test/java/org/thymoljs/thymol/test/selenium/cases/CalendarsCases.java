@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class CalendarsCases extends SeleniumCases {
@@ -190,105 +191,105 @@ public class CalendarsCases extends SeleniumCases {
 	@Test
 	public void calendars01() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars01.html", false );
+		String result = getResult( "calendars01.html", ResultMode.HTML );
 		assertEquals( clean( calendars01Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars02() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars02.html", false );
+		String result = getResult( "calendars02.html", ResultMode.HTML );
 		assertEquals( clean( calendars02Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars03() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars03.html", false );
+		String result = getResult( "calendars03.html", ResultMode.HTML );
 		assertEquals( clean( calendars03Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars04() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars04.html", false );		
+		String result = getResult( "calendars04.html", ResultMode.HTML );		
 		assertEquals( clean( calendars04Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars05() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars05.html", false );
+		String result = getResult( "calendars05.html", ResultMode.HTML );
 		assertEquals( clean( calendars05Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars06() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars06.html", false );
+		String result = getResult( "calendars06.html", ResultMode.HTML );
 		assertEquals( clean( calendars06Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars07() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars07.html", false );
+		String result = getResult( "calendars07.html", ResultMode.HTML );
 		assertEquals( clean( calendars07Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars08() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars08.html", false );
+		String result = getResult( "calendars08.html", ResultMode.HTML );
 		assertEquals( clean( calendars08Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars09() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars09.html", false );
+		String result = getResult( "calendars09.html", ResultMode.HTML );
 		assertEquals( clean( calendars09Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars10() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars10.html", false );
+		String result = getResult( "calendars10.html", ResultMode.HTML );
 		assertEquals( clean( calendars10Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars11() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars11.html", false );
+		String result = getResult( "calendars11.html", ResultMode.HTML );
 		assertEquals( clean( calendars11Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars12() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars12.html", false );
+		String result = getResult( "calendars12.html", ResultMode.HTML );
 		assertEquals( clean( calendars12Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars13() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars13.html", false );
+		String result = getResult( "calendars13.html", ResultMode.HTML );
 		assertEquals( clean( calendars13Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars14() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars14.html", false );
+		String result = getResult( "calendars14.html", ResultMode.HTML );
 		assertEquals( clean( calendars14Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars15() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars15.html", false );
+		String result = getResult( "calendars15.html", ResultMode.HTML );
 		assertEquals( clean( calendars15Result ), clean( result ) );
 	}
 

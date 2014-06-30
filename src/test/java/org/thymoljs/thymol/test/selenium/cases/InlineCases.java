@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class InlineCases extends SeleniumCases {
@@ -244,21 +245,21 @@ public class InlineCases extends SeleniumCases {
 	@Test
 	public void inline01() {
 		localise("tests/inline/");
-		String result = getResult( "inline01.html", false );
+		String result = getResult( "inline01.html", ResultMode.HTML );
 		assertEquals( clean(inline01Result), clean(result) );			
 	}
 
 	@Test
 	public void inline02() {
 		localise("tests/inline/");
-		String result = getResult( "inline02.html", false );
+		String result = getResult( "inline02.html", ResultMode.HTML );
 		assertEquals( clean(inline02Result), clean(result) );			
 	}
 
 	@Test
 	public void inline03() {
 		localise("tests/inline/");
-		String result = getResult( "inline03.html", false );
+		String result = getResult( "inline03.html", ResultMode.HTML );
 		if( expectThymolResult() ) {
 			assertEquals( clean(inline03ResultThymol), clean(result) );			
 		}
@@ -270,7 +271,7 @@ public class InlineCases extends SeleniumCases {
 	@Test
 	public void inline04() {
 		localise("tests/inline/");
-		String result = getResult( "inline04.html", false );
+		String result = getResult( "inline04.html", ResultMode.HTML );
 		if( expectThymolResult() ) {
 			assertEquals( clean(inline04ResultThymol), clean(result) );			
 		}
@@ -282,7 +283,7 @@ public class InlineCases extends SeleniumCases {
 	@Test
 	public void inline05() {
 		localise("tests/inline/");
-		String result = getResult( "inline05.html", false );
+		String result = getResult( "inline05.html", ResultMode.HTML );
 		if( expectThymolResult() ) {
 			assertEquals( clean(inline05ResultThymol), clean(result) );			
 		}
@@ -294,91 +295,91 @@ public class InlineCases extends SeleniumCases {
 	@Test
 	public void inline06() {
 		localise("tests/inline/");
-		String result = getResult( "inline06.html", false );
+		String result = getResult( "inline06.html", ResultMode.HTML );
 		assertEquals( clean(inline06Result), clean(result) );			
 	}
 
 	@Test
 	public void inline07() {
 		localise("tests/inline/");
-		String result = getResult( "inline07.html", false );
+		String result = getResult( "inline07.html", ResultMode.HTML );
 		assertEquals( clean(inline07Result), clean(result) );			
 	}
 
 	@Test
 	public void inline08() {
 		localise("tests/inline/");
-		String result = getResult( "inline08.html", false );
+		String result = getResult( "inline08.html", ResultMode.HTML );
 		assertEquals( clean(inline08Result), clean(result) );			
 	}
 
 	@Test
 	public void inline09() {
 		localise("tests/inline/");
-		String result = getResult( "inline09.html", false );
+		String result = getResult( "inline09.html", ResultMode.HTML );
 		assertEquals( clean(inline09Result), clean(result) );			
 	}
 
 	@Test
 	public void inline10() {
 		localise("tests/inline/");
-		String result = getResult( "inline10.html", false );
+		String result = getResult( "inline10.html", ResultMode.HTML );
 		assertEquals( clean(inline10Result), clean(result) );			
 	}
 
 	@Test
 	public void inline11() {
 		localise("tests/inline/");
-		String result = getResult( "inline11.html", false );
+		String result = getResult( "inline11.html", ResultMode.HTML );
 		assertEquals( clean(inline11Result), clean(result) );			
 	}
 
 	@Test
 	public void inline12() {
 		localise("tests/inline/");
-		String result = getResult( "inline12.html", false );
+		String result = getResult( "inline12.html", ResultMode.HTML );
 		assertEquals( clean(inline12Result), clean(result) );			
 	}
 
 	@Test
 	public void inline13() {
 		localise("tests/inline/");
-		String result = getResult( "inline13.html", false );
+		String result = getResult( "inline13.html", ResultMode.HTML );
 		assertEquals( clean(inline13Result), clean(result) );			
 	}
 
 	@Test
 	public void inline14() {
 		localise("tests/inline/");
-		String result = getResult( "inline14.html", false );
+		String result = getResult( "inline14.html", ResultMode.HTML );
 		assertEquals( clean(inline14Result), clean(result) );			
 	}
 
 	@Test
 	public void inline_body() {
 		localise("tests/inline/");
-		String result = getResult( "inline-body.html", false );
+		String result = getResult( "inline-body.html", ResultMode.HTML );
 		assertEquals( clean(inline_body_Result), clean(result) );			
 	}
 
 	@Test
 	public void inline21() {
 		localise("tests/inline/");
-		String result = getResult( "inline21.html", false );
+		String result = getResult( "inline21.html", ResultMode.HTML );
 		assertEquals( clean(inline01Result), clean(result) );			
 	}
 
 	@Test
 	public void inline26() {
 		localise("tests/inline/");
-		String result = getResult( "inline26.html", false );
+		String result = getResult( "inline26.html", ResultMode.HTML );
 		assertEquals( clean(inline06Result), clean(result) );			
 	}
 
 	@Test
 	public void inline27() {
 		localise("tests/inline/");
-		String result = getResult( "inline27.html", false );
+		String result = getResult( "inline27.html", ResultMode.HTML );
 		assertEquals( clean(inline07Result), clean(result) );			
 	}
 
