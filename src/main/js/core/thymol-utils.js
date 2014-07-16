@@ -231,7 +231,7 @@ ThUtils = (function() {
 			result = thymol.applicationContext[name];
 		}
 		return result;
-	};
+	}
 	
 	function charOcurrences(str, chr) {
 		var count = 0, i = 0, iLimit = str.length;
@@ -241,7 +241,7 @@ ThUtils = (function() {
 			}
 		}
 		return count;
-	};
+	}
 	
 	function isLiteral(val) {
 		var first, last;
@@ -256,7 +256,7 @@ ThUtils = (function() {
 			}
 		}
 		return false;
-	};
+	}
 
 	function isLiteralSubst(param) {
 		var result = false, par = param;
@@ -271,16 +271,16 @@ ThUtils = (function() {
 			}
 		}
 		return result;
-	};
+	}
 	
-    function loadScript(script) {
+      function loadScript(script) {
         $.ajax({
   	    url: script,
   	    dataType: "script",
   	    cache: true,
   	    async: false
         });  		
-      };
+      }
 	
       function unescape(text) {
 			var result = text, i, iLimit, iUpper, c, cc;
@@ -321,7 +321,7 @@ ThUtils = (function() {
 				}
 			}
 			return result;
-		};
+		}
 
 		function removeTag(element) {
 			var i, iLimit, savedObject = element.thObjectVar, savedLocals = element.thLocalVars;
@@ -340,7 +340,7 @@ ThUtils = (function() {
 				}
 				element.parentNode.removeChild(element);
 			}
-		};
+		}
 
       
 	return {
