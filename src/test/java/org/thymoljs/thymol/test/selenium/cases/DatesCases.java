@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class DatesCases extends SeleniumCases {
@@ -190,105 +191,105 @@ public class DatesCases extends SeleniumCases {
 	@Test
 	public void dates01() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates01.html", false );
+		String result = getResult( "dates01.html", ResultMode.HTML );
 		assertEquals( clean( dates01Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates02() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates02.html", false );
+		String result = getResult( "dates02.html", ResultMode.HTML );
 		assertEquals( clean( dates02Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates03() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates03.html", false );
+		String result = getResult( "dates03.html", ResultMode.HTML );
 		assertEquals( clean( dates03Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates04() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates04.html", false );		
+		String result = getResult( "dates04.html", ResultMode.HTML );		
 		assertEquals( clean( dates04Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates05() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates05.html", false );
+		String result = getResult( "dates05.html", ResultMode.HTML );
 		assertEquals( clean( dates05Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates06() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates06.html", false );
+		String result = getResult( "dates06.html", ResultMode.HTML );
 		assertEquals( clean( dates06Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates07() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates07.html", false );
+		String result = getResult( "dates07.html", ResultMode.HTML );
 		assertEquals( clean( dates07Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates08() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates08.html", false );
+		String result = getResult( "dates08.html", ResultMode.HTML );
 		assertEquals( clean( dates08Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates09() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates09.html", false );
+		String result = getResult( "dates09.html", ResultMode.HTML );
 		assertEquals( clean( dates09Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates10() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates10.html", false );
+		String result = getResult( "dates10.html", ResultMode.HTML );
 		assertEquals( clean( dates10Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates11() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates11.html", false );
+		String result = getResult( "dates11.html", ResultMode.HTML );
 		assertEquals( clean( dates11Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates12() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates12.html", false );
+		String result = getResult( "dates12.html", ResultMode.HTML );
 		assertEquals( clean( dates12Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates13() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates13.html", false );
+		String result = getResult( "dates13.html", ResultMode.HTML );
 		assertEquals( clean( dates13Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates14() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates14.html", false );
+		String result = getResult( "dates14.html", ResultMode.HTML );
 		assertEquals( clean( dates14Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates15() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates15.html", false );
+		String result = getResult( "dates15.html", ResultMode.HTML );
 		assertEquals( clean( dates15Result ), clean( result ) );
 	}
 

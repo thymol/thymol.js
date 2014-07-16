@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class ListsCases extends SeleniumCases {
@@ -116,35 +117,35 @@ public class ListsCases extends SeleniumCases {
 	@Test
 	public void lists01() {
 		localise( "thymol/lists/" );
-		String result = getResult( "lists01.html", false );
+		String result = getResult( "lists01.html", ResultMode.HTML );
 		assertEquals( clean( lists01Result ), clean( result ) );
 	}
 
 	@Test
 	public void lists02() {
 		localise( "thymol/lists/" );
-		String result = getResult( "lists02.html", false );
+		String result = getResult( "lists02.html", ResultMode.HTML );
 		assertEquals( clean( lists02Result ), clean( result ) );
 	}
 
 	@Test
 	public void lists03() {
 		localise( "thymol/lists/" );
-		String result = getResult( "lists03.html", false );
+		String result = getResult( "lists03.html", ResultMode.HTML );
 		assertEquals( clean( lists03Result ), clean( result ) );
 	}
 
 	@Test
 	public void lists04() {
 		localise( "thymol/lists/" );
-		String result = getResult( "lists04.html", false );
+		String result = getResult( "lists04.html", ResultMode.HTML );
 		assertEquals( clean( lists04Result ), clean( result ) );
 	}
 
 	@Test
 	public void lists05() {
 		localise( "thymol/lists/" );
-		String result = getResult( "lists05.html", false );		
+		String result = getResult( "lists05.html", ResultMode.HTML );		
 		if( expectThymolResult() ) {
 			assertEquals( clean( lists05ResultThymol ), clean( result ) );
 		}
@@ -156,7 +157,7 @@ public class ListsCases extends SeleniumCases {
 	@Test
 	public void lists06() {
 		localise( "thymol/lists/" );
-		String result = getResult( "lists06.html", false );
+		String result = getResult( "lists06.html", ResultMode.HTML );
 		assertEquals( clean( lists06Result ), clean( result ) );
 	}
 

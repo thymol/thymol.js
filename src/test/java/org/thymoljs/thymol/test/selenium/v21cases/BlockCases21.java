@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.v21cases;
 
 import static org.junit.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class BlockCases21 extends SeleniumCases {
@@ -74,35 +75,35 @@ public class BlockCases21 extends SeleniumCases {
 	@Test
 	public void block01() {
 		localise("tests21/block/");
-		String result = getResult( "block01.html", false );
+		String result = getResult( "block01.html", ResultMode.HTML );
 		assertEquals( clean( block01Result ), clean( result ) );
 	}
 
 	@Test
 	public void block02() {
 		localise("tests21/block/");
-		String result = getResult( "block02.html", false );
+		String result = getResult( "block02.html", ResultMode.HTML );
 		assertEquals( clean( block02Result ), clean( result ) );
 	}
 
 	@Test
 	public void block03() {
 		localise("tests21/block/");
-		String result = getResult( "block03.html", false );
+		String result = getResult( "block03.html", ResultMode.HTML );
 		assertEquals( clean( block03Result ), clean( result ) );
 	}
 
 	@Test
 	public void block04() {
 		localise("tests21/block/");
-		String result = getResult( "block04.html", false );
+		String result = getResult( "block04.html", ResultMode.HTML );
 		assertEquals( clean( block04Result ), clean( result ) );
 	}
 
 	@Test
 	public void block05() {
 		localise("tests21/block/");
-		String result = getResult( "block05.html", false );
+		String result = getResult( "block05.html", ResultMode.HTML );
 		assertEquals( clean( block05Result ), clean( result ) );
 	}
 

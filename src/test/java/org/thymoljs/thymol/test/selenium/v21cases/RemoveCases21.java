@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.v21cases;
 
 import static org.junit.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class RemoveCases21 extends SeleniumCases {
@@ -42,35 +43,35 @@ public class RemoveCases21 extends SeleniumCases {
 	@Test
 	public void remove01() {
 		localise("tests21/remove/");
-		String result = getResult( "remove01.html", false );
+		String result = getResult( "remove01.html", ResultMode.HTML );
 		assertEquals( clean( remove01Result ), clean( result ) );
 	}
 
 	@Test
 	public void remove02() {
 		localise("tests21/remove/");
-		String result = getResult( "remove02.html", false );
+		String result = getResult( "remove02.html", ResultMode.HTML );
 		assertEquals( clean( remove02Result ), clean( result ) );
 	}
 
 	@Test
 	public void remove03() {
 		localise("tests21/remove/");
-		String result = getResult( "remove03.html", false );
+		String result = getResult( "remove03.html", ResultMode.HTML );
 		assertEquals( clean( remove03Result ), clean( result ) );
 	}
 
 	@Test
 	public void remove04() {
 		localise("tests21/remove/");
-		String result = getResult( "remove04.html", false );
+		String result = getResult( "remove04.html", ResultMode.HTML );
 		assertEquals( clean( remove04Result ), clean( result ) );
 	}
 
 	@Test
 	public void remove05() {
 		localise("tests21/remove/");
-		String result = getResult( "remove05.html", false );
+		String result = getResult( "remove05.html", ResultMode.HTML );
 		assertEquals( clean( remove05Result ), clean( result ) );
 	}
 

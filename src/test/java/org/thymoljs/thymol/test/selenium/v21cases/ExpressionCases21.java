@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.v21cases;
 
 import static org.junit.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class ExpressionCases21 extends SeleniumCases {
@@ -62,21 +63,21 @@ public class ExpressionCases21 extends SeleniumCases {
 	@Test
 	public void expression01() {
 		localise("tests21/expression/");
-		String result = getResult( "expression01.html", false );
+		String result = getResult( "expression01.html", ResultMode.HTML );
 		assertEquals( clean( expression01Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression02() {
 		localise("tests21/expression/");
-		String result = getResult( "expression02.html", false );
+		String result = getResult( "expression02.html", ResultMode.HTML );
 		assertEquals( clean( expression02Result ), clean( result ) );
 	}
 
 	@Test
 	public void expression03() {
 		localise("tests21/expression/");
-		String result = getResult( "expression03.html", false );
+		String result = getResult( "expression03.html", ResultMode.HTML );
 		assertEquals( clean( expression03Result ), clean( result ) );
 	}
 

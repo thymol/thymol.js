@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class ArraysCases extends SeleniumCases {
@@ -96,49 +97,49 @@ public class ArraysCases extends SeleniumCases {
 	@Test
 	public void arrays01() {
 		localise( "thymol/arrays/" );
-		String result = getResult( "arrays01.html", false );
+		String result = getResult( "arrays01.html", ResultMode.HTML );
 		assertEquals( clean( arrays01Result ), clean( result ) );
 	}
 
 	@Test
 	public void arrays02() {
 		localise( "thymol/arrays/" );
-		String result = getResult( "arrays02.html", false );
+		String result = getResult( "arrays02.html", ResultMode.HTML );
 		assertEquals( clean( arrays02Result ), clean( result ) );
 	}
 
 	@Test
 	public void arrays03() {
 		localise( "thymol/arrays/" );
-		String result = getResult( "arrays03.html", false );
+		String result = getResult( "arrays03.html", ResultMode.HTML );
 		assertEquals( clean( arrays03Result ), clean( result ) );
 	}
 
 	@Test
 	public void arrays04() {
 		localise( "thymol/arrays/" );
-		String result = getResult( "arrays04.html", false );
+		String result = getResult( "arrays04.html", ResultMode.HTML );
 		assertEquals( clean( arrays04Result ), clean( result ) );
 	}
 
 	@Test
 	public void arrays05() {
 		localise( "thymol/arrays/" );
-		String result = getResult( "arrays05.html", false );
+		String result = getResult( "arrays05.html", ResultMode.HTML );
 		assertEquals( clean( arrays05Result ), clean( result ) );
 	}
 
 	@Test
 	public void arrays06() {
 		localise( "thymol/arrays/" );
-		String result = getResult( "arrays06.html", false );
+		String result = getResult( "arrays06.html", ResultMode.HTML );
 		assertEquals( clean( arrays06Result ), clean( result ) );
 	}
 
 	@Test
 	public void arrays07() {
 		localise( "thymol/arrays/" );
-		String result = getResult( "arrays07.html", false );
+		String result = getResult( "arrays07.html", ResultMode.HTML );
 		assertEquals( clean( arrays07Result ), clean( result ) );
 	}
 

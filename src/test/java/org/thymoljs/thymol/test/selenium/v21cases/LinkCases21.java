@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.v21cases;
 
 import static org.junit.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class LinkCases21 extends SeleniumCases {
@@ -23,14 +24,14 @@ public class LinkCases21 extends SeleniumCases {
 	@Test
 	public void link01() {
 		localise("tests21/link/");
-		String result = getResult( "link01.html", false );
+		String result = getResult( "link01.html", ResultMode.HTML );
 		assertEquals( clean( link01Result ), clean( result ) );
 	}
 
 	@Test
 	public void link02() {
 		localise("tests21/link/");
-		String result = getResult( "link02.html", false );
+		String result = getResult( "link02.html", ResultMode.HTML );
 		assertEquals( clean( link02Result ), clean( result ) );
 	}
 

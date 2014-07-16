@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class IdsCases extends SeleniumCases {
@@ -64,14 +65,14 @@ public class IdsCases extends SeleniumCases {
 	@Test
 	public void ids01() {
 		localise( "thymol/ids/" );
-		String result = getResult( "ids01.html", false );
+		String result = getResult( "ids01.html", ResultMode.HTML );
 		assertEquals( clean( ids01Result ), clean( result ) );
 	}
 
 	@Test
 	public void ids02() {
 		localise( "thymol/ids/" );
-		String result = getResult( "ids02.html", false );
+		String result = getResult( "ids02.html", ResultMode.HTML );
 		assertEquals( clean( ids02Result ), clean( result ) );			
 	}
 

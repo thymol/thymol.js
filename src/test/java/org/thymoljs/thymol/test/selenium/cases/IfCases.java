@@ -2,8 +2,9 @@ package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class IfCases extends SeleniumCases {
@@ -109,56 +110,56 @@ public class IfCases extends SeleniumCases {
 	@Test
 	public void if01() {
 		localise("tests/if/");
-		String result = getResult( "if01.html", false );
+		String result = getResult( "if01.html", ResultMode.HTML );
 		assertEquals( clean( if01Result ), clean( result ) );
 	}
 
 	@Test
 	public void if02() {
 		localise("tests/if/");
-		String result = getResult( "if02.html", false );
+		String result = getResult( "if02.html", ResultMode.HTML );
 		assertEquals( clean( if02Result ), clean( result ) );
 	}
 
 	@Test
 	public void if03() {
 		localise("tests/if/");
-		String result = getResult( "if03.html", false );
+		String result = getResult( "if03.html", ResultMode.HTML );
 		assertEquals( clean( if03Result ), clean( result ) );
 	}
 
 	@Test
 	public void if04() {
 		localise("tests/if/");
-		String result = getResult( "if04.html", false );
+		String result = getResult( "if04.html", ResultMode.HTML );
 		assertEquals( clean( if04Result ), clean( result ) );
 	}
 
 	@Test
 	public void if05() {
 		localise("tests/if/");
-		String result = getResult( "if05.html", false );
+		String result = getResult( "if05.html", ResultMode.HTML );
 		assertEquals( clean( if05Result ), clean( result ) );
 	}
 
 	@Test
 	public void if06() {
 		localise("tests/if/");
-		String result = getResult( "if06.html", false );
+		String result = getResult( "if06.html", ResultMode.HTML );
 		assertEquals( clean( if06Result ), clean( result ) );
 	}
 
 	@Test
 	public void if07() {
 		localise("tests/if/");
-		String result = getResult( "if07.html", false );
+		String result = getResult( "if07.html", ResultMode.HTML );
 		assertEquals( clean( if07Result ), clean( result ) );
 	}
 
 	@Test
 	public void if08() {
 		localise("tests/if/");
-		String result = getResult( "if08.html", false );
+		String result = getResult( "if08.html", ResultMode.HTML );
 		assertEquals( clean( if08Result ), clean( result ) );
 	}
 

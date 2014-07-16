@@ -1,8 +1,9 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
-import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import org.thymoljs.thymol.test.selenium.ResultMode;
+import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class MapsCases extends SeleniumCases {
@@ -87,14 +88,14 @@ public class MapsCases extends SeleniumCases {
 	@Test
 	public void maps01() {
 		localise( "thymol/maps/" );
-		String result = getResult( "maps01.html", false );
+		String result = getResult( "maps01.html", ResultMode.HTML );
 		assertEquals( clean( maps01Result ), clean( result ) );
 	}
 
 	@Test
 	public void maps02() {
 		localise( "thymol/maps/" );
-		String result = getResult( "maps02.html", false );
+		String result = getResult( "maps02.html", ResultMode.ALERT );
 		if( expectThymolResult() ) {
 			assertEquals( maps02ResultThymol, clean( result ) );			
 		}
@@ -107,14 +108,14 @@ public class MapsCases extends SeleniumCases {
 	@Test
 	public void maps03() {
 		localise( "thymol/maps/" );
-		String result = getResult( "maps03.html", false );
+		String result = getResult( "maps03.html", ResultMode.HTML );
 		assertEquals( clean( maps03Result ), clean( result ) );
 	}
 
 	@Test
 	public void maps04() {
 		localise( "thymol/maps/" );
-		String result = getResult( "maps04.html", false );
+		String result = getResult( "maps04.html", ResultMode.ALERT );
 		if( expectThymolResult() ) {
 			assertEquals( maps04ResultThymol, clean( result ) );			
 		}
@@ -127,35 +128,35 @@ public class MapsCases extends SeleniumCases {
 	@Test
 	public void maps05() {
 		localise( "thymol/maps/" );
-		String result = getResult( "maps05.html", false );		
+		String result = getResult( "maps05.html", ResultMode.HTML );		
 		assertEquals( clean( maps05Result ), clean( result ) );
 	}
 
 	@Test
 	public void maps06() {
 		localise( "thymol/maps/" );
-		String result = getResult( "maps06.html", false );		
+		String result = getResult( "maps06.html", ResultMode.HTML );		
 		assertEquals( clean( maps06Result ), clean( result ) );
 	}
 
 	@Test
 	public void maps07() {
 		localise( "thymol/maps/" );
-		String result = getResult( "maps07.html", false );		
+		String result = getResult( "maps07.html", ResultMode.HTML );		
 		assertEquals( clean( maps07Result ), clean( result ) );
 	}
 
 	@Test
 	public void maps08() {
 		localise( "thymol/maps/" );
-		String result = getResult( "maps08.html", false );		
+		String result = getResult( "maps08.html", ResultMode.HTML );		
 		assertEquals( clean( maps08Result ), clean( result ) );
 	}
 
 	@Test
 	public void maps09() {
 		localise( "thymol/maps/" );
-		String result = getResult( "maps09.html", false );		
+		String result = getResult( "maps09.html", ResultMode.HTML );		
 		assertEquals( clean( maps09Result ), clean( result ) );
 	}
 
