@@ -772,7 +772,7 @@ thymol = function() {
                         if (initial != "") {
                             initial = ThUtils.unParenthesise(initial);
                             initial = thymol.preProcess(initial, element);
-                            result = thymol.getParsedExpr(initial, element);
+                            result = thymol.getParsedExpr(initial, element, true);
                         }
                     }
                     if (result == initial && typeof result == typeof initial) {
@@ -868,7 +868,7 @@ thymol = function() {
         var argValue = content.trim(), argCount = 0;
         if (argValue) {
             do {
-                var argsExpr = ThParser.parse(argValue, true);
+                var argsExpr = ThParser.parse(argValue, true, false);
                 var identifier = argsExpr.tokens.shift();
                 if (identifier.type_ === 3) {
                     var result = argsExpr.evaluate(element, thymol.substituteParam);
@@ -888,9 +888,9 @@ thymol = function() {
         }
         return argCount;
     }
-    function getParsedExpr(initial, element) {
+    function getParsedExpr(initial, element, preprocessed) {
         var expr, result = initial;
-        expr = ThParser.parse(result);
+        expr = ThParser.parse(result, false, preprocessed);
         expr = expr.simplify();
         result = expr.evaluate(element, thymol.substituteParam);
         if (typeof result === "number") {
@@ -2850,7 +2850,7 @@ ThParser = function(scope) {
     function elvis(a, b) {
         return a != null ? a : b;
     }
-    function getStr(pos, expression, mode) {
+    function getStr(pos, expression, mode, partial, preprocessed) {
         var localMode = mode;
         var s = "";
         var c = expression.charAt(pos);
@@ -2866,8 +2866,10 @@ ThParser = function(scope) {
             for (;i <= end; i++) {
                 if (c.toUpperCase() === c.toLowerCase()) {
                     if (i === pos || c === "}" || c !== "_" && c !== "?" && c !== ":" && (c < "0" || c > "9")) {
-                        i = i - 1;
-                        break;
+                        if (!(partial && c == "-") && !(mode === 2 && c === "/")) {
+                            i = i - 1;
+                            break;
+                        }
                     }
                 }
                 s += c;
@@ -2875,11 +2877,12 @@ ThParser = function(scope) {
             }
         } else {
             var quoted = false;
+            var preprocessing = false;
             if (c === "'" || c === '"') {
                 quoted = true;
             }
             while (i <= end) {
-                if (c === stopChar && i > start) {
+                if (c === stopChar && i > start && !preprocessing) {
                     if (localMode !== 4) {
                         s += c;
                     } else {
@@ -2888,6 +2891,9 @@ ThParser = function(scope) {
                     break;
                 }
                 var nc = expression.charAt(i);
+                if (c === "_" && nc === "_" && !preprocessed) {
+                    preprocessing = !preprocessing;
+                }
                 if (c === "\\") {
                     if (nc === "'" && s.charAt(s.length - 1) !== "\\") {
                         c = "&#39;";
@@ -2999,11 +3005,11 @@ ThParser = function(scope) {
             PI: Math.PI
         };
     }
-    ThParser.parse = function(expr, partial) {
-        return new ThParser().parse(expr, partial);
+    ThParser.parse = function(expr, partial, preprocessed) {
+        return new ThParser().parse(expr, partial, preprocessed);
     };
     ThParser.evaluate = function(expr, partial, element, func) {
-        return ThParser.parse(expr, partial).evaluate(element, func);
+        return ThParser.parse(expr, partial, false).evaluate(element, func);
     };
     ThParser.Expression = Expression;
     ThParser.values = {
@@ -3044,7 +3050,7 @@ ThParser = function(scope) {
     var OPTION = 1 << 12;
     var ASSIGN = 1 << 13;
     ThParser.prototype = {
-        parse: function(expr, partial) {
+        parse: function(expr, partial, preprocessed) {
             this.errormsg = "";
             this.success = true;
             var operstack = [];
@@ -3172,7 +3178,7 @@ ThParser = function(scope) {
                     tokenstack.push(consttoken);
                     expected = OPERATOR | RPAREN | RVARBRK | RBRACK | COMMA;
                 } else {
-                    var str = getStr(this.pos, this.expression, this.mode);
+                    var str = getStr(this.pos, this.expression, this.mode, partial, preprocessed);
                     if (this.isOpX(str, this.ops2)) {
                         if ("and" === str.str || "or" === str.str) {
                             this.tokenprio = 3;
@@ -3307,7 +3313,7 @@ ThParser = function(scope) {
                 }
                 this.tokenprio = 1;
                 this.tokenindex = "*";
-            } else if (ch === "/") {
+            } else if (ch === "/" && this.mode != 2) {
                 this.tokenprio = 2;
                 this.tokenindex = "/";
             } else if (ch === "%") {
@@ -3696,44 +3702,69 @@ ThParser = function(scope) {
         element.removeAttribute(thUrlAttr.name);
     };
     processAttr = function(element, thUrlAttr, thAttrObj) {
-        var parts = thUrlAttr.value.split(","), pos = 0, i, iLimit, pair, attrName, url, tt, existing;
-        for (i = 0, iLimit = parts.length; i < iLimit; i++) {
-            pair = parts[i].split("=");
-            if (pair) {
-                if (thAttrObj.suffix == "classappend") {
-                    pair[1] = pair[0];
-                    pair[0] = "class";
-                    pos = -1;
-                }
-                attrName = pair[0];
-                if (attrName) {
-                    if (pair[1]) {
-                        if (pos >= 0) {
-                            pos = fixedValBoolAttrList.indexOf(attrName);
-                        }
-                        if (pos >= 0) {
-                            doFixedValBoolAttr(pair[1], element, attrName);
-                        } else {
-                            url = getThAttribute(pair[1], element);
-                            tt = typeof url;
-                            if (thAttrObj.suffix == "attrappend" || thAttrObj.suffix == "attrprepend" || thAttrObj.suffix == "classappend") {
-                                if (url !== null && (tt === "number" || tt === "string" && url.length > 0)) {
-                                    existing = element.getAttribute(attrName);
-                                    if (existing) {
-                                        if (thAttrObj.suffix == "attrappend") {
-                                            url = existing + url;
-                                        } else if (thAttrObj.suffix == "classappend") {
-                                            url = existing + " " + url;
-                                        } else if (thAttrObj.suffix == "attrprepend") {
-                                            url = url + existing;
+        var argValue = thUrlAttr.value.trim(), argsExpr, expr, identifier, attrName = null, ep, lp, url, tt;
+        if (argValue) {
+            do {
+                argsExpr = ThParser.parse(argValue, true, false);
+                identifier = argsExpr.tokens.shift();
+                if (identifier.type_ === 3) {
+                    attrName = identifier.index_;
+                    if (!!attrName) {
+                        ep = argValue.indexOf("=");
+                        if (ep >= 0) {
+                            lp = argsExpr.position - 1;
+                            if (argsExpr.position === argValue.length) {
+                                lp = argValue.position;
+                            }
+                            expr = argValue.substring(ep + 1, lp).trim();
+                            if (fixedValBoolAttrList.indexOf(attrName) >= 0) {
+                                doFixedValBoolAttr(expr, element, attrName);
+                            } else {
+                                url = getThAttribute(expr, element);
+                                tt = typeof url;
+                                if (thAttrObj.suffix == "attrappend" || thAttrObj.suffix == "attrprepend") {
+                                    if (url !== null && (tt === "number" || tt === "string" && url.length > 0)) {
+                                        existing = element.getAttribute(attrName);
+                                        if (existing) {
+                                            if (thAttrObj.suffix == "attrappend") {
+                                                url = existing + url;
+                                            } else if (thAttrObj.suffix == "attrprepend") {
+                                                url = url + existing;
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            if (url !== null && (tt === "number" || tt === "string" && url.length > 0)) {
-                                element.setAttribute(attrName, url);
+                                if (url !== null && (tt === "number" || tt === "string" && url.length > 0)) {
+                                    element.setAttribute(attrName, url);
+                                }
                             }
                         }
+                    }
+                    argValue = argValue.substring(argsExpr.position);
+                } else {
+                    break;
+                }
+            } while (argValue.length > 0);
+        }
+        element.removeAttribute(thUrlAttr.name);
+    };
+    processCSSAttr = function(element, thUrlAttr, thAttrObj) {
+        var parts = thUrlAttr.value.split(","), i, iLimit, expr, attrName, url, tt, existing;
+        for (i = 0, iLimit = parts.length; i < iLimit; i++) {
+            expr = parts[i];
+            attrName = thAttrObj.suffix == "classappend" ? "class" : "style";
+            if (!!attrName) {
+                if (!!expr) {
+                    url = getThAttribute(expr, element);
+                    tt = typeof url;
+                    if (url !== null && (tt === "number" || tt === "string" && url.length > 0)) {
+                        existing = element.getAttribute(attrName);
+                        if (existing) {
+                            url = existing + " " + url;
+                        }
+                    }
+                    if (url !== null && (tt === "number" || tt === "string" && url.length > 0)) {
+                        element.setAttribute(attrName, url);
                     }
                 }
             }
@@ -4261,7 +4292,11 @@ ThParser = function(scope) {
                 precedence: 1e3
             }, {
                 name: "classappend",
-                processor: processAttr,
+                processor: processCSSAttr,
+                precedence: 1100
+            }, {
+                name: "styleappend",
+                processor: processCSSAttr,
                 precedence: 1100
             }, {
                 name: "text",
