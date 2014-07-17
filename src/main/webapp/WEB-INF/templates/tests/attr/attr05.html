@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>attr example 05</title>
+</head>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="attr-data.js"></script>
+<body>
+  <ul>
+    <li><a href="#" th:attr="href=${'#'+affiliate.identificationCode1}">Link v1</a></li>
+    <li><a href="#" th:attr="data-target=${'#'+affiliate.identificationCode1}">Link v2</a></li>
+    <li><a href="#" th:attr="data-target=${'#' + affiliate.identificationCode1}">Link v3</a></li>
+    <li><a href="#" th:attr="data-target='#' + ${affiliate.identificationCode2}">Link v4</a></li>
+    <li><a href="#" th:attr="data-target = ${ '#' + affiliate.identificationCode1 }">Link v5</a></li>
+    <li><a href="#" th:attr="data-target = '#' + ${affiliate.identificationCode2 }">Link v6</a></li>
+  </ul>
+</body>
+</html>

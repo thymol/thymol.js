@@ -192,56 +192,84 @@
 		element.setAttribute(thAttrObj.suffix, url);
 		element.removeAttribute(thUrlAttr.name);
 	};
-
-	processAttr = function(element, thUrlAttr, thAttrObj) {
-		var parts = thUrlAttr.value.split(","), pos = 0, i, iLimit, pair, attrName, url, tt, existing;
-		for (i = 0, iLimit = parts.length; i < iLimit; i++) {
-			pair = parts[i].split("=");
-			if (pair) {
-				if (thAttrObj.suffix == "classappend") {
-					pair[1] = pair[0];
-					pair[0] = "class";
-					pos = -1;
-				}
-				attrName = pair[0];
-				if (attrName) {
-					if (pair[1]) {
-						if (pos >= 0) {
-							pos = fixedValBoolAttrList.indexOf(attrName);
-						}
-						if (pos >= 0) {
-							doFixedValBoolAttr(pair[1], element, attrName);
-						}
-						else {
-							url = getThAttribute(pair[1], element);
-							tt = typeof url;
-							if (thAttrObj.suffix == "attrappend" || thAttrObj.suffix == "attrprepend" || thAttrObj.suffix == "classappend") {
-								if (url !== null && (tt === "number" || (tt === "string" && url.length > 0))) {
-									existing = element.getAttribute(attrName);
-									if (existing) {
-										if (thAttrObj.suffix == "attrappend") {
-											url = existing + url;
-										}
-										else if (thAttrObj.suffix == "classappend") {
-											url = existing + " " + url;
-										}
-										else if (thAttrObj.suffix == "attrprepend") {
-											url = url + existing;
+ 
+	processAttr = function(element, thUrlAttr, thAttrObj) {		
+		var argValue = thUrlAttr.value.trim(), argsExpr, expr, identifier, attrName = null, ep, lp, url, tt;
+		if (argValue) {		
+			do {
+				argsExpr = ThParser.parse(argValue,true,false);
+				identifier = argsExpr.tokens.shift();
+				if( identifier.type_ === 3 ) {
+					attrName = identifier.index_;
+					if (!!attrName) {
+						ep = argValue.indexOf('=');
+						if(ep>=0) {
+							lp = argsExpr.position - 1;
+							if( argsExpr.position === argValue.length ) {
+								lp = argValue.position;
+							}
+							expr = argValue.substring(ep+1,lp).trim();
+							if (fixedValBoolAttrList.indexOf(attrName) >= 0) {
+								doFixedValBoolAttr(expr, element, attrName);
+							}
+							else {
+								url = getThAttribute(expr, element);
+								tt = typeof url;
+								if (thAttrObj.suffix == "attrappend" || thAttrObj.suffix == "attrprepend") {
+									if (url !== null && (tt === "number" || (tt === "string" && url.length > 0))) {
+										existing = element.getAttribute(attrName);
+										if (existing) {
+											if (thAttrObj.suffix == "attrappend") {
+												url = existing + url;
+											}
+											else if (thAttrObj.suffix == "attrprepend") {
+												url = url + existing;
+											}
 										}
 									}
 								}
-							}
-							if (url !== null && (tt === "number" || (tt === "string" && url.length > 0))) {
-								element.setAttribute(attrName, url);
+								if (url !== null && (tt === "number" || (tt === "string" && url.length > 0))) {
+									element.setAttribute(attrName, url);
+								}
 							}
 						}
-					}
+					}							
+					argValue = argValue.substring(argsExpr.position);					
 				}
-			}
+				else {
+					break;
+				}				
+			} while(argValue.length > 0);
 		}
 		element.removeAttribute(thUrlAttr.name);
 	};
+	
+	processCSSAttr = function(element, thUrlAttr, thAttrObj) {
+		var parts = thUrlAttr.value.split(","), i, iLimit, expr, attrName, url, tt, existing;
+		for (i = 0, iLimit = parts.length; i < iLimit; i++) {
+			expr = parts[i];
+			attrName = thAttrObj.suffix == "classappend" ? "class" : "style";
+			if (!!attrName) {
+				if (!!expr) {
+					url = getThAttribute(expr, element);
+					tt = typeof url;
+					if (url !== null && (tt === "number" || (tt === "string" && url.length > 0))) {
+						existing = element.getAttribute(attrName);
+						if (existing) {
+							url = existing + " " + url;
+						}
+					}
+					if (url !== null && (tt === "number" || (tt === "string" && url.length > 0))) {
+						element.setAttribute(attrName, url);
+					}
+				}
+			}			
 
+		}
+		element.removeAttribute(thUrlAttr.name);
+	};
+	
+	
 	processFixedValBoolAttr = function(element, thUrlAttr, thAttrObj) {
 		var val = doFixedValBoolAttr(thUrlAttr.value, element, thAttrObj.suffix);
 		if (val != null) {
@@ -771,7 +799,8 @@
 				{ name : 'alt-title', processor : processPairedAttr, precedence : 990 },
 				{ name : 'lang-xmllang', processor : processPairedAttr, precedence : 990 },		      
 				{ name : 'inline', processor : processInline, precedence : 1000 },		      
-				{ name : 'classappend', processor : processAttr, precedence : 1100 },		      
+				{ name : 'classappend', processor : processCSSAttr, precedence : 1100 },		      
+				{ name : 'styleappend', processor : processCSSAttr, precedence : 1100 },		      
 				{ name : 'text', processor : processText, precedence : 1300 },
 				{ name : 'utext', processor : processText, precedence : 1400 },
 				{ name : 'fragment', processor : processFragment, precedence : 1500 },

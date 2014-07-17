@@ -1099,8 +1099,10 @@ public class ThymolTestFilter implements Filter {
 		List< Integer > numList = Arrays.asList( numListArray );
 		ctx.setVariable( "numList", numList );		
 		
-		
-//		int x = 0;
+		Map<String,Object> affiliate = new HashMap<String,Object>();
+		affiliate.put("identificationCode1","1234");
+		affiliate.put("identificationCode2","5678");
+		ctx.setVariable( "affiliate", affiliate );		
 		
 	}
 	

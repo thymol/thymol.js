@@ -453,7 +453,7 @@ thymol = function() {
 						if (initial != "") {
 							initial = ThUtils.unParenthesise(initial);
 							initial = thymol.preProcess(initial, element);
-							result = thymol.getParsedExpr(initial, element);
+							result = thymol.getParsedExpr(initial, element, true);
 						}
 					}
 					if (result == initial && (typeof result == typeof initial)) { // Unsubstituted
@@ -558,7 +558,7 @@ thymol = function() {
 		var argValue = content.trim(), argCount = 0;
 		if (argValue) {		
 			do {
-				var argsExpr = ThParser.parse(argValue,true);
+				var argsExpr = ThParser.parse(argValue,true,false);
 				var identifier = argsExpr.tokens.shift();
 				if( identifier.type_ === 3 ) {
 					var result = argsExpr.evaluate(element, thymol.substituteParam);				
@@ -581,9 +581,9 @@ thymol = function() {
 		return argCount;
 	};
 
-	function getParsedExpr(initial, element) {
+	function getParsedExpr(initial, element,preprocessed) {
 		var expr, result = initial;
-		expr = ThParser.parse(result);
+		expr = ThParser.parse(result,false,preprocessed);
 		expr = expr.simplify();
 		// TODO Cache expressions here!!
 		result = expr.evaluate(element, thymol.substituteParam);

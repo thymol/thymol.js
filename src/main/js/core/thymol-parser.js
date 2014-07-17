@@ -385,7 +385,7 @@ ThParser = (function(scope) {
 		return a != null ? a : b;
 	}
 
-	function getStr(pos, expression, mode) {
+	function getStr(pos, expression, mode, partial, preprocessed) {
 		var localMode = mode;
 		var s = "";
 		var c = expression.charAt(pos);
@@ -400,9 +400,11 @@ ThParser = (function(scope) {
 		if (localMode !== 4 && c !== '\'' && c !== '"') {
 			for (; i <= end; i++) {
 				if (c.toUpperCase() === c.toLowerCase()) {
-					if (i === pos || c === '}' || (c !== '_' && c !== '?' && c !== ':' && (c < '0' || c > '9'))) {
-						i = i - 1;
-						break;
+					if (i === pos || c === '}' || (c !== '_' && c !== '?' && c !== ':' && (c < '0' || c > '9') )  ) {
+						if( !(partial && c=='-') &&  !( mode === 2 && c === '/')  ) {
+							i = i - 1;
+							break;
+						}
 					}
 				}
 				s += c;
@@ -411,11 +413,12 @@ ThParser = (function(scope) {
 		}
 		else {
 			var quoted = false;
+			var preprocessing = false;
 			if (c === '\'' || c === '"') {
 				quoted = true;
 			}
 			while (i <= end) {
-				if (c === stopChar && i > start) {
+				if (c === stopChar && i > start && !preprocessing) {
 					if (localMode !== 4) {
 						s += c;
 					}
@@ -425,6 +428,9 @@ ThParser = (function(scope) {
 					break;
 				}
 				var nc = expression.charAt(i);
+				if( c === "_" && nc === "_" && !preprocessed ) {
+					preprocessing = !preprocessing;
+				}
 				if (c === '\\') {
 					if (nc === '\'' && s.charAt(s.length - 1) !== '\\') { // previously appended '\' escapes this one!
 						c = "&#39;";
@@ -545,12 +551,12 @@ ThParser = (function(scope) {
 		};
 	}
 
-	ThParser.parse = function(expr,partial) {
-		return new ThParser().parse(expr,partial);
+	ThParser.parse = function(expr,partial,preprocessed) {
+		return new ThParser().parse(expr,partial,preprocessed);
 	};
 
 	ThParser.evaluate = function(expr, partial, element, func) {
-		return ThParser.parse(expr,partial).evaluate(element, func);
+		return ThParser.parse(expr,partial,false).evaluate(element, func);
 	};
 
 	ThParser.Expression = Expression;
@@ -595,7 +601,7 @@ ThParser = (function(scope) {
 	var ASSIGN = 1 << 13;
 
 	ThParser.prototype = {
-		parse : function(expr,partial) {
+		parse : function(expr,partial,preprocessed) {
 			this.errormsg = "";
 			this.success = true;
 			var operstack = [];
@@ -754,7 +760,7 @@ ThParser = (function(scope) {
 					expected = (OPERATOR | RPAREN | RVARBRK | RBRACK | COMMA);
 				}
 				else {
-					var str = getStr(this.pos, this.expression, this.mode);
+					var str = getStr(this.pos, this.expression, this.mode, partial, preprocessed);
 					if (this.isOpX(str, this.ops2)) {
 						if (("and" === str.str) || ("or" === str.str)) {
 							this.tokenprio = 3;
@@ -909,7 +915,7 @@ ThParser = (function(scope) {
 				this.tokenprio = 1;
 				this.tokenindex = "*";
 			}
-			else if (ch === "/") {
+			else if (ch === "/" && this.mode != 2) {
 				this.tokenprio = 2;
 				this.tokenindex = "/";
 			}
