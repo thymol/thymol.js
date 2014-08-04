@@ -1104,6 +1104,19 @@ public class ThymolTestFilter implements Filter {
 		affiliate.put("identificationCode2","5678");
 		ctx.setVariable( "affiliate", affiliate );		
 		
+		ctx.setVariable( "base_url2", "/base/url" );
+		
+		Map< String, Object > user2Var = new LinkedHashMap< String, Object >();
+		user2Var.put("name", "John Apricot");
+		user2Var.put("firstName", "John");
+		user2Var.put("lastName", "Apricot");
+		user2Var.put("nationality", "Antarctica");
+		user2Var.put("age", "(no age specified)");		
+		ctx.setVariable( "user2", user2Var );		
+		
+		ctx.setVariable( "onevar2", "Some text over here" );		
+		ctx.setVariable( "twovar2", "Other text (second)" );		
+				
 	}
 	
 	public static class JunkObject {
