@@ -669,7 +669,18 @@ thymol = function() {
     function substituteParam(argValue, mode, element) {
         var result = argValue, varName = argValue, subs = null, msg, expo;
         if (result) {
-            if (mode == 3) {
+            if (mode == 2) {
+                var token = thymol.booleanAndNullTokens[result];
+                if (!(typeof token === "undefined")) {
+                    if (token === null) {
+                        subs = null;
+                    } else {
+                        subs = token.value;
+                    }
+                } else {
+                    subs = argValue;
+                }
+            } else if (mode == 3) {
                 if (element.thObjectVar) {
                     subs = element.thObjectVar[varName];
                 }
@@ -680,6 +691,8 @@ thymol = function() {
                         subs = msg;
                     }
                 }
+            } else if (mode == 6) {
+                subs = argValue;
             } else {
                 if (varName.charAt(0) === "#") {
                     if ("#object" === varName) {
@@ -717,6 +730,26 @@ thymol = function() {
             result = subs;
             if (subs instanceof ThParam) {
                 result = subs.value;
+            }
+        }
+        return result;
+    }
+    function getStandardURL(initial) {
+        var result = initial, mapped;
+        mapped = thymol.getMapped(result, true);
+        if (mapped) {
+            result = thymol.getWithProtocol(mapped);
+        }
+        if (!/.*:\/\/.*/.test(result)) {
+            if (/^~?\/.*$/.test(result)) {
+                if (/^~.*$/.test(result)) {
+                    result = result.substring(1);
+                }
+                if (/^\/\/.*$/.test(result)) {
+                    result = thymol.getWithProtocol(result);
+                } else {
+                    result = thymol.getWithProtocol(thymol.root + result.substring(1));
+                }
             }
         }
         return result;
@@ -871,7 +904,7 @@ thymol = function() {
                 var argsExpr = ThParser.parse(argValue, true, false);
                 var identifier = argsExpr.tokens.shift();
                 if (identifier.type_ === 3) {
-                    var result = argsExpr.evaluate(element, thymol.substituteParam);
+                    var result = argsExpr.evaluate(element);
                     var varName = identifier.index_;
                     if (!!varName) {
                         argCount++;
@@ -892,7 +925,7 @@ thymol = function() {
         var expr, result = initial;
         expr = ThParser.parse(result, false, preprocessed);
         expr = expr.simplify();
-        result = expr.evaluate(element, thymol.substituteParam);
+        result = expr.evaluate(element);
         if (typeof result === "number") {
             result = ThUtils.getToPrecision(result, expr.precision);
         }
@@ -1890,6 +1923,7 @@ thymol = function() {
         preProcess: preProcess,
         substitute: substitute,
         substituteParam: substituteParam,
+        getStandardURL: getStandardURL,
         getMessage: getMessage,
         getLocale: getLocale,
         getExpression: getExpression,
@@ -2489,6 +2523,20 @@ ThUtils = function() {
             element.parentNode.removeChild(element);
         }
     }
+    function getRequestEncoded(initial) {
+        var result = initial;
+        result = encodeURIComponent(result);
+        result = result.replace(/%20/g, "+");
+        result = result.replace(/%26/g, "&");
+        result = result.replace(/%3A/g, ":");
+        result = result.replace(/!/g, "%21");
+        result = result.replace(/'/g, "%27");
+        result = result.replace(/\(/g, "%28");
+        result = result.replace(/\)/g, "%29");
+        result = result.replace(/\*/g, "%2A");
+        result = result.replace(/~/g, "%7E");
+        return result;
+    }
     return {
         getParameter: getParameter,
         processElement: processElement,
@@ -2504,7 +2552,8 @@ ThUtils = function() {
         isLiteralSubst: isLiteralSubst,
         loadScript: loadScript,
         unescape: unescape,
-        removeTag: removeTag
+        removeTag: removeTag,
+        getRequestEncoded: getRequestEncoded
     };
 }();
 
@@ -2523,12 +2572,14 @@ ThParser = function(scope) {
     var TVAR = 3;
     var TFUNCALL = 4;
     var MSGSUBST = 5;
-    function Token(type_p, index_p, prio_p, number_p, mode_p) {
+    var ARGLIST = 6;
+    function Token(type_p, index_p, prio_p, number_p, mode_p, meta_p) {
         this.type_ = type_p;
         this.index_ = index_p || 0;
         this.prio_ = prio_p || 0;
         this.number_ = number_p !== undefined && number_p !== null ? number_p : 0;
         this.mode_ = mode_p !== undefined && mode_p !== null ? mode_p : 0;
+        this.meta_ = meta_p;
         this.toString = function() {
             switch (this.type_) {
               case TNUMBER:
@@ -2541,6 +2592,7 @@ ThParser = function(scope) {
 
               case TFUNCALL:
               case MSGSUBST:
+              case ARGLIST:
                 return "CALL";
 
               default:
@@ -2576,10 +2628,12 @@ ThParser = function(scope) {
                     item = new Token(TNUMBER, 0, 0, values[item.index_]);
                     nstack.push(item);
                 } else if (type_ === TOP2 && nstack.length > 1) {
-                    n2 = nstack.pop();
-                    n1 = nstack.pop();
                     f = this.ops2[item.index_];
-                    item = new Token(TNUMBER, 0, 0, f(n1.number_, n2.number_));
+                    if (!!f) {
+                        n2 = nstack.pop();
+                        n1 = nstack.pop();
+                        item = new Token(TNUMBER, 0, 0, f(n1.number_, n2.number_));
+                    }
                     nstack.push(item);
                 } else if (type_ === TOP1 && nstack.length > 0) {
                     if ("{" !== item.index_) {
@@ -2601,7 +2655,7 @@ ThParser = function(scope) {
             var res = new Expression(newexpression, object(this.ops1), object(this.ops2), object(this.functions), this.precision);
             return res;
         },
-        evaluate: function(element, func) {
+        evaluate: function(element) {
             var nstack = [];
             var n1;
             var n2;
@@ -2629,11 +2683,47 @@ ThParser = function(scope) {
                         n1 = null;
                     }
                     f = this.ops2[item.index_];
+                    var pathMatch = false;
                     try {
-                        res = f(n1, n2);
-                        if (f !== append) {
-                            if (Object.prototype.toString.call(res) == "[object Array]") {
-                                res.arrayResult = true;
+                        if (item.mode_ === 6) {
+                            if (f === dot) {
+                                res = n1 + "[" + n2 + "]";
+                            } else if (f === append) {
+                                if (!!item.meta_) {
+                                    if (!!item.meta_.paths) {
+                                        var values = item.meta_.paths[n1];
+                                        if (!!values) {
+                                            values.push(n2);
+                                            pathMatch = true;
+                                            res = null;
+                                        }
+                                    }
+                                }
+                                if (!pathMatch) {
+                                    if (!item.meta_) {
+                                        item.meta_ = {};
+                                    }
+                                    if (!item.meta_.params) {
+                                        item.meta_.params = [];
+                                    }
+                                    var values = item.meta_.params[n1];
+                                    if (!values) {
+                                        values = [];
+                                        item.meta_.params[n1] = values;
+                                    }
+                                    values.push(n2);
+                                    pathMatch = true;
+                                }
+                            } else {
+                                res = n2;
+                                nstack.push(n1);
+                            }
+                        } else {
+                            res = f(n1, n2);
+                            if (f !== append) {
+                                if (Object.prototype.toString.call(res) == "[object Array]") {
+                                    res.arrayResult = true;
+                                }
                             }
                         }
                     } catch (err) {
@@ -2644,7 +2734,9 @@ ThParser = function(scope) {
                             throw new ThError(message, element);
                         }
                     }
-                    nstack.push(res);
+                    if (!pathMatch) {
+                        nstack.push(res);
+                    }
                 } else if (type_ === TVAR) {
                     var next = null, pushed = nstack.length;
                     if (item.index_ != null) {
@@ -2655,7 +2747,7 @@ ThParser = function(scope) {
                             }
                         }
                         if (pushed === nstack.length) {
-                            var val = func(item.index_, item.mode_, element);
+                            var val = thymol.substituteParam(item.index_, item.mode_, element);
                             if (Object.prototype.toString.call(val) == "[object Array]") {
                                 val.arrayResult = true;
                             }
@@ -2675,15 +2767,23 @@ ThParser = function(scope) {
                 } else if (type_ === TOP1) {
                     n1 = nstack.pop();
                     if (typeof n1 === "undefined" || n1 instanceof NullReturn) {
-                        n1 = null;
+                        if (item.mode_ === 2) {
+                            n1 = "";
+                        } else {
+                            n1 = null;
+                        }
                     }
                     res = n1;
                     if ("{" === item.index_) {
                         if (typeof n1 === "string") {
-                            var subst = func(n1, item.mode_, element);
-                            if (subst != null) {
-                                this.updatePrecision(subst);
-                                res = subst;
+                            if (item.mode_ === 2) {
+                                res = thymol.getStandardURL(n1);
+                            } else {
+                                var subst = thymol.substituteParam(n1, item.mode_, element);
+                                if (subst != null) {
+                                    this.updatePrecision(subst);
+                                    res = subst;
+                                }
                             }
                         }
                     } else {
@@ -2702,7 +2802,7 @@ ThParser = function(scope) {
                         res.arrayResult = true;
                     }
                     nstack.push(res);
-                } else if (type_ === TFUNCALL || type_ === MSGSUBST) {
+                } else if (type_ === TFUNCALL || type_ === MSGSUBST || type_ === ARGLIST) {
                     n1 = nstack.pop();
                     f = nstack.pop();
                     if (type_ === MSGSUBST) {
@@ -2710,6 +2810,91 @@ ThParser = function(scope) {
                             res = "??" + f.varName + "_" + thymol.getLocale() + "??";
                         } else {
                             res = ThUtils.renderMessage(f, n1);
+                        }
+                        nstack.push(res);
+                    } else if (type_ === ARGLIST) {
+                        var pathMatch = false;
+                        n2 = nstack.pop();
+                        if (typeof n2 === "undefined") {
+                            n2 = f;
+                            f = n1;
+                            n1 = "";
+                        }
+                        if (!!item.meta_) {
+                            if (!!item.meta_.paths) {
+                                var values = item.meta_.paths[f];
+                                if (!!values) {
+                                    values.push(n1);
+                                    pathMatch = true;
+                                }
+                                for (var j in item.meta_.paths) {
+                                    if (item.meta_.paths.hasOwnProperty(j)) {
+                                        var values = item.meta_.paths[j];
+                                        var isReq = n2.indexOf("?") >= 0;
+                                        if (!!values && values.length > 0) {
+                                            var pathVar = "{" + j + "}";
+                                            var repReg = new RegExp(pathVar, "g");
+                                            var rep = "";
+                                            values.reverse();
+                                            for (var k = 0, kLimit = values.length; k < kLimit; k++) {
+                                                if (rep.length > 0) {
+                                                    rep = rep + ",";
+                                                }
+                                                if (isReq) {
+                                                    rep = rep + ThUtils.getRequestEncoded(values[k]);
+                                                } else {
+                                                    rep = rep + encodeURIComponent(values[k]);
+                                                }
+                                            }
+                                            n2 = n2.replace(repReg, rep);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        if (pathMatch) {
+                            res = n2;
+                        } else {
+                            if (typeof f === "undefined" || f instanceof NullReturn) {
+                                f = "";
+                            } else {
+                                f = f.toString();
+                            }
+                            f = ThUtils.getRequestEncoded(f);
+                            f = "?" + f;
+                            n1 = n1.toString();
+                            if (f != "?" && n1 != "") {
+                                f = f + "=";
+                            }
+                            if (n1 != "") {
+                                n1 = ThUtils.getRequestEncoded(n1);
+                                f = f + n1;
+                            }
+                            if (typeof n2 === "undefined" || n2 instanceof NullReturn) {
+                                n2 = "";
+                            } else {
+                                n2 = n2.toString();
+                            }
+                            res = n2 + f;
+                        }
+                        if (!!item.meta_) {
+                            var separator = res.indexOf("?") >= 0 ? "&" : "?";
+                            for (var j in item.meta_.params) {
+                                if (item.meta_.params.hasOwnProperty(j)) {
+                                    var values = item.meta_.params[j];
+                                    if (!!values && values.length > 0) {
+                                        for (var k = 0, kLimit = values.length; k < kLimit; k++) {
+                                            res = res + separator + ThUtils.getRequestEncoded(j) + "=" + ThUtils.getRequestEncoded(values[k]);
+                                            if (k == 0) {
+                                                separator = "&";
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            if (!!item.meta_.urlFragment) {
+                                res = res + item.meta_.urlFragment;
+                            }
                         }
                         nstack.push(res);
                     } else if (f.apply && f.call) {
@@ -2862,18 +3047,50 @@ ThParser = function(scope) {
             localMode = 4;
         }
         var i = start;
+        var inCurly = false;
+        var curlyPos = null;
+        var urlFragPos = -1;
+        var meta = null;
         if (localMode !== 4 && c !== "'" && c !== '"') {
             for (;i <= end; i++) {
                 if (c.toUpperCase() === c.toLowerCase()) {
-                    if (i === pos || c === "}" || c !== "_" && c !== "?" && c !== ":" && (c < "0" || c > "9")) {
-                        if (!(partial && c == "-") && !(mode === 2 && c === "/")) {
+                    if (c === "{") {
+                        inCurly = true;
+                        curlyPos = i;
+                        if (meta === null) {
+                            meta = {};
+                            meta.paths = [];
+                        }
+                    } else if (mode === 2 && c === "#") {
+                        urlFragPos = i;
+                    }
+                    if (i === pos || !inCurly && c === "}" || c !== "_" && c !== "?" && c !== ":" && (c < "0" || c > "9")) {
+                        if (!(partial && c == "-") && !((mode === 2 || mode === 6) && (c === "/" || c === "." || c === "~" || c === "?" || c === "=" || c === ":" || c === "-" || c === "_" || c === "[" || c === "]" || c === "#" || inCurly && c === "{" || inCurly && c === "}")) || mode === 6 && c === "=") {
                             i = i - 1;
                             break;
                         }
                     }
+                    if (inCurly && c === "}") {
+                        inCurly = false;
+                        if (meta === null) {
+                            var message = 'bad path variable definition in expression: "' + expression + '" near column ' + pos;
+                            throw new ThError(message, element);
+                        }
+                        var curlyVar = expression.substring(curlyPos, i - 1);
+                        var values = [];
+                        meta.paths[curlyVar] = values;
+                    }
                 }
                 s += c;
                 c = expression.charAt(i);
+            }
+            if (urlFragPos >= 0) {
+                var urlFrag = expression.substring(urlFragPos - 1, i);
+                s = s.substring(0, s.length - urlFrag.length);
+                if (meta === null) {
+                    meta = {};
+                    meta.urlFragment = urlFrag;
+                }
             }
         } else {
             var quoted = false;
@@ -2928,6 +3145,9 @@ ThParser = function(scope) {
         var str = new Object();
         str.str = s;
         str.pos = i;
+        if (meta !== null) {
+            str.meta = meta;
+        }
         return str;
     }
     function ThParser() {
@@ -3008,8 +3228,8 @@ ThParser = function(scope) {
     ThParser.parse = function(expr, partial, preprocessed) {
         return new ThParser().parse(expr, partial, preprocessed);
     };
-    ThParser.evaluate = function(expr, partial, element, func) {
-        return ThParser.parse(expr, partial, false).evaluate(element, func);
+    ThParser.evaluate = function(expr, partial, element) {
+        return ThParser.parse(expr, partial, false).evaluate(element);
     };
     ThParser.Expression = Expression;
     ThParser.values = {
@@ -3105,6 +3325,7 @@ ThParser = function(scope) {
                     if ((expected & LPAREN) === 0) {
                         this.error_parsing(this.pos, 'unexpected "("');
                     }
+                    modestack.push(this.mode);
                     if (expected & CALL) {
                         noperators += 2;
                         this.tokenprio = -2;
@@ -3113,13 +3334,22 @@ ThParser = function(scope) {
                         var ft = TFUNCALL;
                         if (this.mode === 4) {
                             ft = MSGSUBST;
+                            this.mode = 5;
+                        } else if (this.mode === 2) {
+                            ft = ARGLIST;
+                            this.mode = 6;
+                            var url = tokenstack[tokenstack.length - 1];
+                            if (!url.meta_) {
+                                url.meta_ = {};
+                            }
+                            this.meta = url.meta_;
+                        } else {
+                            this.mode = 5;
                         }
-                        modestack.push(this.mode);
-                        this.mode = 5;
                         this.addfunc(tokenstack, operstack, ft);
                         this.tmpprio -= 2;
                     }
-                    if (this.mode === 5) {
+                    if (this.mode === 5 || this.mode === 6) {
                         this.tmpprio += 10;
                     }
                     expected = PRIMARY | OPERATOR | LPAREN | LVARBRK | FUNCTION | SIGN | OPTION | NULLARY_CALL;
@@ -3130,9 +3360,10 @@ ThParser = function(scope) {
                     } else if ((expected & RPAREN) === 0) {
                         this.error_parsing(this.pos, 'unexpected ")"');
                     }
-                    if (this.mode === 5) {
+                    if (this.mode === 5 || this.mode === 6) {
                         this.tmpprio -= 10;
                     }
+                    this.mode = modestack.pop();
                     expected = OPERATOR | RPAREN | RBRACK | RVARBRK | COMMA | LPAREN | LVARBRK | CALL | OPTION;
                 } else if (this.isRightBracket()) {
                     if ((expected & RBRACK) === 0) {
@@ -3159,13 +3390,13 @@ ThParser = function(scope) {
                     if (!!partial) {
                         break;
                     }
-                    if (this.mode === 5) {
+                    if (this.mode === 5 || this.mode === 6) {
                         this.tmpprio -= 10;
                     }
                     this.tmpprio += 2;
                     this.addfunc(tokenstack, operstack, TOP2);
                     this.tmpprio -= 2;
-                    if (this.mode === 5) {
+                    if (this.mode === 5 || this.mode === 6) {
                         this.tmpprio += 10;
                     }
                     noperators += 2;
@@ -3203,11 +3434,14 @@ ThParser = function(scope) {
                         var token = new Token(TNUMBER, 0, 0, this.tokennumber);
                         tokenstack.push(token);
                         expected = FUNCTION | OPERATOR | RPAREN | RBRACK | RVARBRK | COMMA | LPAREN | RVARBRK | LBRACK | CALL | OPTION;
+                        if (this.mode === 6) {
+                            expected = expected | ASSIGN;
+                        }
                     } else if (this.isVar(str)) {
                         if ((expected & PRIMARY) === 0) {
                             this.error_parsing(this.pos, "unexpected variable");
                         }
-                        var vartoken = new Token(TVAR, this.tokenindex, 0, 0, this.mode);
+                        var vartoken = new Token(TVAR, this.tokenindex, 0, 0, this.mode, str.meta);
                         tokenstack.push(vartoken);
                         expected = FUNCTION | OPERATOR | RPAREN | RBRACK | RVARBRK | COMMA | LPAREN | RVARBRK | LBRACK | CALL | OPTION | ASSIGN;
                     } else {
@@ -3232,8 +3466,8 @@ ThParser = function(scope) {
             var res = new Expression(tokenstack, object(this.ops1), object(this.ops2), object(this.functions), this.precision, this.pos);
             return res;
         },
-        evaluate: function(expr, element, func) {
-            return this.parse(expr).evaluate(element, func);
+        evaluate: function(expr, element) {
+            return this.parse(expr).evaluate(element);
         },
         error_parsing: function(column, msg) {
             this.success = false;
@@ -3241,7 +3475,7 @@ ThParser = function(scope) {
             throw new Error(this.errormsg);
         },
         addfunc: function(tokenstack, operstack, type_) {
-            var operator = new Token(type_, this.tokenindex, this.tokenprio + this.tmpprio, 0, this.mode);
+            var operator = new Token(type_, this.tokenindex, this.tokenprio + this.tmpprio, 0, this.mode, this.meta);
             while (operstack.length > 0) {
                 if (operator.prio_ <= operstack[operstack.length - 1].prio_) {
                     tokenstack.push(operstack.pop());
@@ -3313,7 +3547,7 @@ ThParser = function(scope) {
                 }
                 this.tokenprio = 1;
                 this.tokenindex = "*";
-            } else if (ch === "/" && this.mode != 2) {
+            } else if (ch === "/" && this.mode != 2 && this.pos > 0) {
                 this.tokenprio = 2;
                 this.tokenindex = "/";
             } else if (ch === "%") {
@@ -3537,7 +3771,6 @@ ThParser = function(scope) {
     var specAttrModList = [ "abbr", "accept", "accept-charset", "accesskey", "action", "align", "alt", "archive", "audio", "autocomplete", "axis", "background", "bgcolor", "border", "cellpadding", "cellspacing", "challenge", "charset", "cite", "class", "classid", "codebase", "codetype", "cols", "colspan", "compact", "content", "contenteditable", "contextmenu", "data", "datetime", "dir", "draggable", "dropzone", "enctype", "for", "form", "formaction", "formenctype", "formmethod", "formtarget", "frame", "frameborder", "headers", "height", "high", "href", "hreflang", "hspace", "http-equiv", "icon", "id", "keytype", "kind", "label", "lang", "list", "longdesc", "low", "manifest", "marginheight", "marginwidth", "max", "maxlength", "media", "method", "min", "name", "optimum", "pattern", "placeholder", "poster", "preload", "radiogroup", "rel", "rev", "rows", "rowspan", "rules", "sandbox", "scheme", "scope", "scrolling", "size", "sizes", "span", "spellcheck", "src", "srclang", "standby", "start", "step", "style", "summary", "tabindex", "target", "title", "type", "usemap", "value", "valuetype", "vspace", "width", "wrap", "xmlbase", "xmllang", "xmlspace" ];
     var fixedValBoolAttrList = [ "async", "autofocus", "autoplay", "checked", "controls", "declare", "default", "defer", "disabled", "formnovalidate", "hidden", "ismap", "loop", "multiple", "novalidate", "nowrap", "open", "pubdate", "readonly", "required", "reversed", "scoped", "seamless", "selected" ];
     var eventAttrList = [ "onabort", "onafterprint", "onbeforeprint", "onbeforeunload", "onblur", "oncanplay", "oncanplaythrough", "onchange", "onclick", "oncontextmenu", "ondblclick", "ondrag", "ondragend", "ondragenter", "ondragleave", "ondragover", "ondragstart", "ondrop", "ondurationchanged", "onemptied", "onended", "onerror", "onfocus", "onformchange", "onforminput", "onhashchange", "oninput", "oninvalid", "onkeydown", "onkeypress", "onkeyup", "onload", "onloadeddata", "onloadedmetadata", "onloadstart", "onmessage", "onmousedown", "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onmousewheel", "onoffline", "ononline", "onpause", "onplay", "onplaying", "onpopstate", "onprogress", "onratechange", "onreadystatechange", "onredo", "onreset", "onresize", "onscroll", "onseeked", "onseeking", "onselect", "onshow", "onstalled", "onstorage", "onsubmit", "onsuspend", "ontimeupdate", "onundo", "onunload", "onvolumechange", "onwaiting" ];
-    var linkExpr = /^@{(.*?)([\(][^\)]*?[\)])?}$/;
     var literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/;
     var numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/;
     var nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/;
@@ -3560,16 +3793,7 @@ ThParser = function(scope) {
         return result;
     };
     doExpression = function(part, element) {
-        var result = ThUtils.unParenthesise(part), isLink = false, argsList = null, args = part.match(linkExpr), expr, unq, token, mapped, commaSplit, eqSplit, i, iLimit, rhs;
-        if (args) {
-            if (args[1]) {
-                isLink = true;
-                result = args[1].trim();
-                if (args[2]) {
-                    argsList = ThUtils.unParenthesise(args[2].trim());
-                }
-            }
-        }
+        var result = ThUtils.unParenthesise(part), expr, unq, token, mapped;
         expr = null;
         unq = ThUtils.unQuote(result);
         if (unq != result) {
@@ -3590,55 +3814,17 @@ ThParser = function(scope) {
                     }
                 }
             } else {
-                if (!(result.charAt(0) == "/")) {
-                    expr = thymol.getExpression(result, element);
-                    if (expr !== null && !(expr != expr)) {
-                        result = expr;
-                    } else {
-                        result = null;
-                    }
+                expr = thymol.getExpression(result, element);
+                if (expr !== null && !(expr != expr)) {
+                    result = expr;
+                } else {
+                    result = null;
                 }
             }
         }
         mapped = thymol.getMapped(result, true);
         if (mapped) {
             result = thymol.getWithProtocol(mapped);
-        }
-        if (isLink) {
-            if (result == null) {
-                result = "";
-            } else {
-                result = result.toString().trim();
-            }
-            if (!/.*:\/\/.*/.test(result)) {
-                if (/^~?\/.*$/.test(result)) {
-                    if (/^~.*$/.test(result)) {
-                        result = result.substring(1);
-                    }
-                    if (/^\/\/.*$/.test(result)) {
-                        result = thymol.getWithProtocol(result);
-                    } else {
-                        result = thymol.getWithProtocol(thymol.root + result.substring(1));
-                    }
-                }
-            }
-            if (argsList) {
-                commaSplit = argsList.split(",");
-                for (i = 0, iLimit = commaSplit.length; i < iLimit; i++) {
-                    eqSplit = commaSplit[i].split("=");
-                    if (i == 0) {
-                        result = result + "?" + encodeURIComponent(eqSplit[0]);
-                    } else {
-                        result = result + "&" + encodeURIComponent(eqSplit[0]);
-                    }
-                    if (eqSplit.length > 1 && eqSplit[1]) {
-                        rhs = thymol.getExpression(eqSplit[1], element);
-                        if (rhs != null) {
-                            result = result + "=" + encodeURIComponent(rhs);
-                        }
-                    }
-                }
-            }
         }
         return result;
     };
