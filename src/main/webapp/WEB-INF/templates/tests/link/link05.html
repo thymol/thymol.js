@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>link example 05 derived from link05.thtest</title>
+</head>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="link-data.js"></script>
+<body>
+<a th:href="@{${base_url2}}">go</a>
+<a th:href="@{${base_url2}(param1='one',param2='two')}">go</a>
+<a th:href="@{(${base_url2})}">go</a>
+<a th:href="@{(${base_url2})(param1='one',param2='two')}">go</a>
+<a th:href="@{(${base_url2} + '/doit')(param1='one',param2='two')}">go</a>
+<a th:href="@{${base_url2}(param1='one and two')}">go</a>
+<a th:href="@{${base_url2}(param1='one=two')}">go</a>
+<a th:href="@{${base_url2}(param='one',param='two')}">go</a>
+<a th:href="@{${base_url2}(param='one',name=${user2.name})}">go</a>
+<a th:href="@{${base_url2}(name=#{name_is(${user2.name})})}">go</a>
+</body>
+</html>
+<!--
+
+<a href="/testing/base/url">go</a>
+<a href="/testing/base/url?param1=one&amp;param2=two">go</a>
+<a href="/testing/base/url">go</a>
+<a href="/testing/base/url?param1=one&amp;param2=two">go</a>
+<a href="/testing/base/url/doit?param1=one&amp;param2=two">go</a>
+<a href="/testing/base/url?param1=one+and+two">go</a>
+<a href="/testing/base/url?param1=one%3Dtwo">go</a>
+<a href="/testing/base/url?param=one&amp;param=two">go</a>
+<a href="/testing/base/url?param=one&amp;name=John+Apricot">go</a>
+<a href="/testing/base/url?name=The+name+is+John+Apricot">go</a>
+
+-->
