@@ -344,7 +344,21 @@ thymol = function() {
 	function substituteParam(argValue, mode, element) {
 		var result = argValue, varName = argValue, subs = null, msg, expo;
 		if (result) {
-			if (mode == 3) {
+			if (mode == 2) {
+				var token = thymol.booleanAndNullTokens[result];
+				if (!(typeof token === "undefined")) {
+					if( token === null) {
+						subs = null;
+					}
+					else {
+						subs = token.value;						
+					}					
+				}
+				else {
+					subs = argValue;
+				}
+			}
+			else if (mode == 3) {
 				if (element.thObjectVar) {
 					subs = element.thObjectVar[varName];
 				}
@@ -356,6 +370,9 @@ thymol = function() {
 						subs = msg;
 					}
 				}
+			}
+			else if (mode == 6) {
+				subs = argValue;
 			}
 			else {
 				if (varName.charAt(0) === '#') {
@@ -398,6 +415,28 @@ thymol = function() {
 			}
 		}
 		return result;
+	};
+
+	function getStandardURL(initial) {
+		var result = initial, mapped;
+		mapped = thymol.getMapped(result, true);
+		if (mapped) {
+			result = thymol.getWithProtocol(mapped);
+		}
+		if (!/.*:\/\/.*/.test(result)) { // Absolute URL?
+			if (/^~?\/.*$/.test(result)) { // Server-relative or Context-relative?
+				if (/^~.*$/.test(result)) { // Context-relative?
+					result = result.substring(1);
+				}
+				if (/^\/\/.*$/.test(result)) {
+					result = thymol.getWithProtocol(result);
+				}
+				else {
+					result = thymol.getWithProtocol(thymol.root + result.substring(1));
+				}
+			}
+		}
+		return result;		
 	};
 
 	function getExpression(argValue, element) {
@@ -480,8 +519,8 @@ thymol = function() {
 			}
 		}
 		return result;
-	};
-
+	};	
+	
 	function getWithProtocol(initial) {
 		var result = initial;
 		if (typeof result === "string") {
@@ -561,7 +600,7 @@ thymol = function() {
 				var argsExpr = ThParser.parse(argValue,true,false);
 				var identifier = argsExpr.tokens.shift();
 				if( identifier.type_ === 3 ) {
-					var result = argsExpr.evaluate(element, thymol.substituteParam);				
+					var result = argsExpr.evaluate(element);				
 					var varName = identifier.index_;
 					if (!!varName) {
 						argCount++;
@@ -586,7 +625,7 @@ thymol = function() {
 		expr = ThParser.parse(result,false,preprocessed);
 		expr = expr.simplify();
 		// TODO Cache expressions here!!
-		result = expr.evaluate(element, thymol.substituteParam);
+		result = expr.evaluate(element);
 		if (typeof result === "number") {
 			result = ThUtils.getToPrecision(result, expr.precision);
 		}
@@ -1694,6 +1733,7 @@ thymol = function() {
 		preProcess : preProcess,
 		substitute : substitute,
 		substituteParam : substituteParam,
+		getStandardURL : getStandardURL,
 		getMessage : getMessage,
 		getLocale : getLocale,
 		getExpression : getExpression,

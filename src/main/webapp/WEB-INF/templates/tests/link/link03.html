@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>link example 03 derived from link03.thtest</title>
+</head>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="link-data.js"></script>
+<body>
+<a th:href="@{url0/url1}">go</a>
+<a th:href="@{url0/url1(param1='one',param2='two')}">go</a>
+<a th:href="@{url0/url1(param1='one and two')}">go</a>
+<a th:href="@{url0/url1(param1='one=two')}">go</a>
+<a th:href="@{url0/url1(param='one',param='two')}">go</a>
+<a th:href="@{url0/url1(param='one',name=${user2.name})}">go</a>
+<a th:href="@{url0/url1(name=#{name_is(${user2.name})})}">go</a>
+</body>
+</html>
+<!--
+
+<a href="url0/url1">go</a>
+<a href="url0/url1?param1=one&amp;param2=two">go</a>
+<a href="url0/url1?param1=one+and+two">go</a>
+<a href="url0/url1?param1=one%3Dtwo">go</a>
+<a href="url0/url1?param=one&amp;param=two">go</a>
+<a href="url0/url1?param=one&amp;name=John+Apricot">go</a>
+<a href="url0/url1?name=The+name+is+John+Apricot">go</a>
+
+-->

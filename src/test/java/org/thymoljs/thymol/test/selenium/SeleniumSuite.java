@@ -16,6 +16,7 @@ import org.thymoljs.thymol.test.selenium.cases.IdsCases;
 import org.thymoljs.thymol.test.selenium.cases.IfCases;
 import org.thymoljs.thymol.test.selenium.cases.IncludeCases;
 import org.thymoljs.thymol.test.selenium.cases.InlineCases;
+import org.thymoljs.thymol.test.selenium.cases.LinkCases;
 import org.thymoljs.thymol.test.selenium.cases.ListsCases;
 import org.thymoljs.thymol.test.selenium.cases.MapsCases;
 import org.thymoljs.thymol.test.selenium.cases.MessagesCases;
@@ -60,6 +61,7 @@ import org.junit.runners.Suite;
 	IfCases.class,                                                                                                                                                                                                                                 
 	IncludeCases.class,                                                                                                                                                                                                                            
 	InlineCases.class,                                                                                                                                                                                                                             
+	LinkCases.class,                                                                                                                                                                                                                              
 	ListsCases.class,                                                                                                                                                                                                                              
 	MapsCases.class,                                                                                                                                                                                                                               
 	MessagesCases.class,                                                                                                                                                                                                                           

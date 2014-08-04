@@ -11,7 +11,7 @@
 		<p th:text="${#strings.toString(p2)}">...</p>
 		<p th:text="${#strings.toString(p3)}">...</p>
 		<p th:text="${#strings.toString(p4)}">...</p>
-		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arrayToString(pArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 
+		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arrayToString(pArray)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>    
 		<p>Set of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.setToString(pSet)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
 	</body>
 

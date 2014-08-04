@@ -9,15 +9,15 @@
   	<body>
 		<p th:text="${#calendars.format(calendar0)}">...</p>
 		<p th:text="${#calendars.format(calendar1)}">...</p>
-		<p th:text="${#calendars.format(calendar2)}">...</p>
-		<p th:text="${#calendars.format(calendar3)}">...</p>
-		<p th:text="${#calendars.format(calendar4)}">...</p>
-		<p>Array of calendars: <span th:each="d,dStat : ${#calendars.arrayFormat(calendarArray)}"><span th:text="${d}">xx</span><span th:text="${!dStat.last}?', '"></span></span></p>
-		<p>Set of calendars: 		
-			<span id="sort"> 		
-				<!--/*/ <th:block th:each="d,dStat : ${#calendars.setFormat(calendarSet)}" th:text="${!dStat.last}?(${d}+', '):${d}"></th:block> /*/-->				 
-		 	</span>		 
-		 </p>
+        <p th:text="${#calendars.format(calendar2)}">...</p>
+        <p th:text="${#calendars.format(calendar3)}">...</p>
+        <p th:text="${#calendars.format(calendar4)}">...</p>
+        <p>Array of calendars: <span th:each="d,dStat : ${#calendars.arrayFormat(calendarArray)}"><span th:text="${d}">xx</span><span th:text="${!dStat.last}?', '"></span></span></p>
+        <p>Set of calendars:    
+          <span id="sort">    
+            <!--/*/ <th:block th:each="d,dStat : ${#calendars.setFormat(calendarSet)}" th:text="${!dStat.last}?(${d}+', '):${d}"></th:block> /*/-->        
+          </span>    
+        </p>
 	</body>
 
 </html>

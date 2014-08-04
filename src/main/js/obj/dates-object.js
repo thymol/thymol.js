@@ -89,13 +89,13 @@ thymol.objects.thDatesObject = function() {
 	function create(year, month, day, hour, minute, second, millisecond) {
 //		var result = new Date(Date.UTC(year, month-1, day, hour, minute, second, millisecond));
 		var result = new Date();
-		result.setFullYear(year);
-		result.setMonth(month - 1);		
-		result.setDate(day);
-		result.setHours(hour);
-		result.setMinutes(minute);
-		result.setSeconds(second);
 		result.setMilliseconds(millisecond);
+		result.setSeconds(second);
+		result.setMinutes(minute);
+		result.setHours(hour);
+		result.setDate(day);
+		result.setMonth(month - 1);		
+		result.setFullYear(year);
 		return result;
 	}
 

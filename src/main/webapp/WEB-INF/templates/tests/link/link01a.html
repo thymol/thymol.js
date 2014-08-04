@@ -2,19 +2,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<title>tests21 link example 02 derived from link02.thtest</title>
+<title>link example 01a derived from /thymeleaf-tests/src/test-20/resources/engine20/features/link/link01.thtest</title>
 </head>
 <script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="link-data.js"></script>
 <body>
-<a th:href="@{null(param=1)}">go</a>
-<a th:href="@{null(param)}">go</a>
-<a th:href="@{null}">go</a>
+<a th:href="@{/url(a[0]='b',b-v#e_123:4='c')}">go</a>
 </body>
 </html>
 <!--
 
-<a href="?param=1">go</a>
-<a href="?param">go</a>
-<a href="">go</a>
+<a href="/testing/url?a%5B0%5D=b&amp;b-v%23e_123:4=c">go</a>
 
 -->

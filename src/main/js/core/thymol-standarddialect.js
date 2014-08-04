@@ -7,7 +7,6 @@
 
 	var eventAttrList = [ "onabort", "onafterprint", "onbeforeprint", "onbeforeunload", "onblur", "oncanplay", "oncanplaythrough", "onchange", "onclick", "oncontextmenu", "ondblclick", "ondrag", "ondragend", "ondragenter", "ondragleave", "ondragover", "ondragstart", "ondrop", "ondurationchanged", "onemptied", "onended", "onerror", "onfocus", "onformchange", "onforminput", "onhashchange", "oninput", "oninvalid", "onkeydown", "onkeypress", "onkeyup", "onload", "onloadeddata", "onloadedmetadata", "onloadstart", "onmessage", "onmousedown", "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onmousewheel", "onoffline", "ononline", "onpause", "onplay", "onplaying", "onpopstate", "onprogress", "onratechange", "onreadystatechange", "onredo", "onreset", "onresize", "onscroll", "onseeked", "onseeking", "onselect", "onshow", "onstalled", "onstorage", "onsubmit", "onsuspend", "ontimeupdate", "onundo", "onunload", "onvolumechange", "onwaiting" ];
 
-	var linkExpr = /^@{(.*?)([\(][^\)]*?[\)])?}$/;
 	var literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/;
 
 	var numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/;  // Common
@@ -37,16 +36,7 @@
 	};
 
 	doExpression = function(part, element) {
-		var result = ThUtils.unParenthesise(part), isLink = false, argsList = null, args = part.match(linkExpr), expr, unq, token, mapped, commaSplit, eqSplit, i, iLimit, rhs;
-		if (args) {
-			if (args[1]) {
-				isLink = true;
-				result = args[1].trim();
-				if (args[2]) {
-					argsList = ThUtils.unParenthesise(args[2].trim());
-				}
-			}
-		}
+		var result = ThUtils.unParenthesise(part), expr, unq, token, mapped;
 		expr = null;
 		unq = ThUtils.unQuote(result);
 		if (unq != result) {
@@ -71,60 +61,18 @@
 				}
 			}
 			else {
-				if (!(result.charAt(0) == '/')) {
-					expr = thymol.getExpression(result, element);
-					if (expr !== null && !(expr != expr)) { // Actually not "is Nan"
-						result = expr;
-					}
-					else {
-						result = null;
-					}
+				expr = thymol.getExpression(result, element);
+				if (expr !== null && !(expr != expr)) { // Actually not "is Nan"
+					result = expr;
+				}
+				else {
+					result = null;
 				}
 			}
 		}
-
 		mapped = thymol.getMapped(result, true);
 		if (mapped) {
 			result = thymol.getWithProtocol(mapped);
-		}
-		if (isLink) {
-			if (result == null) {
-				result = "";
-			}
-			else {
-				result = result.toString().trim();
-			}
-			if (!/.*:\/\/.*/.test(result)) { // Absolute URL?
-				if (/^~?\/.*$/.test(result)) { // Server-relative or Context-relative?
-					if (/^~.*$/.test(result)) { // Context-relative?
-						result = result.substring(1);
-					}
-					if (/^\/\/.*$/.test(result)) {
-						result = thymol.getWithProtocol(result);
-					}
-					else {
-						result = thymol.getWithProtocol(thymol.root + result.substring(1));
-					}
-				}
-			}
-			if (argsList) {
-				commaSplit = argsList.split(",");
-				for (i = 0, iLimit = commaSplit.length; i < iLimit; i++) {
-					eqSplit = commaSplit[i].split("=");
-					if (i == 0) {
-						result = result + "?" + encodeURIComponent(eqSplit[0]);
-					}
-					else {
-						result = result + "&" + encodeURIComponent(eqSplit[0]);
-					}
-					if (eqSplit.length > 1 && eqSplit[1]) {
-						rhs = thymol.getExpression(eqSplit[1], element);
-						if (rhs != null) {
-							result = result + "=" + encodeURIComponent(rhs);
-						}
-					}
-				}
-			}
 		}
 		return result;
 	};
@@ -268,8 +216,7 @@
 		}
 		element.removeAttribute(thUrlAttr.name);
 	};
-	
-	
+		
 	processFixedValBoolAttr = function(element, thUrlAttr, thAttrObj) {
 		var val = doFixedValBoolAttr(thUrlAttr.value, element, thAttrObj.suffix);
 		if (val != null) {
