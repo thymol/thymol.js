@@ -131,7 +131,7 @@ public class AggregatesCases extends SeleniumCases {
 //			assertEquals( clean( aggregates02ResultThymol ), clean( result ) );			
 //		}
 //		else {			
-//			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+//		String subs = result.substring( 0, result.indexOf( "\tat" ) );
 //			assertEquals( clean( aggregates02ResultThymeleaf ), subs );			
 //		}
 	}
@@ -152,7 +152,7 @@ public class AggregatesCases extends SeleniumCases {
 //			assertEquals( clean( aggregates04ResultThymol ), clean( result ) );			
 //		}
 //		else {			
-//			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+//		String subs = result.substring( 0, result.indexOf( "\tat" ) );
 //			assertEquals( clean( aggregates04ResultThymeleaf ), subs );			
 //		}
 	}

@@ -15,7 +15,7 @@ public class AssertCases21 extends SeleniumCases {
 	String assert01ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /assert01.html. Reason:\n" +
-			"</p><pre>    Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardAssertAttrProcessor' (assert01:9)<";
+			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardAssertAttrProcessor' (assert01:9)\n";
 
 	String assert02ResultThymol = 		
 			"thymol.processAssert assertion failure - false term is: \"${not_onevar01}\"";	 		
@@ -23,7 +23,7 @@ public class AssertCases21 extends SeleniumCases {
 	String assert02ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /assert02.html. Reason:\n" +
-			"</p><pre>    Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardAssertAttrProcessor' (assert02:10)<";
+			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardAssertAttrProcessor' (assert02:10)\n";
 
 	String assert03ResultThymol = 		
 			"thymol.processAssert assertion failure - list is: ${onevar01},${threevar} false term is: \"${threevar}\"";
@@ -31,7 +31,7 @@ public class AssertCases21 extends SeleniumCases {
 	String assert03ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /assert03.html. Reason:\n" +
-			"</p><pre>    Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardAssertAttrProcessor' (assert03:10)<";
+			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardAssertAttrProcessor' (assert03:10)\n";
 
 	String assert04Result =
 			"\n" +
@@ -46,7 +46,7 @@ public class AssertCases21 extends SeleniumCases {
 	String assert05ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /assert05.html. Reason:\n" +
-			"</p><pre>    Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardAssertAttrProcessor' (assert05:10)<";
+			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardAssertAttrProcessor' (assert05:10)\n";
 
 	String assert06Result =
 			"\n" +
@@ -82,7 +82,7 @@ public class AssertCases21 extends SeleniumCases {
 	String assert10ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /assert10.html. Reason:\n" +
-			"</p><pre>    Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardAssertAttrProcessor' (assert10:11)<";
+			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardAssertAttrProcessor' (assert10:11)\n";
 
 	
 	@Test
@@ -93,7 +93,7 @@ public class AssertCases21 extends SeleniumCases {
 			assertEquals( assert01ResultThymol, clean( result ) );			
 		}
 		else {			
-			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			String subs = result.substring( 0, result.indexOf( "\tat" ) );
 			assertEquals( assert01ResultThymeleaf, subs );			
 		}
 	}
@@ -106,7 +106,7 @@ public class AssertCases21 extends SeleniumCases {
 			assertEquals( assert02ResultThymol, clean( result ) );			
 		}
 		else {			
-			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			String subs = result.substring( 0, result.indexOf( "\tat" ) );
 			assertEquals( assert02ResultThymeleaf, subs );			
 		}
 	}
@@ -119,7 +119,7 @@ public class AssertCases21 extends SeleniumCases {
 			assertEquals( assert03ResultThymol, clean( result ) );			
 		}
 		else {			
-			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			String subs = result.substring( 0, result.indexOf( "\tat" ) );
 			assertEquals( assert03ResultThymeleaf, subs );			
 		}
 	}
@@ -139,7 +139,7 @@ public class AssertCases21 extends SeleniumCases {
 			assertEquals( assert05ResultThymol, clean( result ) );			
 		}
 		else {			
-			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			String subs = result.substring( 0, result.indexOf( "\tat" ) );
 			assertEquals( assert05ResultThymeleaf, subs );			
 		}
 	}
@@ -180,7 +180,7 @@ public class AssertCases21 extends SeleniumCases {
 			assertEquals( assert10ResultThymol, clean( result ) );			
 		}
 		else {			
-			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			String subs = result.substring( 0, result.indexOf( "\tat" ) );
 			assertEquals( assert10ResultThymeleaf, subs );			
 		}
 	}
