@@ -1,6 +1,7 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
+import static junit.framework.Assert.assertTrue;
 
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
@@ -131,10 +132,35 @@ public class MessagesCases extends SeleniumCases {
 	}
 
 	@Test
+	public void messages01a() {
+		localise( "thymol/messages/" );
+		String result = getResult( "messages01a.html", ResultMode.HTML );	
+		if( expectThymolResult() ) {
+			assertEquals( clean( messages01Result ), clean( result ) );
+		}
+		else {
+			assertTrue(true);
+		}
+	
+	}
+
+	@Test
 	public void messages02() {
 		localise( "thymol/messages/" );
 		String result = getResult( "messages02.html", ResultMode.HTML );
 		assertEquals( clean( messages01Result ), clean( result ) );
+	}
+
+	@Test
+	public void messages02a() {
+		localise( "thymol/messages/" );
+		String result = getResult( "messages02a.html", ResultMode.HTML );
+		if( expectThymolResult() ) {
+			assertEquals( clean( messages01Result ), clean( result ) );
+		}
+		else {
+			assertTrue(true);
+		}
 	}
 
 	@Test
@@ -145,10 +171,34 @@ public class MessagesCases extends SeleniumCases {
 	}
 
 	@Test
+	public void messages03a() {
+		localise( "thymol/messages/" );
+		String result = getResult( "messages03a.html", ResultMode.HTML );
+		if( expectThymolResult() ) {
+			assertEquals( clean( messages03Result ), clean( result ) );
+		}
+		else {
+			assertTrue(true);
+		}
+	}
+
+	@Test
 	public void messages04() {
 		localise( "thymol/messages/" );
 		String result = getResult( "messages04.html", ResultMode.HTML );
 		assertEquals( clean( messages04Result ), clean( result ) );
+	}
+
+	@Test
+	public void messages04a() {
+		localise( "thymol/messages/" );
+		String result = getResult( "messages04a.html", ResultMode.HTML );
+		if( expectThymolResult() ) {
+			assertEquals( clean( messages04Result ), clean( result ) );
+		}
+		else {
+			assertTrue(true);
+		}
 	}
 
 	@Test
@@ -159,10 +209,34 @@ public class MessagesCases extends SeleniumCases {
 	}
 
 	@Test
+	public void messages05a() {
+		localise( "thymol/messages/" );
+		String result = getResult( "messages05a.html", ResultMode.HTML );
+		if( expectThymolResult() ) {
+			assertEquals( clean( messages05Result ), clean( result ) );
+		}
+		else {
+			assertTrue(true);
+		}
+	}
+
+	@Test
 	public void messages06() {
 		localise( "thymol/messages/" );
 		String result = getResult( "messages06.html", ResultMode.HTML );
 		assertEquals( clean( messages06Result ), clean( result ) );
+	}
+
+	@Test
+	public void messages06a() {
+		localise( "thymol/messages/" );
+		String result = getResult( "messages06a.html", ResultMode.HTML );
+		if( expectThymolResult() ) {
+			assertEquals( clean( messages06Result ), clean( result ) );
+		}
+		else {
+			assertTrue(true);
+		}
 	}
 
 	@Test
@@ -173,10 +247,34 @@ public class MessagesCases extends SeleniumCases {
 	}
 
 	@Test
+	public void messages07a() {
+		localise( "thymol/messages/" );
+		String result = getResult( "messages07a.html", ResultMode.HTML );
+		if( expectThymolResult() ) {
+			assertEquals( clean( messages07Result ), clean( result ) );
+		}
+		else {
+			assertTrue(true);
+		}
+	}
+
+	@Test
 	public void messages08() {
 		localise( "thymol/messages/" );
 		String result = getResult( "messages08.html", ResultMode.HTML );
 		assertEquals( clean( messages08Result ), clean( result ) );
+	}
+
+	@Test
+	public void messages08a() {
+		localise( "thymol/messages/" );
+		String result = getResult( "messages08a.html", ResultMode.HTML );
+		if( expectThymolResult() ) {
+			assertEquals( clean( messages08Result ), clean( result ) );
+		}
+		else {
+			assertTrue(true);
+		}
 	}
 
 	@Test
@@ -187,6 +285,18 @@ public class MessagesCases extends SeleniumCases {
 	}
 
 	@Test
+	public void messages09a() {
+		localise( "thymol/messages/" );
+		String result = getResult( "messages09a.html", ResultMode.HTML );
+		if( expectThymolResult() ) {
+			assertEquals( clean( messages09Result ), clean( result ) );
+		}
+		else {
+			assertTrue(true);
+		}
+	}
+
+	@Test
 	public void messages10() {
 		localise( "thymol/messages/" );
 		String result = getResult( "messages10.html", ResultMode.HTML );
@@ -194,10 +304,34 @@ public class MessagesCases extends SeleniumCases {
 	}
 
 	@Test
+	public void messages10a() {
+		localise( "thymol/messages/" );
+		String result = getResult( "messages10a.html", ResultMode.HTML );
+		if( expectThymolResult() ) {
+			assertEquals( clean( messages10Result ), clean( result ) );
+		}
+		else {
+			assertTrue(true);
+		}
+	}
+
+	@Test
 	public void messages11() {
 		localise( "thymol/messages/" );
 		String result = getResult( "messages11.html", ResultMode.HTML );
 		assertEquals( clean( messages11Result ), clean( result ) );
+	}
+
+	@Test
+	public void messages11a() {
+		localise( "thymol/messages/" );
+		String result = getResult( "messages11a.html", ResultMode.HTML );
+		if( expectThymolResult() ) {
+			assertEquals( clean( messages11Result ), clean( result ) );
+		}
+		else {
+			assertTrue(true);
+		}
 	}
 
 }
