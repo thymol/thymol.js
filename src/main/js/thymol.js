@@ -4,12 +4,13 @@
 		thScriptName : "${thThymolSource}",
 		thJQuerySource : "${thJQuerySource}",
 		// These are defaults, change them if you wish..
-		thPrefix : "th",
-		thDataPrefix : "data",
+		thDefaultPrefix : "th",
+		thDefaultDataPrefix : "data",
 		thDefaultPrecision : 10,
 		thDefaultProtocol : "file://",
 		thDefaultLocale : "en",
-		thDefaultPrecedence : 20000
+		thDefaultPrecedence : 20000,
+		thDefaultMessagePath : ""		
 	};
 	thymol = function( conf ) {
 		conf.ready = function( func ) {
