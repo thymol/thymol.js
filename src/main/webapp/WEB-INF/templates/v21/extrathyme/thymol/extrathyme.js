@@ -2,7 +2,8 @@
   This is a Thymol extension to emulate the behaviour of the "extrathyme" example dialect from http://www.thymeleaf.org/doc/html/Extending-Thymeleaf.html.
  */
 
-thRoot = "${project.basedir}/dist/Webcontent/examples/templates/v21/extrathyme/webapp"; 
+thRoot = "${project.basedir}/dist/Webcontent/examples/templates/v21/extrathyme/webapp";
+thMessagePath = thRoot + "/../resources";
 thDebug = true;
 
 var WORLD_CHAMPIONS_LEAGUE = 0;
@@ -13,21 +14,6 @@ var remarks = [];
 remarks[WORLD_CHAMPIONS_LEAGUE] = "WORLD_CHAMPIONS_LEAGUE";
 remarks[CONTINENTAL_PLAYOFFS] = "CONTINENTAL_PLAYOFFS";
 remarks[RELEGATION] = "RELEGATION";
-
-var  thMessages = [
-            ["title.application",               "extraThyme: ThymeLand's soccer scoreboard"],
-//            ["title.leaguetable",               "League table for {0,date,long}"],
-            ["title.leaguetable",               "League table for {0}"],
-            ["team.name",                       "Team name"],
-            ["team.points",                     "Points"],
-            ["team.won",                        "Won"],
-            ["team.drawn",                      "Drawn"],
-            ["team.lost",                       "Lost"],
-            ["team.remarks",                    "Remarks"],
-            ["remarks.WORLD_CHAMPIONS_LEAGUE",  "Classified for the World Champions League"],
-            ["remarks.CONTINENTAL_PLAYOFFS",    "Classified for the Continental Play-Offs"],
-            ["remarks.RELEGATION",              "Relegated to Regional League"]
-];
 
 function getRemarkForPosition(position) {        
         if (position === null) {
