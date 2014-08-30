@@ -11,12 +11,11 @@ public class WithCases extends SeleniumCases {
 	String with01ResultThymol = 		
 			"ThError: while evaluating expression: a: null, name: name";
 	
-	String with01ResultThymeleaf = 		
+	String with01ResultThymeleaf =			
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /with01.html. Reason:\n" +
-			"</p><pre>    Exception evaluating OGNL expression: \"a.name\" (with01:10)</pre>";
+			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Exception evaluating OGNL expression: \"a.name\" (with01:10)\n";
 	
-
 	String with02Result = 					
 			"\n" +
 			"<div>Jack Melon</div>\n" +
@@ -35,7 +34,7 @@ public class WithCases extends SeleniumCases {
 			assertEquals( with01ResultThymol, result );			
 		}
 		else {			
-			String subs = result.substring( 0, result.indexOf( "</pre>" ) + 6);
+			String subs = result.substring( 0, result.indexOf( "\tat" ) );
 			assertEquals( with01ResultThymeleaf, subs );			
 		}
 	}

@@ -28,10 +28,10 @@ public class ObjectCases extends SeleniumCases {
 	String object02ResultThymol = 		
 			"thymol.processText cannot process: th:text=\"*{euros}\"\n...";
 	
-	String object02ResultThymeleaf = 		
+	String object02ResultThymeleaf =			
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /object02.html. Reason:\n" +
-			"</p><pre>    Exception evaluating OGNL expression: \"euros\" (object02:9)</pre>";	
+			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Exception evaluating OGNL expression: \"euros\" (object02:9)\n";	
 
 	String object03Result = 		
 			"\n" +
@@ -72,7 +72,7 @@ public class ObjectCases extends SeleniumCases {
 			assertEquals( object02ResultThymol, result );			
 		}
 		else {			
-			String subs = result.substring( 0, result.indexOf( "</pre>" ) + 6);
+			String subs = result.substring( 0, result.indexOf( "\tat" ) );
 			assertEquals( object02ResultThymeleaf, subs );			
 		}
 	}

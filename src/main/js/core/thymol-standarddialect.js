@@ -19,7 +19,7 @@
 	var javascriptInlineCommentExpr = /\/\*\[\[(.*)\]\]\*\//;
 	var javascriptInlineRemainderExpr = /\s*(?:['][^']*['])*(?:["][^"]*["])*(?:[\(][^\(\)]*[\)])*(?:[\{][^\{\}]*[\}])*(?:[\[][^\[\]]*[\]])*((?:[;,\(\)\[\]:\{\}](?=(?:\s*\/\/.*?(?:\n|$)))(?:\s*\/\/.*?(?:\n|$)))|(?:\s*\/\/.*?(?:\n|$))|(?:[;,\(\)\[\]:\{\}](?=(?:\s*(?:\n|$)))(?:\s*(?:\n|$)))|(?:\s*(?:\n|$)))/;
 
-	var thCase = new ThAttr("case", null, 275, thymol.thThymeleafPrefixList, thymol.thPrefix);
+	var thCase = new ThAttr("case", null, 275, thymol.thThymeleafPrefixList, thymol.prefix);
 	
 	getThAttribute = function(part, element) {
 		var result = ThUtils.unParenthesise(part);
@@ -725,14 +725,14 @@
 	appendToAttrList = function(func, prec, attrArray) {
 		var j, jLimit = attrArray.length, tha = null;
 		for (j = 0; j < jLimit; j++) {
-			tha = new ThAttr(attrArray[j], func, prec, thymol.thThymeleafPrefixList, thymol.thPrefix);
+			tha = new ThAttr(attrArray[j], func, prec, thymol.thThymeleafPrefixList, thymol.prefix);
 		}
 		j = tha;
 	};
 
 	thymol.configurePreExecution(function() {
 		thymol.addDialect({
-			prefix : thymol.thPrefix,
+			prefix : thymol.prefix,
 			attributeProcessors : [
 				{ name : 'each', processor : processEach, precedence : 200 },		      
 				{ name : 'switch', processor : processSwitch, precedence : 250 },		      

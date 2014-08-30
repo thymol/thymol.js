@@ -47,6 +47,15 @@ public class LinkCases21 extends SeleniumCases {
 			"<a href=\"/order/details/Some%20text%20over%20here,hello/personal?two=Other+text+%28second%29\">go</a>\n" +
 			"\n\n";	 			
 	
+	String link06Result =
+			"\n" +
+			"<div class=\"delete-button\" sec:authorize=\"hasRole('ROLE_ADMIN')\">\n" +
+			"<a href=\"/content/node/3/delete\">\n" +
+			"<span class=\"glyphicon glyphicon-remove\">\n" +
+			"</span></a>\n" +
+			"</div>" +
+			"\n\n";	 			
+
 	@Test
 	public void link01() {
 		localise("tests21/link/");
@@ -87,6 +96,13 @@ public class LinkCases21 extends SeleniumCases {
 		localise("tests21/link/");
 		String result = getResult( "link05.html", ResultMode.HTML );
 		assertEquals( clean( link05Result ), clean( result ) );
+	}
+
+	@Test
+	public void link06() {
+		localise("tests21/link/");
+		String result = getResult( "link06.html", ResultMode.HTML );
+		assertEquals( clean( link06Result ), clean( result ) );
 	}
 
 }

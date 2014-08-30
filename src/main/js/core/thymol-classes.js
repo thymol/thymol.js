@@ -7,7 +7,7 @@
 			}
 			escpPrefix = pref + "\\:";
 			if (typeof dataAttr === "undefined" || dataAttr === null ) {
-				dataPrefix = thymol.thDataPrefix + "-" + pref + "-";
+				dataPrefix = thymol.dataPrefix + "-" + pref + "-";
 				if (thymol.thThymeleafPrefixList.indexOf(dataPrefix) < 0) {
 					thymol.thThymeleafPrefixList.push(dataPrefix);
 				}

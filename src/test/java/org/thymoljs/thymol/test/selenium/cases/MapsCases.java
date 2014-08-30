@@ -17,11 +17,11 @@ public class MapsCases extends SeleniumCases {
 	String maps02ResultThymol = 
 			"ThError: #maps.size Cannot get size of non-map type \"object\"";
 
-	String maps02ResultThymeleaf = 		
+	String maps02ResultThymeleaf =			
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /maps02.html. Reason:\n" +
-			"</p><pre>    Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardTextAttrProcessor' (maps02:10)<";
-		
+			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardTextAttrProcessor' (maps02:10)\n";	
+	
 	String maps03Result = 
 			"\n" +
 			"\t\t<p>size of tm3: 4</p>\n" +
@@ -34,7 +34,7 @@ public class MapsCases extends SeleniumCases {
 	String maps04ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /maps04.html. Reason:\n" +
-			"</p><pre>    Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardTextAttrProcessor' (maps04:10)<";
+			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardTextAttrProcessor' (maps04:10)\n";
 
 	String maps05Result = 
 			"\n" +
@@ -100,7 +100,7 @@ public class MapsCases extends SeleniumCases {
 			assertEquals( maps02ResultThymol, clean( result ) );			
 		}
 		else {			
-			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			String subs = result.substring( 0, result.indexOf( "\tat" ) );
 			assertEquals( maps02ResultThymeleaf, subs );			
 		}
 	}
@@ -120,7 +120,7 @@ public class MapsCases extends SeleniumCases {
 			assertEquals( maps04ResultThymol, clean( result ) );			
 		}
 		else {			
-			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			String subs = result.substring( 0, result.indexOf( "\tat" ) );
 			assertEquals( maps04ResultThymeleaf, subs );			
 		}
 	}

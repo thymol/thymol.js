@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<title>Messages example 03</title>
+</head>
+<script type="text/javascript">
+	var thLocale = "gl_ES";
+</script>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="messages-data.js"></script>
+<body>
+<span th:text="#{msg01}">Some text</span>
+<span th:text="#{msg02('Jack Lettuce')}">Some text</span>
+<span th:text="#{msg02(${var01})}">Some text</span>
+<span th:text="#{msg02(${var02})}">Some text</span>
+<span th:text="#{msg02(${var01} + ' Jr.')}">Some text</span>
+<span th:text="#{msg02((${var01} + ' Jr.'))}">Some text</span>
+<span th:text="#{msg03(${var01} + ' Jr.', ${var03})}">Some text</span>
+<span th:text="#{msg03(${var01} + ' Jr.', 'Mars')}">Some text</span>
+<span th:text="#{msg03((${var01} + ' Jr.'), 'Mars')}">Some text</span>
+<span th:text="#{msg04(${var01} + ' Jr.', ${var03})}">Some text</span>
+<span th:text="#{msg04(${var01} + ' Jr.', 'Mars')}">Some text</span>
+<span th:text="#{msg04((${var01} + ' Jr.'), 'Mars')}">Some text</span>
+</body>
+</html>
+
+<!--
+
+<span>Ola!</span>
+<span>Ola Jack Lettuce!</span>
+<span>Ola John Apricot!</span>
+<span>Ola John Apricot Jr.!</span>
+<span>Ola John Apricot Jr.!</span>
+<span>Ola John Apricot Jr.!</span>
+<span>Ola John Apricot Jr., benvido ao planeta Saturn!</span>
+<span>Ola John Apricot Jr., benvido ao planeta Mars!</span>
+<span>Ola John Apricot Jr., benvido ao planeta Mars!</span>
+<span>Hello John Apricot Jr., welcome to planet Saturn!</span>
+<span>Hello John Apricot Jr., welcome to planet Mars!</span>
+<span>Hello John Apricot Jr., welcome to planet Mars!</span>
+
+-->

@@ -1,6 +1,7 @@
 package org.thymoljs.thymol.test.selenium;
 
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -49,6 +50,10 @@ public class SeleniumCases {
 	
 	public void localise(String path) {
 		getter.localise(path);
+	}
+
+	public void localise(String path, Locale locale) {
+		getter.localise(path,locale);
 	}
 
 	public String getURI(String path) {
@@ -149,7 +154,15 @@ public class SeleniumCases {
 			}
 			driver.get( location );
 		}		
-		WebElement body = ( new WebDriverWait( driver, 1 ) ).until( new PageResponse(mode) );
+		WebElement body = null;
+		try {
+//			body = ( new WebDriverWait( driver, 1 ) ).until( new PageResponse(mode) );
+			body = ( new WebDriverWait( driver, 0 ) ).until( new PageResponse(mode) );
+		}
+		catch(Exception ex) {
+			ex.printStackTrace();
+			throw(ex);
+		}
 		return body;
 	}
 

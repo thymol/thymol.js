@@ -14,36 +14,32 @@
 	<properties>
 		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-
 		<java-version>1.7</java-version>
-
 		<servlet-api-version>2.5</servlet-api-version>
 		<thymeleaf-version>2.1.3.RELEASE</thymeleaf-version>
 		<slf4j-version>1.6.4</slf4j-version>
 		<junit-version>4.10</junit-version>
 		<selenium-java-version>2.42.2</selenium-java-version>
-		<jetty-version>8.1.8.v20121106</jetty-version>
-
+		<jetty-version>9.2.2.v20140723</jetty-version>
 		<maven-clean-plugin-version>2.5</maven-clean-plugin-version>
 		<maven-compiler-plugin-version>3.1</maven-compiler-plugin-version>
 		<maven-war-plugin-version>2.4</maven-war-plugin-version>
 		<maven-surefire-plugin-version>2.16</maven-surefire-plugin-version>
 		<maven-failsafe-plugin-version>2.16</maven-failsafe-plugin-version>
 		<maven-resources-plugin-version>2.6</maven-resources-plugin-version>
-
-		<grunt-maven-plugin-version>1.3.1</grunt-maven-plugin-version>
+		<maven-dependency-plugin-version>2.8</maven-dependency-plugin-version>
+		<grunt-maven-plugin-version>1.4.1</grunt-maven-plugin-version>
+		<icu4j-version>53.1</icu4j-version>
+		<javagalician-version>1.1</javagalician-version>
 		<m2e-lifecycle-mapping-version>1.0.0</m2e-lifecycle-mapping-version>
-
 		<webDriver>nonesuch</webDriver>
 		<filtering-value>true</filtering-value>
-
 		<thInstall>file://${project.basedir}/bower_components/thymol/dist</thInstall>
 		<theWarName>${project.artifactId}-${project.version}</theWarName>
 		<thThymolPath>${thInstall}/</thThymolPath>
 		<thThymolSource>thymol-full.js</thThymolSource>
 		<thJQuerySource>jquery.min.js</thJQuerySource>
 		<thDeploy>${project.build.directory}/test-classes</thDeploy>
-
 	</properties>
 
 	<dependencies>
@@ -73,6 +69,23 @@
 			<artifactId>junit</artifactId>
 			<version>${junit-version}</version>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<!-- Find this at https://github.com/downloads/javagalician/javagalician.github.com/javagalician-1.1-dist.zip -->
+			<groupId>org.javagalician</groupId>
+			<artifactId>javagalician-java6</artifactId>
+			<version>${javagalician-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ibm.icu</groupId>
+			<artifactId>icu4j</artifactId>
+			<version>${icu4j-version}</version>
+		</dependency>
+		<dependency>
+			<!-- Find this at http://apps.icu-project.org/icu-jsp/downloadPage.jsp?ver=53.1&base=j&svn=release-53-1 -->
+			<groupId>com.ibm.icu</groupId>
+			<artifactId>icu4j-localespi</artifactId>
+			<version>${icu4j-version}</version>
 		</dependency>
 	</dependencies>
 
@@ -109,7 +122,7 @@
 			<id>release</id>
 			<properties>
 				<webDriver>firefox</webDriver>
-			    <thThymolSource>thymol-full.min.js</thThymolSource>
+				<thThymolSource>thymol-full.min.js</thThymolSource>
 				<thJQuerySource>../../jquery/dist/jquery.min.js</thJQuerySource>
 				<filtering-value>false</filtering-value>
 			</properties>
@@ -135,6 +148,9 @@
 				<directory>src/main/webapp/WEB-INF/templates</directory>
 				<targetPath>${project.build.directory}/test-classes/templates</targetPath>
 				<filtering>true</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
 
@@ -194,6 +210,42 @@
 				</configuration>
 			</plugin>
 			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>${maven-dependency-plugin-version}</version>
+				<executions>
+					<execution>
+						<id>copy</id>
+						<phase>package</phase>
+						<goals>
+							<goal>copy</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>com.ibm.icu</groupId>
+									<artifactId>icu4j</artifactId>
+									<version>${icu4j-version}</version>
+									<outputDirectory>${project.build.directory}/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>com.ibm.icu</groupId>
+									<artifactId>icu4j-localespi</artifactId>
+									<version>${icu4j-version}</version>
+									<outputDirectory>${project.build.directory}/lib</outputDirectory>
+								</artifactItem>
+								<artifactItem>
+									<groupId>org.javagalician</groupId>
+									<artifactId>javagalician-java6</artifactId>
+									<version>${javagalician-version}</version>
+									<outputDirectory>${project.build.directory}/lib</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
 				<groupId>pl.allegro</groupId>
 				<artifactId>grunt-maven-plugin</artifactId>
 				<version>${grunt-maven-plugin-version}</version>
@@ -205,7 +257,7 @@
 				</configuration>
 				<executions>
 					<execution>
-						<phase>process-resources</phase>
+						<phase>generate-resources</phase>
 						<goals>
 							<goal>npm</goal>
 							<goal>bower</goal>
@@ -232,6 +284,7 @@
 					<systemPropertyVariables>
 						<webDriver>${webDriver}</webDriver>
 					</systemPropertyVariables>
+					<argLine>-Djava.ext.dirs=${project.build.directory}/lib</argLine>
 				</configuration>
 				<executions>
 					<execution>
@@ -255,11 +308,10 @@
 				</configuration>
 			</plugin>
 			<plugin>
-				<groupId>org.mortbay.jetty</groupId>
+				<groupId>org.eclipse.jetty</groupId>
 				<artifactId>jetty-maven-plugin</artifactId>
 				<version>${jetty-version}</version>
 				<configuration>
-					<scanIntervalSeconds>10</scanIntervalSeconds>
 					<stopPort>8005</stopPort>
 					<stopKey>STOP</stopKey>
 					<contextPath>/</contextPath>
@@ -269,11 +321,11 @@
 						<id>start-jetty</id>
 						<phase>pre-integration-test</phase>
 						<goals>
-							<goal>deploy-war</goal>
+							<goal>run-forked</goal>
 						</goals>
 						<configuration>
-							<scanIntervalSeconds>0</scanIntervalSeconds>
-							<daemon>true</daemon>
+							<waitForChild>false</waitForChild>
+							<jvmArgs>-Djava.ext.dirs=${project.build.directory}/lib</jvmArgs>
 						</configuration>
 					</execution>
 					<execution>
@@ -290,8 +342,26 @@
 				<version>${maven-resources-plugin-version}</version>
 				<executions>
 					<execution>
-						<id>copy-resources1</id>
+						<id>copy-libs</id>
 						<phase>validate</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/lib</outputDirectory>
+							<resources>
+								<resource>
+									<directory>lib</directory>
+									<includes>
+										<include>*.jar</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-resources1</id>
+						<phase>process-resources</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
@@ -320,7 +390,7 @@
 					</execution>
 					<execution>
 						<id>copy-resources3</id>
-						<phase>validate</phase>
+						<phase>process-resources</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
@@ -349,7 +419,7 @@
 					</execution>
 					<execution>
 						<id>copy-resources3a</id>
-						<phase>validate</phase>
+						<phase>process-resources</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
@@ -369,7 +439,7 @@
 					</execution>
 					<execution>
 						<id>copy-resources4</id>
-						<phase>validate</phase>
+						<phase>process-resources</phase>
 						<goals>
 							<goal>copy-resources</goal>
 						</goals>
@@ -383,7 +453,6 @@
 							</resources>
 						</configuration>
 					</execution>
-
 				</executions>
 			</plugin>
 		</plugins>

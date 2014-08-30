@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+<title>Messages example 04</title>
+</head>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="messages-data.js"></script>
+<body>
+<p th:text="${value02} ? #{bools.true} : #{bools.false}">Some text</p>
+<p th:text="${value01} ? #{bools.true} : #{bools.false}">Some text</p>
+<p th:text="#{'bools.' + ${value02}}">Some text</p>
+<p th:text="#{'bools.' + ${value01}}">Some text</p>
+</body>
+</html>
+
+<!--
+
+<p>Yes!</p>
+<p>No!</p>
+<p>Yes!</p>
+<p>No!</p>
+
+-->

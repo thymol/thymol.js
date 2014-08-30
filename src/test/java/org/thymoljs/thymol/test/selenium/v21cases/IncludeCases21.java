@@ -108,7 +108,7 @@ public class IncludeCases21 extends SeleniumCases {
 	String include10ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /include10.html. Reason:\n" +
-			"</p><pre>    Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares 2 parameters, but fragment selection specifies 1 parameters. Fragment selection does not correctly match. (include10:11)<";
+			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares 2 parameters, but fragment selection specifies 1 parameters. Fragment selection does not correctly match. (include10:11)\n";
 
 	String include11Result =
 			"\n" +
@@ -149,7 +149,7 @@ public class IncludeCases21 extends SeleniumCases {
 	String include14ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /include14.html. Reason:\n" +
-			"</p><pre>    Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mss2\", which is not specified at the fragment selection. (include14:11)<";
+			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mss2\", which is not specified at the fragment selection. (include14:11)\n";
 
 	String include15ResultThymol = 		
 			"ThError: getImportNode cannot match fragment: \"frag-1\"";	 			
@@ -157,7 +157,7 @@ public class IncludeCases21 extends SeleniumCases {
 	String include15ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /include15.html. Reason:\n" +
-			"</p><pre>    Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mesg\", which is not specified at the fragment selection. (include15:11)<";
+			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mesg\", which is not specified at the fragment selection. (include15:11)\n";
 
 	String include16Result =
 			"\n" +
@@ -209,7 +209,7 @@ public class IncludeCases21 extends SeleniumCases {
 	String include20ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /include20.html. Reason:\n" +
-			"</p><pre>    Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mss2\", which is not specified at the fragment selection. (include20:11)<";
+			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mss2\", which is not specified at the fragment selection. (include20:11)\n";
 
 	String include21ResultThymol = 		
 			"Error: Syntax error, unrecognized expression: %frag-1";	 			
@@ -217,7 +217,7 @@ public class IncludeCases21 extends SeleniumCases {
 	String include21ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /include21.html. Reason:\n" +
-			"</p><pre>    Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mss2\", which is not specified at the fragment selection. (include21:11)<";
+			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mss2\", which is not specified at the fragment selection. (include21:11)\n";
 
 	@Test
 	public void include01() {
@@ -290,7 +290,7 @@ public class IncludeCases21 extends SeleniumCases {
 			assertEquals( include10ResultThymol, clean( result ) );			
 		}
 		else {			
-			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			String subs = result.substring( 0, result.indexOf( "\tat" ) );
 			assertEquals( include10ResultThymeleaf, subs );			
 		}
 	}
@@ -324,7 +324,7 @@ public class IncludeCases21 extends SeleniumCases {
 			assertEquals( clean( include14ResultThymol ), clean( result ) );			
 		}
 		else {			
-			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			String subs = result.substring( 0, result.indexOf( "\tat" ) );
 			assertEquals( include14ResultThymeleaf, subs );			
 		}
 	}
@@ -337,7 +337,7 @@ public class IncludeCases21 extends SeleniumCases {
 			assertEquals( clean( include15ResultThymol ), clean( result ) );			
 		}
 		else {			
-			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			String subs = result.substring( 0, result.indexOf( "\tat" ) );
 			assertEquals( include15ResultThymeleaf, subs );			
 		}
 	}
@@ -378,7 +378,7 @@ public class IncludeCases21 extends SeleniumCases {
 			assertEquals( clean( include20ResultThymol ), clean( result ) );			
 		}
 		else {			
-			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			String subs = result.substring( 0, result.indexOf( "\tat" ) );
 			assertEquals( include20ResultThymeleaf, subs );			
 		}
 	}
@@ -391,7 +391,7 @@ public class IncludeCases21 extends SeleniumCases {
 			assertEquals( clean( include21ResultThymol ), clean( result ) );			
 		}
 		else {			
-			String subs = result.substring( 0, clean( result ).indexOf( "</pre>" ) + 6);
+			String subs = result.substring( 0, result.indexOf( "\tat" ) );
 			assertEquals( include21ResultThymeleaf, subs );			
 		}
 	}

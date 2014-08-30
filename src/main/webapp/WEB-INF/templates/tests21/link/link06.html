@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://junk">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>Question from http://forum.thymeleaf.org/Thymeleaf-won-t-substitute-tokens-in-a-URL-td4028280.html</title>
+</head>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="link-data.js"></script>
+<body>
+<div class="delete-button" sec:authorize="hasRole('ROLE_ADMIN')">
+  <a th:href="@{/content/node/{id}/delete(id=3)}">
+    <span class="glyphicon glyphicon-remove"/>
+  </a>
+</div>
+</body>
+</html>
