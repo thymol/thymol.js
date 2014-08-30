@@ -21,12 +21,13 @@
     var thymolConfiguration = {
         thScriptName: "thymol-full.js",
         thJQuerySource: "../../jquery/dist/jquery.min.js",
-        thPrefix: "th",
-        thDataPrefix: "data",
+        thDefaultPrefix: "th",
+        thDefaultDataPrefix: "data",
         thDefaultPrecision: 10,
         thDefaultProtocol: "file://",
         thDefaultLocale: "en",
-        thDefaultPrecedence: 2e4
+        thDefaultPrecedence: 2e4,
+        thDefaultMessagePath: ""
     };
     thymol = function(conf) {
         conf.ready = function(func) {
