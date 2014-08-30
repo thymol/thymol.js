@@ -274,7 +274,7 @@ ThParser = ( function( scope ) {
 					f = nstack.pop();
 					if( type_ === MSGSUBST ) { // find first occurrence of {<int value>} in f and replace with n1 then push result
 						if( f instanceof NullReturn ) {
-							res = "??" + f.varName + "_" + thymol.getLocale() + "??";
+							res = "??" + f.varName + "_" + thymol.locale.value + "??";
 						}
 						else {
 							res = ThUtils.renderMessage( f, n1 );
@@ -584,10 +584,11 @@ ThParser = ( function( scope ) {
 			var preprocessing = false;
 			if( c === '\'' || c === '"' ) {
 				quoted = true;
+				stopChar = c;
 			}
 			while( i <= end ) {
 				if( c === stopChar && i > start && !preprocessing ) {
-					if( localMode !== 4 ) {
+					if( localMode !== 4 || quoted ) {
 						s += c;
 					}
 					else {
