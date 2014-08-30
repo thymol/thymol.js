@@ -1,5 +1,7 @@
 package org.thymoljs.thymol.test.selenium;
 
+import java.util.Locale;
+
 
 public class SureFireEnv implements URIGetter {
 	
@@ -11,6 +13,11 @@ public class SureFireEnv implements URIGetter {
 
 	@Override
 	public void localise(String path) {
+		this.suffix = path;
+	}
+	
+	@Override
+	public void localise(String path,Locale locale) {
 		this.suffix = path;
 	}
 	

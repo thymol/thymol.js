@@ -19,6 +19,12 @@ public class ChromeFactory implements WebDriverFactory {
 		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 		WebDriver driver = new ChromeDriver(capabilities);								
 		driver.manage().timeouts().implicitlyWait( 2, TimeUnit.SECONDS );
+
+//		In Chrome I can do
+//		var options = new ChromeOptions();
+//		options.AddArgument("--lang=" + "en-GB");		
+		
+		
 		return driver;
 	}
 

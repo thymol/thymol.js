@@ -39,6 +39,8 @@ public class ThymolTestFilter implements Filter {
 
 	public static final String UPDATE_PREFIX_URI = "ThymolTestFilter-updatePrefix";
 
+	private Locale locale = null;	
+	
 	private static TemplateEngine templateEngine;
 	static {
 		templateEngine = ThymolTestApplication.initializeTemplateEngine();
@@ -64,13 +66,27 @@ public class ThymolTestFilter implements Filter {
 		WebContext ctx = new WebContext( request, response, servletContext );
 		String template = getRequestPath( request );
 		if( UPDATE_PREFIX_URI.equals( template ) ) {
+			String localeIndx = ( String )request.getParameter( "locale" );			
+			if( localeIndx != null ) {
+				int indx = Integer.parseInt(localeIndx);				
+				Locale[] all = Locale.getAvailableLocales();
+				locale = all[indx];				
+			}
+			else {
+				locale = null;
+			}
 			String prefix = ( String )request.getParameter( "prefix" );
 			if( prefix != null ) {
-				addPrefix( prefix );
+				addPrefix( prefix, locale );
 			}
+			response.setContentType("text/html");
 		}
 		else {
 			if( template.length() > 0 && !"favicon".equalsIgnoreCase( template ) ) { // Work around selenium defect 2883 - ignore any requests for favicon from selenium
+				if( locale != null) {
+					ctx.setLocale(locale);
+					locale = null;
+				}
 				processParameters( request, ctx );
 				injectVars( ctx );
 				response.setCharacterEncoding( "UTF-8" );
@@ -117,18 +133,18 @@ public class ThymolTestFilter implements Filter {
 		}
 	}
 
-	public static void addPrefix( String prefix ) {
+	public static void addPrefix( String prefix, Locale locale ) {
 		Set< ITemplateResolver > resolvers = templateEngine.getTemplateResolvers();
 		TemplateResolver prefixResolver = null;
 		for( ITemplateResolver resolver: resolvers ) {
-			TemplateResolver tr = ( TemplateResolver )resolver;
-			if( tr.getPrefix().equals( prefix ) ) {
+			ThymolTestApplication.ThymolServletContextTemplateResolver tr = ( ThymolTestApplication.ThymolServletContextTemplateResolver )resolver;
+			if( tr.getPrefix().equals( prefix ) && tr.getLocale().toString().equals(locale.toString()) ) {
 				prefixResolver = tr;
 				break;
 			}
 		}
 		if( prefixResolver == null ) {
-			templateEngine = ThymolTestApplication.initializeTemplateEngine( prefix );
+			templateEngine = ThymolTestApplication.initializeTemplateEngine( prefix, locale );  //TODO
 		}
 	}
 

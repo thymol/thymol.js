@@ -3,7 +3,10 @@ package org.thymoljs.thymol.test.selenium;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
+import java.util.Locale;
 import java.util.Set;
 
 import org.thymoljs.thymol.test.webapp.ThymolTestFilter;
@@ -16,6 +19,7 @@ public class FailSafeEnv implements URIGetter {
 	Set<String> knownPrefixes = new LinkedHashSet<String>();
 
 	private String suffix = "";
+	private Locale locale = null;
 
 	public FailSafeEnv() {
 		super();
@@ -24,6 +28,13 @@ public class FailSafeEnv implements URIGetter {
 	@Override
 	public void localise( String path ) {
 		this.suffix = path;
+		this.locale = null;
+	}
+
+	@Override
+	public void localise( String path, Locale locale ) {
+		this.suffix = path;
+		this.locale = locale;
 	}
 
 	@Override
@@ -38,26 +49,50 @@ public class FailSafeEnv implements URIGetter {
 	}
 
 	private void issuePrefixUpdate( String prefix ) {
-		if( !knownPrefixes.contains( prefix ) ) {
+		StringBuilder ksb = new StringBuilder( "?prefix=" );
+		ksb.append( prefix );
+		if( locale != null ) {
+			int indx = findLocale();
+			if( indx >= 0 ) {
+				ksb.append( "&locale=" );
+				ksb.append( indx );
+			}
+			else {
+				throw new RuntimeException("Cannot match locale: " + locale.toString());
+			}
+		}
+		String key = ksb.toString();
+		if( !knownPrefixes.contains( key ) ) {
 			URL readBack;
 			try {
 				StringBuilder sb = new StringBuilder( BASE_URI );
 				sb.append( ThymolTestFilter.UPDATE_PREFIX_URI );
-				sb.append( "?prefix=" );
-				sb.append( prefix );
+				sb.append( key );
 				readBack = new URL( sb.toString() );
 				Object resp = readBack.getContent();
 				System.out.println( "readback: " + resp );
 			}
 			catch( MalformedURLException e ) {
-//				e.printStackTrace();
+				e.printStackTrace();
 			}
 			catch( IOException e ) {
-//				e.printStackTrace();
+				e.printStackTrace();
 			}
-			knownPrefixes.add( prefix );
+			knownPrefixes.add( key );
 		}
 		
+	}
+	
+	private int findLocale() {
+		int result = -1;
+		Locale[] all = Locale.getAvailableLocales();
+		for( int i = 0; i < all.length; i++ ) {
+			if( locale.equals(all[i]) || locale.toString().equals(all[i].toString())) {
+				result = i;
+				break;
+			}
+		}
+		return result;
 	}
 
 }

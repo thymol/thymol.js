@@ -3,6 +3,8 @@ package org.thymoljs.thymol.test.selenium.cases;
 import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 
+import java.util.Locale;
+
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
@@ -809,12 +811,12 @@ public class ExpressionCases extends SeleniumCases {
 		assertEquals( clean( expression10Result ), clean( result ) );
 	}
 
-//	@Test
-//	public void expression16() {
-//		localise( "tests/expression/" );
-//		String result = getResult( "expression16.html", ResultMode.HTML );
-//		assertEquals( clean( expression16Result ), clean( result ) );
-//	}
+	@Test
+	public void expression16() {
+		localise( "tests/expression/", new Locale( "pt", "PT" ) );
+		String result = getResult( "expression16.html", ResultMode.HTML );
+		assertEquals( clean( expression16Result ), clean( result ) );
+	}
 
 	@Test
 	public void expression17() {
