@@ -1131,7 +1131,54 @@ public class ThymolTestFilter implements Filter {
 		ctx.setVariable( "user2", user2Var );		
 		
 		ctx.setVariable( "onevar2", "Some text over here" );		
-		ctx.setVariable( "twovar2", "Other text (second)" );		
+		ctx.setVariable( "twovar2", "Other text (second)" );
+		
+/*		
+
+var receipt = {
+        paymentDetails: [
+             {
+                key: "PaymentDetailsMaskedAccount",
+                label: "Account",
+                value: "1234"
+            }, {
+                key: "PaymentDetailsSource",
+                label: "Entry Mode",
+                value: "Magstripe"
+            }, {
+                key: "PaymentDetailsCardIssueNumber",
+                label: "Card Issue No.",
+                value: "01"
+            }
+        ]
+};
+
+*/
+		
+		
+		Map<String,Object> details1 = new HashMap<String,Object>();
+		details1.put("key", "PaymentDetailsMaskedAccount");
+		details1.put("label", "Account");
+		details1.put("value", "1234");
+		Map<String,Object> details2 = new HashMap<String,Object>();
+		details2.put("key", "PaymentDetailsSource");
+		details2.put("label", "Entry Mode");
+		details2.put("value", "Magstripe");
+		Map<String,Object> details3 = new HashMap<String,Object>();
+		details3.put("key", "PaymentDetailsCardIssueNumber");
+		details3.put("label", "Card Issue No.");
+		details3.put("value", "01");
+		
+		List<Map<String,Object>> paymentDetails = new LinkedList<Map<String,Object>>();
+		paymentDetails.add(details1);
+		paymentDetails.add(details2);
+		paymentDetails.add(details3);
+
+		Map<String,List<Map<String,Object>>> receipt = new HashMap<String,List<Map<String,Object>>>();
+		receipt.put("paymentDetails",paymentDetails);
+		
+		ctx.setVariable( "receipt", receipt );
+
 				
 	}
 	
