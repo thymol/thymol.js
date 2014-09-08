@@ -376,7 +376,16 @@ thymol = function() {
 	function substituteParam(argValue, mode, element) {
 		var result = argValue, varName = argValue, subs = null, msg, expo;
 		if (result) {
-			if (mode == 2) {
+			if (mode == 4) {
+				msg = thymol.getMessage(varName);
+				if (msg) {
+					subs = msg;
+				}
+			}
+			else if (mode == 6) {
+				subs = argValue;
+			}
+			else {				
 				var token = thymol.booleanAndNullTokens[result];
 				if (!(typeof token === "undefined")) {
 					if( token === null) {
@@ -387,57 +396,43 @@ thymol = function() {
 					}					
 				}
 				else {
-					subs = argValue;
-				}
-			}
-			else if (mode == 3) {
-				if (element.thObjectVar) {
-					subs = element.thObjectVar[varName];
-				}
-			}
-			else if (mode == 4) {
-				msg = thymol.getMessage(varName);
-				if (msg) {
-					subs = msg;
-				}
-			}
-			else if (mode == 6) {
-				subs = argValue;
-			}
-			else {
-				if (varName.charAt(0) === '#') {
-					if ("#object" === varName) {
-						if (element.thObjectVar) {
-							subs = element.thObjectVar;
+					if (varName.charAt(0) === '#') {
+						if ("#object" === varName) {
+							if (element.thObjectVar) {
+								subs = element.thObjectVar;
+							}
+						}
+						else {
+							expo = thymol.thExpressionObjects[varName];
+							if (typeof expo !== "undefined" && expo !== null) {
+								subs = expo;
+							}
 						}
 					}
-					else {
-						expo = thymol.thExpressionObjects[varName];
-						if (typeof expo !== "undefined" && expo !== null) {
-							subs = expo;
+					if ((typeof subs === "undefined" || subs == null) && element.thObjectVar) {
+						subs = element.thObjectVar[varName];
+					}
+					if ((typeof subs === "undefined" || subs == null) && element.thLocalVars) {
+						subs = element.thLocalVars[varName];
+					}
+					if (typeof subs === "undefined" || subs == null) {
+						subs = ThUtils.getParameter(varName);
+					}
+					if (typeof subs === "undefined" || subs == null) {
+						if ("param" === varName) {
+							subs = thymol.requestContext;
 						}
+						if ("session" === varName) {
+							subs = thymol.sessionContext;
+						}
+						if ("application" === varName) {
+							subs = thymol.applicationContext;
+						}
+					}				
+					if ( mode == 2 && (typeof subs === "undefined" || subs == null)) {
+						subs = argValue;
 					}
-				}
-				if ((typeof subs === "undefined" || subs == null) && element.thLocalVars) {
-					subs = element.thLocalVars[varName];
-				}
-				if ((typeof subs === "undefined" || subs == null) && element.thObjectVar) {
-					subs = element.thObjectVar[varName];
-				}
-				if (typeof subs === "undefined" || subs == null) {
-					subs = ThUtils.getParameter(varName);
-				}
-				if (typeof subs === "undefined" || subs == null) {
-					if ("param" === varName) {
-						subs = thymol.requestContext;
-					}
-					if ("session" === varName) {
-						subs = thymol.sessionContext;
-					}
-					if ("application" === varName) {
-						subs = thymol.applicationContext;
-					}
-				}
+				}												
 			}
 			result = subs;
 			if (subs instanceof ThParam) {
@@ -993,9 +988,7 @@ thymol = function() {
 						var updated = thymol.thThymeleafElementsList[j].process(element);
 						if (updated) {
 							elements = rootNode.thDoc.getElementsByTagName("*");
-							if (elements.length < kLimit) {
-								k--;
-							}
+							k--;
 							kLimit = elements.length;
 						}
 						
@@ -1065,9 +1058,7 @@ thymol = function() {
 							}
 							if (updated) {
 								elements = rootNode.thDoc.getElementsByTagName("*");
-								if (elements.length < kLimit) {
-									k--;
-								}
+								k--;
 								kLimit = elements.length;
 							}
 						}						

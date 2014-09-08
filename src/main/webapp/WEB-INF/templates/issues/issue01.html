@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="issue01-data/demo.js"></script>
+</head>
+<body>
+<table>
+<tr th:each="detail : ${receipt.paymentDetails}" th:if="${detail.key} == 'PaymentDetailsCardIssueNumber'">
+<td valign="center" align="right" style="padding: 0px 21px 0px 21px;">
+<span th:text="${detail.label}">Card Issue No.</span>
+<span th:text="${detail.value}">01</span>
+</td>
+</tr>
+</table>
+</body>
+</html>
