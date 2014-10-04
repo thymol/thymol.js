@@ -72,7 +72,7 @@
 		}
 		mapped = thymol.getMapped(result, true);
 		if (mapped) {
-			result = thymol.getWithProtocol(mapped);
+			result = mapped.trim();
 		}
 		return result;
 	};

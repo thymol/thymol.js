@@ -1,0 +1,10 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:data="http://www.thymoljs.org/dialects/data">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <script type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="multi-data-dialect.js"></script>
+</head>
+<body>
+<div th:text="${'bar'}" th:data-my-plugin-foo-bar="${1+2}">foo</div>
+</body>
+</html>

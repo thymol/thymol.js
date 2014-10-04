@@ -1,9 +1,6 @@
 var	thRoot="/";
-
-
 var	thDebug=true;
 var thShowNullOperands=false;
-var thProtocol="";
 
 var	thVars = [
    	   	    ["base_url2",	"/base/url"],

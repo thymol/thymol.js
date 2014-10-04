@@ -1,6 +1,5 @@
 var thRoot = "";
 var thPath = "";
-var thProtocol = "";
 
 var thDebug = true;
 var thShowNullOperands = true;

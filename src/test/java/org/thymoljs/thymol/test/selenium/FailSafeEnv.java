@@ -3,8 +3,6 @@ package org.thymoljs.thymol.test.selenium;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.LinkedHashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -69,8 +67,7 @@ public class FailSafeEnv implements URIGetter {
 				sb.append( ThymolTestFilter.UPDATE_PREFIX_URI );
 				sb.append( key );
 				readBack = new URL( sb.toString() );
-				Object resp = readBack.getContent();
-				System.out.println( "readback: " + resp );
+				readBack.getContent();
 			}
 			catch( MalformedURLException e ) {
 				e.printStackTrace();

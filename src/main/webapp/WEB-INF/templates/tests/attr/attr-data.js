@@ -1,5 +1,4 @@
 var	thRoot = "/";
-var thProtocol = "";
 
 var	thDebug=true;
 
