@@ -83,15 +83,17 @@ thymol = function() {
 		this.mappings = null;
 
 		this.debug = null;
+		
+		this.protocol = null;
 		this.root = null;
 		this.path = null;
-		
+
 		getLocations(this);
+
+		this.locale = new ThObject();
+		getLanguage();		
 		
 		this.allowNullText = null;
-
-		this.protocol = null;
-		this.locale = new ThObject();
 
 		this.thCache = {};
 		this.thExpressionObjects;
@@ -106,7 +108,6 @@ thymol = function() {
 		this.thExpressionObjects["#locale"] = {};
 
 		this.thExpressionObjects["#ctx"] = [];
-
 		this.thExpressionObjects["#ctx"]["variables"] = {};
 
 		var accessor = undefined, i, iLimit, j, jLimit, base;
@@ -124,17 +125,12 @@ thymol = function() {
 		this.booleanAndNullTokens = new Array();
 		this.booleanAndNullTokens["null"] = this.applicationContext.createVariable("null", null);
 		this.booleanAndNullTokens["true"] = this.applicationContext.createVariable("true", true);
-		this.booleanAndNullTokens["false"] = this.applicationContext.createVariable("false", false);
-		
+		this.booleanAndNullTokens["false"] = this.applicationContext.createVariable("false", false);		
 		this.messagePath = Thymol.prototype.getThParam("thMessagePath", false, false, this.thDefaultMessagePath);// TODO		
-
-		this.protocol = Thymol.prototype.getThParam("thProtocol", false, false, thymol.thDefaultProtocol);
 		this.debug = Thymol.prototype.getThParam("thDebug", true, false, false);
 		this.root = Thymol.prototype.getThParam("thRoot", false, true, "");
 		this.path = Thymol.prototype.getThParam("thPath", false, true, "");
 		this.allowNullText = Thymol.prototype.getThParam("thAllowNullText", true, false, true);
-		this.locale.value = Thymol.prototype.getThParam("thLocale", false, false, thymol.thDefaultLocale);
-		// showNullOperands = Thymol.prototype.getThParam("thShowNullOperands", true, false, false);
 
 		if (typeof thymol.thPreExecutionFunctions === "undefined" || thymol.thPreExecutionFunctions === null) {
 			thymol.thPreExecutionFunctions = [];
@@ -274,6 +270,16 @@ thymol = function() {
 	}
 
 	function getLocations(thiz) {
+		thiz.protocol = document.location.protocol;
+		if( "" == thiz.protocol ) {
+			thiz.protocol = thymol.thDefaultProtocol;
+		}
+		else {
+			thiz.protocol += "//";
+			if( "" == document.location.host ) {
+				thiz.protocol += '/';
+			}			
+		}		
 		thiz.templateName = "";
 		thiz.templatePath = "";				
 		if( !!document.location.href ) {
@@ -446,18 +452,18 @@ thymol = function() {
 		var result = initial, mapped;
 		mapped = thymol.getMapped(result, true);
 		if (mapped) {
-			result = thymol.getWithProtocol(mapped);
+			result = mapped.trim();
 		}
 		if (!/.*:\/\/.*/.test(result)) { // Absolute URL?
 			if (/^~?\/.*$/.test(result)) { // Server-relative or Context-relative?
 				if (/^~.*$/.test(result)) { // Context-relative?
 					result = result.substring(1);
 				}
-				if (/^\/\/.*$/.test(result)) {
-					result = thymol.getWithProtocol(result);
+				if (/^\/\/.*$/.test(result)) { // Protocol relative?
+					result = result.trim();
 				}
 				else {
-					result = thymol.getWithProtocol(thymol.root + result.substring(1));
+					result = thymol.root + result.trim().substring(1);
 				}
 			}
 		}
@@ -545,18 +551,7 @@ thymol = function() {
 		}
 		return result;
 	};	
-	
-	function getWithProtocol(initial) {
-		var result = initial;
-		if (typeof result === "string") {
-			result = result.trim();
-		}
-		if (!/^http:.*$/i.test(result)) { // Is it not an URL?
-			result = thymol.protocol + result;
-		}
-		return result;
-	};
-	
+		
 	function getMapped(uri, extended) {
 		var mapped = null, i, iLimit, key;
 		if (uri && typeof uri === "string") {
@@ -724,13 +719,16 @@ thymol = function() {
 		return thymol.locale.value;
 	}
 	
-	function setLocaleValue() {
+	function getLanguage() {
 		if( !thymol.locale.value ) {
-		  	var userLang = navigator.language || navigator.userLanguage || navigator.browserLanguage || navigator.systemLanguage;
-		  	if( !!userLang ) {
-		  		thymol.locale.value = userLang.replace(/\-/g, "_");
-		  	}						
+	  	var userLang = navigator.language || navigator.userLanguage || navigator.browserLanguage || navigator.systemLanguage;
+	  	if( !!userLang ) {
+	  		thymol.locale.value = userLang.replace(/\-/g, "_");
+	  	}						
 		}
+	}
+	
+	function setLocaleValue() {
 		if( !thymol.locale.value ) {
 			thymol.locale.value = thymol.thDefaultLocale;
 		}		
@@ -1036,12 +1034,19 @@ thymol = function() {
 								var attrList = thymol.thThymeleafPrefixList[prefix];
 								if( attrList ) {
 									for (j = 0, jLimit = attrList.length; j < jLimit; j++) {
-										if (name === attrList[j].suffix || name === attrList[j].synonym || attrList[j].suffix === "*") {
+										var matched = false;
+										if (name === attrList[j].suffix || name === attrList[j].synonym ) {
+											matched = true;
+										}
+										else if( attrList[j].regex !== null ) {
+											matched = attrList[j].regex.test( name );
+										}										
+										if( matched ) {
 											var matchedAttribute = {};
 											matchedAttribute.attr =	attrList[j];
 											matchedAttribute.elementAttr = attributes[i];
 											matchedAttributes.push(matchedAttribute);
-											break;
+											break;											
 										}
 									}																
 								}
@@ -1078,12 +1083,23 @@ thymol = function() {
 
 		override : function(paramName, paramValue) {
 			var param = paramValue, thv;
-			thv = thymol.applicationContext[paramName];
-			if (thv instanceof ThParam) {
-				param = thv.value;
+			thv = window[paramName];
+			if (thv) {
+				if (thv instanceof ThParam) {
+					param = thv.value;
+				}
+				else {
+					param = thv;
+				}
 			}
-			else {
-				param = thv;
+			thv = thymol.applicationContext[paramName];
+			if ( thv ) {
+				if ( thv instanceof ThParam) {
+					param = thv.value;
+				}
+				else {
+					param = thv;
+				}
 			}
 			thv = thymol.requestContext[paramName];
 			if (thv) {
@@ -1302,78 +1318,78 @@ thymol = function() {
 			return result ? true : false;
 		},
 
-		processImport : function(element, rootNode, attr) {
+		processImport : function( element, rootNode, attr ) {
 			var importNode = null, filePart, fragmentPart, names, parts, fragmentArgsList, isNode, fragment, fileName, content, importError;
-			if (!isFragmentChild(element)) {
-				filePart = null;
-				fragmentPart = "::";
-				if (attr.value.indexOf("::") < 0) {
-					filePart = this.getFilePart(attr.value, element);
-				}
-				else {
-					names = attr.value.split("::");
-					filePart = this.getFilePart(names[0].trim(), element);
-					fragmentPart = names[1].trim();
-				}
-				if ("this" == filePart) {
-					filePart = "";
-				}
-				if (filePart != null) {
-					parts = filePart.match(varParExpr);
-					fragmentArgsList = null;
-					if (parts) {
-						if (parts.length > 1) {
-							filePart = parts[1].trim();
-						}
-						if (parts.length > 2) {
-							fragmentArgsList = parts[2].trim();
-						}
+			filePart = null;
+			fragmentPart = "::";
+			if( attr.value.indexOf( "::" ) < 0 ) {
+				filePart = this.getFilePart( attr.value, element );
+			}
+			else {
+				names = attr.value.split( "::" );
+				filePart = this.getFilePart( names[0].trim(), element );
+				fragmentPart = names[1].trim();
+			}
+			if( "this" == filePart ) {
+				filePart = "";
+			}
+			if( filePart != null ) {
+				parts = filePart.match( varParExpr );
+				fragmentArgsList = null;
+				if( parts ) {
+					if( parts.length > 1 ) {
+						filePart = parts[1].trim();
 					}
+					if( parts.length > 2 ) {
+						fragmentArgsList = parts[2].trim();
+					}
+				}
+				if( filePart != "" || !isFragmentChild( element ) ) {
 					isNode = thymol.thReplace.name == attr.localName || thymol.thReplace.synonym == attr.localName || thymol.thSubstituteby.name == attr.localName || thymol.thSubstituteby.synonym == attr.localName;
-					if (thymol.thCache[filePart] != null && thymol.thCache[filePart][fragmentPart] != null) {
+					if( thymol.thCache[filePart] != null && thymol.thCache[filePart][fragmentPart] != null ) {
 						isNode = isNode || fragmentPart == "::";
-						importNode = new ThNode(thymol.thCache[filePart][fragmentPart], false, rootNode, null, null, filePart, fragmentPart, isNode, element);
+						importNode = new ThNode( thymol.thCache[filePart][fragmentPart], false, rootNode, null, null, filePart, fragmentPart, isNode, element );
 					}
 					else {
 						fragment = null;
 						importError = null;
-						if (filePart != "") { // Signifies v2.1 local fragment
+						if( filePart != "" ) { // Signifies v2.1 local fragment
 							fileName = filePart + ".html";
-							$.get(fileName, function(textContent, status) {
-								try {									
-									if ("success" == status) {
-										content = new DOMParser().parseFromString(textContent, "text/html");
-										fragment = Thymol.prototype.getImportNode(element, filePart, fragmentPart, fragmentArgsList, content);
+							$.get( fileName, function( textContent, status ) {
+								try {
+									if( "success" == status ) {
+										content = new DOMParser().parseFromString( textContent, "text/html" );
+										fragment = Thymol.prototype.getImportNode( element, filePart, fragmentPart, fragmentArgsList, content );
 									}
-									else if (thymol.debug) {
-										window.alert("thymol.processImport file read failed: " + filePart + " fragment: " + fragmentPart);
-									}									
+									else if( thymol.debug ) {
+										window.alert( "thymol.processImport file read failed: " + filePart + " fragment: " + fragmentPart );
+									}
 								}
-								catch (err) {
+								catch( err ) {
 									importError = err;
 								}
-							}, "text");
+							}, "text" );
 						}
 						else {
-							fragment = this.getImportNode(element, filePart, fragmentPart, fragmentArgsList, document);
+							fragment = this.getImportNode( element, filePart, fragmentPart, fragmentArgsList, document );
 						}
-						if (fragment == null) {
+						if( fragment == null ) {
 							if( importError !== null ) {
 								throw importError;
 							}
-							if (thymol.debug) {
-								window.alert("thymol.processImport fragment import failed: " + filePart + " fragment: " + fragmentPart);
+							if( thymol.debug ) {
+								window.alert( "thymol.processImport fragment import failed: " + filePart + " fragment: " + fragmentPart );
 							}
 						}
 						else {
-							importNode = new ThNode(fragment, false, rootNode, null, null, filePart, fragmentPart, isNode, element);
+							importNode = new ThNode( fragment, false, rootNode, null, null, filePart, fragmentPart, isNode, element );
 						}
 					}
 				}
-				element.removeAttribute(attr.name);
 			}
+			element.removeAttribute( attr.name );
 			return importNode;
-		},
+	  },
 
 		getImportNode : function(element, filePart, fragmentArg, fragmentArgsList, content) {
 			var result = null, fragmentName = fragmentArg.trim(), fragmentPart = fragmentName, parts, argsCount, matched, fragment, htmlContent, fragArray, i, iLimit, j, jLimit, k, clean, bare, vlParts, vlArgs, argsList, varName, newElement;
@@ -1633,7 +1649,7 @@ thymol = function() {
 				}
 			}
 			if (mapped) {
-				result = thymol.protocol + mapped;
+				result = mapped;
 			}
 			else {
 				if (result && result.charAt(0) != '.') { // Initial period character indicates a relative path
@@ -1942,7 +1958,6 @@ thymol = function() {
 		getExpression : getExpression,
 		getWith : getWith,
 		getParsedExpr : getParsedExpr,
-		getWithProtocol : getWithProtocol,
 		getLocale : getLocale,
 		getMapped : getMapped,
 		getBooleanValue : getBooleanValue,
