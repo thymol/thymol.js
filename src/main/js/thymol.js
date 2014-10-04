@@ -7,7 +7,7 @@
 		thDefaultPrefix : "th",
 		thDefaultDataPrefix : "data",
 		thDefaultPrecision : 10,
-		thDefaultProtocol : "file://",
+		thDefaultProtocol : "file:///",
 		thDefaultLocale : "en",
 		thDefaultPrecedence : 20000,
 		thDefaultMessagePath : ""		
@@ -49,9 +49,9 @@
 		}
 	}
 	else if( typeof thymol.thJQuerySource !== "undefined" && thymol.thJQuerySource !== null && thymol.thJQuerySource.length > 0 ) {
-		var withProtocol = thymol.thJQuerySource.indexOf( ":/" ) >= 0;
-		if( withProtocol || thymol.thJQuerySource.charAt( 0 ) === "/" ) {
-			if( !withProtocol ) {
+		var hasProtocol = thymol.thJQuerySource.indexOf( ":/" ) >= 0;
+		if( hasProtocol || thymol.thJQuerySource.charAt( 0 ) === "/" ) {
+			if( !hasProtocol ) {
 				loadScript( thymol.thDefaultProtocol + thymol.thJQuerySource );
 			}
 			else {
