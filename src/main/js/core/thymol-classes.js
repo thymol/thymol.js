@@ -17,7 +17,14 @@
 			}
 		}
 
-// Need name, synonym, escpName and escpSynonym	
+// Need name, synonym, escpName and escpSynonym
+		this.regex = null;
+		if( suffix.indexOf('*') >=0 || suffix.indexOf('?') >=0 || suffix.indexOf('+') >=0 || suffix.indexOf('\\') >=0 || suffix.indexOf('|') >=0 || suffix.indexOf('[') >=0 || suffix.indexOf(']') >=0 || suffix.indexOf('{') >=0 || suffix.indexOf('}') >=0 ) {
+			if( "*" === suffix ) {
+				suffix = ".*";
+			}
+			this.regex = new RegExp(suffix);
+		}		
 		this.suffix = suffix;
 		this.name = prefix + suffix;
 		this.escpName = "[" + escpPrefix + suffix + "]";
