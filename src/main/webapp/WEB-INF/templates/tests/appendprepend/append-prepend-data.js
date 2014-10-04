@@ -1,6 +1,5 @@
-var	thRoot="C:\\Users\\jim\\Documents\\project\\thymol\\target\\test-classes";
+var	thRoot="${thDeploy}";
 var	thPath="templates/tests/appendprepend";
-var thProtocol = "";
 
 var	thDebug=true;
 
