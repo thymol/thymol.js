@@ -125,12 +125,40 @@ thymol = function() {
 		this.booleanAndNullTokens = new Array();
 		this.booleanAndNullTokens["null"] = this.applicationContext.createVariable("null", null);
 		this.booleanAndNullTokens["true"] = this.applicationContext.createVariable("true", true);
-		this.booleanAndNullTokens["false"] = this.applicationContext.createVariable("false", false);		
-		this.messagePath = Thymol.prototype.getThParam("thMessagePath", false, false, this.thDefaultMessagePath);// TODO		
+		this.booleanAndNullTokens["false"] = this.applicationContext.createVariable("false", false);
+		
+		this.messagePath = Thymol.prototype.getThParam("thMessagePath", false, true, this.thDefaultMessagePath);		
+		this.messagesBaseName = Thymol.prototype.getThParam("thMessagesBaseName", false, false, this.thDefaultMessagesBaseName);		
+		this.relativeRootPath = Thymol.prototype.getThParam("thRelativeRootPath", false, true, this.thDefaultRelativeRootPath);		
+		this.extendedMapping = Thymol.prototype.getThParam("thExtendedMapping", false, false, this.thDefaultExtendedMapping);		
+		
 		this.debug = Thymol.prototype.getThParam("thDebug", true, false, false);
-		this.root = Thymol.prototype.getThParam("thRoot", false, true, "");
-		this.path = Thymol.prototype.getThParam("thPath", false, true, "");
 		this.allowNullText = Thymol.prototype.getThParam("thAllowNullText", true, false, true);
+		
+		if( "" !== this.relativeRootPath ) {
+		  this.root = this.thLocation + this.relativeRootPath;
+		  this.messagePath = this.root + this.messagePath;
+		}
+		else {
+		  this.root = "";
+		}			
+		this.root = Thymol.prototype.getThParam("thRoot", false, true, this.root);
+		
+		this.path = Thymol.prototype.getThParam("thPath", false, true, "");
+		
+		this.protocol = document.location.protocol;
+		if( "" == this.protocol ) {
+			this.protocol = thymol.thDefaultProtocol;
+		}
+		else {
+			this.protocol += "//";
+			if( "" == document.location.host ) {
+				this.protocol += '/';
+			}			
+		}		
+		this.protocol = Thymol.prototype.getThParam("thProtocol", false, false, this.protocol);
+		
+		
 
 		if (typeof thymol.thPreExecutionFunctions === "undefined" || thymol.thPreExecutionFunctions === null) {
 			thymol.thPreExecutionFunctions = [];
@@ -270,16 +298,6 @@ thymol = function() {
 	}
 
 	function getLocations(thiz) {
-		thiz.protocol = document.location.protocol;
-		if( "" == thiz.protocol ) {
-			thiz.protocol = thymol.thDefaultProtocol;
-		}
-		else {
-			thiz.protocol += "//";
-			if( "" == document.location.host ) {
-				thiz.protocol += '/';
-			}			
-		}		
 		thiz.templateName = "";
 		thiz.templatePath = "";				
 		if( !!document.location.href ) {
@@ -450,7 +468,7 @@ thymol = function() {
 
 	function getStandardURL(initial) {
 		var result = initial, mapped;
-		mapped = thymol.getMapped(result, true);
+		mapped = thymol.getMapped(result, thymol.extendedMapping);
 		if (mapped) {
 			result = mapped.trim();
 		}
@@ -888,7 +906,7 @@ thymol = function() {
 		if( propsPath !== "" ) {
 			propsPath = propsPath + "/";
 		}
-		var propsFile = propsPath + "Messages";
+		var propsFile = propsPath + thymol.messagesBaseName;
 		if( !!locale && locale !== "" ) {
 			propsFile += "_" + locale;
 		}
@@ -1032,6 +1050,9 @@ thymol = function() {
 									}
 								}
 								var attrList = thymol.thThymeleafPrefixList[prefix];
+								if( splits.length > 1 ) {
+									prefix += ":";
+								}
 								if( attrList ) {
 									for (j = 0, jLimit = attrList.length; j < jLimit; j++) {
 										var matched = false;
@@ -1039,7 +1060,8 @@ thymol = function() {
 											matched = true;
 										}
 										else if( attrList[j].regex !== null ) {
-											matched = attrList[j].regex.test( name );
+											var fqn = prefix + name;
+											matched = attrList[j].regex.test( fqn );
 										}										
 										if( matched ) {
 											var matchedAttribute = {};
@@ -1645,7 +1667,7 @@ thymol = function() {
 			var result = thymol.substitute(part, element), mapped = null, slashpos;
 			if (result) {
 				if (thymol.mappings) {
-					mapped = thymol.getMapped(result, false);
+					mapped = thymol.getMapped(result, thymol.extendedMapping);
 				}
 			}
 			if (mapped) {
@@ -1924,19 +1946,33 @@ thymol = function() {
 		thDefaultProtocol : thymol.thDefaultProtocol,
 		thDefaultLocale : thymol.thDefaultLocale,
 		thDefaultPrecedence : thymol.thDefaultPrecedence,
+
 		thDefaultMessagePath : thymol.thDefaultMessagePath,			
-		
+		thDefaultRelativeRootPath : thymol.thDefaultRelativeRootPath,
+		thDefaultMessagesBaseName : thymol.thDefaultMessagesBaseName,
+		thDefaultExtendedMapping : thymol.thDefaultExtendedMapping,
+				
+		thMessagePath : thymol.thMessagePath,			
+		thRelativeRootPath : thymol.thRelativeRootPath,			
+		thMessagesBaseName : thymol.thMessagesBaseName,			
+		thExtendedMapping : thymol.thExtendedMapping,			
+
+		thLocation : thymol.thLocation,			
+						
 		thThymeleafPrefixList : thymol.thThymeleafPrefixList,
 		thUsingNullPrefix : thymol.thUsingNullPrefix,
 		
 		thThymeleafElementsList : thymol.thThymeleafElementsList,
-		
+				
+		messagePath : thymol.messagePath,
+		relativeRootPath : thymol.relativeRootPath,			
+		messagesBaseName : thymol.messagesBaseName,
+		extendedMapping : thymol.extendedMapping,			
+
 		prefix : thymol.prefix,
 		dataPrefix : thymol.dataPrefix,
 		templateName : thymol.templateName,
 		templatePath : thymol.templatePath,
-		
-		messagePath : thymol.messagePath,
 		objects : thymol.objects,
 				
 		init : init,
