@@ -940,7 +940,7 @@ ThParser = ( function( scope ) {
 				}
 				else {
 					var str = getStr( this.pos, this.expression, this.mode, partial, preprocessed );
-					if( this.isOpX( str, this.ops2 ) ) {
+					if( this.isOpX( str, this.ops2 ) && (this.mode !== 2 && "/" !== str ) ) {
 						if( ( "and" === str.str ) || ( "or" === str.str ) ) {
 							this.tokenprio = 3;
 						}
