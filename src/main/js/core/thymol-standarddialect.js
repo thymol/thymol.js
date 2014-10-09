@@ -70,7 +70,7 @@
 				}
 			}
 		}
-		mapped = thymol.getMapped(result, true);
+		mapped = thymol.getMapped(result, thymol.extendedMapping);
 		if (mapped) {
 			result = mapped.trim();
 		}
