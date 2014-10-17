@@ -70,10 +70,10 @@
 				}
 			}
 		}
-		mapped = thymol.getMapped(result, true);
-		if (mapped) {
-			result = mapped.trim();
-		}
+//		mapped = thymol.getMapped(result, thymol.extendedMapping);  // Historically extendedMapping has always been true in doExpression
+//		if (mapped) {
+//			result = mapped.trim();
+//		}
 		return result;
 	};
 

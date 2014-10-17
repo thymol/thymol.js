@@ -222,13 +222,21 @@ ThUtils = ( function() {
 	}
 
 	function getParameter( name ) {
-		var result;
+		var result, tor;
 		result = thymol.requestContext[name];
-		if( typeof result === "undefined" ) {
+		tor = typeof result;
+		if( tor === "undefined" ) {
 			result = thymol.sessionContext[name];
+			if( typeof result === "undefined" ) {
+				result = thymol.applicationContext[name];
+			}
 		}
-		if( typeof result === "undefined" ) {
-			result = thymol.applicationContext[name];
+		else if( tor === "object" ) {
+			if( Object.prototype.toString.call( result ) === '[object Array]' ) {
+				if( result.length === 1 ) {
+					result = result[0];
+				}
+			}
 		}
 		return result;
 	}

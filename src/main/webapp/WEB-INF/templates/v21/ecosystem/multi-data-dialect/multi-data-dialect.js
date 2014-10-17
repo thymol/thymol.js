@@ -16,7 +16,7 @@ thymol.configurePreExecution( function() {
         element.removeAttribute(attr.name);
         return true;
       },
-      precedence : 60
+      precedence : 1450
     } ]
   });  
 });

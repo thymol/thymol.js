@@ -18,15 +18,16 @@
 		}
 
 // Need name, synonym, escpName and escpSynonym
+		this.suffix = suffix;
+		this.name = prefix + suffix;
 		this.regex = null;
 		if( suffix.indexOf('*') >=0 || suffix.indexOf('?') >=0 || suffix.indexOf('+') >=0 || suffix.indexOf('\\') >=0 || suffix.indexOf('|') >=0 || suffix.indexOf('[') >=0 || suffix.indexOf(']') >=0 || suffix.indexOf('{') >=0 || suffix.indexOf('}') >=0 ) {
 			if( "*" === suffix ) {
 				suffix = ".*";
 			}
+			suffix = prefix + suffix;
 			this.regex = new RegExp(suffix);
 		}		
-		this.suffix = suffix;
-		this.name = prefix + suffix;
 		this.escpName = "[" + escpPrefix + suffix + "]";
 		if( dataPrefix !== null ) {
 			this.synonym = dataPrefix + suffix;			

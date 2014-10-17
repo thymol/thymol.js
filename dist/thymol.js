@@ -27,7 +27,10 @@
         thDefaultProtocol: "file:///",
         thDefaultLocale: "en",
         thDefaultPrecedence: 2e4,
-        thDefaultMessagePath: ""
+        thDefaultMessagePath: "",
+        thDefaultMessagesBaseName: "Messages",
+        thDefaultRelativeRootPath: "",
+        thDefaultExtendedMapping: false
     };
     thymol = function(conf) {
         conf.ready = function(func) {
@@ -52,11 +55,10 @@
     };
     var scripts = document.getElementsByTagName("script");
     var script = document.currentScript || scripts[scripts.length - 1];
-    var path = "";
     var scriptSrc = script.getAttribute("src");
     var pathEnd = scriptSrc.lastIndexOf("/");
     if (pathEnd >= 0) {
-        path = scriptSrc.substring(0, 1 + pathEnd);
+        thymol.thLocation = scriptSrc.substring(0, 1 + pathEnd);
     }
     var jquerySrc = script.getAttribute("data-jquery-src");
     if (!!jquerySrc || "" === jquerySrc) {
@@ -73,7 +75,7 @@
                 loadScript(thymol.thJQuerySource);
             }
         } else {
-            loadScript(path + thymol.thJQuerySource);
+            loadScript(thymol.thLocation + thymol.thJQuerySource);
         }
     }
     var thymolSrc = script.getAttribute("data-thymol-src");
@@ -87,5 +89,5 @@
             break;
         }
     }
-    loadScript(path + thymol.thScriptName, parameters);
+    loadScript(thymol.thLocation + thymol.thScriptName, parameters);
 })();

@@ -117,15 +117,16 @@ function ThAttr(suffix, func, prec, list, pref, dataAttr) {
             dataPrefix = dataAttr;
         }
     }
+    this.suffix = suffix;
+    this.name = prefix + suffix;
     this.regex = null;
     if (suffix.indexOf("*") >= 0 || suffix.indexOf("?") >= 0 || suffix.indexOf("+") >= 0 || suffix.indexOf("\\") >= 0 || suffix.indexOf("|") >= 0 || suffix.indexOf("[") >= 0 || suffix.indexOf("]") >= 0 || suffix.indexOf("{") >= 0 || suffix.indexOf("}") >= 0) {
         if ("*" === suffix) {
             suffix = ".*";
         }
+        suffix = prefix + suffix;
         this.regex = new RegExp(suffix);
     }
-    this.suffix = suffix;
-    this.name = prefix + suffix;
     this.escpName = "[" + escpPrefix + suffix + "]";
     if (dataPrefix !== null) {
         this.synonym = dataPrefix + suffix;
@@ -486,11 +487,32 @@ thymol = function() {
         this.booleanAndNullTokens["null"] = this.applicationContext.createVariable("null", null);
         this.booleanAndNullTokens["true"] = this.applicationContext.createVariable("true", true);
         this.booleanAndNullTokens["false"] = this.applicationContext.createVariable("false", false);
-        this.messagePath = Thymol.prototype.getThParam("thMessagePath", false, false, this.thDefaultMessagePath);
+        this.messagePath = Thymol.prototype.getThParam("thMessagePath", false, true, this.thDefaultMessagePath);
+        this.messagesBaseName = Thymol.prototype.getThParam("thMessagesBaseName", false, false, this.thDefaultMessagesBaseName);
+        this.relativeRootPath = Thymol.prototype.getThParam("thRelativeRootPath", false, true, this.thDefaultRelativeRootPath);
+        this.extendedMapping = Thymol.prototype.getThParam("thExtendedMapping", false, false, this.thDefaultExtendedMapping);
+        this.indexFile = Thymol.prototype.getThParam("thIndexFile", false, false, null);
         this.debug = Thymol.prototype.getThParam("thDebug", true, false, false);
-        this.root = Thymol.prototype.getThParam("thRoot", false, true, "");
-        this.path = Thymol.prototype.getThParam("thPath", false, true, "");
         this.allowNullText = Thymol.prototype.getThParam("thAllowNullText", true, false, true);
+        this.location = this.thLocation;
+        if ("" !== this.relativeRootPath) {
+            this.root = this.location + this.relativeRootPath;
+            this.messagePath = this.root + this.messagePath;
+        } else {
+            this.root = "";
+        }
+        this.root = Thymol.prototype.getThParam("thRoot", false, true, this.root);
+        this.path = Thymol.prototype.getThParam("thPath", false, true, "");
+        this.protocol = document.location.protocol;
+        if ("" == this.protocol) {
+            this.protocol = thymol.thDefaultProtocol;
+        } else {
+            this.protocol += "//";
+            if ("" == document.location.host) {
+                this.protocol += "/";
+            }
+        }
+        this.protocol = Thymol.prototype.getThParam("thProtocol", false, false, this.protocol);
         if (typeof thymol.thPreExecutionFunctions === "undefined" || thymol.thPreExecutionFunctions === null) {
             thymol.thPreExecutionFunctions = [];
         }
@@ -564,6 +586,7 @@ thymol = function() {
         this.thExpressionObjects["#root"] = this.applicationContext;
         this.sessionContext.init();
         this.sessionContext.resolveJSONReferences();
+        this.requestContext.resolveJSONReferences();
         this.thExpressionObjects["#ctx"]["variables"] = this.applicationContext;
         this.thExpressionObjects["#ctx"]["requestParameters"] = this.requestContext;
         this.thExpressionObjects["#ctx"]["servletContext"] = this.applicationContext;
@@ -614,15 +637,6 @@ thymol = function() {
         return;
     }
     function getLocations(thiz) {
-        thiz.protocol = document.location.protocol;
-        if ("" == thiz.protocol) {
-            thiz.protocol = thymol.thDefaultProtocol;
-        } else {
-            thiz.protocol += "//";
-            if ("" == document.location.host) {
-                thiz.protocol += "/";
-            }
-        }
         thiz.templateName = "";
         thiz.templatePath = "";
         if (!!document.location.href) {
@@ -775,9 +789,12 @@ thymol = function() {
     }
     function getStandardURL(initial) {
         var result = initial, mapped;
-        mapped = thymol.getMapped(result, true);
+        mapped = thymol.getMapped(result, thymol.extendedMapping);
         if (mapped) {
             result = mapped.trim();
+        }
+        if ("/" === result && !!thymol.indexFile) {
+            result += thymol.indexFile;
         }
         if (!/.*:\/\/.*/.test(result)) {
             if (/^~?\/.*$/.test(result)) {
@@ -1171,7 +1188,7 @@ thymol = function() {
         if (propsPath !== "") {
             propsPath = propsPath + "/";
         }
-        var propsFile = propsPath + "Messages";
+        var propsFile = propsPath + thymol.messagesBaseName;
         if (!!locale && locale !== "") {
             propsFile += "_" + locale;
         }
@@ -1303,13 +1320,17 @@ thymol = function() {
                                     }
                                 }
                                 var attrList = thymol.thThymeleafPrefixList[prefix];
+                                if (splits.length > 1) {
+                                    prefix += ":";
+                                }
                                 if (attrList) {
                                     for (j = 0, jLimit = attrList.length; j < jLimit; j++) {
                                         var matched = false;
                                         if (name === attrList[j].suffix || name === attrList[j].synonym) {
                                             matched = true;
                                         } else if (attrList[j].regex !== null) {
-                                            matched = attrList[j].regex.test(name);
+                                            var fqn = prefix + name;
+                                            matched = attrList[j].regex.test(fqn);
                                         }
                                         if (matched) {
                                             var matchedAttribute = {};
@@ -2110,14 +2131,27 @@ thymol = function() {
         thDefaultLocale: thymol.thDefaultLocale,
         thDefaultPrecedence: thymol.thDefaultPrecedence,
         thDefaultMessagePath: thymol.thDefaultMessagePath,
+        thDefaultRelativeRootPath: thymol.thDefaultRelativeRootPath,
+        thDefaultMessagesBaseName: thymol.thDefaultMessagesBaseName,
+        thDefaultExtendedMapping: thymol.thDefaultExtendedMapping,
+        thMessagePath: thymol.thMessagePath,
+        thRelativeRootPath: thymol.thRelativeRootPath,
+        thMessagesBaseName: thymol.thMessagesBaseName,
+        thExtendedMapping: thymol.thExtendedMapping,
+        thIndexFile: thymol.thIndexFile,
+        thLocation: thymol.thLocation,
         thThymeleafPrefixList: thymol.thThymeleafPrefixList,
         thUsingNullPrefix: thymol.thUsingNullPrefix,
         thThymeleafElementsList: thymol.thThymeleafElementsList,
+        messagePath: thymol.messagePath,
+        relativeRootPath: thymol.relativeRootPath,
+        messagesBaseName: thymol.messagesBaseName,
+        extendedMapping: thymol.extendedMapping,
+        indexFile: thymol.indexFile,
         prefix: thymol.prefix,
         dataPrefix: thymol.dataPrefix,
         templateName: thymol.templateName,
         templatePath: thymol.templatePath,
-        messagePath: thymol.messagePath,
         objects: thymol.objects,
         init: init,
         ready: ready,
@@ -2302,7 +2336,11 @@ thymol.makeContext = function(contextNameParam, varAccessorParam) {
             tt = typeof valParam;
             if (tt !== "function" && tt !== "object") {
                 if (tt === "string") {
-                    value = decodeURIComponent(value);
+                    try {
+                        value = isReq ? decodeURIComponent(value) : decodeURI(value);
+                    } catch (err) {
+                        value = "";
+                    }
                 }
                 if (tt === "boolean" || tt === "number") {
                     param = new ThParam(value);
@@ -2320,7 +2358,7 @@ thymol.makeContext = function(contextNameParam, varAccessorParam) {
                             } catch (err) {
                                 if (err instanceof ReferenceError) {}
                                 if (err instanceof EvalError) {}
-                                if (param == null) {
+                                if (param == null || isReq) {
                                     param = new ThParam(value);
                                 }
                             }
@@ -2378,27 +2416,37 @@ thymol.makeContext = function(contextNameParam, varAccessorParam) {
         return result;
     };
     context.resolveJSONReferences = function() {
-        var key = null, param, prop = null, val, ref, subst;
+        var key = null, param, prop = null, val, ref, subst, isReq = "request" === this.contextName;
         for (key in context) {
             if (key) {
                 param = context[key];
                 if (param != null && typeof param === "object") {
                     if (!(param instanceof ThVarsAccessor) && !(param instanceof ThClass)) {
                         if (!(param instanceof ThParam)) {
-                            for (prop in param) {
-                                if (prop) {
-                                    val = param[prop];
-                                    if (typeof val === "string") {
-                                        if (val.indexOf(this.varNamePrefix) == 0) {
-                                            subst = null;
-                                            if (prop.match(/\d*/)) {
-                                                ref = val.substring(this.varNamePrefix.length, val.length - 1);
-                                                ref = this.varAccessor.get(ref);
-                                                subst = context[ref.name];
-                                            } else {
-                                                subst = context[prop];
+                            if (isReq && Object.prototype.toString.call(param) === "[object Array]") {
+                                for (var i = 0, iLimit = param.length; i < iLimit; i++) {
+                                    var pi = param[i];
+                                    if (!!pi && typeof pi.value === "string" && pi.value.charAt(0) == "#") {
+                                        var pv = ThUtils.getParameter(pi.value.substring(1));
+                                        param[i] = pv;
+                                    }
+                                }
+                            } else {
+                                for (prop in param) {
+                                    if (prop) {
+                                        val = param[prop];
+                                        if (typeof val === "string") {
+                                            if (val.indexOf(this.varNamePrefix) == 0) {
+                                                subst = null;
+                                                if (prop.match(/\d*/)) {
+                                                    ref = val.substring(this.varNamePrefix.length, val.length - 1);
+                                                    ref = this.varAccessor.get(ref);
+                                                    subst = context[ref.name];
+                                                } else {
+                                                    subst = context[prop];
+                                                }
+                                                param[prop] = subst;
                                             }
-                                            param[prop] = subst;
                                         }
                                     }
                                 }
@@ -2620,13 +2668,20 @@ ThUtils = function() {
         return result;
     }
     function getParameter(name) {
-        var result;
+        var result, tor;
         result = thymol.requestContext[name];
-        if (typeof result === "undefined") {
+        tor = typeof result;
+        if (tor === "undefined") {
             result = thymol.sessionContext[name];
-        }
-        if (typeof result === "undefined") {
-            result = thymol.applicationContext[name];
+            if (typeof result === "undefined") {
+                result = thymol.applicationContext[name];
+            }
+        } else if (tor === "object") {
+            if (Object.prototype.toString.call(result) === "[object Array]") {
+                if (result.length === 1) {
+                    result = result[0];
+                }
+            }
         }
         return result;
     }
@@ -2842,7 +2897,11 @@ ThParser = function(scope) {
                     }
                     nstack.push(item);
                 } else if (type_ === TOP1 && nstack.length > 0) {
-                    if ("{" !== item.index_) {
+                    if ("{" == item.index_) {
+                        if (item.mode_ == 2) {
+                            nstack.push(item);
+                        }
+                    } else {
                         n1 = nstack.pop();
                         f = this.ops1[item.index_];
                         item = new Token(TNUMBER, 0, 0, f(n1.number_));
@@ -2925,7 +2984,27 @@ ThParser = function(scope) {
                                 nstack.push(n1);
                             }
                         } else {
-                            res = f(n1, n2);
+                            if (f === dot && "class" === n2 && !n1["class"]) {
+                                var tn2 = typeof n2;
+                                if (tn2 === "object" && n2 instanceof ThParam) {
+                                    res = f(n1, n2);
+                                } else {
+                                    res = new ThClass("JavaScript:" + tn2);
+                                }
+                            } else {
+                                res = f(n1, n2);
+                                if (typeof res === "function") {
+                                    if (L - 1 > i) {
+                                        next = this.tokens[i + 1];
+                                        if (next.type_ === TNUMBER && Object.prototype.toString.call(next.number_) == "[object Array]" && next.number_.length == 0) {
+                                            i += 1;
+                                            nstack.push(res);
+                                            n1.isDirect = true;
+                                            res = n1;
+                                        }
+                                    }
+                                }
+                            }
                             if (f !== append) {
                                 if (Object.prototype.toString.call(res) == "[object Array]") {
                                     res.arrayResult = true;
@@ -2981,6 +3060,13 @@ ThParser = function(scope) {
                     }
                     res = n1;
                     if ("{" === item.index_) {
+                        var prev = this.tokens[i - 1];
+                        if (prev.mode_ == 7) {
+                            if (thymol.conversionService) {
+                                n1 = thymol.conversionService(n1);
+                                res = n1;
+                            }
+                        }
                         if (typeof n1 === "string") {
                             if (item.mode_ === 2) {
                                 res = thymol.getStandardURL(n1);
@@ -3104,13 +3190,17 @@ ThParser = function(scope) {
                         }
                         nstack.push(res);
                     } else if (f.apply && f.call) {
-                        if (n1 instanceof NullReturn) {
-                            n1 = null;
-                        }
-                        if (n1 != null && (n1.arrayResult || Object.prototype.toString.call(n1) !== "[object Array]")) {
-                            res = f.call(element, n1);
+                        if (!!n1 && !!n1.isDirect) {
+                            res = f.call(n1);
                         } else {
-                            res = f.apply(element, n1);
+                            if (n1 instanceof NullReturn) {
+                                n1 = null;
+                            }
+                            if (n1 != null && (n1.arrayResult || Object.prototype.toString.call(n1) !== "[object Array]")) {
+                                res = f.call(element, n1);
+                            } else {
+                                res = f.apply(element, n1);
+                            }
                         }
                         if (res instanceof String) {
                             if (res.precision) {
@@ -3590,6 +3680,19 @@ ThParser = function(scope) {
                     }
                     this.mode = modestack.pop();
                     expected = FUNCTION | OPERATOR | RPAREN | RBRACK | RVARBRK | COMMA | LPAREN | LVARBRK | CALL | OPTION;
+                } else if (this.isLeftCurly()) {
+                    if (this.mode == 1 || this.mode == 2 || this.mode == 3 || this.mode == 4) {
+                        modestack.push(this.mode);
+                        this.mode = 7;
+                    } else {
+                        this.error_parsing(this.pos, 'unexpected "{"');
+                    }
+                } else if (this.isRightCurly()) {
+                    if (this.mode == 7) {
+                        this.mode = modestack.pop();
+                    } else {
+                        this.error_parsing(this.pos, 'unexpected "}"');
+                    }
                 } else if (this.isComma()) {
                     if ((expected & COMMA) === 0) {
                         this.error_parsing(this.pos, 'unexpected ","');
@@ -3617,7 +3720,7 @@ ThParser = function(scope) {
                     expected = OPERATOR | RPAREN | RVARBRK | RBRACK | COMMA;
                 } else {
                     var str = getStr(this.pos, this.expression, this.mode, partial, preprocessed);
-                    if (this.isOpX(str, this.ops2)) {
+                    if (this.isOpX(str, this.ops2) && (this.mode !== 2 && "/" !== str)) {
                         if ("and" === str.str || "or" === str.str) {
                             this.tokenprio = 3;
                         }
@@ -3870,6 +3973,24 @@ ThParser = function(scope) {
             }
             return false;
         },
+        isLeftCurly: function() {
+            var code = this.expression.charCodeAt(this.pos);
+            if (code === 123) {
+                this.pos++;
+                this.tmpprio += 10;
+                return true;
+            }
+            return false;
+        },
+        isRightCurly: function() {
+            var code = this.expression.charCodeAt(this.pos);
+            if (code === 125) {
+                this.pos++;
+                this.tmpprio -= 10;
+                return true;
+            }
+            return false;
+        },
         isComma: function() {
             var code = this.expression.charCodeAt(this.pos);
             if (code === 44) {
@@ -4028,10 +4149,6 @@ ThParser = function(scope) {
                     result = null;
                 }
             }
-        }
-        mapped = thymol.getMapped(result, true);
-        if (mapped) {
-            result = mapped.trim();
         }
         return result;
     };
