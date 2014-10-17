@@ -131,12 +131,13 @@ thymol = function() {
 		this.messagesBaseName = Thymol.prototype.getThParam("thMessagesBaseName", false, false, this.thDefaultMessagesBaseName);		
 		this.relativeRootPath = Thymol.prototype.getThParam("thRelativeRootPath", false, true, this.thDefaultRelativeRootPath);		
 		this.extendedMapping = Thymol.prototype.getThParam("thExtendedMapping", false, false, this.thDefaultExtendedMapping);		
+		this.indexFile = Thymol.prototype.getThParam("thIndexFile", false, false, null);		
 		
 		this.debug = Thymol.prototype.getThParam("thDebug", true, false, false);
 		this.allowNullText = Thymol.prototype.getThParam("thAllowNullText", true, false, true);
-		
+		this.location = this.thLocation;
 		if( "" !== this.relativeRootPath ) {
-		  this.root = this.thLocation + this.relativeRootPath;
+		  this.root = this.location + this.relativeRootPath;
 		  this.messagePath = this.root + this.messagePath;
 		}
 		else {
@@ -238,6 +239,7 @@ thymol = function() {
 
 		this.sessionContext.init();
 		this.sessionContext.resolveJSONReferences();
+		this.requestContext.resolveJSONReferences();
 
 		this.thExpressionObjects["#ctx"]["variables"] = this.applicationContext;
 		this.thExpressionObjects["#ctx"]["requestParameters"] = this.requestContext;
@@ -468,10 +470,13 @@ thymol = function() {
 
 	function getStandardURL(initial) {
 		var result = initial, mapped;
-		mapped = thymol.getMapped(result, thymol.extendedMapping);
+		mapped = thymol.getMapped(result, thymol.extendedMapping);  // Historically extendedMapping has always been true in getStandardURL
 		if (mapped) {
 			result = mapped.trim();
 		}
+		if( "/" === result && !!thymol.indexFile ) {
+			result += thymol.indexFile;
+		} 
 		if (!/.*:\/\/.*/.test(result)) { // Absolute URL?
 			if (/^~?\/.*$/.test(result)) { // Server-relative or Context-relative?
 				if (/^~.*$/.test(result)) { // Context-relative?
@@ -1667,7 +1672,8 @@ thymol = function() {
 			var result = thymol.substitute(part, element), mapped = null, slashpos;
 			if (result) {
 				if (thymol.mappings) {
-					mapped = thymol.getMapped(result, thymol.extendedMapping);
+//					mapped = thymol.getMapped(result, thymol.extendedMapping);  // Historically extendedMapping has always been false in getFilePart
+					mapped = thymol.getMapped(result, false);  // Historically extendedMapping has always been false in getFilePart
 				}
 			}
 			if (mapped) {
@@ -1956,6 +1962,7 @@ thymol = function() {
 		thRelativeRootPath : thymol.thRelativeRootPath,			
 		thMessagesBaseName : thymol.thMessagesBaseName,			
 		thExtendedMapping : thymol.thExtendedMapping,			
+		thIndexFile : thymol.thIndexFile,			
 
 		thLocation : thymol.thLocation,			
 						
@@ -1968,6 +1975,7 @@ thymol = function() {
 		relativeRootPath : thymol.relativeRootPath,			
 		messagesBaseName : thymol.messagesBaseName,
 		extendedMapping : thymol.extendedMapping,			
+		indexFile : thymol.indexFile,			
 
 		prefix : thymol.prefix,
 		dataPrefix : thymol.dataPrefix,
