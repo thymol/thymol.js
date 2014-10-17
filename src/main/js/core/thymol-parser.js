@@ -87,7 +87,12 @@ ThParser = ( function( scope ) {
 					nstack.push( item );
 				}
 				else if( type_ === TOP1 && nstack.length > 0 ) {
-					if( '{' !== item.index_ ) {
+					if( '{' == item.index_ ) {
+						if( item.mode_ == 2) {
+							nstack.push( item );
+						}
+					}
+					else {
 						n1 = nstack.pop();
 						f = this.ops1[item.index_];
 						item = new Token( TNUMBER, 0, 0, f( n1.number_ ) );
@@ -176,7 +181,29 @@ ThParser = ( function( scope ) {
 							}
 						}
 						else {
-							res = f( n1, n2 );
+							if( f === dot && "class" === n2 && !n1["class"] ) {
+								var tn2 = typeof n2;
+								if( tn2 === 'object' && n2 instanceof ThParam ) {
+										res = f( n1, n2 );
+								}
+								else {
+									res = new ThClass( "JavaScript:" + tn2 );
+								}									
+							}
+							else {
+								res = f( n1, n2 );								
+								if( typeof res === "function") {	 // TODO finish this							
+									if( L - 1 > i ) {
+										next = this.tokens[i + 1];
+										if( next.type_ === TNUMBER && Object.prototype.toString.call( next.number_ ) == "[object Array]" && next.number_.length == 0 ) { // Empty args list
+											i += 1;
+											nstack.push( res );
+											n1.isDirect = true;
+											res = n1;
+										}
+									}
+								}
+							}
 							if( f !== append ) {
 								if( Object.prototype.toString.call( res ) == "[object Array]" ) {
 									res.arrayResult = true;
@@ -237,7 +264,14 @@ ThParser = ( function( scope ) {
 						}
 					}
 					res = n1;
-					if( '{' === item.index_ ) {
+					if( '{' === item.index_ ) {// TODO
+						var prev = this.tokens[i - 1];
+						if( prev.mode_ == 7) {
+							if(thymol.conversionService) {
+								n1 = thymol.conversionService(n1);
+								res = n1;
+							}
+						}
 						if( typeof n1 === "string" ) {
 							if( item.mode_ === 2 ) {
 								res = thymol.getStandardURL( n1 );
@@ -372,14 +406,19 @@ ThParser = ( function( scope ) {
 						nstack.push( res );
 					}
 					else if( f.apply && f.call ) {
-						if( n1 instanceof NullReturn ) {
-							n1 = null;
-						}
-						if( n1 != null && ( n1.arrayResult || Object.prototype.toString.call( n1 ) !== "[object Array]" ) ) {
-							res = f.call( element, n1 ); // Accepts an argument list
+						if( !!n1 && !!n1.isDirect ) {
+							res = f.call( n1 );
 						}
 						else {
-							res = f.apply( element, n1 ); // Accepts a single array of arguments.
+							if( n1 instanceof NullReturn ) {
+								n1 = null;
+							}
+							if( n1 != null && ( n1.arrayResult || Object.prototype.toString.call( n1 ) !== "[object Array]" ) ) {
+								res = f.call( element, n1 ); // Accepts an argument list
+							}
+							else {
+								res = f.apply( element, n1 ); // Accepts a single array of arguments.
+							}							
 						}
 						if( res instanceof String ) {
 							if( res.precision ) {
@@ -786,7 +825,15 @@ ThParser = ( function( scope ) {
 			this.expression = expr;
 			this.pos = 0;
 			this.mode = 0;
-	
+
+// mode has the following meanings
+//			mode 2 => standard URL
+//			mode 3 => local object
+//			mode 4 => message body
+//			mode 5 => message substitution
+//			mode 6 => argument list
+//			mode 7 => conversion service			
+			
 			while( this.pos < this.expression.length ) {
 				if( this.isWhite() ) {
 					// Do nothing
@@ -908,6 +955,23 @@ ThParser = ( function( scope ) {
 					}
 					this.mode = modestack.pop();
 					expected = ( FUNCTION | OPERATOR | RPAREN | RBRACK | RVARBRK | COMMA | LPAREN | LVARBRK | CALL | OPTION );
+				}
+				else if(this.isLeftCurly()) {
+					if( this.mode == 1 || this.mode == 2 || this.mode == 3 || this.mode == 4 ) {
+						modestack.push( this.mode );
+						this.mode = 7;						
+					}
+					else {
+						this.error_parsing( this.pos, "unexpected \"{\"" );						
+					}
+				}
+				else if(this.isRightCurly()) {
+					if( this.mode == 7 ) {
+						this.mode = modestack.pop();					
+					}
+					else {
+						this.error_parsing( this.pos, "unexpected \"}\"" );						
+					}
 				}
 				else if( this.isComma() ) {
 					if( ( expected & COMMA ) === 0 ) {
@@ -1232,7 +1296,26 @@ ThParser = ( function( scope ) {
 			if( code === 41 ) { // )
 				this.pos++ ;
 				this.tmpprio -= 10;
-				// this.tmpprio -= 12;
+				return true;
+			}
+			return false;
+		},
+	
+		isLeftCurly : function() {
+			var code = this.expression.charCodeAt( this.pos );
+			if( code === 123 ) { // {
+				this.pos++ ;
+				this.tmpprio += 10;
+				return true;
+			}
+			return false;
+		},
+	
+		isRightCurly : function() {
+			var code = this.expression.charCodeAt( this.pos );
+			if( code === 125 ) { // }
+				this.pos++ ;
+				this.tmpprio -= 10;
 				return true;
 			}
 			return false;
