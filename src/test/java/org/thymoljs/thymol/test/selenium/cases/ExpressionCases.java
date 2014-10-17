@@ -88,9 +88,9 @@ public class ExpressionCases extends SeleniumCases {
 	
 	String expression06ResultThymol =
 			"\n" +
-			"<p>[Thymol.ThParam]</p>\n" +
+			"<p>JavaScript:string</p>\n" +
 			"<p>'Some text'</p>\n" +
-			"<p>[Thymol.ThParam]</p>\n" +
+			"<p>JavaScript:string</p>\n" +
 			"<p>123</p>\n" +
 			"<p>'Hello'</p>\n" +
 			"\n\n";

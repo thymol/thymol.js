@@ -99,6 +99,11 @@ public class SyntaxCases21 extends SeleniumCases {
 			"    \n\t<p><a href=\"index.html\">Back</a></p>\n" +
 			"\n\n";
 
+	String syntax01Result =
+			"\n" +
+			"<div>2008-04-23</div>\n" +
+			"\n\n";	
+	
 /*	 		
 	String replace03Result =
 			"\n" +
@@ -178,6 +183,13 @@ public class SyntaxCases21 extends SeleniumCases {
 		localise("tests21/syntax/");
 		String result = getResult( "issue245b.html", ResultMode.HTML );
 		assertEquals( clean( issue245bResult ), clean( result ) );
+	}
+
+	@Test
+	public void syntax01() {
+		localise("tests21/syntax/");
+		String result = getResult( "syntax01.html", ResultMode.HTML );
+		assertEquals( clean( syntax01Result ), clean( result ) );
 	}
 
 /*	@Test
