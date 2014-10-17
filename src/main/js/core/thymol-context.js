@@ -173,7 +173,12 @@
 				tt = (typeof valParam);
 				if (tt !== "function" && tt !== "object") {
 					if (tt === "string") {
-						value = decodeURIComponent(value);
+						try {
+							value = isReq ? decodeURIComponent(value): decodeURI(value);							
+						}
+						catch(err) {
+							value = "";
+						}
 					}
 					if (tt === "boolean" || tt === "number") {
 						param = new ThParam(value);
@@ -198,7 +203,7 @@
 									if (err instanceof EvalError) {
 										// Do nothing
 									}
-									if (param == null) {
+									if (param == null || isReq) {
 										param = new ThParam(value); // Just save it
 									}
 								}
@@ -263,32 +268,44 @@
 		};
 
 		context.resolveJSONReferences = function() {
-			var key = null, param, prop = null, val, ref, subst;
+			var key = null, param, prop = null, val, ref, subst, isReq = ("request" === this.contextName );
 			for (key in context) {
 				if (key) {
 					param = context[key];
 					if (param != null && typeof param === "object") {
 						if (!(param instanceof ThVarsAccessor) && !(param instanceof ThClass)) {
 							if (!(param instanceof ThParam)) {
-								for (prop in param) {
-									if (prop) {
-										val = param[prop];
-										if (typeof val === "string") {
-											if (val.indexOf(this.varNamePrefix) == 0) {
-												subst = null;
-												if (prop.match(/\d*/)) { // Array index!
-													ref = val.substring(this.varNamePrefix.length, val.length - 1);
-													ref = this.varAccessor.get(ref);
-													subst = context[ref.name];
-												}
-												else {
-													subst = context[prop];
-												}
-												param[prop] = subst;
-											}
+								if ( isReq && Object.prototype.toString.call(param) === '[object Array]') {
+									for( var i = 0, iLimit = param.length; i < iLimit; i++ ) {
+										var pi = param[i];
+										if ( !!pi && typeof pi.value === "string" && pi.value.charAt(0) == '#') {
+											var pv = ThUtils.getParameter( pi.value.substring(1) );
+											param[i] = pv;
 										}
 									}
 								}
+								else {
+									for (prop in param) {
+										if (prop) {
+											val = param[prop];
+											if (typeof val === "string") {
+												if (val.indexOf(this.varNamePrefix) == 0) {
+													subst = null;
+													if (prop.match(/\d*/)) { // Array index!
+														ref = val.substring(this.varNamePrefix.length, val.length - 1);
+														ref = this.varAccessor.get(ref);
+														subst = context[ref.name];
+													}
+													else {
+														subst = context[prop];
+													}
+													param[prop] = subst;
+												}
+											}
+										}
+									}
+									
+								}																
 							}
 							else if (typeof param.value === "string" && param.value.charAt(0) == '#') {
 								subst = context[param.value.substring(1)];
