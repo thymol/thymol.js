@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -1179,6 +1180,18 @@ var receipt = {
 		
 		ctx.setVariable( "receipt", receipt );
 
+		Map< String, Object > petVar = new LinkedHashMap< String, Object >();
+		//'2008-04-23'
+		PCDate petVarBirthDate = new PCDate( new GregorianCalendar(2008, Calendar.APRIL, 23) );
+		petVar.put("birthDate", petVarBirthDate);
+		ctx.setVariable( "pet", petVar );
+		
+//	  thymol.applicationContext.createVariable("birthDate",thymol.objects.thDatesObject.create(1940, 10, 9));
+		Calendar bdc = new GregorianCalendar(1940, Calendar.OCTOBER, 9);
+		Date bDate = bdc.getTime();
+		ctx.setVariable( "birthDate1", bDate );
+		ctx.setVariable( "birthDate2", bDate );
+
 				
 	}
 	
@@ -1186,6 +1199,16 @@ var receipt = {
 		String value;
 		JunkObject(String thing) {
 			this.value = thing;
+		}
+	}
+	
+	public static class PCDate {
+		Calendar calendar;
+		PCDate(Calendar c) {
+			this.calendar = c;
+		}
+		public Date toDate() {
+			return calendar.getTime();
 		}
 	}
 	
