@@ -883,7 +883,7 @@ thymol = function() {
 					if( line.charAt(0) !== "#" ) {
 						var p = line.split("=");
 						if(p.length>1) {
-							messages[p[0].trim()] = p[1].trim();
+							messages[p[0].trim()] = ThUtils.decodeUtfProperty(p[1].trim());
 						}						
 					}
 				}

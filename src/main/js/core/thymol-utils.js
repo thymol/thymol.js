@@ -365,6 +365,10 @@ ThUtils = ( function() {
 		result = result.replace( /~/g, "%7E" );
 		return result;
 	}
+	
+	function decodeUtfProperty( str ) {
+		return JSON.parse( str );
+	}
 
 	return { 
 		getParameter : getParameter,
@@ -382,7 +386,8 @@ ThUtils = ( function() {
 		loadScript : loadScript,
 		unescape : unescape,
 		removeTag : removeTag,
-		getRequestEncoded : getRequestEncoded
+		getRequestEncoded : getRequestEncoded,
+		decodeUtfProperty : decodeUtfProperty
 	};
 
 } )();
