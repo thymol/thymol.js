@@ -31,7 +31,7 @@
 			el.src = script;
 		}
 		if( typeof params !== "undefined" && params !== null ) {
-			el.src += params;
+			el.src += params.charAt( 0 ) === "?" ? params : "?" + params;
 		}
 		el.type = "text/javascript";
 		( document.getElementsByTagName( "HEAD" )[0] || document.body ).appendChild( el );
