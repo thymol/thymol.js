@@ -331,6 +331,14 @@ ThUtils = ( function() {
 		return result;
 	}
 
+	function unicodeUnescape( initial ) {
+		var result = initial.replace(/\\u([\da-f]{4})/gi, function(match, grp) {
+			return String.fromCharCode(parseInt(grp, 16));
+		});
+		result = unescape(result);
+		return result;
+	}
+
 	function removeTag( element ) {
 		var i, iLimit, savedObject = element.thObjectVar, savedLocals = element.thLocalVars;
 		if( element.parentNode ) {
@@ -366,13 +374,6 @@ ThUtils = ( function() {
 		return result;
 	}
 	
-	function decodeUtfProperty( str ) {
-		var r = /\\u([\d\w]{4})/gi;
-		str = str.replace(r, function (match, grp) {
-		    return String.fromCharCode(parseInt(grp, 16)); } );
-		str = unescape(str);
-		return str;
-	}
 
 	return { 
 		getParameter : getParameter,
@@ -389,9 +390,9 @@ ThUtils = ( function() {
 		isLiteralSubst : isLiteralSubst,
 		loadScript : loadScript,
 		unescape : unescape,
+		unicodeUnescape : unicodeUnescape,
 		removeTag : removeTag,
-		getRequestEncoded : getRequestEncoded,
-		decodeUtfProperty : decodeUtfProperty
+		getRequestEncoded : getRequestEncoded
 	};
 
 } )();
