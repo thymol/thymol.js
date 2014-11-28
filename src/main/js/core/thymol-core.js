@@ -100,6 +100,8 @@ thymol = function() {
 		this.messagesBaseName = Thymol.prototype.getThParam("thMessagesBaseName", false, false, this.thDefaultMessagesBaseName);		
 		this.relativeRootPath = Thymol.prototype.getThParam("thRelativeRootPath", false, true, this.thDefaultRelativeRootPath);		
 		this.extendedMapping = Thymol.prototype.getThParam("thExtendedMapping", false, false, this.thDefaultExtendedMapping);		
+		this.localMessages = Thymol.prototype.getThParam("thLocalMessages", false, false, this.thDefaultLocalMessages);		
+				
 		this.indexFile = Thymol.prototype.getThParam("thIndexFile", false, false, null);		
 		
 		this.debug = Thymol.prototype.getThParam("thDebug", true, false, false);
@@ -112,8 +114,7 @@ thymol = function() {
 		else {
 		  this.root = "";
 		}			
-		this.root = Thymol.prototype.getThParam("thRoot", false, true, this.root);
-		
+		this.root = Thymol.prototype.getThParam("thRoot", false, true, this.root);		
 		this.path = Thymol.prototype.getThParam("thPath", false, true, "");
 		
 		this.protocol = document.location.protocol;
@@ -196,6 +197,9 @@ thymol = function() {
 				case "thExtendedMapping":
 					thymol.extendedMapping = e[2];
 					break;
+				case "thLocalMessages":
+					thymol.localMessages = e[2];
+					break;
 				case "thIndexFile":
 					thymol.indexFile = e[2];
 					break;
@@ -271,10 +275,24 @@ thymol = function() {
 		this.protocol = Thymol.prototype.override("thProtocol", this.protocol);
 		this.debug = Thymol.prototype.override("thDebug", this.debug);
 		this.root = Thymol.prototype.override("thRoot", this.root);
+		
+		if( "" !== this.relativeRootPath ) { // If we have a relativeRootPath, generate an absolute root path and set thRoot to this value
+			var rootURI = document.location.href;
+			var quePos = rootURI.indexOf("?");
+			if( quePos >= 0 ) {
+				rootURI = rootURI.substring(0,quePos);
+			}
+			var sepPos = rootURI.lastIndexOf("/");
+			if( sepPos >= 0 ) {
+				rootURI = rootURI.substring(0,sepPos+1);
+			}
+			var newThRoot  = rootURI + this.thLocation  + this.relativeRootPath;
+			this.thRoot = Thymol.prototype.getThParam("thRoot", false, true, newThRoot);
+		}
+		
 		this.path = Thymol.prototype.override("thPath", this.path);
 		this.allowNullText = Thymol.prototype.override("thAllowNullText", this.allowNullText);
 		this.locale.value = Thymol.prototype.override("thLocale", this.locale.value);
-		// showNullOperands = Thymol.prototype.override("thShowNullOperands", this.showNullOperands);
 
 		if (!(typeof thMappings === "undefined")) {
 			this.mappings = [];
@@ -813,8 +831,8 @@ thymol = function() {
 		var locale;
 		if( !!thymol.locale.levels ) {
 			var prefix = "$";  // Use prefix to disambiguate the local and default messages
-			var ident, section;			
-			for( var j = 0; j < 2; j++ ) {
+			var ident, section, jLower = thymol.localMessages ? 0 : 1;
+			for( var j = jLower; j < 2; j++ ) {
 				for( var i = 0, iLimit = thymol.locale.levels.length; i < iLimit + 1; i++ ) {
 					ident = prefix;
 					if( i < iLimit ) {
@@ -904,7 +922,7 @@ thymol = function() {
 					if( line.charAt(0) !== "#" ) {
 						var p = line.split("=");
 						if(p.length>1) {
-							messages[p[0].trim()] = ThUtils.decodeUtfProperty(p[1].trim());
+							messages[p[0].trim()] = ThUtils.unicodeUnescape(p[1].trim());
 						}						
 					}
 				}
@@ -1977,6 +1995,7 @@ thymol = function() {
 		thDefaultMessagesBaseName : thymol.thDefaultMessagesBaseName,
 		thDefaultRelativeRootPath : thymol.thDefaultRelativeRootPath,
 		thDefaultExtendedMapping : thymol.thDefaultExtendedMapping,
+		thDefaultLocalMessages : thymol.thDefaultLocalMessages,
 
 		thThymeleafPrefixList : thymol.thThymeleafPrefixList,
 		thThymeleafElementsList : thymol.thThymeleafElementsList,
@@ -1987,6 +2006,7 @@ thymol = function() {
 		relativeRootPath : thymol.relativeRootPath,			
 		messagesBaseName : thymol.messagesBaseName,
 		extendedMapping : thymol.extendedMapping,			
+		localMessages : thymol.localMessages,			
 		indexFile : thymol.indexFile,			
 
 		prefix : thymol.prefix,
