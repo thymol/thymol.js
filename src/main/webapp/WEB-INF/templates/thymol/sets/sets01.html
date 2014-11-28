@@ -4,7 +4,7 @@
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 		<title>Sets example 01</title>
 	</head>
-	<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"   data-thymol-load="sets-data.js"></script>
+	<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="sets-data.js"></script>
 	
   	<body>
 		<p>Set 1: <span><!--/*/<th:block th:each="d,dStat : ${#sets.toSet(ar1)}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>
