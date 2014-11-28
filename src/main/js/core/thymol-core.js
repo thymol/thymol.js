@@ -10,40 +10,6 @@ thymol = function() {
 	thymol.thThymeleafPrefixList = [];
 	thymol.thThymeleafElementsList = [];
 	thymol.objects = {};
-	thymol.prefix = thymol.thDefaultPrefix;
-	thymol.dataPrefix = thymol.thDefaultDataPrefix;
-	
-	(function() {
-		var htmlTag = $("html")[0], nsspec;
-		$(htmlTag.attributes).each(function() {
-			if (thymol.thURL == this.value) {
-				nsspec = this.localName.split(":");
-				if (nsspec.length > 0) {
-					thymol.prefix = nsspec[nsspec.length - 1];
-					return;
-				}
-			}
-		});
-	})();
-
-	thymol.thInclude = new ThAttr("include", null, 100, null, thymol.prefix);
-	thymol.thReplace = new ThAttr("replace", null, 100, null, thymol.prefix);
-	thymol.thSubstituteby = new ThAttr("substituteby", null, 100, null, thymol.prefix);
-	
-	thymol.thFragment = new ThAttr("fragment", null, 20000, null, thymol.prefix);
-	thymol.thRemove = null;
-	
-	thymol.thBlock = new ThElement(
-		"block",
-		function(element) {
-		  var i, limit = element.childNodes.length;
-		  for (i = 0; i < limit; i++) {
-				if (element.childNodes[i].nodeType === 1) {
-					element.childNodes[i].isBlockChild = true;
-	      }
-	    }
-	  },
-	  thymol.prefix);
 	
 	var
 		textFuncSynonym = "~~~~",
@@ -127,6 +93,9 @@ thymol = function() {
 		this.booleanAndNullTokens["true"] = this.applicationContext.createVariable("true", true);
 		this.booleanAndNullTokens["false"] = this.applicationContext.createVariable("false", false);
 		
+		this.prefix = Thymol.prototype.getThParam("thPrefix", false, false, this.thDefaultPrefix);
+		this.dataPrefix = Thymol.prototype.getThParam("thDataPrefix", false, false, this.thDefaultDataPrefix);
+		
 		this.messagePath = Thymol.prototype.getThParam("thMessagePath", false, true, this.thDefaultMessagePath);		
 		this.messagesBaseName = Thymol.prototype.getThParam("thMessagesBaseName", false, false, this.thDefaultMessagesBaseName);		
 		this.relativeRootPath = Thymol.prototype.getThParam("thRelativeRootPath", false, true, this.thDefaultRelativeRootPath);		
@@ -157,9 +126,7 @@ thymol = function() {
 				this.protocol += '/';
 			}			
 		}		
-		this.protocol = Thymol.prototype.getThParam("thProtocol", false, false, this.protocol);
-		
-		
+		this.protocol = Thymol.prototype.getThParam("thProtocol", false, false, this.protocol);		
 
 		if (typeof thymol.thPreExecutionFunctions === "undefined" || thymol.thPreExecutionFunctions === null) {
 			thymol.thPreExecutionFunctions = [];
@@ -182,6 +149,19 @@ thymol = function() {
 
 		executeDeferred();
 
+		(function() {
+			var htmlTag = $("html")[0], nsspec;
+			$(htmlTag.attributes).each(function() {
+				if (thymol.thURL == this.value) {
+					nsspec = this.localName.split(":");
+					if (nsspec.length > 0) {
+						thymol.prefix = nsspec[nsspec.length - 1];
+						return;
+					}
+				}
+			});
+		})();
+		
 		(function(app, req) {
 			var e, f, a = /\+/g, r = /([^&=]+)=?([^&]*)/g, d = function(s) {
 				return decodeURIComponent(s.replace(a, " "));
@@ -198,30 +178,51 @@ thymol = function() {
 			while (e = r.exec(scriptUrl)) {
 				f = e[1].split("?");
 				switch (f[1]) {
-				case "thProtocol":
-					this.protocol = e[2];
+				case "thPrefix":
+					thymol.prefix = e[2];
 					break;
-				case "thDebug":
-					this.debug = e[2];
-					break;
-				case "thRoot":
-					this.root = e[2];
-					break;
-				case "thPath":
-					this.path = e[2];
-					break;
-				case "thAllowNullText":
-					this.allowNullText = e[2];
+				case "thDataPrefix":
+					thymol.dataPrefix = e[2];
 					break;
 				case "thMessagePath":
-					this.messagePath = e[2];
+					thymol.messagePath = e[2];
+					break;
+				case "thMessagesBaseName":
+					thymol.messagesBaseName = e[2];
+					break;
+				case "thRelativeRootPath":
+					thymol.relativeRootPath = e[2];
+					break;
+				case "thExtendedMapping":
+					thymol.extendedMapping = e[2];
+					break;
+				case "thIndexFile":
+					thymol.indexFile = e[2];
+					break;
+				case "thProtocol":
+					thymol.protocol = e[2];
+					break;
+				case "thDebug":
+					thymol.debug = e[2];
+					break;
+				case "thRoot":
+					thymol.root = e[2];
+					break;
+				case "thPath":
+					thymol.path = e[2];
+					break;
+				case "thAllowNullText":
+					thymol.allowNullText = e[2];
 					break;
 				case "thLocale":
-					this.locale.value = e[2];
+					thymol.locale.value = e[2];
 					break;
-				// case "thShowNullOperands":
-				// showNullOperands = e[2];
-				// break;
+				case "thDefaultPrecision":
+					thymol.thDefaultPrecision = e[2];
+					break;
+				case "thDefaultPrecedence":
+					thymol.thDefaultPrecedence = e[2];
+					break;
 				default:
 					app.createVariable(e[1], e[2]);
 				}
@@ -230,7 +231,27 @@ thymol = function() {
 				req.createVariable(d(e[1]), e[2], true);
 			}
 		})(this.applicationContext, this.requestContext);
-
+		
+		thymol.thInclude = new ThAttr("include", null, 100, null, thymol.prefix);
+		thymol.thReplace = new ThAttr("replace", null, 100, null, thymol.prefix);
+		thymol.thSubstituteby = new ThAttr("substituteby", null, 100, null, thymol.prefix);
+		
+		thymol.thFragment = new ThAttr("fragment", null, 20000, null, thymol.prefix);
+		thymol.thRemove = null;
+		
+		thymol.thBlock = new ThElement(
+			"block",
+			function(element) {
+				var i, limit = element.childNodes.length;
+				for (i = 0; i < limit; i++) {
+					if (element.childNodes[i].nodeType === 1) {
+						element.childNodes[i].isBlockChild = true;
+					}
+				}
+			},
+			thymol.prefix
+		);
+		
 		this.applicationContext.resolveJSONReferences();
 		preExecute(this.applicationContext);
 
@@ -1943,8 +1964,7 @@ thymol = function() {
 		
 		thBlock : thymol.thBlock,
 				
- 	  thScriptName : thymol.thScriptName,
-		thJQuerySource : thymol.thJQuerySource,
+		thScriptName : thymol.thScriptName,
 
 		thDefaultPrefix : thymol.thDefaultPrefix,
 		thDefaultDataPrefix : thymol.thDefaultDataPrefix,
@@ -1954,23 +1974,15 @@ thymol = function() {
 		thDefaultPrecedence : thymol.thDefaultPrecedence,
 
 		thDefaultMessagePath : thymol.thDefaultMessagePath,			
-		thDefaultRelativeRootPath : thymol.thDefaultRelativeRootPath,
 		thDefaultMessagesBaseName : thymol.thDefaultMessagesBaseName,
+		thDefaultRelativeRootPath : thymol.thDefaultRelativeRootPath,
 		thDefaultExtendedMapping : thymol.thDefaultExtendedMapping,
-				
-		thMessagePath : thymol.thMessagePath,			
-		thRelativeRootPath : thymol.thRelativeRootPath,			
-		thMessagesBaseName : thymol.thMessagesBaseName,			
-		thExtendedMapping : thymol.thExtendedMapping,			
-		thIndexFile : thymol.thIndexFile,			
 
-		thLocation : thymol.thLocation,			
-						
 		thThymeleafPrefixList : thymol.thThymeleafPrefixList,
-		thUsingNullPrefix : thymol.thUsingNullPrefix,
-		
 		thThymeleafElementsList : thymol.thThymeleafElementsList,
 				
+		thLocation : thymol.thLocation,
+		
 		messagePath : thymol.messagePath,
 		relativeRootPath : thymol.relativeRootPath,			
 		messagesBaseName : thymol.messagesBaseName,
