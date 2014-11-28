@@ -1,10 +1,12 @@
-var	thRoot="${project.basedir}/dist/Webcontent/examples/hierarchy";		// In an exploded war, this is usually webapp root
+var	thProtocol = "";
+//var	thRoot = "";
+var	thRelativeRootPath = "Webcontent/examples/hierarchy/";
 var	thPath="";		// In an exploded war, this is usually WEB-INF/<some-path>
 
 var thDebug = true;
 
 var	thVars = [
-   	       ["currentUser", "#{ 'gravatar': 'ffa96040bb4211cad1c66f385d8cb77b', 'login': 'duyhai', 'firstname': 'Duyhai', 'lastname': 'DOAN' }"],
+   	       ["currentUser", "#{ 'gravatar': 'ffa96040bb4211cad1c66f385d8cb77b', 'login': 'duyhai', 'firstName': 'Duyhai', 'lastName': 'DOAN' }"],
    	       ["error", ""],
    	       ["disco1", "#['John Otway & Wild Willy Barrett', 'Deep & Meaningless', 'Where Did I Go Right?', 'Way & Bar', 'All Balls & No Willy', 'The Wimp & The Wild', 'Cheryl, a Rock Opera', 'Under the Covers and Over the Top', 'Live', 'Premature Adulation', 'OT-AIR', 'Bunsen Burner']" ],
    	       ["artist1", "#{'name' : 'John Otway', 'firstname' : 'John', 'lastname' : 'Otway', 'discography' : #disco1, 'bio' : 'John Otway, (born 2 October 1952, Aylesbury, Buckinghamshire, England) is an English singer-songwriter who has built a sizeable cult audience through extensive touring.'}" ],

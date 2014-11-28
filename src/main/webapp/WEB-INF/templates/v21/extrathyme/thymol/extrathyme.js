@@ -2,8 +2,14 @@
   This is a Thymol extension to emulate the behaviour of the "extrathyme" example dialect from http://www.thymeleaf.org/doc/html/Extending-Thymeleaf.html.
  */
 
-thRoot = "${project.basedir}/dist/Webcontent/examples/templates/v21/extrathyme/webapp";
-thMessagePath = thRoot + "/../resources";
+//thRoot = "${project.basedir}/dist/Webcontent/examples/templates/v21/extrathyme/webapp";
+//thMessagePath = thRoot + "/../resources";
+
+var	thProtocol = "";
+var	thRelativeRootPath = "Webcontent/examples/templates/v21/extrathyme/webapp";
+var     thMessagePath = "../resources";
+var	thPath="";
+
 thDebug = true;
 
 var WORLD_CHAMPIONS_LEAGUE = 0;

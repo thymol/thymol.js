@@ -17,7 +17,7 @@ var  thVarsCommon = [
             ["var3",    "#{'id' : 3, 'name' : 'Thymus herba-barona'}"],
             ["var4",    "#{'id' : 4, 'name' : 'Thymus pseudolaginosus'}"],
             ["var5",    "#{'id' : 5, 'name' : 'Thymus serpyllum'}"],
-            ["allVarieties",    "#[ #var1, #var2, #var3, #var4, #var5 ]"]//,
+            ["allVarieties",    "#[ #var1, #var2, #var3, #var4, #var5 ]"]
 
     ];
 
