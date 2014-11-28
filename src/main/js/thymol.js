@@ -13,7 +13,8 @@
 		thDefaultMessagePath : "",
 		thDefaultMessagesBaseName : "Messages",
 		thDefaultRelativeRootPath: "",  // Non-blank signifies use of thymol.js relative addressing
-		thDefaultExtendedMapping: false
+		thDefaultExtendedMapping: false,
+		thDefaultLocalMessages: true
 	};
 	thymol = function( conf ) {
 		conf.ready = function( func ) {
