@@ -19,7 +19,7 @@
 	var javascriptInlineCommentExpr = /\/\*\[\[(.*)\]\]\*\//;
 	var javascriptInlineRemainderExpr = /\s*(?:['][^']*['])*(?:["][^"]*["])*(?:[\(][^\(\)]*[\)])*(?:[\{][^\{\}]*[\}])*(?:[\[][^\[\]]*[\]])*((?:[;,\(\)\[\]:\{\}](?=(?:\s*\/\/.*?(?:\n|$)))(?:\s*\/\/.*?(?:\n|$)))|(?:\s*\/\/.*?(?:\n|$))|(?:[;,\(\)\[\]:\{\}](?=(?:\s*(?:\n|$)))(?:\s*(?:\n|$)))|(?:\s*(?:\n|$)))/;
 
-	var thCase = new ThAttr("case", null, 275, thymol.thThymeleafPrefixList, thymol.prefix);
+	var thCase;
 	
 	getThAttribute = function(part, element) {
 		var result = ThUtils.unParenthesise(part);
@@ -731,11 +731,12 @@
 	};
 
 	thymol.configurePreExecution(function() {
+		thCase = new ThAttr("case", null, 275, thymol.thThymeleafPrefixList, thymol.prefix);
 		thymol.addDialect({
 			prefix : thymol.prefix,
 			attributeProcessors : [
 				{ name : 'each', processor : processEach, precedence : 200 },		      
-				{ name : 'switch', processor : processSwitch, precedence : 250 },		      
+				{ name : 'switch', processor : processSwitch, precedence : 250 },
 				{ name : 'if', processor : processConditional, precedence : 300 },
 				{ name : 'unless', processor : processConditional, precedence : 400 },		        
 				{ name : 'object', processor : processObject, precedence : 500 },		      
