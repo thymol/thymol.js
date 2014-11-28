@@ -32,6 +32,23 @@ public class IssuesCases extends SeleniumCases {
 			"<span>Wed Oct 09 00:00:00 BST 1940</span>\n" +
 			"\n";
 
+//	\n<h1>Product list</h1>\n<table>\n<tbody><tr>\n<th rowspan="1" colspan="1">NAME</th>\n<th rowspan="1" colspan="1">PRICE</th>\n</tr>\n<tr>\n<td rowspan="1" colspan="1">Potatoes</td>\n<td rowspan="1" colspan="1">£2.43</td>\n</tr>\n</tbody></table>\n\n\n	
+	
+	String issue08Result = 
+			"\n" +
+			"<h1>Product list</h1>\n" +
+			"<table>\n" +
+			"<tbody><tr>\n" +
+			"<th rowspan=\"1\" colspan=\"1\">NAME</th>\n" +
+			"<th rowspan=\"1\" colspan=\"1\">PRICE</th>\n" +
+			"</tr>\n" +
+			"<tr>\n" +
+			"<td rowspan=\"1\" colspan=\"1\">Potatoes</td>\n" +
+			"<td rowspan=\"1\" colspan=\"1\">£2.43</td>\n" +
+			"</tr>\n" +
+			"</tbody></table>\n" +
+			"\n\n";
+
 	@Test
 	public void issue01() {
 		localise("issues/");
@@ -51,6 +68,13 @@ public class IssuesCases extends SeleniumCases {
 		localise("issues/");
 		String result = getResult( "issue06a.html", ResultMode.HTML );
 		assertEquals( clean( issue06aResult ), clean( result ) );
+	}
+
+	@Test
+	public void issue08() {
+		localise("issues/");
+		String result = getResult( "issue08.html", ResultMode.HTML );
+		assertEquals( clean( issue08Result ), clean( result ) );
 	}
 
 
