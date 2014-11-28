@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>simple example</title>
+	</head>
+	<script px:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="prefix04-data.js"></script>
+	<body>
+ 		<div style="color: red;">hello</div>
+		<div px:include="footer02::copy">hello hello</div>
+		<div px:if="${visited}">
+			<div style="color: green;">hello again</div>
+		</div>
+ 		<div px:if="${!visited}">
+			<div style="color: blue;">hello again again</div>
+		</div>
+ 		<div px:unless="${!visited}">
+			<div style="color: green;">do I know you?</div>
+			<div px:include="footer02::copy">help!</div>
+		</div>
+		<div style="color: red;">hello hello hello</div>
+		<div px:unless="${!visited}">
+			<div px:include="other02">help!</div>
+		</div>
+		<div px:switch="${firstName}">
+			<p px:case="'Fred'">User is one of the Bloggs</p>
+			<p px:case="'Solly'">User is a member of Grundy</p>
+			<p px:case="*">User isn't in any known group</p>
+		</div>
+		<div px:if="${visited}">
+			<div style="color: orange;">hello again</div>
+			<div px:unless="${!visited}">
+				<div style="color: purple;">do you know me?</div>
+				<div px:include="footer02::copy">au secours!</div>
+			</div>
+		</div>
+		<p><a href="index.html">Back</a></p>
+	</body>
+</html>
