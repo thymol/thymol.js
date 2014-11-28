@@ -3,22 +3,15 @@ module.exports = function(grunt) {
 	var bower = require('bower');
 	var path = require('path');
 	
-	var bowerPath = "bower_components/";
-
-	var thymolPath = bowerPath + "thymol/";
-
-	var thymolDistPath = thymolPath + "dist/";
-
-	console.log('thymolPath: ' + thymolPath);
-	var jqueryPath = "jquery/dist/jquery.min.js";
-
-	var thymolSource = "thymol-full.js";
-
-	var jquerySource = "../../" + jqueryPath;
-	grunt.log.writeln('jquerySource: ' + jquerySource);
-	var jquerySourceDefault = jquerySource;
-
+	mavenProperties = grunt.file.readJSON('maven-properties.json');	
+	grunt.log.writeln('path to jQuery is: ' + mavenProperties.pathToJquery);
+	
+	var jquerySource = mavenProperties.pathToJquery;
+	
 	var tmpDir = "target/dist-tmp/";
+	var bowerThymolPath = "bower_components/thymol/";
+	var bowerThymolDistPath = bowerThymolPath + "dist/";
+
 
 	var thymolFile = "thymol.js";
 	var thymolFileMin = "thymol.min.js";
@@ -34,49 +27,47 @@ module.exports = function(grunt) {
 	var tmpLiteFileMin = tmpDir + liteFileMin;
 	var tmpFullFileMin = tmpDir + fullFileMin;
 
-	var tmpThymolFileObj = {};
-	tmpThymolFileObj[tmpThymolFile] = [ "src/main/js/thymol.js" ];
+	var thymolBootstrap =  [ "src/main/js/thymol.js" ];
+	
+	var tmpThymolFileObj = {};	
+	tmpThymolFileObj[tmpThymolFile] = thymolBootstrap;
 
+	var coreThymolFiles = [
+                  	        "src/main/js/thymol-main.js",
+                  			"src/main/js/core/thymol-classes.js",
+                  			"src/main/js/core/thymol-core.js",
+                  			"src/main/js/core/thymol-context.js",
+                  			"src/main/js/core/thymol-utils.js",
+                  			"src/main/js/core/thymol-parser.js",
+                  			"src/main/js/core/thymol-standarddialect.js",
+                  			"src/main/js/core/thymol-http.js"
+                  			];
+
+	var optionalThymolFiles = [
+	               			"src/main/js/obj/aggregates-object.js",
+	            			"src/main/js/obj/arrays-object.js",
+	            			"src/main/js/obj/bools-object.js",
+	            			"src/main/js/obj/dates-object.js",
+	            			"src/main/js/obj/calendars-object.js",
+	            			"src/main/js/obj/ids-object.js",
+	            			"src/main/js/obj/lists-object.js",
+	            			"src/main/js/obj/maps-object.js",
+	            			"src/main/js/obj/messages-object.js",
+	            			"src/main/js/obj/numbers-object.js",
+	            			"src/main/js/obj/objects-object.js",
+	            			"src/main/js/obj/sets-object.js",
+	            			"src/main/js/obj/strings-object.js",
+	            			"src/main/js/obj/objects-modules-config.js"
+                  			];
+
+	var thymolConfig = ["src/main/js/thymol-config.js"];
+	
 	var tmpLiteFileObj = {};
-	tmpLiteFileObj[tmpLiteFile] = [
-	        "src/main/js/thymol-main.js",
-			"src/main/js/core/thymol-classes.js",
-			"src/main/js/core/thymol-core.js",
-			"src/main/js/core/thymol-context.js",
-			"src/main/js/core/thymol-utils.js",
-			"src/main/js/core/thymol-parser.js",
-			"src/main/js/core/thymol-standarddialect.js",
-			"src/main/js/core/thymol-http.js",
-			"src/main/js/thymol-config.js"
-			];
-
+	tmpLiteFileObj[tmpLiteFile] = coreThymolFiles.concat(thymolConfig);
+ 
 	var tmpFullFileObj = {};
-	tmpFullFileObj[tmpFullFile] = [
-	        "src/main/js/thymol-main.js",
-			"src/main/js/core/thymol-classes.js",
-			"src/main/js/core/thymol-core.js",
-			"src/main/js/core/thymol-context.js",
-			"src/main/js/core/thymol-utils.js",
-			"src/main/js/core/thymol-parser.js",
-			"src/main/js/core/thymol-standarddialect.js",
-			"src/main/js/core/thymol-http.js",
-			"src/main/js/obj/aggregates-object.js",
-			"src/main/js/obj/arrays-object.js",
-			"src/main/js/obj/bools-object.js",
-			"src/main/js/obj/dates-object.js",
-			"src/main/js/obj/calendars-object.js",
-			"src/main/js/obj/ids-object.js",
-			"src/main/js/obj/lists-object.js",
-			"src/main/js/obj/maps-object.js",
-			"src/main/js/obj/messages-object.js",
-			"src/main/js/obj/numbers-object.js",
-			"src/main/js/obj/objects-object.js",
-			"src/main/js/obj/sets-object.js",
-			"src/main/js/obj/strings-object.js",
-			"src/main/js/obj/objects-modules-config.js",
-			"src/main/js/thymol-config.js"
-			];
-
+	tmpFullFileObj[tmpFullFile] = coreThymolFiles.concat(optionalThymolFiles).concat(thymolConfig); 
+		
 	var tmpLiteFileMinObj = {};
 	tmpLiteFileMinObj[tmpLiteFileMin] = [ tmpLiteFile ];
 
@@ -84,19 +75,19 @@ module.exports = function(grunt) {
 	tmpFullFileMinObj[tmpFullFileMin] = [ tmpFullFile ];
 
 	var tmpThymolFileMinObj = {};
-	tmpThymolFileMinObj[tmpThymolFileMin] = [ "src/main/js/thymol.js" ];
+	tmpThymolFileMinObj[tmpThymolFileMin] = thymolBootstrap;
 
 	grunt.initConfig({
 
 		pkg : grunt.file.readJSON('package.json'),
-
+		
 		banner : '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - '
 				+ '<%= grunt.template.today("yyyy-mm-dd") %>\n'
 				+ '<%= pkg.homepage ? "* " + pkg.homepage + "\\n" : "" %>'
 				+ '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;'
 				+ ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
 
-		clean : [ "dist/", tmpDir, thymolPath ],
+		clean : [ "dist/", tmpDir, bowerThymolPath ],
 
 		uglify : {
 			thymol : {
@@ -167,73 +158,51 @@ module.exports = function(grunt) {
 		copy : {
 			thymol : {
 				expand : true,
-				cwd : "target/dist-tmp/",
-				src : [ "**/thymol.js" ],
+				cwd : tmpDir,
+				src : [ "**/" + thymolFile ],
 				dest : "dist/",
 				options : {
 					flatten : true,
 					process : function(content, srcpath) {
-						content = content.replace("${thThymolSource}", thymolSource);
-						return content.replace("${thJQuerySource}", jquerySourceDefault);
+						content = content.replace("${thThymolSource}", fullFile);
+						return content.replace("${thJQuerySource}", jquerySource);
 					}
 				}
 			},
 		    thymol_min : {
 			    expand : true,
-     			cwd : "target/dist-tmp/",
-	    		src : [ "**/thymol.min.js" ],
+     			cwd : tmpDir,
+	    		src : [ "**/" + thymolFileMin ],
 		    	dest : "dist/",
 			    options : {
 				    flatten : true,
 				    process : function(content, srcpath) {
 				   	    content = content.replace("${thThymolSource}", fullFileMin);
-					    return content.replace("${thJQuerySource}", jquerySourceDefault);
+					    return content.replace("${thJQuerySource}", jquerySource);
 				    }
 			    }
 		    },
 		    thymol_main : {
 			    expand : true,
-     			cwd : "target/dist-tmp/",
+     			cwd : tmpDir,
 	    		src : [ "**/thymol-full*.js", "**/thymol-lite*.js" ],
-		    	dest : "dist/",
+		    	dest : "dist/"
 		    },		    
 			bower_dist : {
 				expand : true,
 				cwd : "dist/",
 				src : [ "**/*.js" ],
-				dest : thymolDistPath
+				dest : bowerThymolDistPath
 			}		    
-		}
 
+		}
+		
 	});
  
-	grunt.registerTask('extract', function(name) {
-		var bower_done = this.async();
-		bower.commands.list({paths : true}, {			
-		}).on('error', function(data) {
-			bower_done(false);
-		}).on('end', function(data) {
-			for ( var k in data) {
-				if (k === "jquery") {
-					if (!!data[k]) {
-						var jqueryLocation = path.dirname(data[k]);
-						if( !!jqueryLocation ) {
-							jquerySource = process.cwd() + path.sep + jqueryLocation + path.sep + "jquery.min.js";							
-						}
-					}
-				}
-			}
-			bower_done();
-		});
-	});
-
 	grunt.loadNpmTasks("grunt-contrib-clean");
 	grunt.loadNpmTasks("grunt-contrib-uglify");
 	grunt.loadNpmTasks("grunt-contrib-copy");
 
-	grunt.registerTask("default", [ "clean", "extract", "uglify", "copy" ]);
-	
-
-
+	grunt.registerTask("default", [ "clean", "uglify", "copy" ]);
 
 };
