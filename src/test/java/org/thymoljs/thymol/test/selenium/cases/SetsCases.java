@@ -27,7 +27,7 @@ public class SetsCases extends SeleniumCases {
 			"\t\t<p>Set 15: <span>1,3,57,99</span></p>\n" +
 			"\t\t<p>Set 16: <span>1,3,57,99</span></p>\n" +
 			"\t\t<p>Set 17: <span>fifty-seven,ninety-nine,one,three</span></p>\n" +
-			"\t\t<p>Set 17: <span>two,[1, 3, 57, 99]</span></p>\n" +
+			"\t\t<p>Set 18: <span>two,[1, 3, 57, 99]</span></p>\n" +
 			"\t\n" +
 			"\n\n\n";
 					
@@ -50,7 +50,7 @@ public class SetsCases extends SeleniumCases {
 			"\t\t<p>Set 15: <span>1,3,57,99</span></p>\n" +
 			"\t\t<p>Set 16: <span>1,3,57,99</span></p>\n" +
 			"\t\t<p>Set 17: <span>fifty-seven,ninety-nine,one,three</span></p>\n" +
-			"\t\t<p>Set 17: <span>two,[1, 3, 57, 99]</span></p>\n" +
+			"\t\t<p>Set 18: <span>[1, 3, 57, 99],two</span></p>\n" +
 			"\t\n" +
 			"\n\n\n";
 					

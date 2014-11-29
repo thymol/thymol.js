@@ -331,6 +331,14 @@ ThUtils = ( function() {
 		return result;
 	}
 
+	function unicodeUnescape( initial ) {
+		var result = initial.replace(/\\u([\da-f]{4})/gi, function(match, grp) {
+			return String.fromCharCode(parseInt(grp, 16));
+		});
+		result = unescape(result);
+		return result;
+	}
+
 	function removeTag( element ) {
 		var i, iLimit, savedObject = element.thObjectVar, savedLocals = element.thLocalVars;
 		if( element.parentNode ) {
@@ -365,6 +373,7 @@ ThUtils = ( function() {
 		result = result.replace( /~/g, "%7E" );
 		return result;
 	}
+	
 
 	return { 
 		getParameter : getParameter,
@@ -381,6 +390,7 @@ ThUtils = ( function() {
 		isLiteralSubst : isLiteralSubst,
 		loadScript : loadScript,
 		unescape : unescape,
+		unicodeUnescape : unicodeUnescape,
 		removeTag : removeTag,
 		getRequestEncoded : getRequestEncoded
 	};

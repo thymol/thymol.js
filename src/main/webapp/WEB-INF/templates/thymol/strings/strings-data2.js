@@ -29,7 +29,6 @@ thymol.configurePreExecution( function() {
     var ps3 = "    Hola mundo!";
     var ps4 = "\tKaixo mundua!\t\n";
     var psArray = [ps1,ps2,ps3,ps4];
-//		psArray = psArray.sort();
     thymol.applicationContext.createVariable("ps1", ps1 );
     thymol.applicationContext.createVariable("ps2", ps2 );
     thymol.applicationContext.createVariable("ps3", ps3 );

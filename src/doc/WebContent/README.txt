@@ -1,13 +1,12 @@
-The Thymol template examples provided in this archive should be configured before use.
-Do this by globally replacing the placeholder value "${thInstall}" with a fully qualified file URI that points to the Thymol javascript file you wish to work with.
+The Thymol template examples provided in this archive should work correctly without any modification when unpacked for most users.
 
-For example:
+If you encounter problems, please look at the advice provided here:
 
-    <script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="pages.js"></script>		
+	http://www.thymoljs.org/issues.html?issu
+    
+If you need more help you can visit the user forum:
 
-might become:
-
-    <script th:remove="all" type="text/javascript" src="file:///home/tester/project/thymol/thymol.js" data-thymol-load="pages.js"></script>
+	http://forum.thymoljs.org/    
     
 Please report any issues to:
 

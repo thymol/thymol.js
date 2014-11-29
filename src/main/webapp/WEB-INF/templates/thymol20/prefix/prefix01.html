@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>simple example</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"></script>
+	<body>
+ 		<div style="color: red;">hello</div>
+		<div th:include="footer01::copy">hello hello</div>
+		<div th:if="${visited}">
+			<div style="color: green;">hello again</div>
+		</div>
+ 		<div th:if="${!visited}">
+			<div style="color: blue;">hello again again</div>
+		</div>
+ 		<div th:unless="${!visited}">
+			<div style="color: green;">do I know you?</div>
+			<div th:include="footer01::copy">help!</div>
+		</div>
+		<div style="color: red;">hello hello hello</div>
+		<div th:unless="${!visited}">
+			<div th:include="other01">help!</div>
+		</div>
+		<div th:switch="${firstName}">
+			<p th:case="'Fred'">User is one of the Bloggs</p>
+			<p th:case="'Solly'">User is a member of Grundy</p>
+			<p th:case="*">User isn't in any known group</p>
+		</div>
+		<div th:if="${visited}">
+			<div style="color: orange;">hello again</div>
+			<div th:unless="${!visited}">
+				<div style="color: purple;">do you know me?</div>
+				<div th:include="footer01::copy">au secours!</div>
+			</div>
+		</div>
+		<p><a href="index.html">Back</a></p>
+	</body>
+</html>
