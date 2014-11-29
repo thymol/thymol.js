@@ -409,33 +409,6 @@ thymol = function() {
     thymol.thThymeleafPrefixList = [];
     thymol.thThymeleafElementsList = [];
     thymol.objects = {};
-    thymol.prefix = thymol.thDefaultPrefix;
-    thymol.dataPrefix = thymol.thDefaultDataPrefix;
-    (function() {
-        var htmlTag = $("html")[0], nsspec;
-        $(htmlTag.attributes).each(function() {
-            if (thymol.thURL == this.value) {
-                nsspec = this.localName.split(":");
-                if (nsspec.length > 0) {
-                    thymol.prefix = nsspec[nsspec.length - 1];
-                    return;
-                }
-            }
-        });
-    })();
-    thymol.thInclude = new ThAttr("include", null, 100, null, thymol.prefix);
-    thymol.thReplace = new ThAttr("replace", null, 100, null, thymol.prefix);
-    thymol.thSubstituteby = new ThAttr("substituteby", null, 100, null, thymol.prefix);
-    thymol.thFragment = new ThAttr("fragment", null, 2e4, null, thymol.prefix);
-    thymol.thRemove = null;
-    thymol.thBlock = new ThElement("block", function(element) {
-        var i, limit = element.childNodes.length;
-        for (i = 0; i < limit; i++) {
-            if (element.childNodes[i].nodeType === 1) {
-                element.childNodes[i].isBlockChild = true;
-            }
-        }
-    }, thymol.prefix);
     var textFuncSynonym = "~~~~", varRefExpr = /([$#]{.*?})/, literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/, startParserLevelCommentExpr = /^\s*\/\*\s*$/, endParserLevelCommentExpr = /^\s*\*\/\s*$/, startParserLevelCommentExpr2 = /^\/\*[^\/].*/, endParserLevelCommentExpr2 = /.*[^\/]\*\/$/, prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//, varExpr3 = /[\$\*#@]{1}\{(.*)\}$/, nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/, numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/, varParExpr = /([^(]*)\s*[(]([^)]*?)[)]/, domSelectExpr = /([\/]{1,2})?([A-Za-z0-9_\-]*(?:[\(][\)])?)?([^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*(?:[\.\/#]?[^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*)*)?([\[][^\]]*?[\]])?/, litSubstExpr = /\.*?([\|][^\|]*?[\|])\.*?/;
     function Thymol() {}
     function ThNode(thDocParam, visitedParam, parentDocParam, firstChildParam, nextSiblingParam, fileNameParam, fragNameParam, isNodeParam, elementParam) {
@@ -487,10 +460,13 @@ thymol = function() {
         this.booleanAndNullTokens["null"] = this.applicationContext.createVariable("null", null);
         this.booleanAndNullTokens["true"] = this.applicationContext.createVariable("true", true);
         this.booleanAndNullTokens["false"] = this.applicationContext.createVariable("false", false);
+        this.prefix = Thymol.prototype.getThParam("thPrefix", false, false, this.thDefaultPrefix);
+        this.dataPrefix = Thymol.prototype.getThParam("thDataPrefix", false, false, this.thDefaultDataPrefix);
         this.messagePath = Thymol.prototype.getThParam("thMessagePath", false, true, this.thDefaultMessagePath);
         this.messagesBaseName = Thymol.prototype.getThParam("thMessagesBaseName", false, false, this.thDefaultMessagesBaseName);
         this.relativeRootPath = Thymol.prototype.getThParam("thRelativeRootPath", false, true, this.thDefaultRelativeRootPath);
         this.extendedMapping = Thymol.prototype.getThParam("thExtendedMapping", false, false, this.thDefaultExtendedMapping);
+        this.localMessages = Thymol.prototype.getThParam("thLocalMessages", false, false, this.thDefaultLocalMessages);
         this.indexFile = Thymol.prototype.getThParam("thIndexFile", false, false, null);
         this.debug = Thymol.prototype.getThParam("thDebug", true, false, false);
         this.allowNullText = Thymol.prototype.getThParam("thAllowNullText", true, false, true);
@@ -530,6 +506,18 @@ thymol = function() {
             }
         }
         executeDeferred();
+        (function() {
+            var htmlTag = $("html")[0], nsspec;
+            $(htmlTag.attributes).each(function() {
+                if (thymol.thURL == this.value) {
+                    nsspec = this.localName.split(":");
+                    if (nsspec.length > 0) {
+                        thymol.prefix = nsspec[nsspec.length - 1];
+                        return;
+                    }
+                }
+            });
+        })();
         (function(app, req) {
             var e, f, a = /\+/g, r = /([^&=]+)=?([^&]*)/g, d = function(s) {
                 return decodeURIComponent(s.replace(a, " "));
@@ -544,32 +532,68 @@ thymol = function() {
             while (e = r.exec(scriptUrl)) {
                 f = e[1].split("?");
                 switch (f[1]) {
-                  case "thProtocol":
-                    this.protocol = e[2];
+                  case "thPrefix":
+                    thymol.prefix = e[2];
                     break;
 
-                  case "thDebug":
-                    this.debug = e[2];
-                    break;
-
-                  case "thRoot":
-                    this.root = e[2];
-                    break;
-
-                  case "thPath":
-                    this.path = e[2];
-                    break;
-
-                  case "thAllowNullText":
-                    this.allowNullText = e[2];
+                  case "thDataPrefix":
+                    thymol.dataPrefix = e[2];
                     break;
 
                   case "thMessagePath":
-                    this.messagePath = e[2];
+                    thymol.messagePath = e[2];
+                    break;
+
+                  case "thMessagesBaseName":
+                    thymol.messagesBaseName = e[2];
+                    break;
+
+                  case "thRelativeRootPath":
+                    thymol.relativeRootPath = e[2];
+                    break;
+
+                  case "thExtendedMapping":
+                    thymol.extendedMapping = e[2];
+                    break;
+
+                  case "thLocalMessages":
+                    thymol.localMessages = e[2];
+                    break;
+
+                  case "thIndexFile":
+                    thymol.indexFile = e[2];
+                    break;
+
+                  case "thProtocol":
+                    thymol.protocol = e[2];
+                    break;
+
+                  case "thDebug":
+                    thymol.debug = e[2];
+                    break;
+
+                  case "thRoot":
+                    thymol.root = e[2];
+                    break;
+
+                  case "thPath":
+                    thymol.path = e[2];
+                    break;
+
+                  case "thAllowNullText":
+                    thymol.allowNullText = e[2];
                     break;
 
                   case "thLocale":
-                    this.locale.value = e[2];
+                    thymol.locale.value = e[2];
+                    break;
+
+                  case "thDefaultPrecision":
+                    thymol.thDefaultPrecision = e[2];
+                    break;
+
+                  case "thDefaultPrecedence":
+                    thymol.thDefaultPrecedence = e[2];
                     break;
 
                   default:
@@ -580,6 +604,19 @@ thymol = function() {
                 req.createVariable(d(e[1]), e[2], true);
             }
         })(this.applicationContext, this.requestContext);
+        thymol.thInclude = new ThAttr("include", null, 100, null, thymol.prefix);
+        thymol.thReplace = new ThAttr("replace", null, 100, null, thymol.prefix);
+        thymol.thSubstituteby = new ThAttr("substituteby", null, 100, null, thymol.prefix);
+        thymol.thFragment = new ThAttr("fragment", null, 2e4, null, thymol.prefix);
+        thymol.thRemove = null;
+        thymol.thBlock = new ThElement("block", function(element) {
+            var i, limit = element.childNodes.length;
+            for (i = 0; i < limit; i++) {
+                if (element.childNodes[i].nodeType === 1) {
+                    element.childNodes[i].isBlockChild = true;
+                }
+            }
+        }, thymol.prefix);
         this.applicationContext.resolveJSONReferences();
         preExecute(this.applicationContext);
         this.thExpressionObjects["#vars"] = this.applicationContext;
@@ -595,6 +632,19 @@ thymol = function() {
         this.protocol = Thymol.prototype.override("thProtocol", this.protocol);
         this.debug = Thymol.prototype.override("thDebug", this.debug);
         this.root = Thymol.prototype.override("thRoot", this.root);
+        if ("" !== this.relativeRootPath) {
+            var rootURI = document.location.href;
+            var quePos = rootURI.indexOf("?");
+            if (quePos >= 0) {
+                rootURI = rootURI.substring(0, quePos);
+            }
+            var sepPos = rootURI.lastIndexOf("/");
+            if (sepPos >= 0) {
+                rootURI = rootURI.substring(0, sepPos + 1);
+            }
+            var newThRoot = rootURI + this.thLocation + this.relativeRootPath;
+            this.thRoot = Thymol.prototype.getThParam("thRoot", false, true, newThRoot);
+        }
         this.path = Thymol.prototype.override("thPath", this.path);
         this.allowNullText = Thymol.prototype.override("thAllowNullText", this.allowNullText);
         this.locale.value = Thymol.prototype.override("thLocale", this.locale.value);
@@ -1079,8 +1129,8 @@ thymol = function() {
         var locale;
         if (!!thymol.locale.levels) {
             var prefix = "$";
-            var ident, section;
-            for (var j = 0; j < 2; j++) {
+            var ident, section, jLower = thymol.localMessages ? 0 : 1;
+            for (var j = jLower; j < 2; j++) {
                 for (var i = 0, iLimit = thymol.locale.levels.length; i < iLimit + 1; i++) {
                     ident = prefix;
                     if (i < iLimit) {
@@ -1162,7 +1212,7 @@ thymol = function() {
                     if (line.charAt(0) !== "#") {
                         var p = line.split("=");
                         if (p.length > 1) {
-                            messages[p[0].trim()] = p[1].trim();
+                            messages[p[0].trim()] = ThUtils.unicodeUnescape(p[1].trim());
                         }
                     }
                 }
@@ -2123,7 +2173,6 @@ thymol = function() {
         thRemove: thymol.thRemove,
         thBlock: thymol.thBlock,
         thScriptName: thymol.thScriptName,
-        thJQuerySource: thymol.thJQuerySource,
         thDefaultPrefix: thymol.thDefaultPrefix,
         thDefaultDataPrefix: thymol.thDefaultDataPrefix,
         thDefaultPrecision: thymol.thDefaultPrecision,
@@ -2131,22 +2180,18 @@ thymol = function() {
         thDefaultLocale: thymol.thDefaultLocale,
         thDefaultPrecedence: thymol.thDefaultPrecedence,
         thDefaultMessagePath: thymol.thDefaultMessagePath,
-        thDefaultRelativeRootPath: thymol.thDefaultRelativeRootPath,
         thDefaultMessagesBaseName: thymol.thDefaultMessagesBaseName,
+        thDefaultRelativeRootPath: thymol.thDefaultRelativeRootPath,
         thDefaultExtendedMapping: thymol.thDefaultExtendedMapping,
-        thMessagePath: thymol.thMessagePath,
-        thRelativeRootPath: thymol.thRelativeRootPath,
-        thMessagesBaseName: thymol.thMessagesBaseName,
-        thExtendedMapping: thymol.thExtendedMapping,
-        thIndexFile: thymol.thIndexFile,
-        thLocation: thymol.thLocation,
+        thDefaultLocalMessages: thymol.thDefaultLocalMessages,
         thThymeleafPrefixList: thymol.thThymeleafPrefixList,
-        thUsingNullPrefix: thymol.thUsingNullPrefix,
         thThymeleafElementsList: thymol.thThymeleafElementsList,
+        thLocation: thymol.thLocation,
         messagePath: thymol.messagePath,
         relativeRootPath: thymol.relativeRootPath,
         messagesBaseName: thymol.messagesBaseName,
         extendedMapping: thymol.extendedMapping,
+        localMessages: thymol.localMessages,
         indexFile: thymol.indexFile,
         prefix: thymol.prefix,
         dataPrefix: thymol.dataPrefix,
@@ -2766,6 +2811,13 @@ ThUtils = function() {
         }
         return result;
     }
+    function unicodeUnescape(initial) {
+        var result = initial.replace(/\\u([\da-f]{4})/gi, function(match, grp) {
+            return String.fromCharCode(parseInt(grp, 16));
+        });
+        result = unescape(result);
+        return result;
+    }
     function removeTag(element) {
         var i, iLimit, savedObject = element.thObjectVar, savedLocals = element.thLocalVars;
         if (element.parentNode) {
@@ -2813,6 +2865,7 @@ ThUtils = function() {
         isLiteralSubst: isLiteralSubst,
         loadScript: loadScript,
         unescape: unescape,
+        unicodeUnescape: unicodeUnescape,
         removeTag: removeTag,
         getRequestEncoded: getRequestEncoded
     };
@@ -4106,7 +4159,7 @@ ThParser = function(scope) {
     var textInlineCommentExpr = /\[\[(.*)\]\]/;
     var javascriptInlineCommentExpr = /\/\*\[\[(.*)\]\]\*\//;
     var javascriptInlineRemainderExpr = /\s*(?:['][^']*['])*(?:["][^"]*["])*(?:[\(][^\(\)]*[\)])*(?:[\{][^\{\}]*[\}])*(?:[\[][^\[\]]*[\]])*((?:[;,\(\)\[\]:\{\}](?=(?:\s*\/\/.*?(?:\n|$)))(?:\s*\/\/.*?(?:\n|$)))|(?:\s*\/\/.*?(?:\n|$))|(?:[;,\(\)\[\]:\{\}](?=(?:\s*(?:\n|$)))(?:\s*(?:\n|$)))|(?:\s*(?:\n|$)))/;
-    var thCase = new ThAttr("case", null, 275, thymol.thThymeleafPrefixList, thymol.prefix);
+    var thCase;
     getThAttribute = function(part, element) {
         var result = ThUtils.unParenthesise(part);
         result = doExpression(result, element);
@@ -4750,6 +4803,7 @@ ThParser = function(scope) {
         j = tha;
     };
     thymol.configurePreExecution(function() {
+        thCase = new ThAttr("case", null, 275, thymol.thThymeleafPrefixList, thymol.prefix);
         thymol.addDialect({
             prefix: thymol.prefix,
             attributeProcessors: [ {
