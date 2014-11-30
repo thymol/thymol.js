@@ -2,11 +2,18 @@ package org.thymoljs.thymol.test.selenium.issues;
 
 import static junit.framework.Assert.assertEquals;
 
+import java.util.Locale;
+
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
 public class IssuesCases extends SeleniumCases {
+    
+    private static final Logger logger = LoggerFactory.getLogger(IssuesCases.class);
+
 
 	String issue01Result = 
 			"\n" +
@@ -32,7 +39,7 @@ public class IssuesCases extends SeleniumCases {
 			"<span>Wed Oct 09 00:00:00 BST 1940</span>\n" +
 			"\n";
 
-//	\n<h1>Product list</h1>\n<table>\n<tbody><tr>\n<th rowspan="1" colspan="1">NAME</th>\n<th rowspan="1" colspan="1">PRICE</th>\n</tr>\n<tr>\n<td rowspan="1" colspan="1">Potatoes</td>\n<td rowspan="1" colspan="1">�2.43</td>\n</tr>\n</tbody></table>\n\n\n	
+//	\n<h1>Product list</h1>\n<table>\n<tbody><tr>\n<th rowspan="1" colspan="1">NAME</th>\n<th rowspan="1" colspan="1">PRICE</th>\n</tr>\n<tr>\n<td rowspan="1" colspan="1">Potatoes</td>\n<td rowspan="1" colspan="1">£2.43</td>\n</tr>\n</tbody></table>\n\n\n	
 	
 	String issue08Result = 
 			"\n" +
@@ -44,7 +51,22 @@ public class IssuesCases extends SeleniumCases {
 			"</tr>\n" +
 			"<tr>\n" +
 			"<td rowspan=\"1\" colspan=\"1\">Potatoes</td>\n" +
-			"<td rowspan=\"1\" colspan=\"1\">�2.43</td>\n" +
+			"<td rowspan=\"1\" colspan=\"1\">£2.43</td>\n" +
+			"</tr>\n" +
+			"</tbody></table>\n" +
+			"\n\n";
+	
+	String issue08Result_ru_RU = 
+			"\n" +
+			"<h1>Product list</h1>\n" +
+			"<table>\n" +
+			"<tbody><tr>\n" +
+			"<th rowspan=\"1\" colspan=\"1\">NAME</th>\n" +
+			"<th rowspan=\"1\" colspan=\"1\">PRICE</th>\n" +
+			"</tr>\n" +
+			"<tr>\n" +
+			"<td rowspan=\"1\" colspan=\"1\">Картофель</td>\n" +
+			"<td rowspan=\"1\" colspan=\"1\">2.43</td>\n" +
 			"</tr>\n" +
 			"</tbody></table>\n" +
 			"\n\n";
@@ -77,5 +99,12 @@ public class IssuesCases extends SeleniumCases {
 		assertEquals( clean( issue08Result ), clean( result ) );
 	}
 
+	@Test
+	public void issue08_ru_RU() {
+		localise("issues/", new Locale("ru_RU"));
+		String result = getResult( "issue08.html", ResultMode.HTML );
 
+		logger.debug("issue08_ru_RU, result: '{}'", result);
+		assertEquals( clean( issue08Result_ru_RU ), clean( result ) );
+	}
 }
