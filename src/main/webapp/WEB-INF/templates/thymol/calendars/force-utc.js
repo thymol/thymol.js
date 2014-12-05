@@ -1,0 +1,1 @@
+Date.prototype.toString = Date.prototype.toUTCString;

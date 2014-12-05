@@ -8,7 +8,14 @@ import org.junit.Test;
 
 public class DatesCases extends SeleniumCases {
 	
-	String dates01Result =
+	String dates01ResultThymol =
+			"\n" +
+			"\t\t<p>12 October 1992 00:00:00 GMT</p>\n" +
+			"\t\t<p>12 October 1732 00:00:00 GMT</p>\n" +
+			"\t\n" +
+			"\n\n";	
+		
+	String dates01ResultThymeleaf =
 			"\n" +
 			"\t\t<p>12 October 1992 00:00:00 BST</p>\n" +
 			"\t\t<p>12 October 1732 00:00:00 GMT</p>\n" +
@@ -23,7 +30,20 @@ public class DatesCases extends SeleniumCases {
 	        "\t\n" +
 			"\n\n";	
 		
-	String dates03Result =
+	String dates03ResultThymol =
+			"\n" +
+			"\t\t<p>12 October 1492 00:00:00 GMT</p>\n" +
+			"\t\t<p>02 September 1666 00:00:00 GMT</p>\n" +
+			"\t\t<p>16 December 1835 00:00:00 GMT</p>\n" +
+			"\t\t<p>03 May 1901 00:00:00 GMT</p>\n" +
+			"\t\t<p>13 September 1922 00:00:00 GMT</p>\n" +
+			"\t\t<p>Array of dates: <span><span>12 October 1492 00:00:00 GMT</span><span>, </span></span><span><span>02 September 1666 00:00:00 GMT</span><span>, </span></span><span><span>16 December 1835 00:00:00 GMT</span><span>, </span></span><span><span>03 May 1901 00:00:00 GMT</span><span>, </span></span><span><span>13 September 1922 00:00:00 GMT</span><span></span></span></p>\n" +
+			"\t\t<p>Set of dates: <span id=\"sort\"> 02 September 1666 00:00:00 GMT, 03 May 1901 00:00:00 GMT, 12 October 1492 00:00:00 GMT, 13 September 1922 00:00:00 GMT, 16 December 1835 00:00:00 GMT</span></p>\n" +					
+			"\t\n" +
+			"\n\n\n\n" +
+			"\n\n";	
+	
+	String dates03ResultThymeleaf =
 			"\n" +
 			"\t\t<p>12 October 1492 00:00:00 GMT</p>\n" +
 			"\t\t<p>02 September 1666 00:00:00 GMT</p>\n" +
@@ -192,7 +212,12 @@ public class DatesCases extends SeleniumCases {
 	public void dates01() {
 		localise( "thymol/dates/" );
 		String result = getResult( "dates01.html", ResultMode.HTML );
-		assertEquals( clean( dates01Result ), clean( result ) );
+		if( expectThymolResult() ) {
+			assertEquals( clean( dates01ResultThymol ), clean( result ) );
+		}
+		else {
+			assertEquals( clean( dates01ResultThymeleaf ), clean( result ) );
+		}
 	}
 
 	@Test
@@ -206,7 +231,12 @@ public class DatesCases extends SeleniumCases {
 	public void dates03() {
 		localise( "thymol/dates/" );
 		String result = getResult( "dates03.html", ResultMode.HTML );
-		assertEquals( clean( dates03Result ), clean( result ) );
+		if( expectThymolResult() ) {
+			assertEquals( clean( dates03ResultThymol ), clean( result ) );
+		}
+		else {
+			assertEquals( clean( dates03ResultThymeleaf ), clean( result ) );
+		}
 	}
 
 	@Test
