@@ -12,7 +12,7 @@
 	<url>http://www.thymoljs.org/</url>
 
 	<properties>
-		<project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java-version>1.7</java-version>
 		<servlet-api-version>2.5</servlet-api-version>
@@ -37,8 +37,12 @@
 		<theWarName>${project.artifactId}-${project.version}</theWarName>
 		<thThymolPath>${project.basedir}/bower_components/thymol/dist/</thThymolPath>
 		<thThymolSource>thymol-full.js</thThymolSource>
-		<thJQuerySource>../../jquery/dist/jquery.min.js</thJQuerySource>
 		<thDeploy>${project.build.directory}/test-classes</thDeploy>
+		<!-- Pushed in Gruntfile.js -->
+		<thBowerJQuerySource>../../jquery/dist/jquery.min.js</thBowerJQuerySource>
+		<thSourceforgeJQuerySource>http://code.jquery.com/jquery-1.11.1.min.js</thSourceforgeJQuerySource>
+		<thJsdelivrJQuerySource>http://cdn.jsdelivr.net/jquery/latest/jquery.min.js</thJsdelivrJQuerySource>
+		<thThymolPrelude>Date.prototype.toString=Date.prototype.toUTCString;</thThymolPrelude>
 	</properties>
 
 	<dependencies>
@@ -115,136 +119,6 @@
 		</profile>
 
 		<profile>
-			<id>sourceforge</id>
-			<properties>
-				<thThymolSource>thymol-full.min.js</thThymolSource>
-				<thJQuerySource>http://code.jquery.com/jquery-1.11.1.min.js</thJQuerySource>
-			</properties>
-			<build>
-				<plugins>
-					<plugin>
-						<artifactId>maven-resources-plugin</artifactId>
-						<version>${maven-resources-plugin-version}</version>
-						<executions>
-							<execution>
-								<id>copy-resources1</id>
-								<phase>process-resources</phase>
-								<goals>
-									<goal>copy-resources</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${basedir}/dist/Webcontent</outputDirectory>
-									<resources>
-										<resource>
-											<directory>src/doc/Sourceforge/attachments</directory>
-											<includes>
-												<include>README.txt</include>
-												<include>CONFIGURATION-README.txt</include>
-											</includes>
-										</resource>
-										<resource>
-											<directory>src/doc/WebContent</directory>
-											<includes>
-												<include>README.txt</include>
-												<include>LICENSE-2.0.txt</include>
-												<include>images/**/*.*</include>
-												<include>css/**/*.*</include>
-												<include>js/**/*.*</include>
-											</includes>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
-							<execution>
-								<id>copy-resources3</id>
-								<phase>process-resources</phase>
-								<goals>
-									<goal>copy-resources</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${basedir}/dist/Webcontent/examples</outputDirectory>
-									<resources>
-										<resource>
-											<directory>src/main/webapp/WEB-INF</directory>
-											<filtering>${filtering-value}</filtering>
-											<includes>
-												<include>templates/billS/**/*.*</include>
-												<include>templates/thattrs/**/*.*</include>
-												<include>templates/v21/**/*.*</include>
-												<include>templates/thymol/2.0/**/*.*</include>
-											</includes>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
-							<execution>
-								<id>copy-resources3a</id>
-								<phase>process-resources</phase>
-								<goals>
-									<goal>copy-resources</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${basedir}/dist/Webcontent/examples/templates/issue-245</outputDirectory>
-									<filters>
-										<filter>${basedir}/src/build/level4.properties</filter>
-									</filters>
-									<resources>
-										<resource>
-											<directory>src/main/webapp/WEB-INF/templates/tests21/syntax</directory>
-											<filtering>${filtering-value}</filtering>
-											<includes>
-												<include>index.html</include>
-												<include>issue*.html</include>
-											</includes>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
-							<execution>
-								<id>copy-resources3b</id>
-								<phase>process-resources</phase>
-								<goals>
-									<goal>copy-resources</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${basedir}/dist/Webcontent/examples</outputDirectory>
-									<filters>
-										<filter>${basedir}/src/build/level3.properties</filter>
-									</filters>
-									<resources>
-										<resource>
-											<directory>src/main/webapp/WEB-INF/templates</directory>
-											<filtering>${filtering-value}</filtering>
-											<includes>
-												<include>expr/**/*.*</include>
-											</includes>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
-							<execution>
-								<id>copy-resources4</id>
-								<phase>process-resources</phase>
-								<goals>
-									<goal>copy-resources</goal>
-								</goals>
-								<configuration>
-									<outputDirectory>${basedir}/dist/Webcontent/examples</outputDirectory>
-									<resources>
-										<resource>
-											<directory>src/doc/WebContent/examples/thymol-example</directory>
-											<filtering>${filtering-value}</filtering>
-										</resource>
-									</resources>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-				</plugins>
-			</build>
-		</profile>
-
-		<profile>
 			<id>windows</id>
 			<activation>
 				<activeByDefault>false</activeByDefault>
@@ -310,6 +184,8 @@
 					<filesets>
 						<fileset>
 							<directory>dist</directory>
+							<directory>sourceforge</directory>
+							<directory>jsdelivr</directory>
 						</fileset>
 						<fileset>
 							<directory>target-grunt</directory>
@@ -403,8 +279,12 @@
 					</includes>
 					<systemPropertyVariables>
 						<webDriver>${webDriver}</webDriver>
+						<JAVA_TOOL_OPTIONS>-Dfile.encoding=UTF-8</JAVA_TOOL_OPTIONS>
 					</systemPropertyVariables>
-					<argLine>-Djava.ext.dirs=${project.build.directory}/lib</argLine>
+					<argLine>-Dfile.encoding=UTF-8 -Djava.ext.dirs=${project.build.directory}/lib</argLine>
+					<properties>
+						<thThymolPrelude></thThymolPrelude>
+					</properties>
 				</configuration>
 				<executions>
 					<execution>
@@ -424,8 +304,25 @@
 					</includes>
 					<systemPropertyVariables>
 						<webDriver>${webDriver}</webDriver>
+						<JAVA_TOOL_OPTIONS>-Dfile.encoding=UTF-8</JAVA_TOOL_OPTIONS>
 					</systemPropertyVariables>
+					<properties>
+						<thThymolPrelude>Date.prototype.toString=Date.prototype.toUTCString;</thThymolPrelude>
+					</properties>
 				</configuration>
+
+<!-- 				<executions>
+					<execution>
+						<id>copy-resources3a</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+						</configuration>
+					</execution>
+				</executions>
+ -->
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
@@ -445,7 +342,7 @@
 						</goals>
 						<configuration>
 							<waitForChild>false</waitForChild>
-							<jvmArgs>-Djava.ext.dirs=${project.build.directory}/lib</jvmArgs>
+							<jvmArgs>-Dfile.encoding=UTF-8 -Djava.ext.dirs=${project.build.directory}/lib</jvmArgs>
 						</configuration>
 					</execution>
 					<execution>
@@ -494,6 +391,118 @@
 									<includes>
 										<include>*.json</include>
 									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-resources1</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/sourceforge/Webcontent</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/doc/Sourceforge/attachments</directory>
+									<includes>
+										<include>README.txt</include>
+										<include>CONFIGURATION-README.txt</include>
+									</includes>
+								</resource>
+								<resource>
+									<directory>src/doc/WebContent</directory>
+									<includes>
+										<include>README.txt</include>
+										<include>LICENSE-2.0.txt</include>
+										<include>images/**/*.*</include>
+										<include>css/**/*.*</include>
+										<include>js/**/*.*</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-resources3</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/sourceforge/Webcontent/examples</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/main/webapp/WEB-INF</directory>
+									<filtering>${filtering-value}</filtering>
+									<includes>
+										<include>templates/billS/**/*.*</include>
+										<include>templates/thattrs/**/*.*</include>
+										<include>templates/v21/**/*.*</include>
+										<include>templates/thymol/2.0/**/*.*</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-resources3a</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/sourceforge/Webcontent/examples/templates/issue-245</outputDirectory>
+							<filters>
+								<filter>${basedir}/src/build/level4.properties</filter>
+							</filters>
+							<resources>
+								<resource>
+									<directory>src/main/webapp/WEB-INF/templates/tests21/syntax</directory>
+									<filtering>${filtering-value}</filtering>
+									<includes>
+										<include>index.html</include>
+										<include>issue*.html</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-resources3b</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/sourceforge/Webcontent/examples</outputDirectory>
+							<filters>
+								<filter>${basedir}/src/build/level3.properties</filter>
+							</filters>
+							<resources>
+								<resource>
+									<directory>src/main/webapp/WEB-INF/templates</directory>
+									<filtering>${filtering-value}</filtering>
+									<includes>
+										<include>expr/**/*.*</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-resources4</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${basedir}/sourceforge/Webcontent/examples</outputDirectory>
+							<resources>
+								<resource>
+									<directory>src/doc/WebContent/examples/thymol-example</directory>
+									<filtering>${filtering-value}</filtering>
 								</resource>
 							</resources>
 						</configuration>
