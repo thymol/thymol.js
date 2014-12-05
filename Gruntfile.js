@@ -4,10 +4,10 @@ module.exports = function(grunt) {
 	var path = require('path');
 	
 	mavenProperties = grunt.file.readJSON('maven-properties.json');	
-	grunt.log.writeln('path to jQuery is: ' + mavenProperties.pathToJquery);
-	
-	var jquerySource = mavenProperties.pathToJquery;
-	
+	grunt.log.writeln('bower path to jQuery is: ' + mavenProperties.bowerJQuerySource);
+	grunt.log.writeln('sourceforge path to jQuery is: ' + mavenProperties.sourceforgeJQuerySource);
+	grunt.log.writeln('jsdelivr path to jQuery is: ' + mavenProperties.jsdelivrJQuerySource);
+		
 	var tmpDir = "target/dist-tmp/";
 	var bowerThymolPath = "bower_components/thymol/";
 	var bowerThymolDistPath = bowerThymolPath + "dist/";
@@ -87,7 +87,7 @@ module.exports = function(grunt) {
 				+ '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;'
 				+ ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
 
-		clean : [ "dist/", tmpDir, bowerThymolPath ],
+		clean : [ "dist/", "sourceforge/", "jsdelivr/", tmpDir, bowerThymolPath ],
 
 		uglify : {
 			thymol : {
@@ -156,7 +156,7 @@ module.exports = function(grunt) {
 		},
 
 		copy : {
-			thymol : {
+			thymol_bower : {
 				expand : true,
 				cwd : tmpDir,
 				src : [ "**/" + thymolFile ],
@@ -165,11 +165,11 @@ module.exports = function(grunt) {
 					flatten : true,
 					process : function(content, srcpath) {
 						content = content.replace("${thThymolSource}", fullFile);
-						return content.replace("${thJQuerySource}", jquerySource);
+						return content.replace("${thJQuerySource}", mavenProperties.bowerJQuerySource);
 					}
 				}
 			},
-		    thymol_min : {
+		    thymol_min_bower : {
 			    expand : true,
      			cwd : tmpDir,
 	    		src : [ "**/" + thymolFileMin ],
@@ -178,23 +178,73 @@ module.exports = function(grunt) {
 				    flatten : true,
 				    process : function(content, srcpath) {
 				   	    content = content.replace("${thThymolSource}", fullFileMin);
-					    return content.replace("${thJQuerySource}", jquerySource);
+					    return content.replace("${thJQuerySource}", mavenProperties.bowerJQuerySource);
 				    }
 			    }
 		    },
-		    thymol_main : {
+			thymol_sourceforge : {
+				expand : true,
+				cwd : tmpDir,
+				src : [ "**/" + thymolFile ],
+				dest : "sourceforge/",
+				options : {
+					flatten : true,
+					process : function(content, srcpath) {
+						content = content.replace("${thThymolSource}", fullFile);
+						return content.replace("${thJQuerySource}", mavenProperties.sourceforgeJQuerySource);
+					}
+				}
+			},
+		    thymol_min_sourceforge : {
+			    expand : true,
+     			cwd : tmpDir,
+	    		src : [ "**/" + thymolFileMin ],
+		    	dest : "sourceforge/",
+			    options : {
+				    flatten : true,
+				    process : function(content, srcpath) {
+				   	    content = content.replace("${thThymolSource}", fullFileMin);
+					    return content.replace("${thJQuerySource}", mavenProperties.sourceforgeJQuerySource);
+				    }
+			    }
+		    },
+		    thymol_min_jsdelivr : {
+			    expand : true,
+     			cwd : tmpDir,
+	    		src : [ "**/" + thymolFileMin ],
+		    	dest : "jsdelivr/",
+			    options : {
+				    flatten : true,
+				    process : function(content, srcpath) {
+				   	    content = content.replace("${thThymolSource}", fullFileMin);
+					    return content.replace("${thJQuerySource}", mavenProperties.jsdelivrJQuerySource);
+				    }
+			    }
+		    },
+		    thymol_main_bower : {
 			    expand : true,
      			cwd : tmpDir,
 	    		src : [ "**/thymol-full*.js", "**/thymol-lite*.js" ],
 		    	dest : "dist/"
+		    },		    
+		    thymol_main_sourceforge : {
+			    expand : true,
+     			cwd : tmpDir,
+	    		src : [ "**/thymol-full*.js", "**/thymol-lite*.js" ],
+		    	dest : "sourceforge/"
+		    },		    
+		    thymol_main_jsdelivr : {
+			    expand : true,
+     			cwd : tmpDir,
+	    		src : [ "**/thymol-full*min.js", "**/thymol-lite*min.js" ],
+		    	dest : "jsdelivr/"
 		    },		    
 			bower_dist : {
 				expand : true,
 				cwd : "dist/",
 				src : [ "**/*.js" ],
 				dest : bowerThymolDistPath
-			}		    
-
+			}
 		}
 		
 	});
