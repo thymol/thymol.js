@@ -35,6 +35,7 @@ public class ThymolTestApplication {
 		prefixResolver.setPrefix( prefix );
 		prefixResolver.setSuffix( ".html" );
 		prefixResolver.setCacheTTLMs( Long.valueOf( 3600000L ) );
+		prefixResolver.setCharacterEncoding( "UTF-8" );
 		templateEngine.addTemplateResolver( prefixResolver );		
 		if( locale != null ) {
 			Properties props = MessageResolutionUtils.loadCombinedMessagesFilesFromBaseName(null, null, "Messages", locale, null);
