@@ -4,7 +4,6 @@ import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriver.Timeouts;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 //import org.openqa.selenium.remote.DesiredCapabilities;
@@ -25,11 +24,6 @@ public class FirefoxFactory implements WebDriverFactory {
 		
 		WebDriver driver = new FirefoxDriver(profile);
 		driver.manage().timeouts().implicitlyWait( 2, TimeUnit.SECONDS );
-//		driver.manage().timeouts().implicitlyWait( 200, TimeUnit.MILLISECONDS );
-		
-		
-		
-		
 		return driver;
 	}
 
@@ -39,6 +33,5 @@ public class FirefoxFactory implements WebDriverFactory {
 		driver = null;
 		return driver;
 	}
-
 
 }
