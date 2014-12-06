@@ -65,7 +65,7 @@ public class Thymol20Cases extends SeleniumCases {
 
 	String prefix01Result = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again again\n" + 
 			"hello hello hello\n" + 
 			"User isn't in any known group\n" + 

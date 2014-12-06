@@ -1,5 +1,6 @@
 package org.thymoljs.thymol.test.selenium;
 
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.regex.Matcher;
@@ -156,7 +157,6 @@ public class SeleniumCases {
 		}		
 		WebElement body = null;
 		try {
-//			body = ( new WebDriverWait( driver, 1 ) ).until( new PageResponse(mode) );
 			body = ( new WebDriverWait( driver, 0 ) ).until( new PageResponse(mode) );
 		}
 		catch(Exception ex) {
@@ -203,7 +203,8 @@ public class SeleniumCases {
 					}
 					break;				
 				}
-			}		
+			}			
+			result = new String(result.getBytes(Charset.forName("utf-8")));			
 		}
 		else {
 			result = "**Result Processing Error no result**";			
