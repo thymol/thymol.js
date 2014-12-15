@@ -351,7 +351,7 @@ thymol = function() {
 		thiz.templatePath = "";				
 		if( !!document.location.href ) {
 			var templateName = templatePath = document.location.href;
-			thiz.templateName = templateName.substring(0, (templateName.indexOf(".") == -1) ? templateName.length : templateName.indexOf("."));
+			thiz.templateName = templateName.substring(0, (templateName.indexOf(".") == -1) ? templateName.length : templateName.lastIndexOf("."));
 			thiz.templatePath = templatePath.substring(0, (templatePath.indexOf("/") == -1) ? 0 : templatePath.lastIndexOf("/") + 1);
 		}		
 	}
