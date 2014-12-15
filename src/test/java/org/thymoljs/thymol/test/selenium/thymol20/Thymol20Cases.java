@@ -144,6 +144,24 @@ public class Thymol20Cases extends SeleniumCases {
 	}
 
 	@Test
+	public void prefix02a() {
+		localise("thymol20/prefix/");
+		String result = getResult( "prefix02a.html", ResultMode.TEXT );
+		if( expectThymolResult() ) {
+			assertEquals( clean( prefix01Result ), clean( result ) );			
+		}
+	}
+
+	@Test
+	public void prefix02b() {
+		localise("thymol20/prefix/");
+		String result = getResult( "prefix02b.html", ResultMode.TEXT );
+		if( expectThymolResult() ) {
+			assertEquals( clean( prefix01Result ), clean( result ) );			
+		}
+	}
+
+	@Test
 	public void prefix03() {
 		localise("thymol20/prefix/");
 		String result = getResult( "prefix03.html", ResultMode.TEXT );
