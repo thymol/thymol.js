@@ -262,8 +262,7 @@ public class SeleniumCases {
 		s1 = s1.replaceAll("    ", " ");
 		s1 = s1.replaceAll("   ", " ");
 		s1 = s1.replaceAll("  ", " ");
-		s1 = s1.replaceAll("> <", "><");
-		s1 = s1.replaceAll(" </", "</");
+		s1 = s1.replaceAll(" <", "<");
 
 		s1 = replaceSortedFields(s1);
 		
