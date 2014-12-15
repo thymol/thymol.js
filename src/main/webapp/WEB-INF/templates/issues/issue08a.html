@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>Error creating dynamically RequestParam URL with Thymeleaf td4028637</title>
+</head>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"></script>
+<script th:remove="all">
+thymol.ready(function () {
+  thymol.configurePreExecution( function() {
+    thymol.applicationContext.createVariable("images_paths", thymol.objects.thListsObject.toList([ "path_image_one", "path_image_two" ]) );
+  });
+});
+</script>
+<body>
+  <div th:each="images_path : ${images_paths}">
+    <img th:src="@{/image/(id=${images_path})}"/>
+  </div>
+</body>
+</html>
