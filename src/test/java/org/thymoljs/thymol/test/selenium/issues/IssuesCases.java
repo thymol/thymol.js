@@ -15,7 +15,7 @@ public class IssuesCases extends SeleniumCases {
 			"<table>\n" +
 			"<tbody>\n" +
 			"<tr>\n" +
-			"<td style=\"padding: 0px 21px 0px 21px;\" align=\"right\" valign=\"center\">\n" +
+			"<td style=\"padding: 0px 21px 0px 21px;\" valign=\"center\" align=\"right\">\n" +
 			"<span>Card Issue No.</span>\n" +
 			"<span>01</span>\n" +
 			"</td>\n" +
@@ -65,6 +65,11 @@ public class IssuesCases extends SeleniumCases {
 			"</tbody></table>\n" +
 			"\n\n";
 
+	String issue08aResult = 
+			"\n" +
+			"<div><img src=\"/image/?id=path_image_one\"></div><div><img src=\"/image/?id=path_image_two\"></div>\n" +
+			"\n\n";
+
 	@Test
 	public void issue01() {
 		localise("issues/");
@@ -104,10 +109,18 @@ public class IssuesCases extends SeleniumCases {
 	}
 
 	@Test
+	public void issue08a() {
+		localise("issues/");
+		String result = getResult( "issue08a.html", ResultMode.HTML );
+		assertEquals( clean( issue08aResult ), clean( result ) );
+	}
+
+	@Test
 	public void issue08_ru_RU() {
 		localise("issues/", new Locale( "ru", "RU", "" ) );
 		String result = getResult("issue08_russian.html", ResultMode.HTML);
 		assertEquals(clean(issue08Result_ru_RU), clean(result));
+		localise("issues/", new Locale( "en", "GB", "" ));
 	}
 
 }
