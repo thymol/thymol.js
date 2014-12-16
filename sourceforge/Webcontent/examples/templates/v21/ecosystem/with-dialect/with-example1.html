@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:with="http://www.thymeleaf.org/extras/with">
+<head>
+    <script type="text/javascript" src="../../../../../../thymol.js" data-thymol-load="with-dialect.js"></script>
+</head>
+<body>
+    <div with:isActive="${true}"
+         with:hello="'Hello'"
+         with:helloWorld="${hello} + ' World'"
+         with:helloUnderWorld="${hello + ' Under World'}"
+         with:someCalc="${2 + 4}"
+         with:moreCalc="${somecalc + 10}">
+        <div th:text="${isactive}">(should be) true</div>
+        <div th:text="${hello}">(should be) Hello</div>
+        <div th:text="${helloworld}">(should be) Hello World</div>
+        <div th:text="${hellounderworld}">(should be) Hello Under World</div>
+        <div th:text="${somecalc}">(should be) 6</div>
+        <div th:text="${morecalc}">(should be) 16</div>
+        <div with:evenMoreCalc="${morecalc + 5}" th:text="${evenmorecalc}">(should be) 21</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>simple example</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../../thymol.js" data-thymol-load="setThPath.js"></script>
+<body>
+  <p>Welcome to our <b>fantastic</b> grocery store!</p>
+  <p th:text="${home.welcome}">Good day!</p>
+  <p th:utext="${home.welcome}">Bonjour!</p>
+  <p><a href="index.html">Back</a></p>
+</body>
+</html>

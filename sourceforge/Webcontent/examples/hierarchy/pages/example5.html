@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragment/common::headerFragment" >
+    <script th:remove="all" type="text/javascript" src="../../../../thymol.js" data-thymol-load="pages.js"></script>
+</head>
+<body>
+<div class="container">
+	<br/>
+	<div class="span10 offset1">
+<!-- 		<span th:text="${'Current date is : '+beans.dateFormatter.getCurrentDate()}">Current date is : 2012-04-14 17:30:00</span> -->
+		<span th:text="${'Current date is : '+#dates.dateFormat(#dates.createToday(),'dd-MMM-yyyy')}">Current date is : 2012-04-14 17:30:00</span>
+		<br/><br/>
+ 		<span th:text="${'The application name is : '+T(doan.thymeleaf.demo.util.Constants).APPLICATION_NAME}">The application name is : Test</span>
+		<br/><br/>
+		<table class="table table-bordered">
+			<thead>
+				<tr class="center middle">
+					<th >#</th>
+					<th>Name</th> 
+					<th>Discography</th>
+					<th>Bio</th>
+				</tr>
+			</thead> 
+			<tbody>
+<!-- 				<tr th:each="artist,rowStat : ${listArtits.?[alive == true]}"> -->
+				<tr th:each="artist,rowStat : ${listArtits}">
+					<td class="center middle" th:text="${rowStat.count}">1</td>
+					<td class="center middle" th:text="${artist.name}">Michael Jackson</td>
+					<td class="center middle" th:text="${artist.discography}">Got to Be There, Ben, Music &amp; Me, Forever Michael...</td>
+					<td class="center middle" th:text="${artist.bio}">Michael Joseph Jackson (August 29, 1958 - June 25, 2009) was an American recording artist, entertainer, and businessman...</td>
+				</tr>
+				<tr th:remove="all">
+					<td class="center middle">2</td>
+					<td class="center middle">Madonna</td>
+					<td class="center middle">Madonna, Like a Virgin, True Blue...</td>
+					<td class="center middle">Madonna (born Madonna Louise Ciccone August 16, 1958) is an American singer, songwriter, actress and entrepreneur...</td>				
+				</tr>
+				<tr th:remove="all">
+					<td class="center middle">3</td>
+					<td class="center middle">Elton John</td>
+					<td class="center middle">Empty Sky, Elton John, Tumbleweed Connection...</td>
+					<td class="center middle">Sir Elton Hercules John, CBE (born Reginald Kenneth Dwight on 25 March 1947) is an English rock singer-songwriter, composer, pianist and occasional actor....</td>				
+				</tr>				
+			</tbody>
+		</table>
+		<br/><br/>
+		<table class="table table-bordered">
+			<thead>
+				<tr class="center middle">
+					<th class="center middle">#</th>
+					<th class="center middle">Name</th> 
+				</tr>
+			</thead> 
+			<tbody>
+<!-- 				<tr th:each="artist,rowStat : ${listArtits.![firstname+' '+lastname]}"> -->
+				<tr th:each="artist,rowStat : ${listArtits}">
+					<td class="center middle" th:text="${rowStat.count}">1</td>
+<!-- 					<td class="center middle" th:text="${artist}">Michael Jackson</td> -->
+					<td class="center middle" th:text="${artist.firstname+' '+artist.lastname}">Michael Jackson</td>
+				</tr>
+				<tr th:remove="all">
+					<td class="center middle">2</td>
+					<td class="center middle">Madonna</td>
+				</tr>
+				<tr th:remove="all">
+					<td class="center middle">3</td>
+					<td class="center middle">Elton John</td>
+				</tr>				
+			</tbody>
+		</table>								
+	</div>
+    <div th:include="fragment/common::footer"></div>
+</div>
+</body>
+</html>

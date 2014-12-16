@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>simple example</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../../thymol.js" data-thymol-load="setThPath.js"></script>
+<body>
+	<ul>
+		<li><a href="#" th:href="@{/examples/templates/thattrs/product/list.html}">Product List 1</a></li>
+		<li><a href="#" th:href="@{'file://'+thRoot+thPath+'product/list.html'}">Product List 3</a></li>
+		<li><a href="#" th:href="@{full}">Alternative List 1</a></li>
+		<li><a href="#" th:href="@{path+'/'+page}">Alternative List 2</a></li>
+		<li><a href="#" th:attr="href=@{path+'/'+page}">Alternative List 3</a></li>
+		<li><a href="#" th:attr="href=@{path}" th:attrappend="href=${'/'+page}">Alternative List 4</a></li>
+		<li><a href="#" th:attr="href=@{page}" th:attrprepend="href=${path+'/'}">Alternative List 5</a></li>
+	</ul>
+	<p><a href="index.html">Back</a></p>
+</body>
+</html>

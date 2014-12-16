@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Local variable error</title>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type"/>
+</head>
+<script th:remove="all" type="text/javascript" src="file:///home/jim/Project/thymol-2.x/bower_components/thymol/dist/thymol.js"></script>
+<body>
+    <div class="container">
+
+        <p>Main include start</p>
+        <div th:include=":: includeTemplate ('Main include')">
+        </div>
+        <p>Main include end</p>
+
+        <p>Main replace start</p>
+        <div th:replace=":: replaceTemplate ('Main replace')">
+        </div>
+        <p>Main replace end</p>
+
+    </div>
+
+    <div th:remove="all">
+        Templates:
+
+        <div th:fragment="includeTemplate (value)">
+            <p>Include template value: <span th:text="${value}">Test</span></p>
+
+            <div th:include=":: subIncludeTemplate ('Sub include')">
+            </div>
+        </div>
+
+        <div th:fragment="subIncludeTemplate (value)">
+            <p>Sub include template value: <span th:text="${value}">Test</span></p>
+        </div>
+
+        <div th:fragment="replaceTemplate (value)">
+            <p>Replace template value: <span th:text="${value}">Test</span></p>
+
+            <div th:replace=":: subReplaceTemplate ('Sub replace')">
+            </div>
+        </div>
+
+        <div th:fragment="subReplaceTemplate (value)">
+            <p>Sub replace template value: <span th:text="${value}">Test</span></p>
+        </div>
+
+    </div>
+	<p><a href="index.html">Back</a></p>
+
+</body>
+</html>

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<title>simple example</title>
+</head>
+<script th:remove="all" type="text/javascript" src="../../../../thymol.js" data-thymol-load="setThPath.js"></script>
+<body>
+	<ul>
+		<li><p th:nowrap="${trueValue}">nowrap true</p></li>
+		<li><p th:nowrap="${falseValue}">nowrap false</p></li>
+		<li><p th:nowrap>nowrap null</p></li>
+		<li><p th:pubdate="${trueValue}">pubdate true</p></li>
+		<li><p th:pubdate="${falseValue}">pubdate false</p></li>
+		<li><p th:pubdate>pubdate null</p></li>
+	</ul>
+	<p><a href="index.html">Back</a></p>
+</body>
+</html>

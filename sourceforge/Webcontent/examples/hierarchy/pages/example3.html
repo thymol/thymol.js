@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="fragment/common::headerFragment" >
+    <script th:remove="all" type="text/javascript" src="../../../../thymol.js" data-thymol-load="pages.js"></script>
+</head>
+<body>
+<div class="container">
+	<br/>
+	<br/>
+	<br/>
+	<div class="span10 offset1">
+		<div class="alert alert-error alert-block" th:if="${error != null}">
+			<h4 class="alert-heading">Error!</h4>
+			 An unexpected error occurs, please contact the support team
+		</div>
+		<div class="alert alert-success alert-block" th:unless="${error != null}">
+			<h4 class="alert-heading">Success!</h4>
+			 There is no error
+		</div>		
+		<br/>
+		<span class="alert alert-success" th:text="${realText}">This is an unescaped sample text</span>
+		<br/>
+		<br/>
+		<span class="alert alert-success" th:utext="${realEscapedText}">This is a sample <strong>escaped</strong> text</span>
+		<br/><br/>
+		<div th:switch="${switchCase}"> 
+			<p th:case="1">Case 1</p> 
+			<p th:case="2">Case 2</p>
+			<p th:case="3">Case 3</p>
+			<p th:case="4">Case 4</p>
+		</div>
+		<br/>
+		<a href="#" 
+			data-url="http://www.google.com"
+			title="Link to Google"
+			th:attr="data-url=${dataUrl},title=${realTitle}"
+			th:text="${dataUrl}">
+			http://www.google.com
+		</a>
+		<br/><br/>
+		<input class="input-medium"
+			type="text"
+			value="Name input"
+			th:value="${nameInput}">
+		</input>
+		<br/><br/>
+		<table class="table table-bordered">
+			<thead>
+				<tr class="center middle">
+					<th>Name</th>
+					<th>Row count</th>
+					<th>Row index</th>
+					<th>List size</th>
+					<th>Even count</th>
+					<th>Odd count</th>
+					<th>First item</th>
+					<th>Last item</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="artist,rowStat : ${listArtits}">
+					<td class="center middle" th:text="${rowStat.current.name}">Michael Jackson</td>
+					<td class="center middle" th:text="${rowStat.count}">1</td>
+					<td class="center middle" th:text="${rowStat.index}">0</td>
+					<td class="center middle" th:text="${rowStat.size}">1</td>
+					<td class="center middle" th:text="${rowStat.even}">false</td>
+					<td class="center middle" th:text="${rowStat.odd}">true</td>
+					<td class="center middle" th:text="${rowStat.first}">true</td>
+					<td class="center middle" th:text="${rowStat.last}">true</td>
+				</tr>
+			</tbody>
+		</table>
+		<br/><br/>
+		<div th:with="currentArtist=${listArtits[1]}">
+			<span class="label label-important" th:text="${currentArtist.name}">Michael Jackson</span><br/>
+			<span class="label label-info" th:text="${currentArtist.bio}">Michael Joseph Jackson (August 29, 1958 - June 25, 2009) was an American recording artist, entertainer, and businessman...</span><br/>
+			<span class="label label-inverse" th:text="${currentArtist.discography}">Got to Be There, B...</span>
+		</div>
+		<br/><br/>
+		<div th:object="${listArtits[0]}">
+			<span class="label label-important" th:text="*{name}">Michael Jackson</span><br/>
+			<span class="label label-info" th:text="*{bio}">Michael Joseph Jackson (August 29, 1958 - June 25, 2009) was an American recording artist, entertainer, and businessman...</span><br/>
+			<span class="label label-inverse" th:text="*{discography}">Got to Be There, B...</span>
+		</div>
+		<br/><br/>
+		<table class="table table-bordered">
+			<thead>
+				<tr class="center middle">
+					<th>#</th>
+					<th>Name</th>
+					<th>Discography</th>
+					<th>Bio</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:each="artist,rowStat : ${listArtits}">
+					<td class="center middle" th:text="${rowStat.count}">1</td>
+					<td class="center middle" th:text="${artist.name}">Michael Jackson</td>
+					<td class="center middle" th:text="${artist.discography}">Got to Be There, Ben, Music &amp; Me, Forever Michael...</td>
+					<td class="center middle" th:text="${artist.bio}">Michael Joseph Jackson (August 29, 1958 - June 25, 2009) was an American recording artist, entertainer, and businessman...</td>
+				</tr>
+				<tr th:remove="all">
+					<td class="center middle">2</td>
+					<td class="center middle">Madonna</td>
+					<td class="center middle">Madonna, Like a Virgin, True Blue...</td>
+					<td class="center middle">Madonna (born Madonna Louise Ciccone August 16, 1958) is an American singer, songwriter, actress and entrepreneur...</td>				
+				</tr>
+				<tr th:remove="all">
+					<td class="center middle">3</td>
+					<td class="center middle">Elton John</td>
+					<td class="center middle">Empty Sky, Elton John, Tumbleweed Connection...</td>
+					<td class="center middle">Sir Elton Hercules John, CBE (born Reginald Kenneth Dwight on 25 March 1947) is an English rock singer-songwriter, composer, pianist and occasional actor....</td>				
+				</tr>				
+			</tbody>
+		</table>				
+	</div>
+</div>
+</body>
+</html>
