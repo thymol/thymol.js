@@ -1192,7 +1192,11 @@ var receipt = {
 		ctx.setVariable( "birthDate1", bDate );
 		ctx.setVariable( "birthDate2", bDate );
 
-				
+//images_paths		
+		
+		List<String> imagesPaths = Arrays.asList( new String[] { "path_image_one", "path_image_two" } );
+		ctx.setVariable( "images_paths", imagesPaths );
+		
 	}
 	
 	public static class JunkObject {

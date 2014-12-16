@@ -41,7 +41,7 @@ public class AssertCases21 extends SeleniumCases {
 			"\n\n";	 			
 
 	String assert05ResultThymol = 		
-			"thymol.processAssert assertion failure - list is: ${onevar01},(${twovar01} < 10) false term is: \"(${twovar01} < 10)\"";	 			
+			"thymol.processAssert assertion failure - list is: ${onevar01},(${twovar01}< 10) false term is: \"(${twovar01}< 10)\"";	 			
 	
 	String assert05ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +

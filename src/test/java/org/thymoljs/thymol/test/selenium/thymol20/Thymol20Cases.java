@@ -65,7 +65,7 @@ public class Thymol20Cases extends SeleniumCases {
 
 	String prefix01Result = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again again\n" + 
 			"hello hello hello\n" + 
 			"User isn't in any known group\n" + 
@@ -138,6 +138,24 @@ public class Thymol20Cases extends SeleniumCases {
 	public void prefix02() {
 		localise("thymol20/prefix/");
 		String result = getResult( "prefix02.html", ResultMode.TEXT );
+		if( expectThymolResult() ) {
+			assertEquals( clean( prefix01Result ), clean( result ) );			
+		}
+	}
+
+	@Test
+	public void prefix02a() {
+		localise("thymol20/prefix/");
+		String result = getResult( "prefix02a.html", ResultMode.TEXT );
+		if( expectThymolResult() ) {
+			assertEquals( clean( prefix01Result ), clean( result ) );			
+		}
+	}
+
+	@Test
+	public void prefix02b() {
+		localise("thymol20/prefix/");
+		String result = getResult( "prefix02b.html", ResultMode.TEXT );
 		if( expectThymolResult() ) {
 			assertEquals( clean( prefix01Result ), clean( result ) );			
 		}

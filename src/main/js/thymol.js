@@ -1,4 +1,5 @@
 ( function() {
+	
 	var thymolConfiguration = {
 		// Please set the values of the following fields!
 		thScriptName : "${thThymolSource}",

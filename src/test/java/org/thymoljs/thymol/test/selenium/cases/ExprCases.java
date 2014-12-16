@@ -14,7 +14,7 @@ public class ExprCases extends SeleniumCases {
 
 	String noParametersResult = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again again\n" + 
 			"hello hello hello\n" + 
 			"User isn't in any known group\n" + 
@@ -22,24 +22,24 @@ public class ExprCases extends SeleniumCases {
 
 	String visitedTrueResult = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again\n" + 
 			"do I know you?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello hello hello\n" + 
 			"0,0 0,1\n" + 
 			"1,0 1,1\n" + 
 			"do we know each other?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"User isn't in any known group\n" + 
 			"hello again\n" + 
 			"do you know me?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"Back";
 
 	String visitedFalseResult = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again again\n" + 
 			"hello hello hello\n" + 
 			"User isn't in any known group\n" + 
@@ -47,24 +47,24 @@ public class ExprCases extends SeleniumCases {
 
 	String visitedJunkResult = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again\n" + 
 			"do I know you?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello hello hello\n" + 
 			"0,0 0,1\n" + 
 			"1,0 1,1\n" + 
 			"do we know each other?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"User isn't in any known group\n" + 
 			"hello again\n" + 
 			"do you know me?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"Back";
 
 	String firstNameFredResult = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again again\n" + 
 			"hello hello hello\n" + 
 			"User is one of the Bloggs\n" + 
@@ -72,7 +72,7 @@ public class ExprCases extends SeleniumCases {
 
 	String firstNameSollyResult = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again again\n" + 
 			"hello hello hello\n" + 
 			"User is a member of Grundy\n" + 
@@ -80,7 +80,7 @@ public class ExprCases extends SeleniumCases {
 
 	String firstNameJunkResult = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again again\n" + 
 			"hello hello hello\n" + 
 			"User isn't in any known group\n" + 
@@ -88,57 +88,57 @@ public class ExprCases extends SeleniumCases {
 
 	String visitedTrueAndFredResult = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again\n" + 
 			"do I know you?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello hello hello\n" + 
 			"0,0 0,1\n" + 
 			"1,0 1,1\n" + 
 			"do we know each other?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"User is one of the Bloggs\n" + 
 			"hello again\n" + 
 			"do you know me?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"Back";
 
 	String visitedTrueAndSollyResult = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again\n" + 
 			"do I know you?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello hello hello\n" + 
 			"0,0 0,1\n" + 
 			"1,0 1,1\n" + 
 			"do we know each other?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"User is a member of Grundy\n" + 
 			"hello again\n" + "do you know me?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"Back";
 
 	String visitedTrueAndJunkResult = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again\n" + 
 			"do I know you?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello hello hello\n" + 
 			"0,0 0,1\n" + 
 			"1,0 1,1\n" + 
 			"do we know each other?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"User isn't in any known group\n" + 
 			"hello again\n" + 
 			"do you know me?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"Back";
 	
 	String visitedFalseAndFredResult = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again again\n" + 
 			"hello hello hello\n" + 
 			"User is one of the Bloggs\n" + 
@@ -146,7 +146,7 @@ public class ExprCases extends SeleniumCases {
 
 	String visitedFalseAndSollyResult = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again again\n" + 
 			"hello hello hello\n" + 
 			"User is a member of Grundy\n" + 
@@ -154,7 +154,7 @@ public class ExprCases extends SeleniumCases {
 
 	String visitedFalseAndJunkResult = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again again\n" + 
 			"hello hello hello\n" + 
 			"User isn't in any known group\n" + 
@@ -172,15 +172,15 @@ public class ExprCases extends SeleniumCases {
 	
 	String firstFileNameVisitedTrueAndFredResult = 
 			"hello\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello again\n" + 
 			"do I know you?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"hello hello hello\n" + 
 			"User is one of the Bloggs\n" + 
 			"hello again\n" + 
 			"do you know me?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"Back";
 	
 	String secondFileNameVisitedTrueAndFredResult = 
@@ -191,7 +191,7 @@ public class ExprCases extends SeleniumCases {
 			"0,0 0,1\n" + 
 			"1,0 1,1\n" + 
 			"do we know each other?\n" + 
-			"© 2011 The Good Thymes Virtual Grocery\n" + 
+			"\u00a9 2011 The Good Thymes Virtual Grocery\n" + 
 			"User is one of the Bloggs\n" + 
 			"hello again\n" + 
 			"do you know me?\n" + 
@@ -200,7 +200,7 @@ public class ExprCases extends SeleniumCases {
 /*	String noParametersResult = 
 			"\n" +
 			"\t\t<div style=\"color: red;\">hello</div>\n" +
-			"\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t<div></div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: blue;\">hello again again</div>\n" +
@@ -220,14 +220,14 @@ public class ExprCases extends SeleniumCases {
 	String visitedTrueResult = 
 			"\n" +
 			"\t\t<div style=\"color: red;\">hello</div>\n" +
-			"\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: green;\">hello again</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<div></div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: green;\">do I know you?</div>\n" +
-			"\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<div style=\"color: red;\">hello hello hello</div>\n" +
 			"\t\t<div>\n" +
@@ -243,7 +243,7 @@ public class ExprCases extends SeleniumCases {
 			"\t\t</table>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<span style=\"color: green;\">do we know each other?</span>\n" +
-			"\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t</div>\n" +
 			"\t</body>\n" +
 			"</div>\n" +
@@ -257,7 +257,7 @@ public class ExprCases extends SeleniumCases {
 			"\t\t\t<div style=\"color: orange;\">hello again</div>\n" +
 			"\t\t\t<div>\n" +
 			"\t\t\t\t<div style=\"color: purple;\">do you know me?</div>\n" +
-			"\t\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t\t</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<p><a href=\"index.html\">Back</a></p>\n" +
@@ -266,7 +266,7 @@ public class ExprCases extends SeleniumCases {
 	String visitedFalseResult = 
 			"\n" +
 			"\t\t<div style=\"color: red;\">hello</div>\n" +
-			"\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t<div></div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: blue;\">hello again again</div>\n" +
@@ -286,14 +286,14 @@ public class ExprCases extends SeleniumCases {
 	String visitedJunkResult = 
 			"\n" +
 			"\t\t<div style=\"color: red;\">hello</div>\n" +
-			"\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: green;\">hello again</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<div></div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: green;\">do I know you?</div>\n" +
-			"\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<div style=\"color: red;\">hello hello hello</div>\n" +
 			"\t\t<div>\n" +
@@ -309,7 +309,7 @@ public class ExprCases extends SeleniumCases {
 			"\t\t</table>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<span style=\"color: green;\">do we know each other?</span>\n" +
-			"\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t</div>\n" +
 			"\t</body>\n" +
 			"</div>\n" +
@@ -323,7 +323,7 @@ public class ExprCases extends SeleniumCases {
 			"\t\t\t<div style=\"color: orange;\">hello again</div>\n" +
 			"\t\t\t<div>\n" +
 			"\t\t\t\t<div style=\"color: purple;\">do you know me?</div>\n" +
-			"\t\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t\t</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<p><a href=\"index.html\">Back</a></p>\n" +
@@ -332,7 +332,7 @@ public class ExprCases extends SeleniumCases {
 	String firstNameFredResult = 
 			"\n" +
 			"\t\t<div style=\"color: red;\">hello</div>\n" +
-			"\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t<div></div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: blue;\">hello again again</div>\n" +
@@ -352,7 +352,7 @@ public class ExprCases extends SeleniumCases {
 	String firstNameSollyResult = 
 			"\n" +
 			"\t\t<div style=\"color: red;\">hello</div>\n" +
-			"\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t<div></div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: blue;\">hello again again</div>\n" +
@@ -372,7 +372,7 @@ public class ExprCases extends SeleniumCases {
 	String firstNameJunkResult = 
 			"\n" +
 			"\t\t<div style=\"color: red;\">hello</div>\n" +
-			"\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t<div></div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: blue;\">hello again again</div>\n" +
@@ -392,14 +392,14 @@ public class ExprCases extends SeleniumCases {
 	String visitedTrueAndFredResult = 
 			"\n" +
 			"\t\t<div style=\"color: red;\">hello</div>\n" +
-			"\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: green;\">hello again</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<div></div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: green;\">do I know you?</div>\n" +
-			"\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<div style=\"color: red;\">hello hello hello</div>\n" +
 			"\t\t<div>\n" +
@@ -415,7 +415,7 @@ public class ExprCases extends SeleniumCases {
 			"\t\t</table>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<span style=\"color: green;\">do we know each other?</span>\n" +
-			"\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t</div>\n" +
 			"\t</body>\n" +
 			"</div>\n" +
@@ -429,7 +429,7 @@ public class ExprCases extends SeleniumCases {
 			"\t\t\t<div style=\"color: orange;\">hello again</div>\n" +
 			"\t\t\t<div>\n" +
 			"\t\t\t\t<div style=\"color: purple;\">do you know me?</div>\n" +
-			"\t\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t\t</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<p><a href=\"index.html\">Back</a></p>\n" +
@@ -438,14 +438,14 @@ public class ExprCases extends SeleniumCases {
 	String visitedTrueAndSollyResult = 
 			"\n" +
 			"\t\t<div style=\"color: red;\">hello</div>\n" +
-			"\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: green;\">hello again</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<div></div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: green;\">do I know you?</div>\n" +
-			"\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<div style=\"color: red;\">hello hello hello</div>\n" +
 			"\t\t<div>\n" +
@@ -461,7 +461,7 @@ public class ExprCases extends SeleniumCases {
 			"\t\t</table>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<span style=\"color: green;\">do we know each other?</span>\n" +
-			"\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t</div>\n" +
 			"\t</body>\n" +
 			"</div>\n" +
@@ -475,7 +475,7 @@ public class ExprCases extends SeleniumCases {
 			"\t\t\t<div style=\"color: orange;\">hello again</div>\n" +
 			"\t\t\t<div>\n" +
 			"\t\t\t\t<div style=\"color: purple;\">do you know me?</div>\n" +
-			"\t\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t\t</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<p><a href=\"index.html\">Back</a></p>\n" +
@@ -484,14 +484,14 @@ public class ExprCases extends SeleniumCases {
 	String visitedTrueAndJunkResult = 
 			"\n" +
 			"\t\t<div style=\"color: red;\">hello</div>\n" +
-			"\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: green;\">hello again</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<div></div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: green;\">do I know you?</div>\n" +
-			"\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<div style=\"color: red;\">hello hello hello</div>\n" +
 			"\t\t<div>\n" +
@@ -507,7 +507,7 @@ public class ExprCases extends SeleniumCases {
 			"\t\t</table>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<span style=\"color: green;\">do we know each other?</span>\n" +
-			"\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t</div>\n" +
 			"\t</body>\n" +
 			"</div>\n" +
@@ -521,7 +521,7 @@ public class ExprCases extends SeleniumCases {
 			"\t\t\t<div style=\"color: orange;\">hello again</div>\n" +
 			"\t\t\t<div>\n" +
 			"\t\t\t\t<div style=\"color: purple;\">do you know me?</div>\n" +
-			"\t\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t\t</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<p><a href=\"index.html\">Back</a></p>\n" +
@@ -530,7 +530,7 @@ public class ExprCases extends SeleniumCases {
 	String visitedFalseAndFredResult = 
 			"\n" +
 			"\t\t<div style=\"color: red;\">hello</div>\n" +
-			"\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t<div></div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: blue;\">hello again again</div>\n" +
@@ -550,7 +550,7 @@ public class ExprCases extends SeleniumCases {
 	String visitedFalseAndSollyResult = 
 			"\n" +
 			"\t\t<div style=\"color: red;\">hello</div>\n" +
-			"\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t<div></div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: blue;\">hello again again</div>\n" +
@@ -570,7 +570,7 @@ public class ExprCases extends SeleniumCases {
 	String visitedFalseAndJunkResult = 
 			"\n" +
 			"\t\t<div style=\"color: red;\">hello</div>\n" +
-			"\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t<div></div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: blue;\">hello again again</div>\n" +
@@ -625,14 +625,14 @@ public class ExprCases extends SeleniumCases {
 	String firstFileNameVisitedTrueAndFredResult = 
 			"\n" +
 			"\t\t<div style=\"color: red;\">hello</div>\n" +
-			"\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: green;\">hello again</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<div></div>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<div style=\"color: green;\">do I know you?</div>\n" +
-			"\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<div style=\"color: red;\">hello hello hello</div>\n" +
 			"\t\t<div>\n" +
@@ -648,7 +648,7 @@ public class ExprCases extends SeleniumCases {
 			"\t\t\t<div style=\"color: orange;\">hello again</div>\n" +
 			"\t\t\t<div>\n" +
 			"\t\t\t\t<div style=\"color: purple;\">do you know me?</div>\n" +
-			"\t\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t\t</div>\n" +
 			"\t\t</div>\n" +
 			"\t\t<p><a href=\"index.html\">Back</a></p>\n" +
@@ -682,7 +682,7 @@ public class ExprCases extends SeleniumCases {
 			"\t\t</table>\n" +
 			"\t\t<div>\n" +
 			"\t\t\t<span style=\"color: green;\">do we know each other?</span>\n" +
-			"\t\t\t<div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			"\t\t\t<div>\u00a9 2011 The Good Thymes Virtual Grocery</div>\n" +
 			"\t\t</div>\n" +
 			"\t</body>\n" +
 			"</div>\n" +

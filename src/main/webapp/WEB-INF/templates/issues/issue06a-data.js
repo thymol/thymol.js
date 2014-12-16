@@ -1,3 +1,4 @@
+Date.prototype.toString = Date.prototype.toUTCString;
 thDebug = true;
 thymol.ready(function () {
 	thymol.configurePreExecution( function() {

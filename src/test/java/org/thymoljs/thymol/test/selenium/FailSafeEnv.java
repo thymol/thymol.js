@@ -67,12 +67,14 @@ public class FailSafeEnv implements URIGetter {
 				sb.append( ThymolTestFilter.UPDATE_PREFIX_URI );
 				sb.append( key );
 				readBack = new URL( sb.toString() );
-				readBack.getContent();
+				try {
+					readBack.getContent();
+				}
+				catch( IOException ioe) {
+					System.out.println("readBack.getContent failed: " + sb.toString());
+				}
 			}
 			catch( MalformedURLException e ) {
-				e.printStackTrace();
-			}
-			catch( IOException e ) {
 				e.printStackTrace();
 			}
 			knownPrefixes.add( key );

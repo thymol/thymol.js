@@ -1,3 +1,5 @@
 {
-	"pathToJquery": "${thJQuerySource}"
+	"bowerJQuerySource": "${thBowerJQuerySource}",
+	"sourceforgeJQuerySource": "${thSourceforgeJQuerySource}",
+	"jsdelivrJQuerySource": "${thJsdelivrJQuerySource}"
 }

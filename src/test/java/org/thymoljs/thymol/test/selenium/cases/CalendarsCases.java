@@ -2,13 +2,22 @@ package org.thymoljs.thymol.test.selenium.cases;
 
 import static junit.framework.Assert.assertEquals;
 
+import java.util.Locale;
+
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class CalendarsCases extends SeleniumCases {
 	
-	String calendars01Result =
+	String calendars01ResultThymol =
+			"\n" +
+			"\t\t<p>12 October 1992 00:00:00 GMT</p>\n" +
+			"\t\t<p>12 October 1732 00:00:00 GMT</p>\n" +
+			"\t\n" +
+			"\n\n";	
+		
+	String calendars01ResultThymeleaf =
 			"\n" +
 			"\t\t<p>12 October 1992 00:00:00 BST</p>\n" +
 			"\t\t<p>12 October 1732 00:00:00 GMT</p>\n" +
@@ -23,7 +32,20 @@ public class CalendarsCases extends SeleniumCases {
 	        "\t\n" +
 			"\n\n";	
 		
-	String calendars03Result =
+	String calendars03ResultThymol =
+			"\n" +
+			"\t\t<p>12 October 1492 00:00:00 GMT</p>\n" +
+			"\t\t<p>02 September 1666 00:00:00 GMT</p>\n" +
+			"\t\t<p>16 December 1835 00:00:00 GMT</p>\n" +
+			"\t\t<p>03 May 1901 00:00:00 GMT</p>\n" +
+			"\t\t<p>13 September 1922 00:00:00 GMT</p>\n" +
+			"\t\t<p>Array of calendars: <span><span>12 October 1492 00:00:00 GMT</span><span>, </span></span><span><span>02 September 1666 00:00:00 GMT</span><span>, </span></span><span><span>16 December 1835 00:00:00 GMT</span><span>, </span></span><span><span>03 May 1901 00:00:00 GMT</span><span>, </span></span><span><span>13 September 1922 00:00:00 GMT</span><span></span></span></p>\n" +
+			"\t\t<p>Set of calendars: <span id=\"sort\"> 02 September 1666 00:00:00 GMT, 03 May 1901 00:00:00 GMT, 12 October 1492 00:00:00 GMT, 13 September 1922 00:00:00 GMT, 16 December 1835 00:00:00 GMT</span></p>\n" +					
+			"\t\n" +
+			"\n\n\n\n" +
+			"\n\n";	
+	
+	String calendars03ResultThymeleaf =
 			"\n" +
 			"\t\t<p>12 October 1492 00:00:00 GMT</p>\n" +
 			"\t\t<p>02 September 1666 00:00:00 GMT</p>\n" +
@@ -190,9 +212,14 @@ public class CalendarsCases extends SeleniumCases {
 	
 	@Test
 	public void calendars01() {
-		localise( "thymol/calendars/" );
+		localise( "thymol/calendars/", new Locale( "en", "GB", "" ) );
 		String result = getResult( "calendars01.html", ResultMode.HTML );
-		assertEquals( clean( calendars01Result ), clean( result ) );
+		if( expectThymolResult() ) {
+			assertEquals( clean( calendars01ResultThymol ), clean( result ) );
+		}
+		else {
+			assertEquals( clean( calendars01ResultThymeleaf ), clean( result ) );
+		}
 	}
 
 	@Test
@@ -204,9 +231,14 @@ public class CalendarsCases extends SeleniumCases {
 
 	@Test
 	public void calendars03() {
-		localise( "thymol/calendars/" );
+		localise( "thymol/calendars/", new Locale( "en", "GB", "" ) );
 		String result = getResult( "calendars03.html", ResultMode.HTML );
-		assertEquals( clean( calendars03Result ), clean( result ) );
+		if( expectThymolResult() ) {
+			assertEquals( clean( calendars03ResultThymol ), clean( result ) );
+		}
+		else {
+			assertEquals( clean( calendars03ResultThymeleaf ), clean( result ) );
+		}
 	}
 
 	@Test
