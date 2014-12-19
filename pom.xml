@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.thymoljs</groupId>
@@ -33,7 +32,6 @@
 		<javagalician-version>1.1</javagalician-version>
 		<m2e-lifecycle-mapping-version>1.0.0</m2e-lifecycle-mapping-version>
 		<filtering-value>true</filtering-value>
-		<thInstall>file://${project.basedir}/bower_components/thymol/dist</thInstall>
 		<theWarName>${project.artifactId}-${project.version}</theWarName>
 		<thThymolPath>${project.basedir}/bower_components/thymol/dist/</thThymolPath>
 		<thThymolSource>thymol-full.js</thThymolSource>
@@ -133,11 +131,13 @@
 	<build>
 
 		<finalName>${theWarName}</finalName>
-
+		<filters>
+			<filter>${project.basedir}/src/build/test.properties</filter>
+		</filters>
 		<resources>
 			<resource>
 				<directory>src/main/webapp/WEB-INF/templates</directory>
-				<targetPath>${project.build.directory}/test-classes/templates</targetPath>
+				<targetPath>${thDeploy}/templates</targetPath>
 				<filtering>true</filtering>
 			</resource>
 			<resource>
@@ -175,7 +175,6 @@
 				</plugin>
 			</plugins>
 		</pluginManagement>
-
 		<plugins>
 			<plugin>
 				<artifactId>maven-clean-plugin</artifactId>
@@ -184,11 +183,18 @@
 					<filesets>
 						<fileset>
 							<directory>dist</directory>
+						</fileset>
+						<fileset>
 							<directory>sourceforge</directory>
+						</fileset>
+						<fileset>
 							<directory>jsdelivr</directory>
 						</fileset>
 						<fileset>
-							<directory>target-grunt</directory>
+							<directory>${project.basedir}</directory>
+							<includes>
+								<include>maven-properties.json</include>
+							</includes>
 						</fileset>
 					</filesets>
 				</configuration>
@@ -310,19 +316,6 @@
 						<thThymolPrelude>Date.prototype.toString=Date.prototype.toUTCString;</thThymolPrelude>
 					</properties>
 				</configuration>
-
-<!-- 				<executions>
-					<execution>
-						<id>copy-resources3a</id>
-						<phase>process-resources</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-						</configuration>
-					</execution>
-				</executions>
- -->
 			</plugin>
 			<plugin>
 				<groupId>org.eclipse.jetty</groupId>
@@ -383,7 +376,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}</outputDirectory>
+							<outputDirectory>${project.basedir}</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/build</directory>
@@ -402,7 +395,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/sourceforge/Webcontent</outputDirectory>
+							<outputDirectory>${project.basedir}/sourceforge/Webcontent</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/doc/Sourceforge/attachments</directory>
@@ -431,7 +424,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/sourceforge/Webcontent/examples</outputDirectory>
+							<outputDirectory>${project.basedir}/sourceforge/Webcontent/examples</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/main/webapp/WEB-INF</directory>
@@ -453,9 +446,9 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/sourceforge/Webcontent/examples/templates/issue-245</outputDirectory>
+							<outputDirectory>${project.basedir}/sourceforge/Webcontent/examples/templates/issue-245</outputDirectory>
 							<filters>
-								<filter>${basedir}/src/build/level4.properties</filter>
+								<filter>${project.basedir}/src/build/level4.properties</filter>
 							</filters>
 							<resources>
 								<resource>
@@ -476,9 +469,9 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/sourceforge/Webcontent/examples</outputDirectory>
+							<outputDirectory>${project.basedir}/sourceforge/Webcontent/examples</outputDirectory>
 							<filters>
-								<filter>${basedir}/src/build/level3.properties</filter>
+								<filter>${project.basedir}/src/build/level3.properties</filter>
 							</filters>
 							<resources>
 								<resource>
@@ -498,7 +491,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${basedir}/sourceforge/Webcontent/examples</outputDirectory>
+							<outputDirectory>${project.basedir}/sourceforge/Webcontent/examples</outputDirectory>
 							<resources>
 								<resource>
 									<directory>src/doc/WebContent/examples/thymol-example</directory>
