@@ -404,7 +404,8 @@ function ThClass(nValue) {
 thymol = function() {
     thymol.thVersion = "2.0.0-SNAPSHOT";
     thymol.thReleaseDate = "not yet!";
-    thymol.thURL = "http://www.thymeleaf.org";
+    thymol.thURL = "http://www.thymoljs.org";
+    thymol.thAltURL = "http://www.thymeleaf.org";
     thymol.thUsingNullPrefix = false;
     thymol.thThymeleafPrefixList = [];
     thymol.thThymeleafElementsList = [];
@@ -507,14 +508,21 @@ thymol = function() {
         }
         executeDeferred();
         (function() {
-            var htmlTag = $("html")[0], nsspec;
-            $(htmlTag.attributes).each(function() {
-                if (thymol.thURL == this.value) {
-                    nsspec = this.localName.split(":");
-                    if (nsspec.length > 0) {
-                        thymol.prefix = nsspec[nsspec.length - 1];
-                        return;
+            var htmlTagAttrs = $("html")[0].attributes, tp = null, tu, nsspec;
+            $([ thymol.thURL, thymol.thAltURL ]).each(function() {
+                tu = this;
+                $(htmlTagAttrs).each(function() {
+                    if (this.value == tu) {
+                        nsspec = this.localName.split(":");
+                        if (nsspec.length > 0) {
+                            tp = nsspec[nsspec.length - 1];
+                            return false;
+                        }
                     }
+                });
+                if (tp) {
+                    thymol.prefix = tp;
+                    return false;
                 }
             });
         })();
@@ -691,7 +699,7 @@ thymol = function() {
         thiz.templatePath = "";
         if (!!document.location.href) {
             var templateName = templatePath = document.location.href;
-            thiz.templateName = templateName.substring(0, templateName.indexOf(".") == -1 ? templateName.length : templateName.indexOf("."));
+            thiz.templateName = templateName.substring(0, templateName.indexOf(".") == -1 ? templateName.length : templateName.lastIndexOf("."));
             thiz.templatePath = templatePath.substring(0, templatePath.indexOf("/") == -1 ? 0 : templatePath.lastIndexOf("/") + 1);
         }
     }
@@ -838,10 +846,10 @@ thymol = function() {
         return result;
     }
     function getStandardURL(initial) {
-        var result = initial, mapped;
+        var result = initial.trim(), mapped, head;
         mapped = thymol.getMapped(result, thymol.extendedMapping);
         if (mapped) {
-            result = mapped.trim();
+            result = mapped;
         }
         if ("/" === result && !!thymol.indexFile) {
             result += thymol.indexFile;
@@ -851,10 +859,18 @@ thymol = function() {
                 if (/^~.*$/.test(result)) {
                     result = result.substring(1);
                 }
-                if (/^\/\/.*$/.test(result)) {
-                    result = result.trim();
-                } else {
-                    result = thymol.root + result.trim().substring(1);
+                if (!/^\/\/.*$/.test(result)) {
+                    head = thymol.root;
+                    if (head != "") {
+                        if (head.charAt(head.length - 1) !== "/") {
+                            head = head + "/";
+                        }
+                        if (result.charAt(0) === "/") {
+                            result = head + result.substring(1);
+                        } else {
+                            result = head + result;
+                        }
+                    }
                 }
             }
         }
@@ -2166,6 +2182,7 @@ thymol = function() {
         thVersion: thymol.thVersion,
         thReleaseDate: thymol.thReleaseDate,
         thURL: thymol.thURL,
+        thAltURL: thymol.thAltURL,
         thInclude: thymol.thInclude,
         thReplace: thymol.thReplace,
         thSubstituteby: thymol.thSubstituteby,
