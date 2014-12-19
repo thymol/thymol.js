@@ -2,7 +2,7 @@
   This is a Thymol extension to emulate the behaviour of the "extrathyme" example dialect from http://www.thymeleaf.org/doc/html/Extending-Thymeleaf.html.
  */
 
-//thRoot = "/home/jim/Project/thymol-2.x/dist/Webcontent/examples/templates/v21/extrathyme/webapp";
+//thRoot = "/home/jim/github/thymol-tagging/dist/Webcontent/examples/templates/v21/extrathyme/webapp";
 //thMessagePath = thRoot + "/../resources";
 
 var	thProtocol = "";
