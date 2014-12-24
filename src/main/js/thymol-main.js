@@ -1,6 +1,6 @@
 /*-------------------- Thymol - the flavour of Thymeleaf --------------------*
 
-   Thymol version 2.0.0-SNAPSHOT Copyright 2012-2014 James J. Benson.
+   Thymol version ${thymolVersion} Copyright 2012-2014 James J. Benson.
    jjbenson .AT. users.sf.net
 
    Licensed under the Apache License, Version 2.0 (the "License");

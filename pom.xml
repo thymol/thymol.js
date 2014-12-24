@@ -33,6 +33,9 @@
 		<m2e-lifecycle-mapping-version>1.0.0</m2e-lifecycle-mapping-version>
 		<filtering-value>true</filtering-value>
 		<theWarName>${project.artifactId}-${project.version}</theWarName>
+		<!-- -->		
+		<thReleaseDate>not yet!</thReleaseDate>
+		<!-- -->
 		<thThymolPath>${project.basedir}/bower_components/thymol/dist/</thThymolPath>
 		<thThymolSource>thymol-full.js</thThymolSource>
 		<thDeploy>${project.build.directory}/test-classes</thDeploy>
@@ -194,6 +197,7 @@
 							<directory>${project.basedir}</directory>
 							<includes>
 								<include>maven-properties.json</include>
+								<include>package.json</include>
 							</includes>
 						</fileset>
 					</filesets>
@@ -255,6 +259,9 @@
 					</gruntOptions>
 					<filteredResources>
 						<filteredResource>src/build/maven-properties.json</filteredResource>
+					</filteredResources>
+					<filteredResources>
+						<filteredResource>src/build/package.json</filteredResource>
 					</filteredResources>
 				</configuration>
 				<executions>
