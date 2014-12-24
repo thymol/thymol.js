@@ -1,8 +1,8 @@
 thymol = function() {
 	
 	// Version data
-	thymol.thVersion = "2.0.0-SNAPSHOT";
-	thymol.thReleaseDate = "not yet!";
+	thymol.thVersion = "${thymolVersion}";
+	thymol.thReleaseDate = "${thymolReleaseDate}";
 	thymol.thURL = "http://www.thymoljs.org";
 	thymol.thAltURL = "http://www.thymeleaf.org";
 	
