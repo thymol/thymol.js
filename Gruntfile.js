@@ -2,8 +2,11 @@ module.exports = function(grunt) {
 
 	var bower = require('bower');
 	var path = require('path');
-	
+		
 	mavenProperties = grunt.file.readJSON('maven-properties.json');	
+	grunt.log.writeln('Thymol version is: ' + mavenProperties.thymolVersion );
+	grunt.log.writeln('Release date is: ' + mavenProperties.thymolReleaseDate );
+	grunt.log.writeln('\n');
 	grunt.log.writeln('bower path to jQuery is: ' + mavenProperties.bowerJQuerySource);
 	grunt.log.writeln('sourceforge path to jQuery is: ' + mavenProperties.sourceforgeJQuerySource);
 	grunt.log.writeln('jsdelivr path to jQuery is: ' + mavenProperties.jsdelivrJQuerySource);
@@ -13,18 +16,14 @@ module.exports = function(grunt) {
 	var bowerThymolDistPath = bowerThymolPath + "dist/";
 
 
-	var thymolFile = "thymol.js";
-	var thymolFileMin = "thymol.min.js";
-	var liteFile = "thymol-lite.js";
 	var fullFile = "thymol-full.js";
-	var liteFileMin = "thymol-lite.min.js";
 	var fullFileMin = "thymol-full.min.js";
 
-	var tmpThymolFile = tmpDir + thymolFile;
-	var tmpThymolFileMin = tmpDir + thymolFileMin;
-	var tmpLiteFile = tmpDir + liteFile;
+	var tmpThymolFile = tmpDir +"thymol.js";
+	var tmpThymolFileMin = tmpDir + "thymol.min.js";
+	var tmpLiteFile = tmpDir + "thymol-lite.js";
 	var tmpFullFile = tmpDir + fullFile;
-	var tmpLiteFileMin = tmpDir + liteFileMin;
+	var tmpLiteFileMin = tmpDir + "thymol-lite.min.js";
 	var tmpFullFileMin = tmpDir + fullFileMin;
 
 	var thymolBootstrap =  [ "src/main/js/thymol.js" ];
@@ -76,10 +75,14 @@ module.exports = function(grunt) {
 
 	var tmpThymolFileMinObj = {};
 	tmpThymolFileMinObj[tmpThymolFileMin] = thymolBootstrap;
+	
+	var pckJSON = grunt.file.readJSON('package.json');
+	
+	pckJSON.version = mavenProperties.thymolVersion;
 
 	grunt.initConfig({
 
-		pkg : grunt.file.readJSON('package.json'),
+		pkg : pckJSON,
 		
 		banner : '/*! <%= pkg.title || pkg.name %> - v<%= pkg.version %> - '
 				+ '<%= grunt.template.today("yyyy-mm-dd") %>\n'
@@ -159,86 +162,48 @@ module.exports = function(grunt) {
 			thymol_bower : {
 				expand : true,
 				cwd : tmpDir,
-				src : [ "**/" + thymolFile ],
+				src : [ "**/*.js" ],
 				dest : "dist/",
 				options : {
 					flatten : true,
 					process : function(content, srcpath) {
+						content = content.replace("${thymolVersion}", mavenProperties.thymolVersion);
+						content = content.replace("${thymolReleaseDate}", mavenProperties.thymolReleaseDate);
 						content = content.replace("${thThymolSource}", fullFile);
 						return content.replace("${thJQuerySource}", mavenProperties.bowerJQuerySource);
 					}
 				}
 			},
-		    thymol_min_bower : {
-			    expand : true,
-     			cwd : tmpDir,
-	    		src : [ "**/" + thymolFileMin ],
-		    	dest : "dist/",
-			    options : {
-				    flatten : true,
-				    process : function(content, srcpath) {
-				   	    content = content.replace("${thThymolSource}", fullFileMin);
-					    return content.replace("${thJQuerySource}", mavenProperties.bowerJQuerySource);
-				    }
-			    }
-		    },
 			thymol_sourceforge : {
 				expand : true,
 				cwd : tmpDir,
-				src : [ "**/" + thymolFile ],
+				src : [ "**/*.js" ],
 				dest : "sourceforge/",
 				options : {
 					flatten : true,
 					process : function(content, srcpath) {
+						content = content.replace("${thymolVersion}", mavenProperties.thymolVersion);
+						content = content.replace("${thymolReleaseDate}", mavenProperties.thymolReleaseDate);
 						content = content.replace("${thThymolSource}", fullFile);
 						return content.replace("${thJQuerySource}", mavenProperties.sourceforgeJQuerySource);
 					}
 				}
 			},
-		    thymol_min_sourceforge : {
+		    thymol_jsdelivr : {
 			    expand : true,
      			cwd : tmpDir,
-	    		src : [ "**/" + thymolFileMin ],
-		    	dest : "sourceforge/",
-			    options : {
-				    flatten : true,
-				    process : function(content, srcpath) {
-				   	    content = content.replace("${thThymolSource}", fullFileMin);
-					    return content.replace("${thJQuerySource}", mavenProperties.sourceforgeJQuerySource);
-				    }
-			    }
-		    },
-		    thymol_min_jsdelivr : {
-			    expand : true,
-     			cwd : tmpDir,
-	    		src : [ "**/" + thymolFileMin ],
+	    		src : [ "**/*min*.js" ],
 		    	dest : "jsdelivr/",
 			    options : {
 				    flatten : true,
 				    process : function(content, srcpath) {
+						content = content.replace("${thymolVersion}", mavenProperties.thymolVersion);
+						content = content.replace("${thymolReleaseDate}", mavenProperties.thymolReleaseDate);
 				   	    content = content.replace("${thThymolSource}", fullFileMin);
 					    return content.replace("${thJQuerySource}", mavenProperties.jsdelivrJQuerySource);
 				    }
 			    }
 		    },
-		    thymol_main_bower : {
-			    expand : true,
-     			cwd : tmpDir,
-	    		src : [ "**/thymol-full*.js", "**/thymol-lite*.js" ],
-		    	dest : "dist/"
-		    },		    
-		    thymol_main_sourceforge : {
-			    expand : true,
-     			cwd : tmpDir,
-	    		src : [ "**/thymol-full*.js", "**/thymol-lite*.js" ],
-		    	dest : "sourceforge/"
-		    },		    
-		    thymol_main_jsdelivr : {
-			    expand : true,
-     			cwd : tmpDir,
-	    		src : [ "**/thymol-full*min.js", "**/thymol-lite*min.js" ],
-		    	dest : "jsdelivr/"
-		    },		    
 			bower_dist : {
 				expand : true,
 				cwd : "dist/",
