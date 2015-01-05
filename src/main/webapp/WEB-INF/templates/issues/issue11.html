@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>issue11 test</title>
+</head>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"></script>
+<script>
+	var thDebug = true;
+//	var thDisable = [ "include", "substituteby", "replace" ];
+	var thDisable = [ "substituteby", "replace" ];
+</script>
+<body>
+<div>
+  <p>This is some text</p>
+  <div th:include=" this   ::frag">...</div>
+  <p th:fragment="frag">This is some text</p>
+</div>
+</body>
+</html>
+<!--
+
+<div>
+  <p>This is some text</p>
+  <div>This is some text</div>
+  <p>This is some text</p>
+</div>
+
+
+-->
