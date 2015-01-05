@@ -64,6 +64,7 @@
 			this.name = null;
 			this.escpName = null;
 			this.escpSynonym = null;
+			this.process = function() {};
 		};
 	}
 
