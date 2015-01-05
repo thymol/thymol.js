@@ -1209,6 +1209,11 @@ thymol = function() {
 
 		getThAttrByName : function(name) {
 			var attrList = thymol.thThymeleafPrefixList[thymol.prefix];
+			attrList.push(thymol.thInclude);
+			attrList.push(thymol.thReplace);
+			attrList.push(thymol.thSubstituteby);
+			attrList.push(thymol.thFragment);
+			attrList.push(thymol.thRemove);
 			var i, iLimit = attrList.length;
 			for (i = 0; i < iLimit; i++) {
 				if (name === attrList[i].suffix) {

@@ -1,6 +1,6 @@
 /*-------------------- Thymol - the flavour of Thymeleaf --------------------*
 
-   Thymol version 2.0.0-SNAPSHOT Copyright (C) 2012-2014 James J. Benson
+   Thymol version 2.0.0-SNAPSHOT Copyright (C) 2012-2015 James J. Benson
    <jjbenson AT users.sf.net> (http://www.thymoljs.org/)
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -161,6 +161,7 @@ function ThAttr(suffix, func, prec, list, pref, dataAttr) {
         this.name = null;
         this.escpName = null;
         this.escpSynonym = null;
+        this.process = function() {};
     };
 }
 
@@ -1477,6 +1478,11 @@ thymol = function() {
         },
         getThAttrByName: function(name) {
             var attrList = thymol.thThymeleafPrefixList[thymol.prefix];
+            attrList.push(thymol.thInclude);
+            attrList.push(thymol.thReplace);
+            attrList.push(thymol.thSubstituteby);
+            attrList.push(thymol.thFragment);
+            attrList.push(thymol.thRemove);
             var i, iLimit = attrList.length;
             for (i = 0; i < iLimit; i++) {
                 if (name === attrList[i].suffix) {
@@ -3946,9 +3952,9 @@ ThParser = function(scope) {
                         return false;
                     }
                     this.pos++;
-                    this.tokenprio = 4;
-                } else if (ch === "!") {
                     this.tokenprio = 6;
+                } else if (ch === "!") {
+                    this.tokenprio = 7;
                     this.tokenindex = "!";
                 } else if (ch === "=") {
                     this.tokenindex = "=";
