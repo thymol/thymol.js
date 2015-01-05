@@ -1185,10 +1185,10 @@ ThParser = ( function( scope ) {
 						return false;
 					}
 					this.pos++ ;
-					this.tokenprio = 4;
+					this.tokenprio = 6;
 				}
 				else if( ch === "!" ) {
-					this.tokenprio = 6;
+					this.tokenprio = 7;
 					this.tokenindex = "!";
 				}
 				else if( ch === "=" ) {
