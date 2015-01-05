@@ -70,6 +70,49 @@ public class IssuesCases extends SeleniumCases {
 			"<div><img src=\"/image/?id=path_image_one\"></div><div><img src=\"/image/?id=path_image_two\"></div>\n" +
 			"\n\n";
 
+	String issue10Result = 
+			"\n" +
+			"<span>TRUE_VALUE</span>\n" +
+			"<span>TRUE_VALUE</span>\n" +
+			"<span>TRUE_VALUE</span>\n" +
+			"\n";
+
+	String issue11Result = 
+			"\n" +
+			"<div>\n" +
+			"<p>This is some text</p>\n" +
+			"<div>This is some text</div>\n" +
+			"<p>This is some text</p>\n" +
+			"</div>\n" +
+			"\n";
+
+	String issue11aResultThymol = 
+			"\n" +
+			"<div>\n" +
+			"<p>This is some text</p>\n" +
+			"<div th:include=\" this ::frag\">...</div>\n" +
+			"<p>This is some text</p>\n" +
+			"</div>\n" +
+			"\n";
+
+	String issue11aResultThymeleaf = 
+			"\n" +
+			"<div>\n" +
+			"<p>This is some text</p>\n" +
+			"<div>This is some text</div>\n" +
+			"<p>This is some text</p>\n" +
+			"</div>\n" +
+			"\n";
+
+	String issue11bResult = 
+			"\n" +
+			"<div>\n" +
+			"<p>This is some text</p>\n" +
+			"<div>This is some text</div>\n" +
+			"<p>This is some text</p>\n" +
+			"</div>\n" +
+			"\n";
+
 	@Test
 	public void issue01() {
 		localise("issues/");
@@ -121,6 +164,39 @@ public class IssuesCases extends SeleniumCases {
 		String result = getResult("issue08_russian.html", ResultMode.HTML);
 		assertEquals(clean(issue08Result_ru_RU), clean(result));
 		localise("issues/", new Locale( "en", "GB", "" ));
+	}
+
+	@Test
+	public void issue10() {
+		localise("issues/" );
+		String result = getResult("issue10.html", ResultMode.HTML);
+		assertEquals(clean(issue10Result), clean(result));
+	}
+
+	@Test
+	public void issue11() {
+		localise("issues/" );
+		String result = getResult("issue11.html", ResultMode.HTML);
+		assertEquals(clean(issue11Result), clean(result));
+	}
+
+	@Test
+	public void issue11a() {
+		localise("issues/" );
+		String result = getResult("issue11a.html", ResultMode.HTML);
+		if( expectThymolResult() ) {
+			assertEquals(clean(issue11aResultThymol), clean(result));
+		}
+		else {
+			assertEquals(clean(issue11aResultThymeleaf), clean(result));
+		}		
+	}
+
+	@Test
+	public void issue11b() {
+		localise("issues/" );
+		String result = getResult("issue11b.html", ResultMode.HTML);
+		assertEquals(clean(issue11bResult), clean(result));
 	}
 
 }
