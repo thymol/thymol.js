@@ -102,6 +102,7 @@ thymol = function() {
 		this.relativeRootPath = Thymol.prototype.getThParam("thRelativeRootPath", false, true, this.thDefaultRelativeRootPath);		
 		this.extendedMapping = Thymol.prototype.getThParam("thExtendedMapping", false, false, this.thDefaultExtendedMapping);		
 		this.localMessages = Thymol.prototype.getThParam("thLocalMessages", false, false, this.thDefaultLocalMessages);		
+		this.templateSuffix = Thymol.prototype.getThParam("thTemplateSuffix", false, false, this.thDefaultTemplateSuffix);		
 				
 		this.indexFile = Thymol.prototype.getThParam("thIndexFile", false, false, null);		
 		
@@ -204,6 +205,9 @@ thymol = function() {
 					break;
 				case "thExtendedMapping":
 					thymol.extendedMapping = e[2];
+					break;
+				case "thTemplateSuffix":
+					thymol.templateSuffix = e[2];
 					break;
 				case "thLocalMessages":
 					thymol.localMessages = e[2];
@@ -1441,7 +1445,7 @@ thymol = function() {
 						fragment = null;
 						importError = null;
 						if( filePart != "" ) { // Signifies v2.1 local fragment
-							fileName = filePart + ".html";
+							fileName = filePart + thymol.templateSuffix;
 							$.get( fileName, function( textContent, status ) {
 								try {
 									if( "success" == status ) {
@@ -2018,6 +2022,7 @@ thymol = function() {
 		thDefaultRelativeRootPath : thymol.thDefaultRelativeRootPath,
 		thDefaultExtendedMapping : thymol.thDefaultExtendedMapping,
 		thDefaultLocalMessages : thymol.thDefaultLocalMessages,
+		thDefaultTemplateSuffix : thymol.thDefaultTemplateSuffix,
 
 		thThymeleafPrefixList : thymol.thThymeleafPrefixList,
 		thThymeleafElementsList : thymol.thThymeleafElementsList,
@@ -2030,6 +2035,7 @@ thymol = function() {
 		extendedMapping : thymol.extendedMapping,			
 		localMessages : thymol.localMessages,			
 		indexFile : thymol.indexFile,			
+		templateSuffix : thymol.templateSuffix,			
 
 		prefix : thymol.prefix,
 		dataPrefix : thymol.dataPrefix,

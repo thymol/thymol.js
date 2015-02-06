@@ -113,6 +113,47 @@ public class IssuesCases extends SeleniumCases {
 			"</div>\n" +
 			"\n";
 
+	String issue13ResultThymol = 
+			"\n<div style=\"color: red;\">hello</div>\n" +
+			" 		<div>\n" +
+			"		    <div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			" 		</div>\n" +
+			"		<div>\n" +
+			"			<div>\n\n" +	
+			"		<table>\n" +
+			"			<tbody><tr><td>0,0</td><td>0,1</td></tr>\n" +
+			"			<tr><td>1,0</td><td>1,1</td></tr>\n" +
+			"		</tbody></table>\n\n\n\n\n\n" +
+			"</div>\n" +
+			"		</div>\n" +
+			"		<p><a href=\"index.html\">Back</a></p>\n" +
+			"	\n";
+
+	
+	String issue13ResultThymeleaf =	"\n" +
+			" \t\t<div style=\"color: red;\">hello</div>\n" +
+			" \t\t<div>\n" +
+			"\t\t    <div>© 2011 The Good Thymes Virtual Grocery</div>\n" +
+			" \t\t</div>\n" +
+			"\t\t<div>\n" +
+			"\t\t\t<div>\n" +
+			"\n" +
+			"\t\n" +
+			"\t\t<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
+			"\t\t<title>Stuff that goes in a title element</title>\n" +
+			"\t\n" +
+			"\t\n" +
+			"\t\t<table>\n" +
+			"\t\t\t<tbody><tr><td>0,0</td><td>0,1</td></tr>\n" +
+			"\t\t\t<tr><td>1,0</td><td>1,1</td></tr>\n" +
+			"\t\t</tbody></table>\n" +
+			"\t\t\n" +
+			"\t\n\n\n\n" +
+			"</div>\n" +
+			"\t\t</div>\n" +
+			"\t\t<p><a href=\"index.html\">Back</a></p>\n" +
+			"\t\n";
+
 	@Test
 	public void issue01() {
 		localise("issues/");
@@ -197,6 +238,42 @@ public class IssuesCases extends SeleniumCases {
 		localise("issues/" );
 		String result = getResult("issue11b.html", ResultMode.HTML);
 		assertEquals(clean(issue11bResult), clean(result));
+	}
+
+	@Test
+	public void issue13() {
+		localise("issues/" );
+		String result = getResult("issue13.html", ResultMode.HTML);
+		if( expectThymolResult() ) {
+			assertEquals(clean(issue13ResultThymol), clean(result));
+		}
+		else {
+			assertEquals(clean(issue13ResultThymeleaf), clean(result));
+		}		
+	}
+
+	@Test
+	public void issue13a() {
+		localise("issues/" );
+		String result = getResult("issue13a.html", ResultMode.HTML);
+		if( expectThymolResult() ) {
+			assertEquals(clean(issue13ResultThymol), clean(result));
+		}
+		else {
+			assertEquals(clean(issue13ResultThymeleaf), clean(result));
+		}		
+	}
+
+	@Test
+	public void issue13b() {
+		localise("issues/", "" );
+		String result = getResult("issue13b.html", ResultMode.HTML);
+		if( expectThymolResult() ) {
+			assertEquals(clean(issue13ResultThymol), clean(result));
+		}
+		else {
+			assertEquals(clean(issue13ResultThymeleaf), clean(result));
+		}		
 	}
 
 }

@@ -5,7 +5,7 @@ import java.util.Locale;
 
 public class SureFireEnv implements URIGetter {
 	
-	private String suffix = "";
+	private String path = "";
 
 	public SureFireEnv() {
 		super();
@@ -13,18 +13,29 @@ public class SureFireEnv implements URIGetter {
 
 	@Override
 	public void localise(String path) {
-		this.suffix = path;
+		this.path = path;
 	}
 	
 	@Override
-	public void localise(String path,Locale locale) {
-		this.suffix = path;
+	public void localise(String path, Locale locale) {
+		this.path = path;
 	}
 	
 	@Override
-	public String getURI(String path) {
+	public void localise(String path, String suffix) {
+		this.path = path;
+	}
+	
+	@Override
+	public void localise(String path, String suffix, Locale locale) {		
+		this.path = path;
+	}
+	
+	
+	@Override
+	public String getURI(String junk) {
 		StringBuilder sb = new StringBuilder("target/test-classes/templates/");
-		sb.append(suffix);
+		sb.append(this.path);
 //		sb.append('/');
 		String uri = makeURI( sb.toString() );
 		return uri;
@@ -45,5 +56,5 @@ public class SureFireEnv implements URIGetter {
 			return sb.append( userdir ).append( '/' ).append( pathname ).toString();
 		}
 	}
-	
+
 }
