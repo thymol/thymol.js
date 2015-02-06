@@ -467,8 +467,10 @@ thymol = function() {
         this.messagePath = Thymol.prototype.getThParam("thMessagePath", false, true, this.thDefaultMessagePath);
         this.messagesBaseName = Thymol.prototype.getThParam("thMessagesBaseName", false, false, this.thDefaultMessagesBaseName);
         this.relativeRootPath = Thymol.prototype.getThParam("thRelativeRootPath", false, true, this.thDefaultRelativeRootPath);
-        this.extendedMapping = Thymol.prototype.getThParam("thExtendedMapping", false, false, this.thDefaultExtendedMapping);
-        this.localMessages = Thymol.prototype.getThParam("thLocalMessages", false, false, this.thDefaultLocalMessages);
+        this.extendedMapping = Thymol.prototype.getThParam("thExtendedMapping", true, false, this.thDefaultExtendedMapping);
+        this.localMessages = Thymol.prototype.getThParam("thLocalMessages", true, false, this.thDefaultLocalMessages);
+        this.disableMessages = Thymol.prototype.getThParam("thDisableMessages", true, false, this.thDefaultDisableMessages);
+        this.templateSuffix = Thymol.prototype.getThParam("thTemplateSuffix", false, false, this.thDefaultTemplateSuffix);
         this.indexFile = Thymol.prototype.getThParam("thIndexFile", false, false, null);
         this.debug = Thymol.prototype.getThParam("thDebug", true, false, false);
         this.allowNullText = Thymol.prototype.getThParam("thAllowNullText", true, false, true);
@@ -565,8 +567,16 @@ thymol = function() {
                     thymol.extendedMapping = e[2];
                     break;
 
+                  case "thTemplateSuffix":
+                    thymol.templateSuffix = e[2];
+                    break;
+
                   case "thLocalMessages":
                     thymol.localMessages = e[2];
+                    break;
+
+                  case "thDisableMessages":
+                    thymol.disableMessages = e[2];
                     break;
 
                   case "thIndexFile":
@@ -786,12 +796,12 @@ thymol = function() {
     function substituteParam(argValue, mode, element) {
         var result = argValue, varName = argValue, subs = null, msg, expo;
         if (result) {
-            if (mode == 4) {
+            if (mode === 4) {
                 msg = thymol.getMessage(varName);
                 if (msg) {
                     subs = msg;
                 }
-            } else if (mode == 6) {
+            } else if (mode === 6) {
                 subs = argValue;
             } else {
                 var token = thymol.booleanAndNullTokens[result];
@@ -834,7 +844,7 @@ thymol = function() {
                             subs = thymol.applicationContext;
                         }
                     }
-                    if (mode == 2 && (typeof subs === "undefined" || subs == null)) {
+                    if (mode === 2 && (typeof subs === "undefined" || subs == null)) {
                         subs = argValue;
                     }
                 }
@@ -1142,6 +1152,9 @@ thymol = function() {
         thymol.thExpressionObjects["#locale"] = thymol.locale;
     }
     function getMessage(varName, parameters, returnStringAlways) {
+        if (thymol.disableMessages) {
+            return undefined;
+        }
         var msgKey = null;
         var locale;
         if (!!thymol.locale.levels) {
@@ -1692,7 +1705,7 @@ thymol = function() {
                         fragment = null;
                         importError = null;
                         if (filePart != "") {
-                            fileName = filePart + ".html";
+                            fileName = filePart + thymol.templateSuffix;
                             $.get(fileName, function(textContent, status) {
                                 try {
                                     if ("success" == status) {
@@ -2207,6 +2220,7 @@ thymol = function() {
         thDefaultRelativeRootPath: thymol.thDefaultRelativeRootPath,
         thDefaultExtendedMapping: thymol.thDefaultExtendedMapping,
         thDefaultLocalMessages: thymol.thDefaultLocalMessages,
+        thDefaultTemplateSuffix: thymol.thDefaultTemplateSuffix,
         thThymeleafPrefixList: thymol.thThymeleafPrefixList,
         thThymeleafElementsList: thymol.thThymeleafElementsList,
         thLocation: thymol.thLocation,
@@ -2216,6 +2230,8 @@ thymol = function() {
         extendedMapping: thymol.extendedMapping,
         localMessages: thymol.localMessages,
         indexFile: thymol.indexFile,
+        disableMessages: thymol.disableMessages,
+        templateSuffix: thymol.templateSuffix,
         prefix: thymol.prefix,
         dataPrefix: thymol.dataPrefix,
         templateName: thymol.templateName,
@@ -3008,6 +3024,11 @@ ThParser = function(scope) {
             var result;
             for (i = 0; i < L; i++) {
                 item = this.tokens[i];
+                if (i === 0 && thymol.disableMessages && item.mode_ === 4) {
+                    var nullReturn = new ThClass();
+                    nullReturn.abort = true;
+                    return nullReturn;
+                }
                 var type_ = item.type_;
                 if (type_ === TNUMBER) {
                     nstack.push(item.number_);
@@ -3757,7 +3778,7 @@ ThParser = function(scope) {
                     this.mode = modestack.pop();
                     expected = FUNCTION | OPERATOR | RPAREN | RBRACK | RVARBRK | COMMA | LPAREN | LVARBRK | CALL | OPTION;
                 } else if (this.isLeftCurly()) {
-                    if (this.mode == 1 || this.mode == 2 || this.mode == 3 || this.mode == 4) {
+                    if (this.mode === 1 || this.mode === 2 || this.mode === 3 || this.mode === 4) {
                         modestack.push(this.mode);
                         this.mode = 7;
                     } else {
@@ -4243,6 +4264,9 @@ ThParser = function(scope) {
                 if (url.value) {
                     url = url.value;
                 }
+            } else if (url instanceof ThClass && url.abort) {
+                element.removeAttribute(thUrlAttr.name);
+                return true;
             }
         }
         try {
@@ -4284,7 +4308,9 @@ ThParser = function(scope) {
     };
     processSpecAttrMod = function(element, thUrlAttr, thAttrObj) {
         var url = getThAttribute(thUrlAttr.value, element);
-        element.setAttribute(thAttrObj.suffix, url);
+        if (!url || !(url instanceof ThClass) || !url.abort) {
+            element.setAttribute(thAttrObj.suffix, url);
+        }
         element.removeAttribute(thUrlAttr.name);
     };
     processAttr = function(element, thUrlAttr, thAttrObj) {

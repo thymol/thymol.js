@@ -94,6 +94,10 @@
 					url = url.value;
 				}
 			}
+			else if( url instanceof ThClass && url.abort ) {
+				element.removeAttribute(thUrlAttr.name);
+				return true;
+			}
 		}
 		try {
 			while (element.firstChild != null) {
@@ -137,7 +141,9 @@
 
 	processSpecAttrMod = function(element, thUrlAttr, thAttrObj) {
 		var url = getThAttribute(thUrlAttr.value, element);
-		element.setAttribute(thAttrObj.suffix, url);
+		if( !url || !( url instanceof ThClass ) || !url.abort ) {
+			element.setAttribute(thAttrObj.suffix, url);						
+		}
 		element.removeAttribute(thUrlAttr.name);
 	};
  

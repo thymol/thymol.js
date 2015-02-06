@@ -31,7 +31,9 @@
         thDefaultMessagesBaseName: "Messages",
         thDefaultRelativeRootPath: "",
         thDefaultExtendedMapping: false,
-        thDefaultLocalMessages: true
+        thDefaultLocalMessages: true,
+        thDefaultDisableMessages: false,
+        thDefaultTemplateSuffix: ".html"
     };
     thymol = function(conf) {
         conf.ready = function(func) {
