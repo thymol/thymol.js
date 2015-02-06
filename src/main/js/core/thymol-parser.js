@@ -124,7 +124,12 @@ ThParser = ( function( scope ) {
 			var i = 0;
 			var result;
 			for( i = 0; i < L; i++ ) {
-				item = this.tokens[i];
+				item = this.tokens[i];				
+				if( i === 0 && thymol.disableMessages && item.mode_ === 4 ) {
+					var nullReturn = new ThClass();
+					nullReturn.abort = true;
+					return nullReturn;
+				}								
 				var type_ = item.type_;
 				if( type_ === TNUMBER ) {
 					nstack.push( item.number_ );
@@ -957,7 +962,7 @@ ThParser = ( function( scope ) {
 					expected = ( FUNCTION | OPERATOR | RPAREN | RBRACK | RVARBRK | COMMA | LPAREN | LVARBRK | CALL | OPTION );
 				}
 				else if(this.isLeftCurly()) {
-					if( this.mode == 1 || this.mode == 2 || this.mode == 3 || this.mode == 4 ) {
+					if( this.mode === 1 || this.mode === 2 || this.mode === 3 || this.mode === 4 ) {
 						modestack.push( this.mode );
 						this.mode = 7;						
 					}

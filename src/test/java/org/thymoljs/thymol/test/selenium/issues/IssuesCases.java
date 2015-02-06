@@ -113,6 +113,33 @@ public class IssuesCases extends SeleniumCases {
 			"</div>\n" +
 			"\n";
 
+	String issue12ResultThymol = 
+			"\n" +
+			"<h1>Contents</h1>\n" +
+			"<div>\n" +
+			"\t<input name=\"command\" value=\"Review\">\n" +
+			"\t<input name=\"preamble\" value=\"Clear\">\n" +
+			"</div>\n" +
+			"\n\n";
+	
+	String issue12ResultThymeleaf = 
+			"\n" +
+			"<h1>Contents</h1>\n" +
+			"<div>\n" +
+			"\t<input name=\"command\" value=\"selected items\" type=\"text\">\n" +
+			"\t<input name=\"preamble\" value=\"items to be deleted\" type=\"text\">\n" +
+			"</div>\n" +
+			"\n\n";			
+	
+	String issue12aResultThymol =
+			"\n" +
+			"<h1>Contents</h1>\n" +
+			"<div>\n" +
+			"\t<input name=\"command\" value=\"selected items\">\n" +
+			"\t<input name=\"preamble\" value=\"items to be deleted\">\n" +
+			"</div>\n" +
+			"\n\n";			
+
 	String issue13ResultThymol = 
 			"\n<div style=\"color: red;\">hello</div>\n" +
 			" 		<div>\n" +
@@ -238,6 +265,30 @@ public class IssuesCases extends SeleniumCases {
 		localise("issues/" );
 		String result = getResult("issue11b.html", ResultMode.HTML);
 		assertEquals(clean(issue11bResult), clean(result));
+	}
+
+	@Test
+	public void issue12() {
+		localise("issues/" );
+		String result = getResult("issue12.html", ResultMode.HTML);
+		if( expectThymolResult() ) {
+			assertEquals(clean(issue12ResultThymol), clean(result));
+		}
+		else {
+			assertEquals(clean(issue12ResultThymeleaf), clean(result));
+		}		
+	}
+
+	@Test
+	public void issue12a() {
+		localise("issues/" );
+		String result = getResult("issue12a.html", ResultMode.HTML);
+		if( expectThymolResult() ) {
+			assertEquals(clean(issue12aResultThymol), clean(result));
+		}
+		else {
+			assertEquals(clean(issue12ResultThymeleaf), clean(result));
+		}		
 	}
 
 	@Test

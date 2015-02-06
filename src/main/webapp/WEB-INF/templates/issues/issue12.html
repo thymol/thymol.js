@@ -1,0 +1,15 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-3.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title th:text="#{edit.pageTitle}">Online Shopping Cart - Enter Quantity</title>
+</head>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="issue12-data.js"></script>
+<body>
+<h1>Contents</h1>
+<div>
+	<input name="command" value="Review" th:attr="value=#{edit.button.review}" />
+	<input name="preamble" value="Clear" th:value="#{edit.button.clear}" />
+</div>
+</body>
+</html>

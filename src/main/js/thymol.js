@@ -16,6 +16,7 @@
 		thDefaultRelativeRootPath: "",  // Non-blank signifies use of thymol.js relative addressing
 		thDefaultExtendedMapping: false,
 		thDefaultLocalMessages: true,
+		thDefaultDisableMessages: false,
 		thDefaultTemplateSuffix: ".html"
 	};
 	thymol = function( conf ) {

@@ -100,8 +100,9 @@ thymol = function() {
 		this.messagePath = Thymol.prototype.getThParam("thMessagePath", false, true, this.thDefaultMessagePath);		
 		this.messagesBaseName = Thymol.prototype.getThParam("thMessagesBaseName", false, false, this.thDefaultMessagesBaseName);		
 		this.relativeRootPath = Thymol.prototype.getThParam("thRelativeRootPath", false, true, this.thDefaultRelativeRootPath);		
-		this.extendedMapping = Thymol.prototype.getThParam("thExtendedMapping", false, false, this.thDefaultExtendedMapping);		
-		this.localMessages = Thymol.prototype.getThParam("thLocalMessages", false, false, this.thDefaultLocalMessages);		
+		this.extendedMapping = Thymol.prototype.getThParam("thExtendedMapping", true, false, this.thDefaultExtendedMapping);		
+		this.localMessages = Thymol.prototype.getThParam("thLocalMessages", true, false, this.thDefaultLocalMessages);				
+		this.disableMessages = Thymol.prototype.getThParam("thDisableMessages", true, false, this.thDefaultDisableMessages);				
 		this.templateSuffix = Thymol.prototype.getThParam("thTemplateSuffix", false, false, this.thDefaultTemplateSuffix);		
 				
 		this.indexFile = Thymol.prototype.getThParam("thIndexFile", false, false, null);		
@@ -211,6 +212,9 @@ thymol = function() {
 					break;
 				case "thLocalMessages":
 					thymol.localMessages = e[2];
+					break;
+				case "thDisableMessages":
+					thymol.disableMessages = e[2];
 					break;
 				case "thIndexFile":
 					thymol.indexFile = e[2];
@@ -453,13 +457,13 @@ thymol = function() {
 	function substituteParam(argValue, mode, element) {
 		var result = argValue, varName = argValue, subs = null, msg, expo;
 		if (result) {
-			if (mode == 4) {
+			if (mode === 4) {
 				msg = thymol.getMessage(varName);
 				if (msg) {
 					subs = msg;
 				}
 			}
-			else if (mode == 6) {
+			else if (mode === 6) {
 				subs = argValue;
 			}
 			else {				
@@ -506,7 +510,7 @@ thymol = function() {
 							subs = thymol.applicationContext;
 						}
 					}				
-					if ( mode == 2 && (typeof subs === "undefined" || subs == null)) {
+					if ( mode === 2 && (typeof subs === "undefined" || subs == null)) {
 						subs = argValue;
 					}
 				}												
@@ -727,7 +731,7 @@ thymol = function() {
 		expr = ThParser.parse(result,false,preprocessed);
 		expr = expr.simplify();
 		// TODO Cache expressions here!!
-		result = expr.evaluate(element);
+		result = expr.evaluate(element);			
 		if (typeof result === "number") {
 			result = ThUtils.getToPrecision(result, expr.precision);
 		}
@@ -847,6 +851,9 @@ thymol = function() {
 	}
 	
 	function getMessage(varName, parameters, returnStringAlways) {
+		if( thymol.disableMessages ) {
+			return undefined;
+		}
 		var msgKey = null;
 		var locale;
 		if( !!thymol.locale.levels ) {
@@ -2035,6 +2042,7 @@ thymol = function() {
 		extendedMapping : thymol.extendedMapping,			
 		localMessages : thymol.localMessages,			
 		indexFile : thymol.indexFile,			
+		disableMessages : thymol.disableMessages,
 		templateSuffix : thymol.templateSuffix,			
 
 		prefix : thymol.prefix,
