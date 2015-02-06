@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>issue13a example</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="issue13a-data.js"></script>
+	<body>
+ 		<div style="color: red;">hello</div>
+ 		<div>
+		    <div th:include="fter::copy">hello hello</div>
+ 		</div>
+		<div>
+			<div th:include="other">help!</div>
+		</div>
+		<p><a href="index.html">Back</a></p>
+	</body>
+</html>

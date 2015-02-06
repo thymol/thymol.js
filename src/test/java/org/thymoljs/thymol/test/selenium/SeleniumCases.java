@@ -53,8 +53,16 @@ public class SeleniumCases {
 		getter.localise(path);
 	}
 
+	public void localise(String path, String suffix) {
+		getter.localise(path,suffix);
+	}
+
 	public void localise(String path, Locale locale) {
 		getter.localise(path,locale);
+	}
+
+	public void localise(String path, String suffix, Locale locale) {
+		getter.localise(path,suffix,locale);
 	}
 
 	public String getURI(String path) {
