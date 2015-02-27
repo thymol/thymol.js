@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"></script>
+</head>
+<body>
+<span th:text="${1==1 ? 'TRUE_VALUE':'FALSE_VALUE'}">result</span>
+<span th:text="${(1==1) ? 'TRUE_VALUE':'FALSE_VALUE'}">result</span>
+<span th:text="${#bools.isTrue(1==1) ? 'TRUE_VALUE':'FALSE_VALUE'}">result</span>
+</body>
+</html>

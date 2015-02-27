@@ -260,7 +260,7 @@ public class InlineCases extends SeleniumCases {
 	public void inline03() {
 		localise("tests/inline/");
 		String result = getResult( "inline03.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean(inline03ResultThymol), clean(result) );			
 		}
 		else {			
@@ -272,7 +272,7 @@ public class InlineCases extends SeleniumCases {
 	public void inline04() {
 		localise("tests/inline/");
 		String result = getResult( "inline04.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean(inline04ResultThymol), clean(result) );			
 		}
 		else {			
@@ -284,7 +284,7 @@ public class InlineCases extends SeleniumCases {
 	public void inline05() {
 		localise("tests/inline/");
 		String result = getResult( "inline05.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean(inline05ResultThymol), clean(result) );			
 		}
 		else {			

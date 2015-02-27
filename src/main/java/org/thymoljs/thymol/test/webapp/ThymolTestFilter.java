@@ -38,9 +38,11 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 
 public class ThymolTestFilter implements Filter {
 
-	public static final String UPDATE_PREFIX_URI = "ThymolTestFilter-updatePrefix";
+	public static final String UPDATE_CONFIG_URI = "ThymolTestFilter-updateConfig";
+	public static final String APP_SUFFIX = ".html";
 
 	private Locale locale = null;	
+	private String suffix = APP_SUFFIX;	
 	
 	private static TemplateEngine templateEngine;
 	static {
@@ -66,7 +68,7 @@ public class ThymolTestFilter implements Filter {
 	private void process( final HttpServletRequest request, final HttpServletResponse response, final ServletContext servletContext, final TemplateEngine templateEngine ) throws IOException {
 		WebContext ctx = new WebContext( request, response, servletContext );
 		String template = getRequestPath( request );
-		if( UPDATE_PREFIX_URI.equals( template ) ) {
+		if( UPDATE_CONFIG_URI.equals( template ) ) {
 			String localeIndx = ( String )request.getParameter( "locale" );			
 			if( localeIndx != null ) {
 				int indx = Integer.parseInt(localeIndx);				
@@ -77,8 +79,10 @@ public class ThymolTestFilter implements Filter {
 				locale = null;
 			}
 			String prefix = ( String )request.getParameter( "prefix" );
+			String reqSuffix = ( String )request.getParameter( "suffix" );
+			suffix = reqSuffix == null ? APP_SUFFIX: reqSuffix;
 			if( prefix != null ) {
-				addPrefix( prefix, locale );
+				addConfiguration( prefix, suffix, locale );
 			}
 			response.setContentType("text/html");
 		}
@@ -98,12 +102,12 @@ public class ThymolTestFilter implements Filter {
 
 	private String getRequestPath( final HttpServletRequest request ) {
 		final String requestURI = request.getRequestURI();
-		if( !requestURI.contains( UPDATE_PREFIX_URI ) ) {
+		if( !requestURI.contains( UPDATE_CONFIG_URI ) ) {
 			final String contextPath = request.getContextPath();
 			if( requestURI.startsWith( contextPath ) ) {
 				String uri = requestURI.substring( contextPath.length() + 1 );			
-				if( uri.endsWith( ".html" ) ) {
-					uri = uri.substring( 0, uri.length() - 5 );
+				if( uri.endsWith( suffix ) ) {
+					uri = uri.substring( 0, uri.length() - suffix.length() );
 				}
 				else {
 					uri = "";
@@ -134,18 +138,23 @@ public class ThymolTestFilter implements Filter {
 		}
 	}
 
-	public static void addPrefix( String prefix, Locale locale ) {
+	public static void addConfiguration( String prefix, String suffix, Locale locale ) {
 		Set< ITemplateResolver > resolvers = templateEngine.getTemplateResolvers();
 		TemplateResolver prefixResolver = null;
 		for( ITemplateResolver resolver: resolvers ) {
 			ThymolTestApplication.ThymolServletContextTemplateResolver tr = ( ThymolTestApplication.ThymolServletContextTemplateResolver )resolver;
-			if( tr.getPrefix().equals( prefix ) && tr.getLocale().toString().equals(locale.toString()) ) {
-				prefixResolver = tr;
-				break;
+			if( tr.getPrefix().equals( prefix ) ) {
+				Locale trl = tr.getLocale();
+				if( ( trl == null && locale == null ) || ( trl != null && locale != null && tr.getLocale().toString().equals(locale.toString()) ) ) {
+					if( suffix.equals( tr.getSuffix() ) ) {
+						prefixResolver = tr;
+						break;
+					}
+				}
 			}
 		}
 		if( prefixResolver == null ) {
-			templateEngine = ThymolTestApplication.initializeTemplateEngine( prefix, locale );  //TODO
+			templateEngine = ThymolTestApplication.initializeTemplateEngine( prefix, suffix, locale );  //TODO
 		}
 	}
 

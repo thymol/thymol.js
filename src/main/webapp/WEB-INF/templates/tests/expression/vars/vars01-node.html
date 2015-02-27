@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>vars example 01</title>
+</head>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="vars01-data.js"></script>
+<body>
+<p th:text="${#vars.a}">...</p>
+<p th:text="${#vars.b}">...</p>
+</body>
+</html>
+<!--
+
+<p th:text="${#vars.class == null}">...</p>
+<p th:text="${#vars} ? 'vars exists' : 'vars does not exist'">...</p>
+
+<p>vars exists</p>
+<p>true</p>
+<p>Letter A</p>
+<p>Letter B</p>
+
+-->

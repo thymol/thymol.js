@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 <title>tests21 literalsubst example 05 derived from literalsubst05.thtest</title>
 </head>
-<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"   data-thymol-load="literalsubst-data.js"></script>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="literalsubst-data.js"></script>
 <body>
 <ul>
   <li th:each="p : ${planets}" th:text="'We say hello' + | to planet: ${p}|">...</li>

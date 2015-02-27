@@ -1,0 +1,1 @@
+thLocale="en_US";

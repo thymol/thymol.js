@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>ctx example 03</title>
+</head>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="ctx03-data.js"></script>
+<body>
+<p th:text="${#ctx.variables.class}">...</p>
+</body>
+</html>
+<!--
+
+ <p th:text="${class}">...</p>
+
+<p>This is a class text</p>
+<p>This is a class text</p>
+
+-->

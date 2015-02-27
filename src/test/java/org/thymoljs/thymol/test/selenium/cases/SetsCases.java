@@ -118,7 +118,7 @@ public class SetsCases extends SeleniumCases {
 	public void sets01() {
 		localise( "thymol/sets/" );
 		String result = getResult( "sets01.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( sets01ResultThymol ), clean( result ) );
 		}
 		else {			

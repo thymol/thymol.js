@@ -16,7 +16,8 @@ public class FailSafeEnv implements URIGetter {
 	
 	Set<String> knownPrefixes = new LinkedHashSet<String>();
 
-	private String suffix = "";
+	private String path = "";
+	private String suffix = null;
 	private Locale locale = null;
 
 	public FailSafeEnv() {
@@ -25,30 +26,44 @@ public class FailSafeEnv implements URIGetter {
 
 	@Override
 	public void localise( String path ) {
-		this.suffix = path;
-		this.locale = null;
+		localise( path, null, null );
 	}
 
 	@Override
 	public void localise( String path, Locale locale ) {
-		this.suffix = path;
+		localise( path, null, locale );
+	}
+
+	@Override
+	public void localise( String path, String suffix ) {
+		localise( path, suffix, null );
+	}
+
+	@Override
+	public void localise( String path, String suffix, Locale locale ) {
+		this.path = path;
+		this.suffix = suffix;
 		this.locale = locale;
 	}
 
 	@Override
-	public String getURI( String path ) {
+	public String getURI( String junk ) {
 		StringBuilder sb = new StringBuilder( "/WEB-INF/templates/" );
-		sb.append( suffix );
+		sb.append( path );
 		String prefix = sb.toString();
 		// ThymolTestFilter.addPrefix(prefix);
-		issuePrefixUpdate( prefix );
+		issueConfigUpdate( prefix );
 		// ThymolTestApplication.setPrefix(prefix);
 		return BASE_URI;
 	}
 
-	private void issuePrefixUpdate( String prefix ) {
+	private void issueConfigUpdate( String prefix ) {
 		StringBuilder ksb = new StringBuilder( "?prefix=" );
 		ksb.append( prefix );
+		if( suffix != null ) {
+			ksb.append( "&suffix=" );
+			ksb.append( suffix );			
+		}
 		if( locale != null ) {
 			int indx = findLocale();
 			if( indx >= 0 ) {
@@ -64,7 +79,7 @@ public class FailSafeEnv implements URIGetter {
 			URL readBack;
 			try {
 				StringBuilder sb = new StringBuilder( BASE_URI );
-				sb.append( ThymolTestFilter.UPDATE_PREFIX_URI );
+				sb.append( ThymolTestFilter.UPDATE_CONFIG_URI );
 				sb.append( key );
 				readBack = new URL( sb.toString() );
 				try {

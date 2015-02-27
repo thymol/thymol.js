@@ -43,6 +43,9 @@ public class AssertCases21 extends SeleniumCases {
 	String assert05ResultThymol = 		
 			"thymol.processAssert assertion failure - list is: ${onevar01},(${twovar01}< 10) false term is: \"(${twovar01}< 10)\"";	 			
 	
+	String assert05ResultNode = 		
+			"thymol.processAssert assertion failure - list is: ${onevar01},(${twovar01} &lt; 10) false term is: \"(${twovar01} &lt; 10)\"";	 			
+	
 	String assert05ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /assert05.html. Reason:\n" +
@@ -79,6 +82,9 @@ public class AssertCases21 extends SeleniumCases {
 	String assert10ResultThymol = 		
 			"thymol.processAssert assertion failure - false term is: \"*{value} > 25\"";	 			
 	
+	String assert10ResultNode = 		
+			"thymol.processAssert assertion failure - false term is: \"*{value} &gt; 25\"";	 			
+	
 	String assert10ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /assert10.html. Reason:\n" +
@@ -89,7 +95,7 @@ public class AssertCases21 extends SeleniumCases {
 	public void assert01() {
 		localise("tests21/assert/");
 		String result = getResult( "assert01.html", ResultMode.ALERT );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( assert01ResultThymol, clean( result ) );			
 		}
 		else {			
@@ -102,7 +108,7 @@ public class AssertCases21 extends SeleniumCases {
 	public void assert02() {
 		localise("tests21/assert/");
 		String result = getResult( "assert02.html", ResultMode.ALERT );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( assert02ResultThymol, clean( result ) );			
 		}
 		else {			
@@ -115,7 +121,7 @@ public class AssertCases21 extends SeleniumCases {
 	public void assert03() {
 		localise("tests21/assert/");
 		String result = getResult( "assert03.html", ResultMode.ALERT );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( assert03ResultThymol, clean( result ) );			
 		}
 		else {			
@@ -137,6 +143,9 @@ public class AssertCases21 extends SeleniumCases {
 		String result = getResult( "assert05.html", ResultMode.ALERT );
 		if( expectThymolResult() ) {
 			assertEquals( assert05ResultThymol, clean( result ) );			
+		}
+		else if( expectNodeResult() ) {
+			assertEquals( assert05ResultNode, clean( result ) );			
 		}
 		else {			
 			String subs = result.substring( 0, result.indexOf( "\tat" ) );
@@ -178,6 +187,9 @@ public class AssertCases21 extends SeleniumCases {
 		String result = getResult( "assert10.html", ResultMode.ALERT );
 		if( expectThymolResult() ) {
 			assertEquals( assert10ResultThymol, clean( result ) );			
+		}
+		else if( expectNodeResult() ) {
+			assertEquals( assert10ResultNode, clean( result ) );			
 		}
 		else {			
 			String subs = result.substring( 0, result.indexOf( "\tat" ) );

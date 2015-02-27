@@ -53,8 +53,16 @@ public class SeleniumCases {
 		getter.localise(path);
 	}
 
+	public void localise(String path, String suffix) {
+		getter.localise(path,suffix);
+	}
+
 	public void localise(String path, Locale locale) {
 		getter.localise(path,locale);
+	}
+
+	public void localise(String path, String suffix, Locale locale) {
+		getter.localise(path,suffix,locale);
 	}
 
 	public String getURI(String path) {
@@ -181,7 +189,15 @@ public class SeleniumCases {
 	public String getResult( String relative, ResultMode mode ) {
 		String result = null;
 		WebElement body = getResultBody( relative, mode );
-		if( body != null ) {			
+		if( body != null ) {
+			// Hack stupid Google bug
+			if( body instanceof  RemoteWebElement ) {
+				RemoteWebElement rwe = (RemoteWebElement)body; 
+				String bodyId = rwe.getId();
+				if( bodyId == null ) {
+					rwe.setId("");
+				}				
+			}						
 			switch( mode ) {
 				case HTML: {
 					result = body.getAttribute( "innerHTML" );
@@ -299,6 +315,13 @@ public class SeleniumCases {
 	public boolean expectThymolResult() {
 		boolean result = false;
 		if( getter.getClass().isAssignableFrom( SureFireEnv.class ) ) {
+			result = true;
+		}
+		return result;
+	}
+	public boolean expectNodeResult() {
+		boolean result = false;
+		if( getter.getClass().isAssignableFrom( FailSafeEnvNode.class ) ) {
 			result = true;
 		}
 		return result;

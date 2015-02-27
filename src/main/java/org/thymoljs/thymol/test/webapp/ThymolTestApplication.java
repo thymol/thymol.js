@@ -20,23 +20,23 @@ public class ThymolTestApplication {
 	}
 
 	public static TemplateEngine initializeTemplateEngine() {
-		return initializeTemplateEngine(APP_PREFIX,null);
+		return initializeTemplateEngine(APP_PREFIX,ThymolTestFilter.APP_SUFFIX,null);
 	}
 
-	public static TemplateEngine initializeTemplateEngine(String prefix, Locale locale) {
+	public static TemplateEngine initializeTemplateEngine(String prefix, String suffix, Locale locale) {
 		templateEngine = new TemplateEngine();		
-		addResolver(prefix,locale);
+		addResolver(prefix,suffix,locale);
 		return templateEngine;
 	}
 		
-	public static void addResolver(String prefix, Locale locale) {
-		TemplateResolver prefixResolver = new ThymolServletContextTemplateResolver(locale);
-		prefixResolver.setTemplateMode( "HTML5" );
-		prefixResolver.setPrefix( prefix );
-		prefixResolver.setSuffix( ".html" );
-		prefixResolver.setCacheTTLMs( Long.valueOf( 3600000L ) );
-		prefixResolver.setCharacterEncoding( "UTF-8" );
-		templateEngine.addTemplateResolver( prefixResolver );		
+	public static void addResolver(String prefix, String suffix, Locale locale) {
+		TemplateResolver configurationResolver = new ThymolServletContextTemplateResolver(locale);
+		configurationResolver.setTemplateMode( "HTML5" );
+		configurationResolver.setPrefix( prefix == null ? APP_PREFIX: prefix );
+		configurationResolver.setSuffix( suffix == null ? ThymolTestFilter.APP_SUFFIX: suffix );
+		configurationResolver.setCacheTTLMs( Long.valueOf( 3600000L ) );
+		configurationResolver.setCharacterEncoding( "UTF-8" );
+		templateEngine.addTemplateResolver( configurationResolver );		
 		if( locale != null ) {
 			Properties props = MessageResolutionUtils.loadCombinedMessagesFilesFromBaseName(null, null, "Messages", locale, null);
 			StandardMessageResolver messageResolver = new StandardMessageResolver();			

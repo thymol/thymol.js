@@ -68,7 +68,8 @@ public class ObjectCases extends SeleniumCases {
 	public void object02() {
 		localise("tests/object/");
 		String result = getResult( "object02.html", ResultMode.ALERT );
-		if( getter.getClass().isAssignableFrom( SureFireEnv.class ) ) {
+//		if( getter.getClass().isAssignableFrom( SureFireEnv.class ) ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( object02ResultThymol, result );			
 		}
 		else {			

@@ -14,7 +14,7 @@ thymol.ready(function () {
 		thymol.applicationContext.createVariable("ar4", ar4 );
 		thymol.applicationContext.createVariable("ar5", ar5 );
 			
-		var tm1 = new ThMap();
+		var tm1 = new thymol.ThMap();
 		tm1.put("ar1",ar1);
 		tm1.put("ar2",ar2);
 		tm1.put("ar3",ar3);
@@ -28,14 +28,14 @@ thymol.ready(function () {
 		var va1 = [ar1,ar2,ar3,ar4];
 		thymol.applicationContext.createVariable("va1", va1 );
 	    
-		var ks1 = new ThSet();
+		var ks1 = new thymol.ThSet();
 		ks1.add("ar1");
 		ks1.add("ar2");
 		ks1.add("ar3");
 		ks1.add("ar4");
 		thymol.applicationContext.createVariable("ks1", ks1 );
 	    
-		var vs1 = new ThSet();
+		var vs1 = new thymol.ThSet();
 		vs1.add(ar1);
 		vs1.add(ar2);
 		vs1.add(ar3);
@@ -48,7 +48,7 @@ thymol.ready(function () {
 		var va2 = [ar1,ar2,ar3,ar4,ar5];
 		thymol.applicationContext.createVariable("va2", va2 );
 		
-		var ks2 = new ThSet();
+		var ks2 = new thymol.ThSet();
 		ks2.add("ar1");
 		ks2.add("ar2");
 		ks2.add("ar3");
@@ -56,7 +56,7 @@ thymol.ready(function () {
 		ks2.add("ar5");
 		thymol.applicationContext.createVariable("ks2", ks2 );
 	    
-		var vs2 = new ThSet();
+		var vs2 = new thymol.ThSet();
 		vs2.add(ar1);
 		vs2.add(ar2);
 		vs2.add(ar3);
@@ -70,19 +70,19 @@ thymol.ready(function () {
 		var va3 = [ar1,ar2,ar3];
 		thymol.applicationContext.createVariable("va3", va3 );
 	    
-		var ks3 = new ThSet();
+		var ks3 = new thymol.ThSet();
 		ks3.add("ar1");
 		ks3.add("ar2");
 		ks3.add("ar3");
 		thymol.applicationContext.createVariable("ks3", ks3 );
 	    
-		var vs3 = new ThSet();
+		var vs3 = new thymol.ThSet();
 		vs3.add(ar1);
 		vs3.add(ar2);
 		vs3.add(ar3);
 		thymol.applicationContext.createVariable("vs3", vs3 );
 	    
-		var tm2 = new ThSet();
+		var tm2 = new thymol.ThSet();
 		tm2.add(ar1);
 		tm2.add(ar2);
 		tm2.add(ar3);
@@ -90,7 +90,7 @@ thymol.ready(function () {
 		
 		thymol.applicationContext.createVariable("tm2", tm2 );
 	    
-		var tm3 = new ThMap();
+		var tm3 = new thymol.ThMap();
 		tm3.put("ar1",ar1);
 		tm3.put("ar2",ar2);
 		tm3.put("ar3",ar1);
@@ -106,7 +106,7 @@ thymol.ready(function () {
 		
 		thymol.applicationContext.createVariable("tm4", tm4 );
 
-		var tm5 = new ThMap();
+		var tm5 = new thymol.ThMap();
 		thymol.applicationContext.createVariable("tm5", tm5 );
 	});
 });

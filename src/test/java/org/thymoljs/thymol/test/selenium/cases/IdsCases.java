@@ -64,15 +64,27 @@ public class IdsCases extends SeleniumCases {
 				
 	@Test
 	public void ids01() {
-		localise( "thymol/ids/" );
-		String result = getResult( "ids01.html", ResultMode.HTML );
+		localise( "thymol/ids/" );		
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "ids01-node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "ids01.html", ResultMode.HTML );
+		}
 		assertEquals( clean( ids01Result ), clean( result ) );
 	}
 
 	@Test
 	public void ids02() {
 		localise( "thymol/ids/" );
-		String result = getResult( "ids02.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "ids02-node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "ids02.html", ResultMode.HTML );
+		}
 		assertEquals( clean( ids02Result ), clean( result ) );			
 	}
 

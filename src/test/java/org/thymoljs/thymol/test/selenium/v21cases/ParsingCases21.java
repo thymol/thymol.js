@@ -402,7 +402,7 @@ public class ParsingCases21 extends SeleniumCases {
 	public void parsing07() {
 		localise("tests21/parsing/");
 		String result = getResult( "parsing07.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( parsing07ResultThymol ), clean( result ) );			
 		}
 		else {			
@@ -414,7 +414,7 @@ public class ParsingCases21 extends SeleniumCases {
 	public void parsing07a() {
 		localise("tests21/parsing/");
 		String result = getResult( "parsing07a.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( parsing07aResultThymol ), clean( result ) );			
 		}
 		else {			
@@ -426,7 +426,7 @@ public class ParsingCases21 extends SeleniumCases {
 	public void parsing07b() {
 		localise("tests21/parsing/");
 		String result = getResult( "parsing07b.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( parsing07bResultThymol ), clean( result ) );			
 		}
 		else {			

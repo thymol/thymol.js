@@ -10,7 +10,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class AttrCases extends SeleniumCases {
-
+	
 	String attr01Result =
 			"\n" +
 			"<form action=\"/subscribe\">\n" +
@@ -21,11 +21,29 @@ public class AttrCases extends SeleniumCases {
 			"</form>" +
 			"\n\n\n";
 	
-	
-	
+	String attr01NodeResultMould =
+			"\n" +
+			"<form action=\"%s/subscribe\">\n" +
+			"  <fieldset>\n" +
+			"    <input name=\"email\" type=\"text\">\n" +
+			"    <input value=\"Subscribe me please!\" type=\"submit\">\n" +
+			"  </fieldset>\n" +
+			"</form>" +
+			"\n\n\n";
+		
 	String attr01aResult =
 			"\n" +
 			"<form action=\"/subscribe\">\n" +
+			"  <fieldset>\n" +
+			"    <input type=\"text\" name=\"email\">\n" +
+			"    <input type=\"submit\" value=\"Subscribe me please!\">\n" +
+			"  </fieldset>\n" +
+			"</form>" +
+			"\n\n\n";
+	
+	String attr01aNodeResult =
+			"\n" +
+			"<form action=\"/home/jim/Project/thymol-node-test/subscribe\">\n" +
 			"  <fieldset>\n" +
 			"    <input type=\"text\" name=\"email\">\n" +
 			"    <input type=\"submit\" value=\"Subscribe me please!\">\n" +
@@ -83,16 +101,43 @@ public class AttrCases extends SeleniumCases {
 	
 	@Test
 	public void attr01() {
+		
+//		String thDeploy = System.getProperty("thDeploy");		
+//		String attr01NodeResult = String.format(attr01NodeResultMould, thDeploy);
+		
 		localise("tests/attr/");
 		String result = getResult( "attr01.html", ResultMode.HTML );
 		result = result.replaceAll(";jsessionid=[^\"]*", "");
 		result = clean(result);
-		if( result.equals( clean(attr01Result) ) ) {
-			assertEquals(clean(attr01Result),result);
-		}
-		else {
-			assertEquals(clean(attr01aResult),result);			
-		}
+
+//		if( expectNodeResult() ) {
+//			assertEquals( clean(attr01NodeResult), clean(result) );			
+//
+//			if( result.equals( clean(attr01NodeResult) ) ) {
+//				assertEquals(clean(attr01NodeResult),result);
+//			}
+//			else {
+//				assertEquals(clean(attr01aNodeResult),result);			
+//			}
+//			
+//		
+//		}
+//		else {
+			
+			if( result.equals( clean(attr01Result) ) ) {
+				assertEquals(clean(attr01Result),result);
+			}
+			else {
+				assertEquals(clean(attr01aResult),result);			
+			}
+			
+			
+			assertEquals( clean(attr01Result), clean(result) );			
+//		}
+		
+		
+		
+		
 	}
 
 	@Test

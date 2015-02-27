@@ -96,7 +96,7 @@ public class MapsCases extends SeleniumCases {
 	public void maps02() {
 		localise( "thymol/maps/" );
 		String result = getResult( "maps02.html", ResultMode.ALERT );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( maps02ResultThymol, clean( result ) );			
 		}
 		else {			
@@ -116,7 +116,7 @@ public class MapsCases extends SeleniumCases {
 	public void maps04() {
 		localise( "thymol/maps/" );
 		String result = getResult( "maps04.html", ResultMode.ALERT );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( maps04ResultThymol, clean( result ) );			
 		}
 		else {			

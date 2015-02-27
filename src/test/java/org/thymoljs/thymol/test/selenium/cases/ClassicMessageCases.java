@@ -95,7 +95,13 @@ public class ClassicMessageCases extends SeleniumCases {
 	@Test
 	public void messages03() {
 		localise("tests/messages/",new Locale( "gl", "ES", "" ));
-		String result = getResult( "messages03.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "messages03-node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "messages03.html", ResultMode.HTML );
+		}
 		assertEquals( clean( messages03Result ), clean( result ) );
 	}
 
@@ -110,7 +116,13 @@ public class ClassicMessageCases extends SeleniumCases {
 	@Test
 	public void messages05() {
 		localise("tests/messages/",new Locale( "en", "US", "" ));
-		String result = getResult( "messages05.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "messages05-node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "messages05.html", ResultMode.HTML );
+		}
 		assertEquals( clean( messages05Result ), clean( result ) );
 	}
 

@@ -1,0 +1,1 @@
+thLocale = "gl_ES";

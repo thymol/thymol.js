@@ -12,6 +12,6 @@ thymol.ready(function () {
 	    thymol.applicationContext.createVariable("calendarTime3", time3 );
 	    thymol.applicationContext.createVariable("calendarTime4", time4 );
 	    thymol.applicationContext.createVariable("calendarTimeArray", timeArray );
-	    thymol.applicationContext.createVariable("calendarTimeSet", ThSet.prototype.fromArray(timeArray) );
+	    thymol.applicationContext.createVariable("calendarTimeSet", thymol.ThSet.prototype.fromArray(timeArray) );
 	});
 });
