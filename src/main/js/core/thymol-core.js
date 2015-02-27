@@ -1,2062 +1,2731 @@
+/*-------------------- Thymol - the flavour of Thymeleaf --------------------*
+
+   Thymol version ${thymolVersion} Copyright 2012-2014 James J. Benson.
+   jjbenson .AT. users.sf.net
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" basis,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either expressed or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+
+ *---------------------------------------------------------------------------*/
+
 thymol = function() {
-	
-	// Version data
-	thymol.thVersion = "${thymolVersion}";
-	thymol.thReleaseDate = "${thymolReleaseDate}";
-	thymol.thURL = "http://www.thymoljs.org";
-	thymol.thAltURL = "http://www.thymeleaf.org";
-	
-	// For internal use
-	thymol.thUsingNullPrefix = false;
-	thymol.thThymeleafPrefixList = [];
-	thymol.thThymeleafElementsList = [];
-	thymol.objects = {};
-	
-	var
-		textFuncSynonym = "~~~~",
-		varRefExpr = /([$#]{.*?})/,
-		literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/,
-		startParserLevelCommentExpr = /^\s*\/\*\s*$/,
-		endParserLevelCommentExpr = /^\s*\*\/\s*$/,
-		startParserLevelCommentExpr2 = /^\/\*[^\/].*/,
-		endParserLevelCommentExpr2 = /.*[^\/]\*\/$/,
-		prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//,
-		varExpr3 = /[\$\*#@]{1}\{(.*)\}$/, // Retain the content
-		nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/,
-		numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/,
-		varParExpr = /([^(]*)\s*[(]([^)]*?)[)]/,
-		domSelectExpr = /([\/]{1,2})?([A-Za-z0-9_\-]*(?:[\(][\)])?)?([^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*(?:[\.\/#]?[^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*)*)?([\[][^\]]*?[\]])?/,
-		litSubstExpr = /\.*?([\|][^\|]*?[\|])\.*?/;
 
-	function Thymol() {
-		// Empty apart from this!
-	}
+  // Version data
+  thymol.thVersion = "${thymolVersion}";
+  thymol.thReleaseDate = "${thymolReleaseDate}";
+  thymol.thURL = "http://www.thymoljs.org";
+  thymol.thAltURL = "http://www.thymeleaf.org";
 
-	function ThNode(thDocParam, visitedParam, parentDocParam, firstChildParam, nextSiblingParam, fileNameParam, fragNameParam, isNodeParam, elementParam) {
-		this.thDoc = thDocParam;
-		this.visited = visitedParam;
-		this.parentDoc = parentDocParam;
-		this.firstChild = firstChildParam;
-		this.nextSibling = nextSiblingParam;
-		this.fileName = fileNameParam;
-		this.fragName = fragNameParam;
-		this.isNode = isNodeParam;
-		this.element = elementParam;
-	}
+  // For internal use
+  thymol.thUsingNullPrefix = false;
+  thymol.thThymeleafPrefixList = [];
+  thymol.thThymeleafElementsList = [];
+  thymol.objects = {};
 
-	function init() {
+  var
+    textFuncSynonym = "~~~~",
+    varRefExpr = /([$#]{.*?})/,
+    literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/,
+    startParserLevelCommentExpr = /^\s*\/\*\s*$/,
+    endParserLevelCommentExpr = /^\s*\*\/\s*$/,
+    startParserLevelCommentExpr2 = /^\/\*[^\/].*/,
+    endParserLevelCommentExpr2 = /.*[^\/]\*\/$/,
+    prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//,
+    varExpr3 = /[\$\*#@]{1}\{(.*)\}$/, // Retain the content
+    nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/,
+    numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/,
+    varParExpr = /([^(]*)\s*[(]([^)]*?)[)]/,
+    domSelectExpr = /([\/]{1,2})?([A-Za-z0-9_\-]*(?:[\(][\)])?)?([^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*(?:[\.\/#]?[^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*)*)?([\[][^\]]*?[\]])?/,
+    litSubstExpr = /\.*?([\|][^\|]*?[\|])\.*?/;
 
-		this.messages = null;
-		this.mappings = null;
+  function Thymol() {
+    // Empty apart from this!
+  }
 
-		this.debug = null;
-		
-		this.protocol = null;
-		this.root = null;
-		this.path = null;
+  function execute( doc ) {
+    if( typeof thymol.protocol === "undefined") {
+      thymol.protocol = "";
+    }
+    if( typeof thymol.root === "undefined") {
+      thymol.root = "";
+    }
+    if( typeof thymol.path === "undefined") {
+      thymol.path = "";
+    }
+    thymol.thDocument = doc;
+    var theWindow = thymol.thWindow;
+    if( typeof thymol.thWindow === "undefined" ) {
+      if( typeof doc.defaultView !== "undefined" ) {
+        theWindow = doc.defaultView;
+      }
+      else if( typeof doc.parentWindow !== "undefined" ) {
+        theWindow = doc.parentWindow;
+      }
+    }
+    thymol.thWindow = theWindow;    
+    var theTop = thymol.thTop;
+    if( typeof thymol.thTop === "undefined" ) {
+      if( typeof top !== "undefined" ) {
+        theTop = top;
+      }
+    }
+    thymol.thTop = theTop;        
 
-		getLocations(this);
+    thymol.init();
+    var base = new ThNode( thymol.thDocument, false, null, null, null, thymol.thDocument.nodeName, "::", false, thymol.thDocument );
+    Thymol.prototype.process( base );
+    postExecute();
+    return thymol.thDocument;
+  }
+  
+  function jqSetup( jq ) {
+    /**
+     * @memberOf $.fn
+     */
+    jq.fn.extend( {
+      getComments : function() {
+        return this.filter( function() {
+          return this.nodeType === 8;
+        } );
+      },
+      getThDecorated : function( thInst ) {
+        var i, iAttrName, iLength, j, jLength, instances = [], result = null, expanded = false;
+        if( thInst.escpName !== null ) {
+          instances = this.filter( thInst.escpName );
+        }
+        if( thInst.escpSynonym !== null ) {
+          instances = instances.add( this.filter( thInst.escpSynonym ) );
+        }
+        for( i = 0, iLength = instances.length; i < iLength; i++ ) {
+          if( instances[ i ] ) {
+            for( j = 0, jLength = instances[ i ].attributes.length; j < jLength; j++ ) {
+              if( instances[ i ].attributes[ j ] ) {
+                iAttrName = instances[ i ].attributes[ j ].name;
+                if( iAttrName && ( thInst.name == iAttrName || thInst.synonym == iAttrName ) ) {
+                  expanded = thymol.ThUtils.processElement( thInst.process, instances[ i ], instances[ i ].attributes[ j ], thInst );
+                  if( expanded ) {
+                    if( result === null ) {
+                      result = [];
+                    }
+                    result.push( instances[ i ] );
+                  }
+                }
+              }
+            }
+          }
+        }
+        return result;
+      }
+    } );
+  } 
+  
+  function ready( func ) {
+    if( typeof thymolDeferredFunctions === "undefined" || thymolDeferredFunctions === null ) {
+      thymolDeferredFunctions = [];
+    }
+    thymolDeferredFunctions.push( func );
+  }
+  
+  function setupEnv() {
+    thymol.prefix = Thymol.prototype.getThParam( "thPrefix", false, false, thymol.thDefaultPrefix );
+    thymol.dataPrefix = Thymol.prototype.getThParam( "thDataPrefix", false, false, thymol.thDefaultDataPrefix );
 
-		this.locale = new ThObject();
-		getLanguage();		
-		
-		this.allowNullText = null;
+    thymol.messagePath = Thymol.prototype.getThParam("thMessagePath", false, true, thymol.thDefaultMessagePath);		
+    thymol.messagesBaseName = Thymol.prototype.getThParam("thMessagesBaseName", false, false, thymol.thDefaultMessagesBaseName);		
+    thymol.relativeRootPath = Thymol.prototype.getThParam("thRelativeRootPath", false, true, thymol.thDefaultRelativeRootPath);		
+    thymol.extendedMapping = Thymol.prototype.getThParam("thExtendedMapping", true, false, thymol.thDefaultExtendedMapping);		
+    thymol.localMessages = Thymol.prototype.getThParam("thLocalMessages", true, false, thymol.thDefaultLocalMessages);				
+    thymol.disableMessages = Thymol.prototype.getThParam("thDisableMessages", true, false, thymol.thDefaultDisableMessages);				
+    thymol.templateSuffix = Thymol.prototype.getThParam("thTemplateSuffix", false, false, thymol.thDefaultTemplateSuffix);		
+    
+    if (typeof thymol.thScriptPath !== "undefined") {
+      thymol.scriptPath = Thymol.prototype.getThParam( "thScriptPath", false, true, thymol.thScriptPath );
+    }
+    if (typeof thymol.thAbsolutePath !== "undefined") {
+      thymol.absolutePath = Thymol.prototype.getThParam( "thAbsolutePath", false, true, thymol.thAbsolutePath );
+    }
+    if (typeof thymol.thUseAbsolutePath !== "undefined") {
+      thymol.useAbsolutePath = Thymol.prototype.getThParam( "thUseAbsolutePath", true, false, thymol.thUseAbsolutePath );
+    }
+    if (typeof thymol.thKeepRelative !== "undefined") {
+      thymol.keepRelative = Thymol.prototype.getThParam( "thKeepRelative", true, false, thymol.thKeepRelative );
+    }
+    
+    thymol.indexFile = Thymol.prototype.getThParam( "thIndexFile", false, false, null );
+    thymol.debug = Thymol.prototype.getThParam( "thDebug", true, false, false );
+    thymol.allowNullText = Thymol.prototype.getThParam( "thAllowNullText", true, false, true );
 
-		this.thCache = {};
-		this.thExpressionObjects;
-		this.thDeferredFunctions;
-		this.thPreExecutionFunctions;
-		this.thPostExecutionFunctions;
+    thymol.location = thymol.thLocation;
+    if( "" !== thymol.relativeRootPath ) {
+      thymol.root = thymol.location + thymol.relativeRootPath;
+      thymol.messagePath = thymol.root + thymol.messagePath;
+    }
+    else {
+      if( typeof thymol.thMessagePath !== "undefined" ) {
+        thymol.messagePath = Thymol.prototype.getThParam( "thMessagePath", false, true, thymol.thMessagePath );
+      }
+      if( typeof thymol.thRoot !== "undefined" ) {
+        thymol.root = Thymol.prototype.getThParam( "thRoot", false, true, thymol.thRoot );
+      }
+    }
+    thymol.root = Thymol.prototype.getThParam( "thRoot", false, true, thymol.root );
+    if( typeof thymol.thPath !== "undefined" ) {
+      thymol.path = Thymol.prototype.getThParam( "thPath", false, true, thymol.thPath );
+    }
+    thymol.path = Thymol.prototype.getThParam( "thPath", false, true, thymol.path );
 
-		if (typeof this.thExpressionObjects === "undefined" || this.thExpressionObjects === null) {
-			this.thExpressionObjects = {};
+    thymol.protocol = thymol.thDocument.location.protocol;
+    if( "" == thymol.protocol ) {
+      thymol.protocol = thymol.thDefaultProtocol;
+    }
+    else {
+      thymol.protocol += "//";
+      if( "" == thymol.thDocument.location.host ) {
+        thymol.protocol += '/';
+      }
+    }
+    thymol.protocol = Thymol.prototype.getThParam( "thProtocol", false, false, thymol.protocol );
+      
+  }
+  
+  function updatePrefix(pref) {
+    thymol.prefix = pref;
+    thymol.thThymeleafPrefixList = [];
+    thymol.thThymeleafElementsList = [];    
+  }
+  
+  function init() {
+
+    this.messages = null;
+    this.mappings = null;
+
+    this.debug = null;
+
+    getLocations( this );
+
+    this.locale = new thymol.ThObject();
+    getLanguage();
+    
+    var accessor = undefined, i, iLimit, j, jLimit;
+    if( typeof thVars !== "undefined" ) {
+      accessor = new thymol.ThVarsAccessor( thVars, "thVars" );
+    }
+    this.applicationContext = thymol.makeContext( "application", accessor );
+    this.sessionContext = thymol.makeContext( "session", undefined );
+    this.sessionContext.persist = function() { // Only decorate the session context with persist
+      var save = this.serialise();
+      thymol.thTop.name = save;
+    };
+    this.requestContext = thymol.makeContext( "request", undefined );
+
+    this.booleanAndNullTokens = new Array();
+    this.booleanAndNullTokens[ "null" ] = this.applicationContext.createVariable( "null", null );
+    this.booleanAndNullTokens[ "true" ] = this.applicationContext.createVariable( "true", true );
+    this.booleanAndNullTokens[ "false" ] = this.applicationContext.createVariable( "false", false );
+    this.allowNullText = null;
+
+    setupEnv();    
+
+    this.thCache = {};
+    this.thExpressionObjects;
+    this.thDeferredFunctions;
+    this.thPreExecutionFunctions;
+    this.thPostExecutionFunctions;
+
+    if( typeof this.thExpressionObjects === "undefined" || this.thExpressionObjects === null ) {
+      this.thExpressionObjects = {};
+    }
+    this.thExpressionObjects[ "#object" ] = {};
+    this.thExpressionObjects[ "#locale" ] = {};
+
+    this.thExpressionObjects[ "#ctx" ] = [];
+    this.thExpressionObjects[ "#ctx" ][ "variables" ] = {};
+
+    thymol.configureModule( thymol.objects.thHttpServletRequestObject );
+    thymol.configureModule( thymol.objects.thHttpSessionObject );
+    if( typeof thymol.thObjectsConfigureModules !== "undefined" ) {
+      thymol.thObjectsConfigureModules();
+    }
+    var scripts = thymol.thDocument.getElementsByTagName( "script" );
+    for( var i = 0, iLimit = scripts.length; i < iLimit; i++ ) {
+      var parameters = scripts[ i ].getAttribute( "data-thymol-load" );
+      if( !!parameters ) {
+        var splits = parameters.split( "," );
+        for( var j = 0, jLimit = splits.length; j < jLimit; j++ ) {
+          thymol.ThUtils.loadScript( splits[ j ] );
+        }
+      }
+    }
+
+    setupEnv();  // Environment set-up is repeated just in case the script loads wanted to change anything
+    
+    if( typeof thymol.thPreExecutionFunctions === "undefined" || thymol.thPreExecutionFunctions === null ) {
+      thymol.thPreExecutionFunctions = [];
+    }
+    if( typeof thymol.thPostExecutionFunctions === "undefined" || thymol.thPostExecutionFunctions === null ) {
+      thymol.thPostExecutionFunctions = [];
+    }
+
+    $.ajaxSetup( {
+      async : false,
+      isLocal : true,
+      dataType : "text"
+    } );
+
+    if( ! ( typeof thVars === "undefined" ) ) {
+      for( i = 0, iLimit = thVars.length; i < iLimit; i++ ) {
+        this.applicationContext.createVariable( thVars[ i ][ 0 ], thVars[ i ][ 1 ] );
+      }
+    }
+
+    executeDeferred();
+
+    ( function() {
+      var htmlTagAttrs = $( "html" )[ 0 ].attributes, tp = null, tu, nsspec;
+      $( [ thymol.thURL, thymol.thAltURL ] ).each( function() {
+        tu = this;
+        $( htmlTagAttrs ).each( function() {
+          if( this.value == tu ) {
+            nsspec = this.localName.split( ":" );
+            if( nsspec.length > 0 ) {
+              tp = nsspec[ nsspec.length - 1 ];
+              return false;
+            }
+          }
+        } );
+        if( tp ) {
+          thymol.updatePrefix(tp);
+          return false;
+        }
+      } );
+    } )();
+    var defaultScriptUrl = "";
+    if( !!thymol.thRequest ) {
+      thymol.thWindow.location.search = thymol.thRequest;
+    }
+    ( function( app, req ) {
+      var e, f, a = /\+/g, r = /([^&=]+)=?([^&]*)/g, d = function( s ) {
+        return decodeURIComponent( s.replace( a, " " ) );
+      }, q = thymol.thWindow.location.search.substring( 1 ), surl, scriptUrl = defaultScriptUrl;
+
+      $( "script" ).each( function() {
+        surl = this.src;
+        if( surl.indexOf( thymol.thScriptName ) >= 0 ) {
+          scriptUrl = d( surl );
+          return false;
+        }
+      } );
+
+      while( e = r.exec( scriptUrl ) ) {
+        f = e[ 1 ].split( "?" );
+        switch( f[ 1 ] ) {
+          case "thPrefix":
+            thymol.prefix = e[ 2 ];
+            break;
+          case "thDataPrefix":
+            thymol.dataPrefix = e[ 2 ];
+            break;
+          case "thMessagePath":
+            thymol.messagePath = e[ 2 ];
+            break;
+          case "thMessagesBaseName":
+            thymol.messagesBaseName = e[ 2 ];
+            break;
+          case "thRelativeRootPath":
+            thymol.relativeRootPath = e[ 2 ];
+            break;
+          case "thExtendedMapping":
+            thymol.extendedMapping = e[ 2 ];
+            break;
+	  case "thTemplateSuffix":
+	    thymol.templateSuffix = e[2];
+	    break;
+          case "thLocalMessages":
+            thymol.localMessages = e[ 2 ];
+	    break;
+	  case "thDisableMessages":
+  	    thymol.disableMessages = e[2];
+            break;
+          case "thIndexFile":
+            thymol.indexFile = e[ 2 ];
+            break;
+          case "thProtocol":
+            thymol.protocol = e[ 2 ];
+            break;
+          case "thDebug":
+            thymol.debug = e[ 2 ];
+            break;
+          case "thRoot":
+            thymol.root = e[ 2 ];
+            break;
+          case "thPath":
+            thymol.path = e[ 2 ];
+            break;
+          case "thAllowNullText":
+            thymol.allowNullText = e[ 2 ];
+            break;
+          case "thLocale":
+            thymol.locale.value = e[ 2 ];
+            break;
+          case "thDefaultPrecision":
+            thymol.thDefaultPrecision = e[ 2 ];
+            break;
+          case "thDefaultPrecedence":
+            thymol.thDefaultPrecedence = e[ 2 ];
+            break;
+          default:
+            app.createVariable( e[ 1 ], e[ 2 ] );
+        }
+      }
+      while( e = r.exec( q ) ) {
+        req.createVariable( d( e[ 1 ] ), e[ 2 ], true );
+      }
+    } )( this.applicationContext, this.requestContext );
+
+    thymol.thInclude = new thymol.ThAttr( "include", null, 100, null, thymol.prefix );
+    thymol.thReplace = new thymol.ThAttr( "replace", null, 100, null, thymol.prefix );
+    thymol.thSubstituteby = new thymol.ThAttr( "substituteby", null, 100, null, thymol.prefix );
+
+    thymol.thFragment = new thymol.ThAttr( "fragment", null, 20000, null, thymol.prefix );
+    thymol.thRemove = null;
+
+    thymol.thBlock = new thymol.ThElement( "block", function( element ) {
+      var i, limit = element.childNodes.length;
+      for( i = 0; i < limit; i++ ) {
+        if( element.childNodes[ i ].nodeType === 1 ) {
+          element.childNodes[ i ].isBlockChild = true;
+        }
+      }
+    }, thymol.prefix );
+
+    this.applicationContext.resolveJSONReferences();
+    thymol.setupAttrList();
+    preExecute( this.applicationContext );
+
+    this.thExpressionObjects[ "#vars" ] = this.applicationContext;
+    this.thExpressionObjects[ "#root" ] = this.applicationContext;
+
+    this.sessionContext.init();
+    this.sessionContext.resolveJSONReferences();
+    this.requestContext.resolveJSONReferences();
+
+    this.thExpressionObjects[ "#ctx" ][ "variables" ] = this.applicationContext;
+    this.thExpressionObjects[ "#ctx" ][ "requestParameters" ] = this.requestContext;
+    this.thExpressionObjects[ "#ctx" ][ "servletContext" ] = this.applicationContext;
+    this.thExpressionObjects[ "#ctx" ][ "httpServletRequest" ] = this.thExpressionObjects[ "#httpServletRequest" ];
+    this.thExpressionObjects[ "#ctx" ][ "httpSession" ] = this.thExpressionObjects[ "#httpSession" ];
+
+    this.protocol = Thymol.prototype.override( "thProtocol", this.protocol );
+    this.debug = Thymol.prototype.override( "thDebug", this.debug );
+    this.root = Thymol.prototype.override( "thRoot", this.root );
+
+    if( "" !== this.relativeRootPath ) { // If we have a relativeRootPath, generate an absolute root path and set thRoot to this value
+      var rootURI = thymol.thDocument.location.href;
+      var quePos = rootURI.indexOf( "?" );
+      if( quePos >= 0 ) {
+        rootURI = rootURI.substring( 0, quePos );
+      }
+      var sepPos = rootURI.lastIndexOf( "/" );
+      if( sepPos >= 0 ) {
+        rootURI = rootURI.substring( 0, sepPos + 1 );
+      }
+      var newThRoot = rootURI + this.thLocation + this.relativeRootPath;
+      this.thRoot = Thymol.prototype.getThParam( "thRoot", false, true, newThRoot );
+    }
+
+    this.path = Thymol.prototype.override( "thPath", this.path );
+    this.allowNullText = Thymol.prototype.override( "thAllowNullText", this.allowNullText );
+    this.locale.value = Thymol.prototype.override( "thLocale", this.locale.value );
+
+    if( ! ( typeof thMappings === "undefined" ) ) {
+      this.mappings = [];
+      for( j = 0, jLimit = thMappings.length; j < jLimit; j++ ) {
+        this.mappings.push( [ thMappings[ j ][ 0 ], thMappings[ j ][ 1 ] ] );
+      }
+      this.mappings.sort( function( a, b ) {
+        return a[ 0 ].length > b[ 0 ].length ? -1 : 1;
+      } );
+    }
+    this.messages = {};
+    setLocaleValue();
+
+    if( ! ( typeof thMessages === "undefined" ) ) {
+      this.messages[ "" ] = [];
+      for( j = 0, jLimit = thMessages.length; j < jLimit; j++ ) {
+        this.messages[ "" ][ thMessages[ j ][ 0 ] ] = thMessages[ j ][ 1 ];
+      }
+      for( var k in thMessages ) {
+        if( thMessages.hasOwnProperty( k ) ) {
+          if( !k.match( numericExpr ) ) {
+            this.messages[ k ] = [];
+            for( j = 0, jLimit = thMessages[ k ].length; j < jLimit; j++ ) {
+              this.messages[ k ][ thMessages[ k ][ j ][ 0 ] ] = thMessages[ k ][ j ][ 1 ];
+            }
+          }
+        }
+      }
+    }
+
+    if( ! ( typeof thDisable === "undefined" ) ) {
+      for( j = 0, jLimit = thDisable.length; j < jLimit; j++ ) {
+        Thymol.prototype.doDisable( thDisable[ j ] );
+      }
+    }
+
+    thymol.thRemove = Thymol.prototype.getThAttrByName( "remove" );
+
+  }
+
+  function getLocations( thiz ) {
+    thiz.templateName = "";
+    thiz.templatePath = "";
+    if( !!thymol.thDocument.location.href ) {
+      var templateName = templatePath = thymol.thDocument.location.href;
+      thiz.templateName = templateName.substring( 0, ( templateName.indexOf( "." ) == -1 ) ? templateName.length : templateName.lastIndexOf( "." ) );
+      thiz.templatePath = templatePath.substring( 0, ( templatePath.indexOf( "/" ) == -1 ) ? 0 : templatePath.lastIndexOf( "/" ) + 1 );
+    }
+  }
+
+  function getCtx() {
+    return thymol.thExpressionObjects[ "#ctx" ];
+  }
+
+  function configureModule( module ) {
+    if( typeof thymol.thExpressionObjects === "undefined" || thymol.thExpressionObjects === null ) {
+      thymol.thExpressionObjects = {};
+    }
+    thymol.thExpressionObjects[ module.thExpressionObjectName ] = module;
+  }
+
+  function configureAttributeProcessor( prefix, suffix, func, prec, dataAttr ) {
+    var p = prefix + ":";
+    if( p !== null ) {
+      if( thymol.thThymeleafPrefixList.indexOf( p ) < 0 ) {
+        thymol.thThymeleafPrefixList.push( p );
+      }
+    }
+    else {
+      thymol.thUsingNullPrefix = true;
+    }
+    p = new thymol.ThAttr( suffix, func, prec, thymol.thThymeleafPrefixList, prefix, dataAttr );
+  }
+
+  function configureElementProcessor( prefix, suffix, func ) {
+    var p = new thymol.ThElement( suffix, func, prefix );
+  }
+
+  function configurePreExecution( func ) {
+    if( typeof thymol.thPreExecutionFunctions === "undefined" || thymol.thPreExecutionFunctions === null ) {
+      thymol.thPreExecutionFunctions = [];
+    }
+    thymol.thPreExecutionFunctions.push( func );
+  }
+
+  function configurePostExecution( func ) {
+    if( typeof thymol.thPostExecutionFunctions === "undefined" || thymol.thPostExecutionFunctions === null ) {
+      thymol.thPostExecutionFunctions = [];
+    }
+    thymol.thPostExecutionFunctions.push( func );
+  }
+
+  function executeDeferred() {
+    if( typeof thymolDeferredFunctions !== "undefined" && thymolDeferredFunctions !== null ) {
+      while( thymolDeferredFunctions.length > 0 ) {
+        var func = thymolDeferredFunctions.pop();
+        func();
+      }
+    }
+  }
+
+  function preExecute( context ) {
+    while( thymol.thPreExecutionFunctions.length > 0 ) {
+      var func = thymol.thPreExecutionFunctions.pop();
+      func();
+      context.resolveJSONReferences();
+    }
+  }
+
+  function postExecute() {
+    while( thymol.thPostExecutionFunctions.length > 0 ) {
+      var func = thymol.thPostExecutionFunctions.pop();
+      func();
+    }
+  }
+
+  function preProcess( expr, element ) {
+    var result = expr, fp, lp;
+    do {
+      fp = result.indexOf( "__" );
+      if( fp >= 0 ) {
+        lp = -1;
+        if( result.length > 4 ) {
+          lp = result.lastIndexOf( "__" );
+        }
+        if( lp <= 0 ) {
+          throw new thymol.ThError( "Mismatched pre-processing indicators", element );
+        }
+        var head = result.substring( 0, fp );
+        var centre = result.substring( fp + 2, lp );
+        centre = this.getParsedExpr( centre, element );
+        var tail = result.substring( lp + 2 );
+        result = head + centre + tail;
+        fp = result.indexOf( "__" );
+      }
+    }while( fp >= 0 );
+    result = result.replace( /\\_\\_/g, "__" );
+    return result;
+  }
+  ;
+
+  function substituteParam( argValue, mode, element ) {
+    var result = argValue, varName = argValue, subs = null, msg, expo;
+    if( result ) {
+      if( mode === 4 ) {
+        msg = thymol.getMessage( varName );
+        if( msg ) {
+          subs = msg;
+        }
+      }
+      else if( mode === 6 ) {
+        subs = argValue;
+      }
+      else {
+        var token = thymol.booleanAndNullTokens[ result ];
+        if( ! ( typeof token === "undefined" ) ) {
+          if( token === null ) {
+            subs = null;
+          }
+          else {
+            subs = token.value;
+          }
+        }
+        else {
+          if( varName.charAt( 0 ) === '#' ) {
+            if( "#object" === varName ) {
+              if( element.thObjectVar ) {
+                subs = element.thObjectVar;
+              }
+            }
+            else {
+              expo = thymol.thExpressionObjects[ varName ];
+              if( typeof expo !== "undefined" && expo !== null ) {
+                subs = expo;
+              }
+            }
+          }
+          if( ( typeof subs === "undefined" || subs == null ) && element.thObjectVar ) {
+            subs = element.thObjectVar[ varName ];
+          }
+          if( ( typeof subs === "undefined" || subs == null ) && element.thLocalVars ) {
+            subs = element.thLocalVars[ varName ];
+          }
+          if( typeof subs === "undefined" || subs == null ) {
+            subs = thymol.ThUtils.getParameter( varName );
+          }
+          if( typeof subs === "undefined" || subs == null ) {
+            if( "param" === varName ) {
+              subs = thymol.requestContext;
+            }
+            if( "session" === varName ) {
+              subs = thymol.sessionContext;
+            }
+            if( "application" === varName ) {
+              subs = thymol.applicationContext;
+            }
+          }
+          if( mode === 2 && ( typeof subs === "undefined" || subs == null ) ) {
+            subs = argValue;
+          }
+        }
+      }
+      result = subs;
+      if( subs instanceof thymol.ThParam ) {
+        result = subs.value;
+      }
+    }
+    return result;
+  }
+  ;
+
+  function getStandardURL( initial ) {
+    var result = initial.trim(), mapped, head;
+    mapped = thymol.getMapped( result, thymol.extendedMapping ); // Historically extendedMapping has always been true in getStandardURL
+    if( mapped ) {
+      result = mapped;
+    }
+    if( "/" === result && !!thymol.indexFile ) {
+      result += thymol.indexFile;
+    }
+    if( !/.*:\/\/.*/.test( result ) ) { // Absolute URL?
+      if( /^~?\/.*$/.test( result ) ) { // Server-relative or Context-relative?
+        if( /^~.*$/.test( result ) ) { // Context-relative?
+          result = result.substring( 1 );
+        }
+        if( !/^\/\/.*$/.test( result ) ) { // Protocol relative?
+          if( !thymol.keepRelative ) {
+            head = thymol.root;
+            if( head != "" ) {
+              if( head.charAt( head.length - 1 ) !== '/' ) {
+                head = head + '/';
+              }
+              if( result.charAt( 0 ) === '/' ) {
+                result = head + result.substring( 1 );
+              }
+              else {
+                result = head + result;
+              }
+            }
+          }
+        }
+      }
+    }
+    return result;
+  }
+  ;
+
+  function getExpression( argValue, element ) {
+    var result = argValue, subst = false, initial, shortCut, args, negate, token, lsp;
+    if( typeof argValue === 'string' ) {
+      initial = argValue.trim();
+      result = initial;
+      if( result ) {
+        shortCut = thymol.ThUtils.getParameter( result );
+        if( !shortCut ) {
+          args = result.match( varExpr3 );
+          if( args ) {
+            if( args[ 1 ] && args[ 1 ].length > 0 ) {
+              shortCut = thymol.ThUtils.getParameter( args[ 1 ] );
+            }
+          }
+        }
+        if( shortCut ) {
+          if( shortCut instanceof thymol.ThParam ) {
+            result = shortCut.value;
+          }
+          else {
+            result = shortCut;
+          }
+          if( typeof result === 'string' && result.match( numericExpr ) ) { // Numeric?
+            result = parseInt( result );
+          }
+        }
+        else {
+          initial = thymol.ThUtils.unParenthesise( result );
+          negate = false;
+          if( initial.charAt( 0 ) == '!' ) {
+            negate = true;
+            initial = initial.substring( 1, initial.length );
+            initial = thymol.ThUtils.unParenthesise( initial );
+          }
+          if( literalTokenExpr.test( initial ) ) {
+            token = thymol.booleanAndNullTokens[ initial ];
+            if( ! ( typeof token === "undefined" ) ) {
+              result = token.value;
+              subst = true;
+            }
+          }
+          lsp = null;
+          if( !subst ) {
+            lsp = initial.match( litSubstExpr );
+            if( lsp && lsp.length > 0 ) {
+              if( thymol.ThUtils.charOcurrences( lsp[ 1 ], '\'' ) < 2 ) { // No contained literals
+                initial = Thymol.prototype.doLiteralSubstExpr( initial, lsp[ 1 ] );
+              }
+            }
+            result = "";
+            if( initial != "" ) {
+              initial = thymol.ThUtils.unParenthesise( initial );
+              initial = thymol.preProcess( initial, element );
+              result = thymol.getParsedExpr( initial, element, true );
+            }
+          }
+          if( result == initial && ( typeof result == typeof initial ) ) { // Unsubstituted
+            result = null;
+          }
+          else if( typeof result === 'string' ) {
+            if( !lsp ) {
+              result = result.replace( /[\\][\\]/g, "\\" );
+            }
+            result = result.replace( /&#39;/g, "\'" ).replace( /&apos;/gi, "\'" );
+          }
+          if( negate ) {
+            if( typeof result === 'boolean' ) {
+              result = !result;
+            }
+            else if( typeof result === 'number' ) {
+              result = ( result == 0 );
+            }
+            else if( typeof result === 'string' ) {
+              result = !thymol.ThUtils.testLiteralFalse( result );
+            }
+          }
+        }
+      }
+    }
+    return result;
+  }
+  ;
+
+  function getMapped( uri, extended ) {
+    var mapped = null, i, iLimit, key;
+    if( uri && typeof uri === "string" ) {
+      if( thymol.mappings ) {
+        for( i = 0, iLimit = thymol.mappings.length; i < iLimit; i++ ) {
+          key = thymol.mappings[ i ][ 0 ];
+          if( uri == key ) {
+            mapped = thymol.mappings[ i ][ 1 ];
+            break;
+          }
+          else if( extended ) {
+            if( uri.indexOf( key ) == 0 ) {
+              mapped = uri.substring( key.length );
+              mapped = thymol.mappings[ i ][ 1 ] + mapped;
+              break;
+            }
+          }
+        }
+      }
+    }
+    return mapped;
+  }
+  ;
+
+  function substitute( initial, element, lenient ) { // It looks pretty good but it's just (nearly) deprecated !!!
+    var argValue = initial, result, args, token, re, subs, saved;
+    if( typeof argValue === "string" ) {
+      argValue = argValue.trim();
+    }
+    result = argValue;
+    args = "";
+    while( args != null ) {
+      args = argValue.match( /.*([$\*#@]{(!?[^}]*)}).*/ );
+      if( args != null && args.length > 0 ) {
+        if( args.length == 3 ) { // Found an embedded expression
+          token = args[ 1 ];
+          token = token.replace( /[$]/g, "[$]" ).replace( /[*]/g, "[*]" ).replace( /[\']/g, "[\']" ).replace( /[+]/g, "[\+]" ).replace( /[\(]/g, "[\(]" ).replace( /[\)]/g, "[\)]" );
+          re = new RegExp( token );
+          subs = this.getExpression( args[ 2 ], element );
+          if( subs != args[ 2 ] ) {
+            result = result.replace( re, subs, "g" );
+            if( result == "null" ) {
+              result = null;
+            }
+          }
+          else {
+            subs = ""; // Substitution failed
+            if( thymol.debug && !lenient ) {
+              thymol.thWindow.alert( "thymol variable substitution failed: \"" + initial + "\"" );
+            }
+          }
+          saved = argValue;
+          argValue = argValue.replace( re, subs, "g" );
+          if( saved == argValue ) {
+            argValue = "";
+          }
+        }
+      }
+    }
+    return result;
+  }
+  ;
+
+  function getWith( element, content ) {
+    var argValue = content.trim(), argCount = 0;
+    if( argValue ) {
+      do {
+        var argsExpr = thymol.ThParser.parse( argValue, true, false );
+        var identifier = argsExpr.tokens.shift();
+        if( identifier.type_ === 3 ) {
+          var result = argsExpr.evaluate( element );
+          var varName = identifier.index_;
+          if( !!varName ) {
+            argCount++;
+            if( !element.thLocalVars ) {
+              element.thLocalVars = {};
+
+            }
+            element.thLocalVars[ varName ] = result;
+          }
+          argValue = argValue.substring( argsExpr.position );
+        }
+        else {
+          break;
+        }
+      }while( argValue.length > 0 );
+    }
+    return argCount;
+  }
+  ;
+
+  function getParsedExpr( initial, element, preprocessed ) {
+    var expr, result = initial;
+    expr = thymol.ThParser.parse( result, false, preprocessed );
+    expr = expr.simplify();
+    // TODO Cache expressions here!!
+    result = expr.evaluate( element );
+    if( typeof result === "number" ) {
+      result = thymol.ThUtils.getToPrecision( result, expr.precision );
+    }
+    return result;
+  }
+  ;
+
+  function getBooleanValue( param ) {
+    var flag = false, val, args;
+    if( param != null ) {
+      if( typeof param === "boolean" ) {
+        flag = param;
+      }
+      else if( typeof param === 'number' ) {
+        flag = param != 0;
+      }
+      else {
+        val = param;
+        if( Object.prototype.toString.call( val ) === '[object Array]' ) {
+          if( val.length === 1 ) {
+            val = val[ 0 ];
+          }
+          else {
+            val = true;
+          }
+        }
+        if( typeof val === 'boolean' ) {
+          flag = val;
+        }
+        else if( typeof val === 'number' ) {
+          flag = ( val != 0 );
+        }
+        else if( typeof val === 'string' ) {
+          args = val.match( nonURLExpr );
+          if( args ) {
+            val = args[ 1 ];
+            flag = this.testParam( val );
+          }
+          else {
+            flag = !thymol.ThUtils.testLiteralFalse( val );
+          }
+        }
+        else if( val instanceof thymol.ThParam ) {
+          flag = val.getBooleanValue();
+        }
+        else {
+          flag = typeof val !== "undefined" && val !== null;
+        }
+      }
+    }
+    return flag;
+  }
+
+  function isFragmentChild( element ) {
+    var result = false, parent = element.parentElement;
+    while( parent ) {
+      if( parent.getAttribute( thymol.thFragment.name ) || parent.getAttribute( thymol.thFragment.synonym ) ) {
+        result = true;
+        break;
+      }
+      parent = parent.parentElement;
+    }
+    return result;
+  }
+
+  function setLocale( locValue ) {
+    thymol.locale.value = locValue;
+    setLocaleValue();
+  }
+
+  function getLocale() {
+    return thymol.locale.value;
+  }
+
+  function getLanguage() {
+    if( !thymol.locale.value ) {
+      if( typeof navigator !== "undefined" && !!navigator ) {
+        var userLang = navigator.language || navigator.userLanguage || navigator.browserLanguage || navigator.systemLanguage;
+        if( !!userLang ) {
+          thymol.locale.value = userLang.replace( /\-/g, "_" );
+        }        
+      }
+    }
+  }
+
+  function setLocaleValue() {
+    if( !thymol.locale.value ) {
+      thymol.locale.value = thymol.thDefaultLocale;
+    }
+    var sepPos;
+    var locale = thymol.locale.value.replace( /\-/g, "_" );
+    var level = thymol.locale.value;
+    var levels = [];
+    var part, parts = [];
+    do {
+      levels.push( level );
+      sepPos = locale.lastIndexOf( "_" );
+      if( sepPos >= 0 ) {
+        part = locale.substring( sepPos + 1 );
+        parts.push( part );
+        locale = locale.substring( 0, sepPos );
+        level = level.substring( 0, sepPos );
+      }
+    }while( sepPos >= 0 );
+    thymol.locale.language = level;
+    if( !!parts ) {
+      parts.reverse();
+      for( var i = 0, iLimit = parts.length; i < iLimit; i++ ) {
+        if( i === 0 ) {
+          thymol.locale.country = parts[ i ];
+        }
+        else if( i === 1 ) {
+          thymol.locale.variant = parts[ i ];
+        }
+      }
+    }
+    thymol.locale.levels = levels;
+    thymol.thExpressionObjects[ "#ctx" ][ "locale" ] = thymol.locale;
+    thymol.thExpressionObjects[ "#locale" ] = thymol.locale;
+  }
+
+  function getMessage( varName, parameters, returnStringAlways ) {
+		if( thymol.disableMessages ) {
+			return undefined;
 		}
-		this.thExpressionObjects["#object"] = {};
-		this.thExpressionObjects["#locale"] = {};
+    var msgKey = null;
+    var locale;
+    if( !!thymol.locale.levels ) {
+      var prefix = "$"; // Use prefix to disambiguate the local and default messages
+      var ident, section, jLower = thymol.localMessages ? 0 : 1;
+      for( var j = jLower; j < 2; j++ ) {
+        for( var i = 0, iLimit = thymol.locale.levels.length; i < iLimit + 1; i++ ) {
+          ident = prefix;
+          if( i < iLimit ) {
+            locale = thymol.locale.levels[ i ];
+          }
+          else {
+            locale = "";
+          }
+          ident = ident + locale;
+          section = thymol.messages[ ident ];
+          if( !section ) {
+            if( j < 1 ) {
+              section = getLocalMessages( locale );
+            }
+            else {
+              section = getDefaultMessages( locale );
+            }
+          }
+          if( !!section ) {
+            thymol.messages[ ident ] = section;
+            msgKey = section[ varName ];
+            if( !!msgKey ) {
+              break;
+            }
+          }
+        }
+        if( !!msgKey ) {
+          break;
+        }
+        prefix += "$";
+      }
+    }
+    if( !msgKey ) {
+      for( var i = 0, iLimit = thymol.locale.levels.length; i <= iLimit; i++ ) {
+        if( i < iLimit ) {
+          locale = thymol.locale.levels[ i ];
+        }
+        else {
+          locale = "";
+        }
+        if( !!thymol.messages[ locale ] ) {
+          msgKey = thymol.messages[ locale ][ varName ];
+          if( !!msgKey ) {
+            break;
+          }
+        }
+      }
+    }
+    if( !!msgKey ) {
+      if( typeof parameters === "undefined" ) {
+        return msgKey;
+      }
+      else {
+        return thymol.ThUtils.renderMessage( msgKey, parameters );
+      }
+    }
+    else if( returnStringAlways !== undefined && returnStringAlways ) {
+      return "??" + varName + "_" + thymol.locale.value + "??";
+    }
+    return null;
+  }
 
-		this.thExpressionObjects["#ctx"] = [];
-		this.thExpressionObjects["#ctx"]["variables"] = {};
+//  function getProperties( pf ) {
+  function getProperties( propFile ) {
+    var props = null;
+    var messages = [];
+//    var file = propFile;
+//    var propFile = Thymol.prototype.getFilePath( pf );
+    $.get( propFile, function( textContent, status ) {
+      var err = null;
+      try {
+        if( "success" == status ) {
+          props = textContent;
+        }
+        else if( thymol.debug ) {
+          thymol.thWindow.alert( "read failed: " + propFile );
+        }
+      }
+      catch( err ) {
+        if( thymol.debug ) {
+          thymol.thWindow.alert( "properties file read failed: " + propFile + " error: " + err );
+        }
+      }
+    }, "text" );
+    if( props !== null ) {
+      var splits = props.split( "\n" );
+      if( splits.length > 0 ) {
+        for( var i = 0, iLimit = splits.length; i < iLimit; i++ ) {
+          var line = splits[ i ].trim();
+          if( line.charAt( 0 ) !== "#" ) {
+            var p = line.split( "=" );
+            if( p.length > 1 ) {
+              messages[ p[ 0 ].trim() ] = thymol.ThUtils.unicodeUnescape( p[ 1 ].trim() );
+            }
+          }
+        }
+      }
+    }
+    return messages;
+  }
 
-		var accessor = undefined, i, iLimit, j, jLimit, base;
-		if (typeof thVars !== "undefined") {
-			accessor = new ThVarsAccessor(thVars, "thVars");
-		}
-		this.applicationContext = thymol.makeContext("application", accessor);
-		this.sessionContext = thymol.makeContext("session", undefined);
-		this.sessionContext.persist = function() { // Only decorate the session context with persist
-			var save = this.serialise();
-			top.name = save;
-		};
-		this.requestContext = thymol.makeContext("request", undefined);
+  function getLocalMessages( locale ) {
+    var messages = [];
+    if( !!thymol.thDocument.location.href ) {
+      var propsFile = thymol.templateName;
+      if( !!locale && locale !== "" ) {
+        propsFile += "_" + locale;
+      }
+      propsFile += ".properties";
+      messages = getProperties( propsFile );
+    }
+    return messages;
+  }
 
-		this.booleanAndNullTokens = new Array();
-		this.booleanAndNullTokens["null"] = this.applicationContext.createVariable("null", null);
-		this.booleanAndNullTokens["true"] = this.applicationContext.createVariable("true", true);
-		this.booleanAndNullTokens["false"] = this.applicationContext.createVariable("false", false);
-		
-		this.prefix = Thymol.prototype.getThParam("thPrefix", false, false, this.thDefaultPrefix);
-		this.dataPrefix = Thymol.prototype.getThParam("thDataPrefix", false, false, this.thDefaultDataPrefix);
-		
-		this.messagePath = Thymol.prototype.getThParam("thMessagePath", false, true, this.thDefaultMessagePath);		
-		this.messagesBaseName = Thymol.prototype.getThParam("thMessagesBaseName", false, false, this.thDefaultMessagesBaseName);		
-		this.relativeRootPath = Thymol.prototype.getThParam("thRelativeRootPath", false, true, this.thDefaultRelativeRootPath);		
-		this.extendedMapping = Thymol.prototype.getThParam("thExtendedMapping", false, false, this.thDefaultExtendedMapping);		
-		this.localMessages = Thymol.prototype.getThParam("thLocalMessages", false, false, this.thDefaultLocalMessages);		
-				
-		this.indexFile = Thymol.prototype.getThParam("thIndexFile", false, false, null);		
-		
-		this.debug = Thymol.prototype.getThParam("thDebug", true, false, false);
-		this.allowNullText = Thymol.prototype.getThParam("thAllowNullText", true, false, true);
-		this.location = this.thLocation;
-		if( "" !== this.relativeRootPath ) {
-		  this.root = this.location + this.relativeRootPath;
-		  this.messagePath = this.root + this.messagePath;
-		}
-		else {
-		  this.root = "";
-		}			
-		this.root = Thymol.prototype.getThParam("thRoot", false, true, this.root);		
-		this.path = Thymol.prototype.getThParam("thPath", false, true, "");
-		
-		this.protocol = document.location.protocol;
-		if( "" == this.protocol ) {
-			this.protocol = thymol.thDefaultProtocol;
-		}
-		else {
-			this.protocol += "//";
-			if( "" == document.location.host ) {
-				this.protocol += '/';
-			}			
-		}		
-		this.protocol = Thymol.prototype.getThParam("thProtocol", false, false, this.protocol);		
+  function getDefaultMessages( locale ) {
+    var messages = null;
+    var propsPath = "";
+    if( thymol.useAbsolutePath ) {
+      propsPath += thymol.protocol + thymol.root + thymol.path;
+    }
+    else {
+    }
+    propsPath += thymol.messagePath;      
+    if( propsPath !== "" ) {
+      propsPath += "/";
+    }
+    var propsFile = propsPath + thymol.messagesBaseName;
+    if( !!locale && locale !== "" ) {
+      propsFile += "_" + locale;
+    }
+    propsFile += ".properties";
+    messages = getProperties( propsFile );
+    return messages;
+  }
 
-		if (typeof thymol.thPreExecutionFunctions === "undefined" || thymol.thPreExecutionFunctions === null) {
-			thymol.thPreExecutionFunctions = [];
-		}
-		if (typeof thymol.thPostExecutionFunctions === "undefined" || thymol.thPostExecutionFunctions === null) {
-			thymol.thPostExecutionFunctions = [];
-		}
+  Thymol.prototype = {
 
-		$.ajaxSetup({
-			async : false,
-			isLocal : true,
-			dataType : "text"
-		});
+    process : function( rootNode ) {
+      var n = rootNode;
+      try {
+        while( n.thDoc ) {
+          this.getChildren( n );
+          if( n.firstChild && n.firstChild.thDoc && !n.visited ) {
+            n.visited = true;
+            n = n.firstChild;
+          }
+          else {
+            if( n.element != n.thDoc ) {
+              this.doReplace( n.isNode, n.element, n.thDoc );
+              if( !n.isNode ) {
+                n.thDoc = n.element;
+              }
+            }
+            if( n.nextSibling && n.nextSibling.thDoc ) {
+              n = n.nextSibling;
+            }
+            else {
+              if( n == rootNode ) {
+                break;
+              }
+              n = n.parentDoc;
+            }
+          }
+        }
+        this.processChildren( rootNode );
+      }
+      catch( err ) {
+        if( thymol.debug ) {
+          if( err instanceof thymol.ThError ) {
+            if( !err.suppress ) {
+              thymol.thWindow.alert( err );
+            }
+          }
+          else {
+            thymol.thWindow.alert( err );
+          }
+        }
+      }
+    },
 
-		if (!(typeof thVars === "undefined")) {
-			for (i = 0, iLimit = thVars.length; i < iLimit; i++) {
-				this.applicationContext.createVariable(thVars[i][0], thVars[i][1]);
+    getChildren : function( rootNode ) {
+      var count = 0, last = null, changed = false, child, froot, fstar, fchildren, i, iLimit, j, jLimit, element, matches, theAttr;
+      if( !rootNode.visited ) {
+        this.processComments( rootNode );
+        var rnd = this.getContentRoot(rootNode)
+        froot = $( rnd );
+        fstar = $( froot ).add( froot.find( "*" ) );            
+        fchildren = fstar.filter( thymol.thInclude.escpName ).add( fstar.filter( thymol.thInclude.escpSynonym ) ).add( fstar.filter( thymol.thReplace.escpName ) ).add( fstar.filter( thymol.thReplace.escpSynonym ) ).add( fstar.filter( thymol.thSubstituteby.escpName ) ).add( fstar.filter( thymol.thSubstituteby.escpSynonym ) );      
+        for( i = 0, iLimit = fchildren.length; i < iLimit; i++ ) {
+          element = fchildren[ i ], matches = [];
+          for( j = 0, jLimit = element.attributes.length; j < jLimit; j++ ) {
+            theAttr = element.attributes[ j ];
+            if( thymol.thInclude.name == theAttr.name || thymol.thInclude.synonym == theAttr.name || thymol.thReplace.name == theAttr.name || thymol.thReplace.synonym == theAttr.name || thymol.thSubstituteby.name == theAttr.name || thymol.thSubstituteby.synonym == theAttr.name ) {
+              matches.push( theAttr );
+            }
+          }
+          for( j = 0, jLimit = matches.length; j < jLimit; j++ ) {
+            child = this.processImport( element, rootNode, matches[ j ] );
+            if( child != null ) {
+              changed = true;
+              if( count == 0 ) {
+                rootNode.firstChild = child;
+              }
+              else {
+                last.nextSibling = child;
+              }
+              last = child;
+              count++;
+            }
+          }
+        }
+      }
+      return changed;
+    },
+
+    processChildren : function( rootNode ) {
+      var i, iLimit, j, jLimit, k, kLimit;
+      var elements = rootNode.thDoc.getElementsByTagName( "*" );
+      for( k = 0, kLimit = elements.length; k < kLimit; k++ ) {
+        var element = elements[ k ];
+        for( j = 0, jLimit = thymol.thThymeleafElementsList.length; j < jLimit; j++ ) {
+          if( element.localName == thymol.thThymeleafElementsList[ j ].name || element.localName == thymol.thThymeleafElementsList[ j ].synonym ) {
+            var updated = thymol.thThymeleafElementsList[ j ].process( element );
+            if( updated ) {
+              elements = rootNode.thDoc.getElementsByTagName( "*" );
+              k--;
+              kLimit = elements.length;
+            }
+            break; // Element names should be distinct and we don't want to repeat any processing!
+          }
+        }
+        var allAttributes = element.attributes;
+        if( allAttributes && allAttributes.length > 0 ) {
+          var attributes = [];
+          if( !thymol.thUsingNullPrefix ) {
+            for( i = 0, iLimit = allAttributes.length; i < iLimit; i++ ) {
+              if( allAttributes[ i ] ) {
+                for( j = 0, jLimit = thymol.thThymeleafPrefixList.length; j < jLimit; j++ ) {
+                  var attrName = allAttributes[ i ].name.toString();
+                  if( attrName.length > thymol.thThymeleafPrefixList[ j ].length ) {
+                    attrName = attrName.substring( 0, thymol.thThymeleafPrefixList[ j ].length );
+                    if( attrName === thymol.thThymeleafPrefixList[ j ] ) {
+                      attributes.push( allAttributes[ i ] );
+                    }
+                  }
+                }
+              }
+            }
+          }
+          else {
+            attributes = allAttributes;
+          }
+          if( attributes.length > 0 ) {
+            attributes.reverse();
+            var matchedAttributes = [];
+            for( i = 0, iLimit = attributes.length; i < iLimit; i++ ) {
+              var splits = attributes[ i ].name.toString().split( ":" );
+              if( splits && splits.length > 0 ) {
+                var prefix = "", name;
+                if( splits.length > 1 ) {
+                  prefix = splits[ 0 ];
+                  name = splits[ 1 ];
+                }
+                else {
+                  name = splits[ 0 ];
+                  var hpos = name.lastIndexOf( "-" );
+                  if( hpos >= 0 ) {
+                    prefix = name.substring( 0, hpos + 1 );
+                  }
+                }
+                var attrList = thymol.thThymeleafPrefixList[ prefix ];
+                if( splits.length > 1 ) {
+                  prefix += ":";
+                }
+                if( attrList ) {
+                  for( j = 0, jLimit = attrList.length; j < jLimit; j++ ) {
+                    var matched = false;
+                    if( name === attrList[ j ].suffix || name === attrList[ j ].synonym ) {
+                      matched = true;
+                    }
+                    else if( attrList[ j ].regex !== null ) {
+                      var fqn = prefix + name;
+                      matched = attrList[ j ].regex.test( fqn );
+                    }
+                    if( matched ) {
+                      var matchedAttribute = {};
+                      matchedAttribute.attr = attrList[ j ];
+                      matchedAttribute.elementAttr = attributes[ i ];
+                      matchedAttributes.push( matchedAttribute );
+                      break;
+                    }
+                  }
+                }
+              }
+            }
+            if( matchedAttributes.length > 0 ) {
+              matchedAttributes.sort( function( a, b ) {
+                return a.attr.precedence - b.attr.precedence;
+              } );
+              var updated = false;
+              for( i = 0, iLimit = matchedAttributes.length; i < iLimit; i++ ) {
+                var exp = thymol.ThUtils.processElement( matchedAttributes[ i ].attr.process, element, matchedAttributes[ i ].elementAttr, matchedAttributes[ i ].attr, 1 );
+                updated = exp || updated; // No short-circuiting!
+              }
+              if( updated ) {
+                elements = rootNode.thDoc.getElementsByTagName( "*" );
+                k--;
+                kLimit = elements.length;
+              }
+            }
+          }
+        }
+      }
+
+      elements = rootNode.thDoc.getElementsByTagName( "*" );
+      var kc = 0;
+      for( k = 0, kLimit = elements.length; k < kLimit; k++ ) {
+        var element = elements[ kc ];
+        var elName = element.nodeName.toLowerCase();
+        if( elName == thymol.thBlock.name || elName == thymol.thBlock.synonym ) {
+          thymol.ThUtils.removeTag( element );
+          elements = rootNode.thDoc.getElementsByTagName( "*" );
+        }
+        else {
+          kc++;
+        }
+      }
+      
+      
+/*      elements = rootNode.thDoc.getElementsByTagName( "*" );
+      for( k = 0, kLimit = elements.length; k < kLimit; k++ ) {
+        var element = elements[ k ];
+        if( element.localName == thymol.thBlock.name || element.localName == thymol.thBlock.synonym ) {
+          thymol.ThUtils.removeTag( element );
+          elements = rootNode.thDoc.getElementsByTagName( "*" );
+          k--;
+          kLimit = elements.length;
+        }
+      }
+*/    },
+
+    override : function( paramName, paramValue ) {
+      var param = paramValue, thv;
+      thv = thymol.thWindow[ paramName ];
+      if( typeof thv === "undefined" ) {
+        thv = thymol.applicationContext.javascriptify(paramName);
+      }
+      if( thv ) {
+        if( thv instanceof thymol.ThParam ) {
+          param = thv.value;
+        }
+        else {
+          param = thv;
+        }
+      }
+      thv = thymol.applicationContext[ paramName ];
+      if( thv ) {
+        if( thv instanceof thymol.ThParam ) {
+          param = thv.value;
+        }
+        else {
+          param = thv;
+        }
+      }
+      thv = thymol.requestContext[ paramName ];
+      if( thv ) {
+        if( thv instanceof thymol.ThParam ) {
+          param = thv.value;
+        }
+        else {
+          param = thv;
+        }
+      }
+      return param;
+    },
+
+    doDisable : function( attrName ) {
+      var tha = this.getThAttrByName( attrName );
+      if( tha !== null ) {
+        tha.disable();
+      }
+      else {
+        if( thymol.debug ) {
+          thymol.thWindow.alert( "cannot disable unknown attribute \"" + attrName + "\"" );
+        }
+      }
+    },
+
+	getThAttrByName : function(name) {
+		var attrList = thymol.thThymeleafPrefixList[thymol.prefix];
+		attrList.push(thymol.thInclude);
+		attrList.push(thymol.thReplace);
+		attrList.push(thymol.thSubstituteby);
+		attrList.push(thymol.thFragment);
+		var i, iLimit = attrList.length;
+		for (i = 0; i < iLimit; i++) {
+			if (name === attrList[i].suffix) {
+				return attrList[i];
 			}
-		}
-
-		executeDeferred();
-
-		(function() {
-			var htmlTagAttrs = $("html")[0].attributes, tp = null, tu, nsspec;			
-			$([thymol.thURL,thymol.thAltURL]).each( function() {
-				tu = this;
-				$(htmlTagAttrs).each(function() {
-					if (this.value == tu) {
-						nsspec = this.localName.split(":");
-						if (nsspec.length > 0) {
-							tp = nsspec[nsspec.length - 1];
-							return false;
-						}
-					}
-				});
-				if( tp ) {
-					thymol.prefix = tp;
-					return false;
-				}
-			});
-		})();
-		
-		(function(app, req) {
-			var e, f, a = /\+/g, r = /([^&=]+)=?([^&]*)/g, d = function(s) {
-				return decodeURIComponent(s.replace(a, " "));
-			}, q = window.location.search.substring(1), surl, scriptUrl = "";
-
-			$("script").each(function() {
-				surl = this.src;
-				if (surl.indexOf(thymol.thScriptName) >= 0) {
-					scriptUrl = d(surl);
-					return false;
-				}
-			});
-
-			while (e = r.exec(scriptUrl)) {
-				f = e[1].split("?");
-				switch (f[1]) {
-				case "thPrefix":
-					thymol.prefix = e[2];
-					break;
-				case "thDataPrefix":
-					thymol.dataPrefix = e[2];
-					break;
-				case "thMessagePath":
-					thymol.messagePath = e[2];
-					break;
-				case "thMessagesBaseName":
-					thymol.messagesBaseName = e[2];
-					break;
-				case "thRelativeRootPath":
-					thymol.relativeRootPath = e[2];
-					break;
-				case "thExtendedMapping":
-					thymol.extendedMapping = e[2];
-					break;
-				case "thLocalMessages":
-					thymol.localMessages = e[2];
-					break;
-				case "thIndexFile":
-					thymol.indexFile = e[2];
-					break;
-				case "thProtocol":
-					thymol.protocol = e[2];
-					break;
-				case "thDebug":
-					thymol.debug = e[2];
-					break;
-				case "thRoot":
-					thymol.root = e[2];
-					break;
-				case "thPath":
-					thymol.path = e[2];
-					break;
-				case "thAllowNullText":
-					thymol.allowNullText = e[2];
-					break;
-				case "thLocale":
-					thymol.locale.value = e[2];
-					break;
-				case "thDefaultPrecision":
-					thymol.thDefaultPrecision = e[2];
-					break;
-				case "thDefaultPrecedence":
-					thymol.thDefaultPrecedence = e[2];
-					break;
-				default:
-					app.createVariable(e[1], e[2]);
-				}
-			}
-			while (e = r.exec(q)) {
-				req.createVariable(d(e[1]), e[2], true);
-			}
-		})(this.applicationContext, this.requestContext);
-		
-		thymol.thInclude = new ThAttr("include", null, 100, null, thymol.prefix);
-		thymol.thReplace = new ThAttr("replace", null, 100, null, thymol.prefix);
-		thymol.thSubstituteby = new ThAttr("substituteby", null, 100, null, thymol.prefix);
-		
-		thymol.thFragment = new ThAttr("fragment", null, 20000, null, thymol.prefix);
-		thymol.thRemove = null;
-		
-		thymol.thBlock = new ThElement(
-			"block",
-			function(element) {
-				var i, limit = element.childNodes.length;
-				for (i = 0; i < limit; i++) {
-					if (element.childNodes[i].nodeType === 1) {
-						element.childNodes[i].isBlockChild = true;
-					}
-				}
-			},
-			thymol.prefix
-		);
-		
-		this.applicationContext.resolveJSONReferences();
-		preExecute(this.applicationContext);
-
-		this.thExpressionObjects["#vars"] = this.applicationContext;
-		this.thExpressionObjects["#root"] = this.applicationContext;
-
-		this.sessionContext.init();
-		this.sessionContext.resolveJSONReferences();
-		this.requestContext.resolveJSONReferences();
-
-		this.thExpressionObjects["#ctx"]["variables"] = this.applicationContext;
-		this.thExpressionObjects["#ctx"]["requestParameters"] = this.requestContext;
-		this.thExpressionObjects["#ctx"]["servletContext"] = this.applicationContext;
-		this.thExpressionObjects["#ctx"]["httpServletRequest"] = this.thExpressionObjects["#httpServletRequest"];
-		this.thExpressionObjects["#ctx"]["httpSession"] = this.thExpressionObjects["#httpSession"];
-		
-		this.protocol = Thymol.prototype.override("thProtocol", this.protocol);
-		this.debug = Thymol.prototype.override("thDebug", this.debug);
-		this.root = Thymol.prototype.override("thRoot", this.root);
-		
-		if( "" !== this.relativeRootPath ) { // If we have a relativeRootPath, generate an absolute root path and set thRoot to this value
-			var rootURI = document.location.href;
-			var quePos = rootURI.indexOf("?");
-			if( quePos >= 0 ) {
-				rootURI = rootURI.substring(0,quePos);
-			}
-			var sepPos = rootURI.lastIndexOf("/");
-			if( sepPos >= 0 ) {
-				rootURI = rootURI.substring(0,sepPos+1);
-			}
-			var newThRoot  = rootURI + this.thLocation  + this.relativeRootPath;
-			this.thRoot = Thymol.prototype.getThParam("thRoot", false, true, newThRoot);
-		}
-		
-		this.path = Thymol.prototype.override("thPath", this.path);
-		this.allowNullText = Thymol.prototype.override("thAllowNullText", this.allowNullText);
-		this.locale.value = Thymol.prototype.override("thLocale", this.locale.value);
-
-		if (!(typeof thMappings === "undefined")) {
-			this.mappings = [];
-			for (j = 0, jLimit = thMappings.length; j < jLimit; j++) {
-				this.mappings.push([ thMappings[j][0], thMappings[j][1] ]);
-			}
-			this.mappings.sort(function(a, b) {
-				return a[0].length > b[0].length ? -1 : 1;
-			});
-		}
-		this.messages = {};		
-		setLocaleValue();		
-
-		if (!(typeof thMessages === "undefined")) {
-			this.messages[""] = [];
-			for (j = 0, jLimit = thMessages.length; j < jLimit; j++) {
-				this.messages[""][thMessages[j][0]] = thMessages[j][1];
-			}
-			for( var k in thMessages ) {
-				if( thMessages.hasOwnProperty(k) ) {
-					if( !k.match(numericExpr) ) {
-						this.messages[k] = [];
-						for (j = 0, jLimit = thMessages[k].length; j < jLimit; j++) {
-							this.messages[k][thMessages[k][j][0]] = thMessages[k][j][1];
-						}												
-					}
-				}
-			}		
-		}
-
-		if (!(typeof thDisable === "undefined")) {
-			for (j = 0, jLimit = thDisable.length; j < jLimit; j++) {
-				Thymol.prototype.doDisable(thDisable[j]);
-			}
-		}
-		
-		thymol.thRemove = Thymol.prototype.getThAttrByName("remove");
-
-		base = new ThNode(document, false, null, null, null, document.nodeName, "::", false, document);
-		Thymol.prototype.process(base);
-		postExecute();
-		return;
-
-	}
-
-	function getLocations(thiz) {
-		thiz.templateName = "";
-		thiz.templatePath = "";				
-		if( !!document.location.href ) {
-			var templateName = templatePath = document.location.href;
-			thiz.templateName = templateName.substring(0, (templateName.indexOf(".") == -1) ? templateName.length : templateName.lastIndexOf("."));
-			thiz.templatePath = templatePath.substring(0, (templatePath.indexOf("/") == -1) ? 0 : templatePath.lastIndexOf("/") + 1);
-		}		
-	}
-	
-	function getCtx() {
-		return thymol.thExpressionObjects["#ctx"];
-	}
-
-	function configureModule(module) {
-		if (typeof thymol.thExpressionObjects === "undefined" || thymol.thExpressionObjects === null) {
-			thymol.thExpressionObjects = {};
-		}
-		thymol.thExpressionObjects[module.thExpressionObjectName] = module;
-	}
-
-	function configureAttributeProcessor(prefix, suffix, func, prec, dataAttr) {
-		var p = prefix + ":";
-		if (p !== null) {
-			if (thymol.thThymeleafPrefixList.indexOf(p) < 0) {
-				thymol.thThymeleafPrefixList.push(p);
-			}
-		}
-		else {
-			thymol.thUsingNullPrefix = true;
-		}
-		p = new ThAttr(suffix, func, prec, thymol.thThymeleafPrefixList, prefix, dataAttr);
-	}
-
-	function configureElementProcessor(prefix, suffix, func) {
-		var p = new ThElement(suffix, func, prefix);
-	}
-
-	function configurePreExecution(func) {
-		if (typeof thymol.thPreExecutionFunctions === "undefined" || thymol.thPreExecutionFunctions === null) {
-			thymol.thPreExecutionFunctions = [];
-		}
-		thymol.thPreExecutionFunctions.push(func);
-	}
-
-	function configurePostExecution(func) {
-		if (typeof thymol.thPostExecutionFunctions === "undefined" || thymol.thPostExecutionFunctions === null) {
-			thymol.thPostExecutionFunctions = [];
-		}
-		thymol.thPostExecutionFunctions.push(func);
-	}
-
-	function executeDeferred() {
-		if (typeof thymolDeferredFunctions !== "undefined" && thymolDeferredFunctions !== null) {
-			while (thymolDeferredFunctions.length > 0) {
-				var func = thymolDeferredFunctions.pop();
-				func();
-			}
-		}
-	}
-
-	function preExecute(context) {
-		while (thymol.thPreExecutionFunctions.length > 0) {
-			var func = thymol.thPreExecutionFunctions.pop();
-			func();
-			context.resolveJSONReferences();
-		}
-	}
-
-	function postExecute() {
-		while (thymol.thPostExecutionFunctions.length > 0) {
-			var func = thymol.thPostExecutionFunctions.pop();
-			func();
-		}
-	}
-
-	function preProcess(expr, element) {
-		var result = expr, fp, lp;
-		do {
-			fp = result.indexOf("__");
-			if (fp >= 0) {
-				lp = -1;
-				if (result.length > 4) {
-					lp = result.lastIndexOf("__");
-				}
-				if (lp <= 0) {
-					throw new ThError("Mismatched pre-processing indicators", element);
-				}
-				var head = result.substring(0, fp);
-				var centre = result.substring(fp + 2, lp);
-				centre = this.getParsedExpr(centre, element);
-				var tail = result.substring(lp + 2);
-				result = head + centre + tail;
-				fp = result.indexOf("__");
-			}
-		} while (fp >= 0);
-        result = result.replace(/\\_\\_/g, "__");                
-		return result;
-	};	
-	
-	function substituteParam(argValue, mode, element) {
-		var result = argValue, varName = argValue, subs = null, msg, expo;
-		if (result) {
-			if (mode == 4) {
-				msg = thymol.getMessage(varName);
-				if (msg) {
-					subs = msg;
-				}
-			}
-			else if (mode == 6) {
-				subs = argValue;
-			}
-			else {				
-				var token = thymol.booleanAndNullTokens[result];
-				if (!(typeof token === "undefined")) {
-					if( token === null) {
-						subs = null;
-					}
-					else {
-						subs = token.value;						
-					}					
-				}
-				else {
-					if (varName.charAt(0) === '#') {
-						if ("#object" === varName) {
-							if (element.thObjectVar) {
-								subs = element.thObjectVar;
-							}
-						}
-						else {
-							expo = thymol.thExpressionObjects[varName];
-							if (typeof expo !== "undefined" && expo !== null) {
-								subs = expo;
-							}
-						}
-					}
-					if ((typeof subs === "undefined" || subs == null) && element.thObjectVar) {
-						subs = element.thObjectVar[varName];
-					}
-					if ((typeof subs === "undefined" || subs == null) && element.thLocalVars) {
-						subs = element.thLocalVars[varName];
-					}
-					if (typeof subs === "undefined" || subs == null) {
-						subs = ThUtils.getParameter(varName);
-					}
-					if (typeof subs === "undefined" || subs == null) {
-						if ("param" === varName) {
-							subs = thymol.requestContext;
-						}
-						if ("session" === varName) {
-							subs = thymol.sessionContext;
-						}
-						if ("application" === varName) {
-							subs = thymol.applicationContext;
-						}
-					}				
-					if ( mode == 2 && (typeof subs === "undefined" || subs == null)) {
-						subs = argValue;
-					}
-				}												
-			}
-			result = subs;
-			if (subs instanceof ThParam) {
-				result = subs.value;
-			}
-		}
-		return result;
-	};
-
-	function getStandardURL(initial) {
-		var result = initial.trim(), mapped, head;
-		mapped = thymol.getMapped(result, thymol.extendedMapping);  // Historically extendedMapping has always been true in getStandardURL
-		if (mapped) {
-			result = mapped;
-		}
-		if( "/" === result && !!thymol.indexFile ) {
-			result += thymol.indexFile;
-		} 
-		if (!/.*:\/\/.*/.test(result)) { // Absolute URL?
-			if (/^~?\/.*$/.test(result)) { // Server-relative or Context-relative?
-				if (/^~.*$/.test(result)) { // Context-relative?
-					result = result.substring(1);
-				}
-				if ( !/^\/\/.*$/.test(result)) { // Protocol relative?
-					head = thymol.root;
-					if( head != "" ) {
-						if( head.charAt(head.length-1) !== '/' ) {
-							head = head + '/';														
-						}
-						if( result.charAt(0) === '/' ) {
-							result = head + result.substring(1);	
-						}
-						else {
-							result = head + result;								
-						}
-					}
-				}
-			}
-		}
-		return result;		
-	};
-
-	function getExpression(argValue, element) {
-		var result = argValue, subst = false, initial, shortCut, args, negate, token, lsp;
-		if (typeof argValue === 'string') {
-			initial = argValue.trim();
-			result = initial;
-			if (result) {
-				shortCut = ThUtils.getParameter(result);
-				if (!shortCut) {
-					args = result.match(varExpr3);
-					if (args) {
-						if (args[1] && args[1].length > 0) {
-							shortCut = ThUtils.getParameter(args[1]);
-						}
-					}
-				}
-				if (shortCut) {
-					if (shortCut instanceof ThParam) {
-						result = shortCut.value;
-					}
-					else {
-						result = shortCut;
-					}
-					if (typeof result === 'string' && result.match(numericExpr)) { // Numeric?
-						result = parseInt(result);
-					}
-				}
-				else {
-					initial = ThUtils.unParenthesise(result);
-					negate = false;
-					if (initial.charAt(0) == '!') {
-						negate = true;
-						initial = initial.substring(1, initial.length);
-						initial = ThUtils.unParenthesise(initial);
-					}
-					if (literalTokenExpr.test(initial)) {
-						token = thymol.booleanAndNullTokens[initial];
-						if (!(typeof token === "undefined")) {
-							result = token.value;
-							subst = true;
-						}
-					}
-					lsp = null;
-					if (!subst) {
-						lsp = initial.match(litSubstExpr);
-						if (lsp && lsp.length > 0) {
-							if (ThUtils.charOcurrences(lsp[1], '\'') < 2) { // No contained literals
-								initial = Thymol.prototype.doLiteralSubstExpr(initial, lsp[1]);
-							}
-						}
-						result = "";
-						if (initial != "") {
-							initial = ThUtils.unParenthesise(initial);
-							initial = thymol.preProcess(initial, element);
-							result = thymol.getParsedExpr(initial, element, true);
-						}
-					}
-					if (result == initial && (typeof result == typeof initial)) { // Unsubstituted
-						result = null;
-					}
-					else if (typeof result === 'string') {
-						if (!lsp) {
-							result = result.replace(/[\\][\\]/g, "\\");
-						}
-						result = result.replace(/&#39;/g, "\'").replace(/&apos;/gi, "\'");
-					}
-					if (negate) {
-						if (typeof result === 'boolean') {
-							result = !result;
-						}
-						else if (typeof result === 'number') {
-							result = (result == 0);
-						}
-						else if (typeof result === 'string') {
-							result = !ThUtils.testLiteralFalse(result);
-						}
-					}
-				}
-			}
-		}
-		return result;
-	};	
-		
-	function getMapped(uri, extended) {
-		var mapped = null, i, iLimit, key;
-		if (uri && typeof uri === "string") {
-			if (thymol.mappings) {
-				for (i = 0, iLimit = thymol.mappings.length; i < iLimit; i++) {
-					key = thymol.mappings[i][0];
-					if (uri == key) {
-						mapped = thymol.mappings[i][1];
-						break;
-					}
-					else if (extended) {
-						if (uri.indexOf(key) == 0) {
-							mapped = uri.substring(key.length);
-							mapped = thymol.mappings[i][1] + mapped;
-							break;
-						}
-					}
-				}
-			}
-		}
-		return mapped;
-	};
-
-	function substitute(initial, element, lenient) { // It looks pretty good but it's just (nearly) deprecated !!!
-		var argValue = initial, result, args, token, re, subs, saved;
-		if (typeof argValue === "string") {
-			argValue = argValue.trim();
-		}
-		result = argValue;
-		args = "";
-		while (args != null) {
-			args = argValue.match(/.*([$\*#@]{(!?[^}]*)}).*/);
-			if (args != null && args.length > 0) {
-				if (args.length == 3) { // Found an embedded expression
-					token = args[1];
-					token = token.replace(/[$]/g, "[$]").replace(/[*]/g, "[*]").replace(/[\']/g, "[\']").replace(/[+]/g, "[\+]").replace(/[\(]/g, "[\(]").replace(/[\)]/g, "[\)]");
-					re = new RegExp(token);
-					subs = this.getExpression(args[2], element);
-					if (subs != args[2]) {
-						result = result.replace(re, subs, "g");
-						if (result == "null") {
-							result = null;
-						}
-					}
-					else {
-						subs = ""; // Substitution failed
-						if (thymol.debug && !lenient) {
-							window.alert("thymol variable substitution failed: \"" + initial + "\"");
-						}
-					}
-					saved = argValue;
-					argValue = argValue.replace(re, subs, "g");
-					if (saved == argValue) {
-						argValue = "";
-					}
-				}
-			}
-		}
-		return result;
-	};
-	
-	function getWith(element, content) {
-		var argValue = content.trim(), argCount = 0;
-		if (argValue) {		
-			do {
-				var argsExpr = ThParser.parse(argValue,true,false);
-				var identifier = argsExpr.tokens.shift();
-				if( identifier.type_ === 3 ) {
-					var result = argsExpr.evaluate(element);				
-					var varName = identifier.index_;
-					if (!!varName) {
-						argCount++;
-						if (!element.thLocalVars) {
-							element.thLocalVars = {};
-		
-						}
-						element.thLocalVars[varName] = result;
-					}
-					argValue = argValue.substring(argsExpr.position);					
-				}
-				else {
-					break;
-				}				
-			} while(argValue.length > 0);
-		}
-		return argCount;
-	};
-
-	function getParsedExpr(initial, element,preprocessed) {
-		var expr, result = initial;
-		expr = ThParser.parse(result,false,preprocessed);
-		expr = expr.simplify();
-		// TODO Cache expressions here!!
-		result = expr.evaluate(element);
-		if (typeof result === "number") {
-			result = ThUtils.getToPrecision(result, expr.precision);
-		}
-		return result;
-	};
-
-	function getBooleanValue(param) {
-		var flag = false, val, args;
-		if (param != null) {
-			if (typeof param === "boolean") {
-				flag = param;
-			}
-			else if (typeof param === 'number') {
-				flag = param != 0;
-			}
-			else {
-				val = param;
-				if (Object.prototype.toString.call(val) === '[object Array]') {
-					if (val.length === 1) {
-						val = val[0];
-					}
-					else {
-						val = true;
-					}
-				}
-				if (typeof val === 'boolean') {
-					flag = val;
-				}
-				else if (typeof val === 'number') {
-					flag = (val != 0);
-				}
-				else if (typeof val === 'string') {
-					args = val.match(nonURLExpr);
-					if (args) {
-						val = args[1];
-						flag = this.testParam(val);
-					}
-					else {
-						flag = !ThUtils.testLiteralFalse(val);
-					}
-				}
-				else if (val instanceof ThParam) {
-					flag = val.getBooleanValue();
-				}
-				else {
-					flag = typeof val !== "undefined" && val !== null;
-				}
-			}
-		}
-		return flag;
-	}
-
-	function isFragmentChild(element) {
-		var result = false, parent = element.parentElement;
-		while (parent) {
-			if (parent.getAttribute(thymol.thFragment.name) || parent.getAttribute(thymol.thFragment.synonym)) {
-				result = true;
-				break;
-			}
-			parent = parent.parentElement;
-		}
-		return result;
-	}
-
-	function setLocale(locValue) {
-		thymol.locale.value = locValue;
-		setLocaleValue();
-	}
-	
-	function getLocale() {
-		return thymol.locale.value;
-	}
-	
-	function getLanguage() {
-		if( !thymol.locale.value ) {
-	  	var userLang = navigator.language || navigator.userLanguage || navigator.browserLanguage || navigator.systemLanguage;
-	  	if( !!userLang ) {
-	  		thymol.locale.value = userLang.replace(/\-/g, "_");
-	  	}						
-		}
-	}
-	
-	function setLocaleValue() {
-		if( !thymol.locale.value ) {
-			thymol.locale.value = thymol.thDefaultLocale;
-		}		
-		var sepPos;
-		var locale = thymol.locale.value.replace(/\-/g, "_");
-		var level = thymol.locale.value;
-		var levels = [];
-		var part, parts = [];
-		do {
-			levels.push(level);
-			sepPos = locale.lastIndexOf("_");
-			if( sepPos >= 0 ) {
-				part = locale.substring(sepPos + 1);
-				parts.push(part);
-				locale = locale.substring(0,sepPos);
-				level = level.substring(0,sepPos);
-			}
-		} while(sepPos >= 0);
-		thymol.locale.language = level;
-		if( !!parts ) {
-			parts.reverse();
-  		for( var i = 0, iLimit = parts.length; i < iLimit; i++ ) {
-  			if( i === 0 ) {
-  				thymol.locale.country = parts[i];
-  			}
-  			else if( i === 1 ) {
-  				thymol.locale.variant = parts[i];
-  			}
-			}
-		}
-		thymol.locale.levels = levels;
-		thymol.thExpressionObjects["#ctx"]["locale"] = thymol.locale;
-		thymol.thExpressionObjects["#locale"] = thymol.locale;
-	}
-	
-	function getMessage(varName, parameters, returnStringAlways) {
-		var msgKey = null;
-		var locale;
-		if( !!thymol.locale.levels ) {
-			var prefix = "$";  // Use prefix to disambiguate the local and default messages
-			var ident, section, jLower = thymol.localMessages ? 0 : 1;
-			for( var j = jLower; j < 2; j++ ) {
-				for( var i = 0, iLimit = thymol.locale.levels.length; i < iLimit + 1; i++ ) {
-					ident = prefix;
-					if( i < iLimit ) {
-						locale = thymol.locale.levels[i];
-					}
-					else {
-						locale = "";
-					}
-					ident = ident + locale;
-					section = thymol.messages[ident];
-					if( !section ) {
-						if( j < 1 ) {
-							section = getLocalMessages(locale);
-						}
-						else {
-							section = getDefaultMessages(locale);														
-						}
-					}
-					if( !!section ) {
-						thymol.messages[ident] = section;
-						msgKey = section[varName];
-						if( !!msgKey ) {
-							break;
-						}
-					}
-				}			
-				if( !!msgKey ) {
-					break;
-				}
-				prefix += "$";
-			}			
-		}		
-		if( !msgKey ) {			
-			for( var i = 0, iLimit = thymol.locale.levels.length; i <= iLimit; i++ ) {
-				if( i < iLimit ) {
-					locale = thymol.locale.levels[i];					
-				}
-				else {
-					locale = "";
-				}
-				if( !!thymol.messages[locale] ) {
-					msgKey = thymol.messages[locale][varName];
-					if( !!msgKey ) {
-						break;
-					}
-				}
-			}
-		}
-		if (!!msgKey) {
-			if( typeof parameters === "undefined" ) {
-				return msgKey;
-			}
-			else {
-				return ThUtils.renderMessage(msgKey, parameters);
-			}
-		}
-		else if (returnStringAlways !== undefined && returnStringAlways) {			
-			return "??" + varName + "_" + thymol.locale.value + "??";
 		}
 		return null;
-	}
+	},
 
-	function getProperties(propFile) {
-		var props = null;
-		var messages = [];
-		$.get(propFile, function(textContent, status) {
-			var err = null;
-			try {									
-				if ("success" == status) {
-					props = textContent;
-				}
-				else if (thymol.debug) {
-					window.alert("read failed: " + propFile);
-				}									
-			}
-			catch (err) {
-				if (thymol.debug) {
-					window.alert("properties file read failed: " + propFile + " error: " + err);
-				}									
-			}
-		}, "text");
-		if( props !== null ) {
-			var splits = props.split("\n");
-			if(splits.length>0) {
-				for( var i = 0, iLimit = splits.length; i < iLimit; i++ ) {
-					var line = splits[i].trim();
-					if( line.charAt(0) !== "#" ) {
-						var p = line.split("=");
-						if(p.length>1) {
-							messages[p[0].trim()] = ThUtils.unicodeUnescape(p[1].trim());
-						}						
-					}
-				}
-			}
-		}
-		return messages;
-	}
-	
-	function getLocalMessages(locale) {
-		var messages = [];
-		if( !!document.location.href ) {
-			var propsFile = thymol.templateName;
-			if( !!locale && locale !== "" ) {				
-				propsFile += "_" + locale;
-			}
-			propsFile += ".properties";				
-			messages = getProperties(propsFile);			
-		}
-		return messages;
-	}
-	
-	function getDefaultMessages(locale) {
-		var messages = null;
-		var propsPath = thymol.messagePath;
-		if( propsPath !== "" ) {
-			propsPath = propsPath + "/";
-		}
-		var propsFile = propsPath + thymol.messagesBaseName;
-		if( !!locale && locale !== "" ) {
-			propsFile += "_" + locale;
-		}
-		propsFile += ".properties";
-		messages = getProperties(propsFile);
-		return messages;
-	}
-	
-	Thymol.prototype = {
+    getContents : function(rootNode) {
+      var rnd = this.getContentRoot(rootNode); 
+      var froot = $( rnd );
+      var fstar = froot.find( "*" );
+      return fstar;
+    },
+    
+    getContentRoot : function(rn) {
+      var rnd = rn.thDoc;
+//      if( rnd.nodeName !== "#document" && rnd.nodeName !== "#document-fragment") {
+      if( rnd.nodeName !== "#document" ) {
+        rnd = rnd.childNodes;
+      }
+      return rnd;
+    },
+    
+    processComments : function( rootNode ) {
+      var comments = null, fstar, changed, i, iLimit, startComment, parent, startValue, pointer, nextPointer;
+      do {
+        fstar = this.getContents(rootNode);
+        comments = fstar.contents().getComments();
+        changed = false;
+        for( i = 0, iLimit = comments.length; i < iLimit; i++ ) {
 
-		process : function(rootNode) {
-			var n = rootNode;
-			try {
-				while (n.thDoc) {
-					this.getChildren(n);
-					if (n.firstChild && n.firstChild.thDoc && !n.visited) {
-						n.visited = true;
-						n = n.firstChild;
-					}
-					else {
-						if (n.element != n.thDoc) {
-							this.doReplace(n.isNode, n.element, n.thDoc);
-							if (!n.isNode) {
-								n.thDoc = n.element;
-							}
-						}
-						if (n.nextSibling && n.nextSibling.thDoc) {
-							n = n.nextSibling;
-						}
-						else {
-							if (n == rootNode) {
-								break;
-							}
-							n = n.parentDoc;
-						}
-					}
-				}
-				this.processChildren(rootNode);
-			}
-			catch (err) {
-				if (thymol.debug) {
-					if (err instanceof ThError) {
-						if (!err.suppress) {
-							window.alert(err);
-						}
-					}
-					else {
-						window.alert(err);
-					}
-				}
-			}
-		},
+          startComment = comments[ i ];
+          parent = startComment.parentNode;
+          startValue = startComment.nodeValue.trim();
 
-		getChildren : function(rootNode) {
-			var count = 0, last = null, changed = false, child, froot, fstar, fchildren, i, iLimit, j, jLimit, element, matches, theAttr;
-			if (!rootNode.visited) {
-				this.processComments(rootNode);
-				froot = $(rootNode.thDoc);
-				fstar = $(froot).add(froot.find("*"));
-				fchildren = fstar.filter(thymol.thInclude.escpName).add(fstar.filter(thymol.thInclude.escpSynonym)).add(fstar.filter(thymol.thReplace.escpName)).add(fstar.filter(thymol.thReplace.escpSynonym)).add(fstar.filter(thymol.thSubstituteby.escpName)).add(fstar.filter(thymol.thSubstituteby.escpSynonym));
-				for (i = 0, iLimit = fchildren.length; i < iLimit; i++) {
-					element = fchildren[i], matches = [];
-					for (j = 0, jLimit = element.attributes.length; j < jLimit; j++) {
-						theAttr = element.attributes[j];
-						if (thymol.thInclude.name == theAttr.name || thymol.thInclude.synonym == theAttr.name || thymol.thReplace.name == theAttr.name || thymol.thReplace.synonym == theAttr.name || thymol.thSubstituteby.name == theAttr.name || thymol.thSubstituteby.synonym == theAttr.name) {
-							matches.push(theAttr);
-						}
-					}
-					for (j = 0, jLimit = matches.length; j < jLimit; j++) {
-						child = this.processImport(element, rootNode, matches[j]);
-						if (child != null) {
-							changed = true;
-							if (count == 0) {
-								rootNode.firstChild = child;
-							}
-							else {
-								last.nextSibling = child;
-							}
-							last = child;
-							count++;
-						}
-					}
-				}
-			}
-			return changed;
-		},
+          if( startParserLevelCommentExpr.test( startValue ) ) {
+            pointer = startComment;
+            while( pointer != null ) {
+              if( endParserLevelCommentExpr.test( pointer.nodeValue ) ) {
+                changed = ( parent.removeChild( pointer ) != null );
+                break;
+              }
+              nextPointer = pointer.nextSibling;
+              changed = ( parent.removeChild( pointer ) != null );
+              pointer = nextPointer;
+            }
+          }
+          else if( startParserLevelCommentExpr2.test( startValue ) && endParserLevelCommentExpr2.test( startValue ) ) { // Last option so it doesn't conflict with previous case
+            parent.removeChild( startComment );
+            changed = true;
+          }
+        }
+      }while( changed );
+      this.processPrototypeOnlyComments( rootNode );
+    },
 
-		processChildren : function(rootNode) {
-			var i, iLimit, j, jLimit, k, kLimit;
-			var elements = rootNode.thDoc.getElementsByTagName("*");
-			for (k = 0, kLimit = elements.length; k < kLimit; k++) {
-				var element = elements[k];				
-				for (j = 0, jLimit = thymol.thThymeleafElementsList.length; j < jLimit; j++) {
-					if (element.localName == thymol.thThymeleafElementsList[j].name || element.localName == thymol.thThymeleafElementsList[j].synonym) {
-						var updated = thymol.thThymeleafElementsList[j].process(element);
-						if (updated) {
-							elements = rootNode.thDoc.getElementsByTagName("*");
-							k--;
-							kLimit = elements.length;
-						}
-						
-					}
-				}
-				var allAttributes = element.attributes;
-				if (allAttributes && allAttributes.length > 0) {
-					var attributes = [];
-					if (!thymol.thUsingNullPrefix) {
-						for (i = 0, iLimit = allAttributes.length; i < iLimit; i++) {
-							if (allAttributes[i]) {
-								for (j = 0, jLimit = thymol.thThymeleafPrefixList.length; j < jLimit; j++) {
-									var attrName = allAttributes[i].name.toString();
-									if (attrName.length > thymol.thThymeleafPrefixList[j].length) {
-										attrName = attrName.substring(0, thymol.thThymeleafPrefixList[j].length);
-										if (attrName === thymol.thThymeleafPrefixList[j]) {
-											attributes.push(allAttributes[i]);
-										}
-									}
-								}
-							}
-						}
-					}
-					else {
-						attributes = allAttributes;
-					}
-					if (attributes.length > 0) {
-						attributes.reverse();
-						var matchedAttributes = [];						
-						for (i = 0, iLimit = attributes.length; i < iLimit; i++) {
-							var splits = attributes[i].name.toString().split(":");
-							if( splits && splits.length > 0 ) {
-								var prefix = "", name;
-								if( splits.length > 1 ) {
-									prefix = splits[0];
-									name = splits[1];
-								}
-								else {
-									name = splits[0];
-									var hpos = name.lastIndexOf("-");
-									if( hpos >= 0 ) {
-										prefix = name.substring( 0, hpos + 1 );
-									}
-								}
-								var attrList = thymol.thThymeleafPrefixList[prefix];
-								if( splits.length > 1 ) {
-									prefix += ":";
-								}
-								if( attrList ) {
-									for (j = 0, jLimit = attrList.length; j < jLimit; j++) {
-										var matched = false;
-										if (name === attrList[j].suffix || name === attrList[j].synonym ) {
-											matched = true;
-										}
-										else if( attrList[j].regex !== null ) {
-											var fqn = prefix + name;
-											matched = attrList[j].regex.test( fqn );
-										}										
-										if( matched ) {
-											var matchedAttribute = {};
-											matchedAttribute.attr =	attrList[j];
-											matchedAttribute.elementAttr = attributes[i];
-											matchedAttributes.push(matchedAttribute);
-											break;											
-										}
-									}																
-								}
-							}
-						}						
-						if (matchedAttributes.length > 0) {
-							matchedAttributes.sort(function (a, b) {
-								return a.attr.precedence - b.attr.precedence;
-							});
-							var updated = false;
-							for (i = 0, iLimit = matchedAttributes.length; i < iLimit; i++) {
-								var exp = ThUtils.processElement(matchedAttributes[i].attr.process, element, matchedAttributes[i].elementAttr, matchedAttributes[i].attr, 1);
-								updated = exp || updated; // No short-circuiting!
-							}
-							if (updated) {
-								elements = rootNode.thDoc.getElementsByTagName("*");
-								k--;
-								kLimit = elements.length;
-							}
-						}						
-					}
-				}
-			}
-			elements = rootNode.thDoc.getElementsByTagName("*");
-			for (k = 0, kLimit = elements.length; k < kLimit; k++) {
-				var element = elements[k];
-				if (element.localName == thymol.thBlock.name || element.localName == thymol.thBlock.synonym) {
-					ThUtils.removeTag(element);
-					k--;
-					kLimit = elements.length;
-				}
-			}			
-		},
+    processPrototypeOnlyComments : function( rootNode ) {
+      var comments = null, fstar, changed, indexOfLast, i, iLimit, j, jLimit, k, kLimit, startComment, parent, deletions, res, fullText, innerNodes, done, next, commentText, res2, blockElement, blockDoc, blockDocBody, blockBase, newNode, newDoc;
+      do {        
+        fstar = this.getContents(rootNode);
+        comments = fstar.contents().getComments();
+        changed = false;
+        indexOfLast = comments.length - 1;
+        for( i = 0, iLimit = comments.length; i < iLimit; i++ ) {
+          startComment = comments[ i ];
+          parent = startComment.parentNode;
+          if( parent != null ) {
+            startValue = startComment.nodeValue.trim();
+            deletions = [];
+            deletions.push( startComment );
+            startValue = startValue.replace( /\n/g, "" );
+            res = startValue.match( prototypeOnlyCommentEscpExpr );
+            if( res ) {
+              fullText = startValue;
+              if( parent.localName == "table" || parent.localName == "tbody" ) {
+                if( startValue.indexOf( thymol.thBlock.name ) >= 0 || startValue.indexOf( thymol.thBlock.synonym ) >= 0 ) {
+                  if( startValue.indexOf( thymol.thBlock.endName ) < 0 || startValue.indexOf( thymol.thBlock.endSynonym ) < 0 ) { // whole th:block is NOT embedded
+                    fullText = fullText.replace( res[ 0 ], res[ 1 ] );
+                    innerNodes = [];
+                    done = false;
+                    next = startComment;
+                    do {
+                      next = next.nextSibling;
+                      if( next != null ) {
+                        deletions.push( next );
+                        if( i < indexOfLast ) {
+                          if( next == comments[ i + 1 ] ) {
+                            commentText = next.nodeValue;
+                            if( commentText.indexOf( thymol.thBlock.endName ) >= 0 || commentText.indexOf( thymol.thBlock.endSynonym ) >= 0 ) {
+                              res2 = commentText.match( prototypeOnlyCommentEscpExpr );
+                              if( res2 ) {
+                                commentText = commentText.replace( res2[ 0 ], res2[ 1 ] );
+                                fullText = fullText + commentText;
+                              }
+                              done = true;
+                            }
+                          }
+                          else {
+                            innerNodes.push( next );
+                          }
+                        }
+                      }
+                      else {
+                        done = true;
+                      }
+                    }while( !done );
+                    blockElement = null;
+                    blockDoc = new thymol.thDomParser().parseFromString( fullText, "text/html" ); // Block is non-HTML5 so we can't use jQuery to find it!
+                    blockDocBody = $( blockDoc ).find( "body" )[ 0 ];
+                    for( j = 0, jLimit = blockDocBody.childNodes.length; j < jLimit; j++ ) {
+                      if( blockDocBody.childNodes[ j ].localName == thymol.thBlock.name || blockDocBody.childNodes[ j ].localName == thymol.thBlock.synonym ) {
+                        blockElement = blockDocBody.childNodes[ j ];
+                        for( k = 0, kLimit = innerNodes.length; k < kLimit; k++ ) {                          
+                          newNode = blockDoc.importNode( innerNodes[ k ], true);
+//                          newNode = innerNodes[ k ].cloneNode( true );
+                          blockElement.appendChild( newNode );
+// TODO                          jjb
+                        }
+                      }
+                    }
+                    if( blockElement != null ) {
+                      blockBase = new ThNode( blockDoc, false, null, null, null, blockDoc.nodeName, "::", false, blockDoc );
+                      this.processChildren( blockBase );
+                      changed = this.insertUncommented( blockBase.thDoc, deletions, parent );
+                    }
+                    else {
+                      parent.removeChild( startComment ); // Delete it!
+                      changed = true;
+                    }
+                  }
+                  else { // Embedded?
+                    parent.removeChild( startComment ); // Delete it!
+                    changed = true;
+                  }
+                }
+              }
+              else {
+                startValue = startValue.substring( 3, startValue.length - 3 );
+                newDoc = new thymol.thDomParser().parseFromString( startValue, "text/html" );
+                changed = this.insertUncommented( newDoc, deletions, parent );
+              }
+            }
+          }
+        }
+      }while( changed );
+    },
 
-		override : function(paramName, paramValue) {
-			var param = paramValue, thv;
-			thv = window[paramName];
-			if (thv) {
-				if (thv instanceof ThParam) {
-					param = thv.value;
-				}
-				else {
-					param = thv;
-				}
-			}
-			thv = thymol.applicationContext[paramName];
-			if ( thv ) {
-				if ( thv instanceof ThParam) {
-					param = thv.value;
-				}
-				else {
-					param = thv;
-				}
-			}
-			thv = thymol.requestContext[paramName];
-			if (thv) {
-				if (thv instanceof ThParam) {
-					param = thv.value;
-				}
-				else {
-					param = thv;
-				}
-			}
-			return param;
-		},
+    insertUncommented : function( doc, deletions, parent ) {
+      var docBody = $( doc ).find( "body" )[ 0 ], i, iLimit, newNode;
+      for( i = 0, iLimit = docBody.childNodes.length; i < iLimit; i++ ) {        
+        if( parent.ownerDocument === doc ) {
+          newNode = docBody.childNodes[ i ].cloneNode( true );          
+        }
+        else {
+          newNode = parent.ownerDocument.importNode(docBody.childNodes[ i ], true);
+          newNode.parentNode = parent;
+        }        
+        parent.insertBefore( newNode, deletions[ 0 ] );
+      }
+      for( i = 0, iLimit = deletions.length; i < iLimit; i++ ) {
+        parent.removeChild( deletions[ i ] );
+      }
+      return true;
+    },
 
-		doDisable : function(attrName) {
-			var tha = this.getThAttrByName(attrName);
-			if (tha !== null) {
-				tha.disable();
-			}
-			else {
-				if (thymol.debug) {
-					window.alert("cannot disable unknown attribute \"" + attrName + "\"");
-				}
-			}
-		},
+    getList : function( element, content ) {
+      var argValue = content.trim(), argsCount = 0, argsList = [], assigs, i, iLimit, val;
+      if( argValue ) {
+        assigs = argValue.split( "," );
+        for( i = 0, iLimit = assigs.length; i < iLimit; i++ ) {
+          val = thymol.getExpression( assigs[ i ], element );
+          argsList[ i ] = val;
+        }
+        if( !element.thLocalVars ) {
+          element.thLocalVars = {};
+        }
+        element.thLocalVars[ "..." ] = argsList;
+        argsCount = argsList.length;
+      }
+      return argsCount;
+    },
 
-		getThAttrByName : function(name) {
-			var attrList = thymol.thThymeleafPrefixList[thymol.prefix];
-			var i, iLimit = attrList.length;
-			for (i = 0; i < iLimit; i++) {
-				if (name === attrList[i].suffix) {
-					return attrList[i];
-				}
-			}
-			return null;
-		},
+    testParam : function( param ) {
+      var initial = param, result = false, theParam = null, negate = false;
+      if( typeof initial === 'boolean' ) {
+        result = initial;
+      }
+      else {
+        theParam = null;
+        negate = false;
+        if( typeof initial === 'object' && initial instanceof thymol.ThParam ) {
+          theParam = initial;
+        }
+        else {
+          initial = initial.valueOf();
+          if( initial.charAt( 0 ) == '!' ) {
+            negate = true;
+            initial = initial.substring( 1 );
+          }
+        }
+        theParam = thymol.applicationContext[ initial ];
+        if( theParam != null ) {
+          result = theParam.getBooleanValue();
+        }
+        if( negate ) {
+          result = !result;
+        }
+      }
+      return result ? true : false;
+    },
 
-		processComments : function(rootNode) {
-			var comments = null, froot, fstar, changed, i, iLimit, startComment, parent, startValue, pointer, nextPointer;
-			do {
-				froot = $(rootNode.thDoc);
-				fstar = froot.find("*");
-				comments = fstar.contents().getComments();
-				changed = false;
-				for (i = 0, iLimit = comments.length; i < iLimit; i++) {
+    processImport : function( element, rootNode, attr ) {
+      var importNode = null, filePart, fragmentPart, names, parts, fragmentArgsList, isNode, fragment, fileName, content, importError;
+      filePart = null;
+      if( attr.value.indexOf( "::" ) < 0 ) {
+        filePart = attr.value;
+        fragmentPart = "::";
+      }
+      else {
+        names = attr.value.split( "::" );
+        filePart = names[ 0 ].trim();
+        fragmentPart = names[ 1 ].trim();
+      }
+      if( "this" === filePart ) {
+        filePart = "";
+      }
+      else {
+          filePart = this.getFilePath( filePart, element );          
+      }
+      if( filePart != null ) {
+        parts = filePart.match( varParExpr );
+        fragmentArgsList = null;
+        if( parts ) {
+          if( parts.length > 1 ) {
+            filePart = parts[ 1 ].trim();
+          }
+          if( parts.length > 2 ) {
+            fragmentArgsList = parts[ 2 ].trim();
+          }
+        }
+        if( filePart != "" || !isFragmentChild( element ) ) {
+          isNode = thymol.thReplace.name == attr.localName || thymol.thReplace.synonym == attr.localName || thymol.thSubstituteby.name == attr.localName || thymol.thSubstituteby.synonym == attr.localName;
+          if( thymol.thCache[ filePart ] != null && thymol.thCache[ filePart ][ fragmentPart ] != null ) {
+            isNode = isNode || fragmentPart == "::";
+            importNode = new ThNode( thymol.thCache[ filePart ][ fragmentPart ], false, rootNode, null, null, filePart, fragmentPart, isNode, element );
+          }
+          else {
+            fragment = null;
+            importError = null;
+            if( filePart != "" ) { // Signifies v2.1 local fragment
+              fileName = filePart + thymol.templateSuffix;
+              $.get( fileName, function( textContent, status ) {
+                try {
+                  if( "success" == status ) {
+                    content = new thymol.thDomParser().parseFromString( textContent, "text/html" );
+                    fragment = Thymol.prototype.getImportNode( element, filePart, fragmentPart, fragmentArgsList, content );
+                  }
+                  else if( thymol.debug ) {
+                    thymol.thWindow.alert( "thymol.processImport file read failed: " + filePart + " fragment: " + fragmentPart );
+                  }
+                }
+                catch( err ) {
+                  importError = err;
+                }
+              }, "text" );
+            }
+            else {
+              fragment = this.getImportNode( element, filePart, fragmentPart, fragmentArgsList, thymol.thDocument );
+            }
+            if( fragment == null ) {
+              if( importError !== null ) {
+                throw importError;
+              }
+              if( thymol.debug ) {
+                thymol.thWindow.alert( "thymol.processImport fragment import failed: " + filePart + " fragment: " + fragmentPart );
+              }
+            }
+            else {
+              importNode = new ThNode( fragment, false, rootNode, null, null, filePart, fragmentPart, isNode, element );
+            }
+          }
+        }
+      }
+      element.removeAttribute( attr.name );
+      return importNode;
+    },
 
-					startComment = comments[i];
-					parent = startComment.parentNode;
-					startValue = startComment.nodeValue.trim();
+    getImportNode : function( element, filePart, fragmentArg, fragmentArgsList, content ) {
+      var result = null, fragmentName = fragmentArg.trim(), fragmentPart = fragmentName, parts, argsCount, matched, fragment, htmlContent, fragArray, i, iLimit, j, jLimit, k, clean, bare, vlParts, vlArgs, argsList, varName, newElement;
+      fragmentName = fragmentName.replace( /text\(\)/g, textFuncSynonym );
+      parts = fragmentName.match( varParExpr );
+      if( parts == null && fragmentArgsList != null ) {
+        parts = [];
+        parts[ 1 ] = fragmentName;
+        parts[ 2 ] = fragmentArgsList;
+      }
+      argsCount = 0;
+      if( parts ) {
+        if( parts.length > 1 ) {
+          fragmentName = parts[ 1 ].trim();
+          if( parts.length > 2 ) {
+            if( parts[ 2 ].indexOf( "=" ) > 0 ) {
+              argsCount = thymol.getWith( element, parts[ 2 ] );
+            }
+            else {
+              argsCount = this.getList( element, parts[ 2 ] );
+            }
+          }
+        }
+      }
+      if( thymol.thCache[ filePart ] == null ) {
+        thymol.thCache[ filePart ] = new Object();
+      }
+      matched = false;
+      fragment = null;
+      if( fragmentName == "::" ) {
+        htmlContent = $( "html", content )[ 0 ];
+        result = htmlContent;
+        matched = true;
+      }
+      else {
+        fragArray = $( thymol.thFragment.escpName, content );
+        for( i = 0, iLimit = fragArray.length; i < iLimit; i++ ) {
+          fragment = fragArray[ i ];
+          for( j = 0, jLimit = fragment.attributes.length; j < jLimit; j++ ) {
+            clean = fragment.attributes[ j ];
+            clean = clean.value.replace( /\s/g, "" );
+            bare = null;
+            vlParts = clean.match( varParExpr );
+            if( vlParts ) {
+              if( vlParts.length > 1 ) {
+                bare = vlParts[ 1 ].trim();
+              }
+            }
+            if( fragmentName == bare && argsCount > 0 ) {
+              if( vlParts.length > 2 ) {
+                vlArgs = vlParts[ 2 ].trim().split( "," );
+                if( vlArgs ) {
+                  if( vlArgs.length == argsCount ) {
+                    argsList = element.thLocalVars[ "..." ];
+                    if( argsList != null ) {
+                      for( k = 0; k < argsCount; k++ ) {
+                        varName = vlArgs[ k ].trim();
+                        element.thLocalVars[ varName ] = argsList[ k ];
+                      }
+                      element.thLocalVars[ "..." ] = null;
+                    }
+                    matched = true;
+                    break;
+                  }
+                  else if( vlArgs.length > argsCount ) {
+                    break;
+                  }
+                }
+              }
+            }
+            if( fragmentName == clean || fragmentPart == clean || fragmentName == bare ) {
+              matched = true;
+              break;
+            }
+          }
+          if( matched ) {
+            result = fragment;
+            break;
+          }
+        }
+      }
+      if( !matched ) {
+        fragment = this.getDOMSelection( fragmentName, content );
+        if( fragment ) {
+          matched = true;
+          result = fragment;
+        }
+        else {
+          if( !element.isBlockChild ) {
+            throw new thymol.ThError( "getImportNode cannot match fragment: \"" + fragmentName + "\"", element );
+          }
+        }
+      }
+      thymol.thCache[ filePart ][ fragmentPart ] = result;
+      if( matched ) {
+        newElement = result.cloneNode( true );
+        if( newElement.nodeType == 1 ) {
+          newElement.removeAttribute( thymol.thFragment.name );
+          newElement.removeAttribute( thymol.thFragment.synonym );
+        }
+        result = newElement;
+        result.thLocalVars = element.thLocalVars;
+      }
+      return result;
+    },
 
-					if (startParserLevelCommentExpr.test(startValue)) {
-						pointer = startComment;
-						while (pointer != null) {
-							if (endParserLevelCommentExpr.test(pointer.nodeValue)) {
-								changed = (parent.removeChild(pointer) != null);
-								break;
-							}
-							nextPointer = pointer.nextSibling;
-							changed = (parent.removeChild(pointer) != null);
-							pointer = nextPointer;
-						}
-					}
-					else if (startParserLevelCommentExpr2.test(startValue) && endParserLevelCommentExpr2.test(startValue)) { // Last option so it doesn't conflict with previous case
-						parent.removeChild(startComment);
-						changed = true;
-					}
-				}
-			} while (changed);
-			this.processPrototypeOnlyComments(rootNode);
-		},
+    getDOMSelection : function( initial, content ) {
+      var spec = initial, result = null, scope = "", query = new Array(), parts = "", innr = thymol.ThUtils.unBracket( spec ), i, iLimit, j, jLimit, k, kLimit, m, mLimit, token, indx, saved, indxed, start, selection, descend, subQuery, exprFrags, classSpecs, qTerms, subSelect, partial, html, newNode;
+      if( spec != innr && innr.charAt( innr.length - 1 ) == ']' ) { // Wrapped in [] and ends with ]]
+        spec = innr;
+      }
+      while( spec != "" ) {
+        parts = spec.match( domSelectExpr );
+        if( parts != null && parts.length > 1 ) {
+          for( i = 1, iLimit = parts.length; i < iLimit; i++ ) {
+            if( parts[ i ] != null ) {
+              token = parts[ i ];
+              indx = null;
+              innr = thymol.ThUtils.unBracket( token );
+              if( token != innr ) {
+                if( innr.match( numericExpr ) ) {
+                  indx = innr;
+                }
+              }
+              saved = spec;
+              spec = spec.replace( token, "" ); // Only replace 1st occurrence
+              if( saved == spec ) {
+                spec = "";
+              }
+              if( indx ) {
+                token = query[ query.length - 1 ];
+                indxed = new String( token );
+                indxed.indx = indx;
+                query[ query.length - 1 ] = indxed;
+              }
+              else {
+                query.push( token.trim() );
+              }
+              break;
+            }
+          }
+        }
+        else {
+          break;
+        }
+      }
+      start = 0;
+      if( query.length > 0 && query[ 0 ] != "" && query[ 0 ].charAt( 0 ) == '/' ) {
+        scope = query[ 0 ];
+        start = 1;
+      }
+      selection = [];
+      selection.push( content );
+      descend = false;
 
-		processPrototypeOnlyComments : function(rootNode) {
-			var comments = null, froot, fstar, changed, indexOfLast, i, iLimit, j, jLimit, k, kLimit, startComment, parent, deletions, res, fullText, innerNodes, done, next, commentText, res2, blockElement, blockDoc, blockDocBody, blockBase, newNode, newDoc;
-			do {
-				froot = $(rootNode.thDoc);
-				fstar = froot.find("*");
-				comments = fstar.contents().getComments();
-				changed = false;
-				indexOfLast = comments.length - 1;
-				for (i = 0, iLimit = comments.length; i < iLimit; i++) {
-					startComment = comments[i];
-					parent = startComment.parentNode;
-					if (parent != null) {
-						startValue = startComment.nodeValue.trim();
-						deletions = [];
-						deletions.push(startComment);
-						startValue = startValue.replace(/\n/g, "");
-						res = startValue.match(prototypeOnlyCommentEscpExpr);
-						if (res) {
-							fullText = startValue;
-							if (parent.localName == "table" || parent.localName == "tbody") {
-								if (startValue.indexOf(thymol.thBlock.name) >= 0 || startValue.indexOf(thymol.thBlock.synonym) >= 0) {
-									if (startValue.indexOf(thymol.thBlock.endName) < 0 || startValue.indexOf(thymol.thBlock.endSynonym) < 0) { // whole th:block is NOT embedded
-										fullText = fullText.replace(res[0], res[1]);
-										innerNodes = [];
-										done = false;
-										next = startComment;
-										do {
-											next = next.nextSibling;
-											if (next != null) {
-												deletions.push(next);
-												if (i < indexOfLast) {
-													if (next == comments[i + 1]) {
-														commentText = next.nodeValue;
-														if (commentText.indexOf(thymol.thBlock.endName) >= 0 || commentText.indexOf(thymol.thBlock.endSynonym) >= 0) {
-															res2 = commentText.match(prototypeOnlyCommentEscpExpr);
-															if (res2) {
-																commentText = commentText.replace(res2[0], res2[1]);
-																fullText = fullText + commentText;
-															}
-															done = true;
-														}
-													}
-													else {
-														innerNodes.push(next);
-													}
-												}
-											}
-											else {
-												done = true;
-											}
-										} while (!done);
-										blockElement = null;
-										blockDoc = new DOMParser().parseFromString(fullText, "text/html"); // Block is non-HTML5 so we can't use jQuery to find it!
-										blockDocBody = $(blockDoc).find("body")[0];
-										for (j = 0, jLimit = blockDocBody.childNodes.length; j < jLimit; j++) {
-											if (blockDocBody.childNodes[j].localName == thymol.thBlock.name || blockDocBody.childNodes[j].localName == thymol.thBlock.synonym) {
-												blockElement = blockDocBody.childNodes[j];
-												for (k = 0, kLimit = innerNodes.length; k < kLimit; k++) {
-													newNode = innerNodes[k].cloneNode(true);
-													blockElement.appendChild(newNode);
-												}
-											}
-										}
-										if (blockElement != null) {
-											blockBase = new ThNode(blockDoc, false, null, null, null, blockDoc.nodeName, "::", false, blockDoc);
-											this.processChildren(blockBase);
-											changed = this.insertUncommented(blockBase.thDoc, deletions, parent);
-										}
-										else {
-											parent.removeChild(startComment); // Delete it!
-											changed = true;
-										}
-									}
-									else { // Embedded?
-										parent.removeChild(startComment); // Delete it!
-										changed = true;
-									}
-								}
-							}
-							else {
-								startValue = startValue.substring(3, startValue.length - 3);
-								newDoc = new DOMParser().parseFromString(startValue, "text/html");
-								changed = this.insertUncommented(newDoc, deletions, parent);
-							}
-						}
-					}
-				}
-			} while (changed);
-		},
+      for( i = start, iLimit = query.length; i < iLimit; i++ ) {
+        subQuery = query[ i ];
 
-		insertUncommented : function(doc, deletions, parent) {
-			var docBody = $(doc).find("body")[0], i, iLimit, newNode;
-			for (i = 0, iLimit = docBody.childNodes.length; i < iLimit; i++) {
-				newNode = docBody.childNodes[i].cloneNode(true);
-				parent.insertBefore(newNode, deletions[0]);
-			}
-			for (i = 0, iLimit = deletions.length; i < iLimit; i++) {
-				parent.removeChild(deletions[i]);
-			}
-			return true;
-		},
+        innr = thymol.ThUtils.unBracket( subQuery );
+        if( subQuery != innr ) {
+          innr = innr.replace( /[']/g, "\"" );
+          subQuery = "";
+          exprFrags = innr.split( /\s{1}\s*((?:and)|(?:or))\s{1}\s*/ );
+          for( j = 0, jLimit = exprFrags.length; j < jLimit; j++ ) {
+            if( exprFrags[ j ] != "and" && exprFrags[ j ] != "or" ) {
+              classSpecs = exprFrags[ j ].match( /[@]?\s*(?:class)\s*(\W?[=])\s*[\"]((?:\w*[\-_]*)*)[\"]/ );
+              if( classSpecs && classSpecs.length > 0 ) {
+                if( classSpecs[ 1 ] == "=" ) {
+                  subQuery = subQuery + "[class~='" + classSpecs[ 2 ] + "']";
+                }
+                if( classSpecs[ 1 ] == "^=" ) {
+                  subQuery = subQuery + "[class^='" + classSpecs[ 2 ] + "'],[class*=' " + classSpecs[ 2 ] + "']";
+                }
+              }
+              else {
+                subQuery = subQuery + "[" + exprFrags[ j ] + "]";
+              }
+            }
+            else if( exprFrags[ j ] == "or" ) {
+              subQuery = subQuery + ",";
+            }
+          }
+        }
 
-		getList : function(element, content) {
-			var argValue = content.trim(), argsCount = 0, argsList = [], assigs, i, iLimit, val;
-			if (argValue) {
-				assigs = argValue.split(",");
-				for (i = 0, iLimit = assigs.length; i < iLimit; i++) {
-					val = thymol.getExpression(assigs[i], element);
-					argsList[i] = val;
-				}
-				if (!element.thLocalVars) {
-					element.thLocalVars = {};
-				}
-				element.thLocalVars["..."] = argsList;
-				argsCount = argsList.length;
-			}
-			return argsCount;
-		},
+        qTerms = subQuery.split( "/" );
+        for( j = 0, jLimit = qTerms.length; j < jLimit; j++ ) {
+          if( qTerms[ j ] != "" ) {
+            qTerms[ j ] = qTerms[ j ].replace( /[@]/g, "" );
+            if( subQuery.indx != null ) {
+              qTerms[ j ] = qTerms[ j ] + ":eq(" + subQuery.indx + ")";
+            }
+            subSelect = [];
+            for( k = 0, kLimit = selection.length; k < kLimit; k++ ) {
+              partial = null;
+              if( qTerms[ j ] == textFuncSynonym ) {
+                partial = $( selection[ k ] ).contents().filter( function() {
+                  return this.nodeType === 3; // Node.TEXT_NODE
+                } );
+              }
+              else if( descend ) {
+                partial = $( selection[ k ] ).children( qTerms[ j ] );
+              }
+              else if( j == 0 ) {
+                if( scope == "/" ) {
+                  html = $( "html", selection[ k ] );
+                  if( html.length > 0 ) {
+                    selection[ k ] = html;
+                  }
+                  partial = $( selection[ k ] ).children( "body" ).children( qTerms[ j ] );
+                  scope = "";
+                }
+                else {
+                  if( i == 0 || scope == "//" ) {
+                    partial = $( selection[ k ] ).find( qTerms[ j ] );
+                    scope = "";
+                  }
+                  else {
+                    partial = $( selection[ k ] ).filter( qTerms[ j ] );
+                  }
+                }
+              }
+              else {
+                partial = $( selection[ k ] ).children( qTerms[ j ] );
+              }
+              if( partial != null ) {
+                for( m = 0, mLimit = partial.length; m < mLimit; m++ ) {
+                  subSelect.push( partial[ m ] );
+                }
+              }
+            }
+            selection = subSelect;
+          }
+        }
+        descend = ( qTerms[ qTerms.length - 1 ] == "" ); // If qTerms ended with a '/' apply next query to children
+      }
+      result = selection;
+      if( result != null && ! ( result.length === undefined ) ) {
+        if( result.length > 1 ) {
+          newNode = thymol.thDocument.createDocumentFragment();
+          for( i = 0, iLimit = result.length; i < iLimit; i++ ) {
+            var newChild = thymol.thDocument.importNode( result[ i ], true);
+            newNode.appendChild( newChild );
+          }
+          result = newNode;
+        }
+        else {
+          result = result[ 0 ];
+        }
+      }
+      return result;
+    },
 
-		testParam : function(param) {
-			var initial = param, result = false, theParam = null, negate = false;
-			if (typeof initial === 'boolean') {
-				result = initial;
-			}
-			else {
-				theParam = null;
-				negate = false;
-				if (typeof initial === 'object' && initial instanceof ThParam) {
-					theParam = initial;
-				}
-				else {
-					initial = initial.valueOf();
-					if (initial.charAt(0) == '!') {
-						negate = true;
-						initial = initial.substring(1);
-					}
-				}
-				theParam = thymol.applicationContext[initial];
-				if (theParam != null) {
-					result = theParam.getBooleanValue();
-				}
-				if (negate) {
-					result = !result;
-				}
-			}
-			return result ? true : false;
-		},
+/*    getFilePath : function(part, element) {
+      var result = thymol.substitute(part, element), mapped = null, slashpos, useAbsolutePath = thymol.useAbsolutePath || !!thymol.absolutePath;
+      if (result) {
+        if (thymol.mappings) {
+//          mapped = thymol.getMapped(result, thymol.extendedMapping);  // Historically extendedMapping has always been false in getFilePart
+          mapped = thymol.getMapped(result, false);  // Historically extendedMapping has always been false in getFilePart
+        }
+      }
+      if (mapped) {
+        result = mapped;
+      }
+      else {
+        if (result && ( result.charAt(0) != '.' || useAbsolutePath ) ) { // Initial period character indicates a relative path
+          slashpos = result.indexOf('/');
+          if (slashpos >= 0 || useAbsolutePath ) { // If it doesn't start with a '.', and there are no path separators, it's also treated as relative
+            if (slashpos == 0 && !useAbsolutePath ) {
+              result = result.substring(1);
+            }
+            result = thymol.protocol + thymol.root + thymol.path + result;
+          }
+        }
+      }
+      return result;
+    },*/
+    
+/*    getFilePath : function( part, element ) {
+      var result = thymol.substitute( part, element ), mapped = null, slashpos, useScriptPath = !!thymol.scriptPath, useAbsolutePath = !!thymol.absolutePath;
+      if( result ) {
+        if( thymol.mappings ) {
+          // mapped = thymol.getMapped(result, thymol.extendedMapping); // Historically extendedMapping has always been false in getFilePath
+          mapped = thymol.getMapped( result, false ); // Historically extendedMapping has always been false in getFilePath
+        }
+      }
+      if( mapped ) {
+        result = mapped;
+      }
+      else {
+        if( result && ( useScriptPath || useAbsolutePath || result.charAt( 0 ) != '.' ) ) { // Initial period character indicates a relative path
+          slashpos = result.indexOf( '/' );
+          if( useScriptPath || useAbsolutePath || slashpos >= 0 ) { // If it doesn't start with a '.', and there are no path separators, it's also treated as relative            
+            if( slashpos == 0 && !useAbsolutePath && !useScriptPath ) {
+              result = result.substring( 1 );
+            }
+            if( useAbsolutePath ) {
+              result = thymol.protocol + thymol.absolutePath + result;              
+            }
+            else if( useScriptPath ) {
+              result = thymol.scriptPath + result;            
+            }
+            else {
+              result = thymol.protocol + thymol.root + thymol.path + result;
+            }
+          }
+        }
+      }
+      return result;
+    },*/
+    getFilePath : function( part, element ) {
+      var result = thymol.substitute( part, element ), mapped = null, slashpos;
+      if( result ) {
+        if( thymol.mappings ) {
+          // mapped = thymol.getMapped(result, thymol.extendedMapping); // Historically extendedMapping has always been false in getFilePath
+          mapped = thymol.getMapped( result, false ); // Historically extendedMapping has always been false in getFilePath
+        }
+      }
+      if( mapped ) {
+        result = mapped;
+      }
+      else {
+        if( result && ( thymol.useAbsolutePath || result.charAt( 0 ) != '.' ) ) { // Initial period character indicates a relative path
+          slashpos = result.indexOf( '/' );
+          if( thymol.useAbsolutePath || slashpos >= 0 ) { // If it doesn't start with a '.', and there are no path separators, it's also treated as relative
+            if( slashpos == 0 && !thymol.useAbsolutePath ) {
+              result = result.substring( 1 );
+            }
+            var proto = "";
+            if( thymol.useAbsolutePath ) {
+              proto = thymol.protocol;
+            }            
+            if( thymol.useAbsolutePath && !!thymol.absolutePath ) {
+              result = proto + thymol.absolutePath + result;              
+            }
+            else {
+              result = proto + thymol.root + thymol.path + result;                
+            }
+          }
+        }
+      }
+      return result;
+    },
 
-		processImport : function( element, rootNode, attr ) {
-			var importNode = null, filePart, fragmentPart, names, parts, fragmentArgsList, isNode, fragment, fileName, content, importError;
-			filePart = null;
-			fragmentPart = "::";
-			if( attr.value.indexOf( "::" ) < 0 ) {
-				filePart = this.getFilePart( attr.value, element );
-			}
-			else {
-				names = attr.value.split( "::" );
-				filePart = this.getFilePart( names[0].trim(), element );
-				fragmentPart = names[1].trim();
-			}
-			if( "this" == filePart ) {
-				filePart = "";
-			}
-			if( filePart != null ) {
-				parts = filePart.match( varParExpr );
-				fragmentArgsList = null;
-				if( parts ) {
-					if( parts.length > 1 ) {
-						filePart = parts[1].trim();
-					}
-					if( parts.length > 2 ) {
-						fragmentArgsList = parts[2].trim();
-					}
-				}
-				if( filePart != "" || !isFragmentChild( element ) ) {
-					isNode = thymol.thReplace.name == attr.localName || thymol.thReplace.synonym == attr.localName || thymol.thSubstituteby.name == attr.localName || thymol.thSubstituteby.synonym == attr.localName;
-					if( thymol.thCache[filePart] != null && thymol.thCache[filePart][fragmentPart] != null ) {
-						isNode = isNode || fragmentPart == "::";
-						importNode = new ThNode( thymol.thCache[filePart][fragmentPart], false, rootNode, null, null, filePart, fragmentPart, isNode, element );
-					}
-					else {
-						fragment = null;
-						importError = null;
-						if( filePart != "" ) { // Signifies v2.1 local fragment
-							fileName = filePart + ".html";
-							$.get( fileName, function( textContent, status ) {
-								try {
-									if( "success" == status ) {
-										content = new DOMParser().parseFromString( textContent, "text/html" );
-										fragment = Thymol.prototype.getImportNode( element, filePart, fragmentPart, fragmentArgsList, content );
-									}
-									else if( thymol.debug ) {
-										window.alert( "thymol.processImport file read failed: " + filePart + " fragment: " + fragmentPart );
-									}
-								}
-								catch( err ) {
-									importError = err;
-								}
-							}, "text" );
-						}
-						else {
-							fragment = this.getImportNode( element, filePart, fragmentPart, fragmentArgsList, document );
-						}
-						if( fragment == null ) {
-							if( importError !== null ) {
-								throw importError;
-							}
-							if( thymol.debug ) {
-								window.alert( "thymol.processImport fragment import failed: " + filePart + " fragment: " + fragmentPart );
-							}
-						}
-						else {
-							importNode = new ThNode( fragment, false, rootNode, null, null, filePart, fragmentPart, isNode, element );
-						}
-					}
-				}
-			}
-			element.removeAttribute( attr.name );
-			return importNode;
-	  },
+    doLiteralSubstExpr : function( param, primary ) {
+      var result = param.trim(), term, subst, lsp;
+      if( thymol.ThUtils.isLiteralSubst( result ) ) {
+        result = this.decodeLiteralSubst( result );
+      }
+      else {
+        term = primary;
+        while( term != null ) {
+          if( thymol.ThUtils.isLiteralSubst( term ) ) {
+            subst = this.decodeLiteralSubst( term );
+            result = result.replace( term, subst );
+            lsp = result.match( litSubstExpr );
+            if( lsp && lsp.length > 0 ) {
+              term = lsp[ 1 ];
+            }
+            else {
+              break;
+            }
+          }
+          else {
+            break;
+          }
+        }
+      }
+      return result;
+    },
 
-		getImportNode : function(element, filePart, fragmentArg, fragmentArgsList, content) {
-			var result = null, fragmentName = fragmentArg.trim(), fragmentPart = fragmentName, parts, argsCount, matched, fragment, htmlContent, fragArray, i, iLimit, j, jLimit, k, clean, bare, vlParts, vlArgs, argsList, varName, newElement;
-			fragmentName = fragmentName.replace(/text\(\)/g, textFuncSynonym);
-			parts = fragmentName.match(varParExpr);
-			if (parts == null && fragmentArgsList != null) {
-				parts = [];
-				parts[1] = fragmentName;
-				parts[2] = fragmentArgsList;
-			}
-			argsCount = 0;
-			if (parts) {
-				if (parts.length > 1) {
-					fragmentName = parts[1].trim();
-					if (parts.length > 2) {
-						if (parts[2].indexOf("=") > 0) {
-							argsCount = thymol.getWith(element, parts[2]);
-						}
-						else {
-							argsCount = this.getList(element, parts[2]);
-						}
-					}
-				}
-			}
-			if (thymol.thCache[filePart] == null) {
-				thymol.thCache[filePart] = new Object();
-			}
-			matched = false;
-			fragment = null;
-			if (fragmentName == "::") {
-				htmlContent = $("html", content)[0];
-				result = htmlContent;
-				matched = true;
-			}
-			else {
-				fragArray = $(thymol.thFragment.escpName, content);
-				for (i = 0, iLimit = fragArray.length; i < iLimit; i++) {
-					fragment = fragArray[i];
-					for (j = 0, jLimit = fragment.attributes.length; j < jLimit; j++) {
-						clean = fragment.attributes[j];
-						clean = clean.value.replace(/\s/g, "");
-						bare = null;
-						vlParts = clean.match(varParExpr);
-						if (vlParts) {
-							if (vlParts.length > 1) {
-								bare = vlParts[1].trim();
-							}
-						}
-						if (fragmentName == bare && argsCount > 0) {
-							if (vlParts.length > 2) {
-								vlArgs = vlParts[2].trim().split(",");
-								if (vlArgs) {
-									if (vlArgs.length == argsCount) {
-										argsList = element.thLocalVars["..."];
-										if (argsList != null) {
-											for (k = 0; k < argsCount; k++) {
-												varName = vlArgs[k].trim();
-												element.thLocalVars[varName] = argsList[k];
-											}
-											element.thLocalVars["..."] = null;
-										}
-										matched = true;
-										break;
-									}
-									else if (vlArgs.length > argsCount) {
-										break;
-									}
-								}
-							}
-						}
-						if (fragmentName == clean || fragmentPart == clean || fragmentName == bare) {
-							matched = true;
-							break;
-						}
-					}
-					if (matched) {
-						result = fragment;
-						break;
-					}
-				}
-			}
-			if (!matched) {
-				fragment = this.getDOMSelection(fragmentName, content);
-				if (fragment) {
-					matched = true;
-					result = fragment;
-				}
-				else {
-					if (!element.isBlockChild) {
-						throw new ThError("getImportNode cannot match fragment: \"" + fragmentName + "\"", element);
-					}
-				}
-			}
-			thymol.thCache[filePart][fragmentPart] = result;
-			if (matched) {
-				newElement = result.cloneNode(true);
-				if (newElement.nodeType == 1) {
-					newElement.removeAttribute(thymol.thFragment.name);
-					newElement.removeAttribute(thymol.thFragment.synonym);
-				}
-				result = newElement;
-				result.thLocalVars = element.thLocalVars;
-			}
-			return result;
-		},
+    decodeLiteralSubst : function( param ) {
+      var result = param, parts, rep, i, iLimit;
+      result = result.trim();
+      result = result.substring( 1, result.length - 1 );
+      result = result.replace( /[\']/g, "&#39;" );
+      parts = result.split( varRefExpr );
+      if( parts && parts.length > 0 ) {
+        rep = "";
+        for( i = 0, iLimit = parts.length; i < iLimit; i++ ) {
+          if( parts[ i ] != "" ) {
+            if( !parts[ i ].match( varRefExpr ) ) {
+              parts[ i ] = "'" + parts[ i ] + "'";
+            }
+            if( rep == "" ) {
+              rep = parts[ i ];
+            }
+            else {
+              rep = rep + "+" + parts[ i ];
+            }
+          }
+        }
+        result = rep;
+      }
+      return result;
+    },
 
-		getDOMSelection : function(initial, content) {
-			var spec = initial, result = null, scope = "", query = new Array(), parts = "", innr = ThUtils.unBracket(spec), i, iLimit, j, jLimit, k, kLimit, m, mLimit, token, indx, saved, indxed, start, selection, descend, subQuery, exprFrags, classSpecs, qTerms, subSelect, partial, html, newNode;
-			if (spec != innr && innr.charAt(innr.length - 1) == ']') { // Wrapped in [] and ends with ]]
-				spec = innr;
-			}
-			while (spec != "") {
-				parts = spec.match(domSelectExpr);
-				if (parts != null && parts.length > 1) {
-					for (i = 1, iLimit = parts.length; i < iLimit; i++) {
-						if (parts[i] != null) {
-							token = parts[i];
-							indx = null;
-							innr = ThUtils.unBracket(token);
-							if (token != innr) {
-								if (innr.match(numericExpr)) {
-									indx = innr;
-								}
-							}
-							saved = spec;
-							spec = spec.replace(token, ""); // Only replace 1st occurrence
-							if (saved == spec) {
-								spec = "";
-							}
-							if (indx) {
-								token = query[query.length - 1];
-								indxed = new String(token);
-								indxed.indx = indx;
-								query[query.length - 1] = indxed;
-							}
-							else {
-								query.push(token.trim());
-							}
-							break;
-						}
-					}
-				}
-				else {
-					break;
-				}
-			}
-			start = 0;
-			if (query.length > 0 && query[0] != "" && query[0].charAt(0) == '/') {
-				scope = query[0];
-				start = 1;
-			}
-			selection = [];
-			selection.push(content);
-			descend = false;
+    doReplace : function( isNode, element, content ) {
+      if( isNode ) {
+        var parent = element.parentNode;
+        if( content.nodeName.toLowerCase() == "html" ) {
+          this.doInsertion( element, content, function( e, n ) {
+            if( n.nodeType == 1 ) {
+              n.removeAttribute( thymol.thFragment.name );
+              n.removeAttribute( thymol.thFragment.synonym );
+            }
+            e.parentNode.insertBefore( n, e ); // TODO make sure this works in a cross document scenario
+          } );
+          parent.removeChild( element ); // TODO make sure this works in a cross document scenario
+        }
+        else {
+          var node = this.doClone( content, parent.ownerDocument );
+          if( node.nodeType == 1 ) {
+            node.removeAttribute( thymol.thFragment.name );
+            node.removeAttribute( thymol.thFragment.synonym );
+          }
+          parent.replaceChild( node, element ); // TODO make sure this works in a cross document scenario
+          node.parentNode = parent;
+        }
+      }
+      else {
+        try {
+          while( element.firstChild != null ) {
+            element.removeChild( element.firstChild );
+            if( element.firstChild == null ) {
+              break;
+            }
+          }
+          this.doInsertion( element, content, function( e, n ) {
+            if( n.nodeType == 1 ) {
+              n.removeAttribute( thymol.thFragment.name );
+              n.removeAttribute( thymol.thFragment.synonym );
+            }
+            e.appendChild( n );
+          } );
+        }
+        catch( err ) { // Work-around for IE
+          element.innerHTML = content.innerHTML;
+        }
+      }
+    },
 
-			for (i = start, iLimit = query.length; i < iLimit; i++) {
-				subQuery = query[i];
+    doClone : function( old, targetDoc ) {
+      var node, cNodes, i, iNode, aNode;
+      if( !!old.parentNode && old.parentNode.ownerDocument === targetDoc ) {
+        node = old.cloneNode( false );          
+      }
+      else {
+        node = targetDoc.importNode(old, false);
+      }        
+      if( node !== null ) {
+        if( node.nodeType == 1 ) {
+          if( old.thLocalVars !== null ) {
+            node.thLocalVars = old.thLocalVars;
+          }
+        }
+        if( old.childNodes !== null ) {
+          cNodes = old.childNodes.length;
+          if( cNodes > 0 ) {
+            for( i = 0; i < cNodes; i++ ) {
+              iNode = old.childNodes[ i ];
+              if( iNode !== null ) {
+                aNode = this.doClone( iNode, targetDoc );
+                if( aNode !== null ) {
+                  node.appendChild( aNode );
+                }
+              }
+            }
+          }
+        }
+      }
+      return node;
+    },
 
-				innr = ThUtils.unBracket(subQuery);
-				if (subQuery != innr) {
-					innr = innr.replace(/[']/g, "\"");
-					subQuery = "";
-					exprFrags = innr.split(/\s{1}\s*((?:and)|(?:or))\s{1}\s*/);
-					for (j = 0, jLimit = exprFrags.length; j < jLimit; j++) {
-						if (exprFrags[j] != "and" && exprFrags[j] != "or") {
-							classSpecs = exprFrags[j].match(/[@]?\s*(?:class)\s*(\W?[=])\s*[\"]((?:\w*[\-_]*)*)[\"]/);
-							if (classSpecs && classSpecs.length > 0) {
-								if (classSpecs[1] == "=") {
-									subQuery = subQuery + "[class~='" + classSpecs[2] + "']";
-								}
-								if (classSpecs[1] == "^=") {
-									subQuery = subQuery + "[class^='" + classSpecs[2] + "'],[class*=' " + classSpecs[2] + "']";
-								}
-							}
-							else {
-								subQuery = subQuery + "[" + exprFrags[j] + "]";
-							}
-						}
-						else if (exprFrags[j] == "or") {
-							subQuery = subQuery + ",";
-						}
-					}
-				}
+    doInsertion : function( element, content, func ) {
+      var topLevel = true, parent = element.parentElement, i, iLimit, iNode, elementName, j, jLimit, jNode, cJNode, cINode;
+      if( parent != null ) {
+        topLevel = ( element.parentElement.nodeName.toLowerCase() == "html" );
+      }
+      for( i = 0, iLimit = content.childNodes.length; i < iLimit; i++ ) {
+        iNode = content.childNodes[ i ];
+        if( iNode ) {
+          if( !topLevel ) {
+            elementName = iNode.nodeName.toLowerCase();
+            if( elementName != "head" ) { // Don't insert head if not at top level
+              if( elementName == "body" ) { // Skip body element if not at top level and just insert it's children
+                for( j = 0, jLimit = iNode.childNodes.length; j < jLimit; j++ ) {
+                  jNode = iNode.childNodes[ j ];
+                  if( jNode ) {
+                    cJNode = this.doClone( jNode, parent.ownerDocument );
+                    func( element, cJNode );
+                  }
+                }
+              }
+              else {
+                cINode = this.doClone( iNode, parent.ownerDocument );
+                func( element, cINode );
+              }
+            }
+          }
+          else { // Insert anything at top level
+            cINode = this.doClone( iNode, parent.ownerDocument );
+            func( element, cINode );
+          }
+        }
+      }
+    },
 
-				qTerms = subQuery.split("/");
-				for (j = 0, jLimit = qTerms.length; j < jLimit; j++) {
-					if (qTerms[j] != "") {
-						qTerms[j] = qTerms[j].replace(/[@]/g, "");
-						if (subQuery.indx != null) {
-							qTerms[j] = qTerms[j] + ":eq(" + subQuery.indx + ")";
-						}
-						subSelect = [];
-						for (k = 0, kLimit = selection.length; k < kLimit; k++) {
-							partial = null;
-							if (qTerms[j] == textFuncSynonym) {
-								partial = $(selection[k]).contents().filter(function() {
-									return this.nodeType === 3; // Node.TEXT_NODE
-								});
-							}
-							else if (descend) {
-								partial = $(selection[k]).children(qTerms[j]);
-							}
-							else if (j == 0) {
-								if (scope == "/") {
-									html = $("html", selection[k]);
-									if (html.length > 0) {
-										selection[k] = html;
-									}
-									partial = $(selection[k]).children("body").children(qTerms[j]);
-									scope = "";
-								}
-								else {
-									if (i == 0 || scope == "//") {
-										partial = $(selection[k]).find(qTerms[j]);
-										scope = "";
-									}
-									else {
-										partial = $(selection[k]).filter(qTerms[j]);
-									}
-								}
-							}
-							else {
-								partial = $(selection[k]).children(qTerms[j]);
-							}
-							if (partial != null) {
-								for (m = 0, mLimit = partial.length; m < mLimit; m++) {
-									subSelect.push(partial[m]);
-								}
-							}
-						}
-						selection = subSelect;
-					}
-				}
-				descend = (qTerms[qTerms.length - 1] == ""); // If qTerms ended with a '/' apply next query to children
-			}
-			result = selection;
-			if (result != null && !(result.length === undefined)) {
-				if (result.length > 1) {
-					newNode = document.createDocumentFragment();
-					for (i = 0, iLimit = result.length; i < iLimit; i++) {
-						newNode.appendChild(result[i]);
-					}
-					result = newNode;
-				}
-				else {
-					result = result[0];
-				}
-			}
-			return result;
-		},
+    getThParam : function( paramName, isBoolean, isPath, defaultValue ) {      
+      var localValue = defaultValue, globalValue = thymol.thWindow[ paramName ], theParam = thymol.ThUtils.getParameter( paramName );
+      if( typeof globalValue === "undefined" ) {
+        globalValue = thymol.applicationContext.javascriptify(paramName);
+      }
+      if( !!theParam ) {
+        if( theParam instanceof ThParam ) {
+          if( theParam.globalValue !== globalValue ) {
+            theParam.globalValue = globalValue;
+            theParam.value = globalValue;
+            localValue = globalValue;
+          }
+        }        
+        if( isBoolean ) {
+          localValue = theParam.getBooleanValue();
+        }
+      }
+      else {
+        if( ! ( typeof globalValue === "undefined" ) ) {
+          if( globalValue != null ) {
+            if( isBoolean ) {
+              localValue = ( globalValue == true );
+            }
+            else {
+              localValue = globalValue;
+            }
+          }
+        }
+      }
+      if( !isBoolean && isPath && localValue.length > 0 && localValue.charAt( localValue.length - 1 ) != '/' ) {
+          localValue = localValue + '/';
+      }
+      thymol.applicationContext.createVariable( paramName, localValue );
+      return localValue;
+    }
+    
+/*    getThParam : function( paramName, isBoolean, isPath, defaultValue ) {
+      var localValue = defaultValue, globalValue, theParam = thymol.ThUtils.getParameter( paramName );
+      if( isBoolean && !!theParam ) {
+        localValue = theParam.getBooleanValue();
+      }
+      else {
+        try {
+          globalValue = thymol.thWindow[ paramName ];
+          if( ! ( typeof globalValue === "undefined" ) ) {
+            if( globalValue != null ) {
+              if( isBoolean ) {
+                localValue = ( globalValue == true );
+              }
+              else {
+                localValue = globalValue;
+              }
+            }
+          }
+        }
+        catch( err ) {
+          if( err instanceof ReferenceError ) {
+            // Do nothing
+          }
+          if( err instanceof EvalError ) {
+            // Do nothing
+          }
+        }
+      }
+      if( !isBoolean && isPath && localValue.length > 0 && localValue.charAt( localValue.length - 1 ) != '/' ) {
+        localValue = localValue + '/';
+      }
+      thymol.applicationContext.createVariable( paramName, localValue );
+      return localValue;
+    }*/
 
-		getFilePart : function(part, element) {
-			var result = thymol.substitute(part, element), mapped = null, slashpos;
-			if (result) {
-				if (thymol.mappings) {
-//					mapped = thymol.getMapped(result, thymol.extendedMapping);  // Historically extendedMapping has always been false in getFilePart
-					mapped = thymol.getMapped(result, false);  // Historically extendedMapping has always been false in getFilePart
-				}
-			}
-			if (mapped) {
-				result = mapped;
-			}
-			else {
-				if (result && result.charAt(0) != '.') { // Initial period character indicates a relative path
-					slashpos = result.indexOf('/');
-					if (slashpos >= 0) { // If it doesn't start with a '.', and there are no path separators, it's also treated as relative
-						if (slashpos == 0) {
-							result = result.substring(1);
-						}
-						result = thymol.protocol + thymol.root + thymol.path + result;
-					}
-				}
-			}
-			return result;
-		},
 
-		doLiteralSubstExpr : function(param, primary) {
-			var result = param.trim(), term, subst, lsp;
-			if (ThUtils.isLiteralSubst(result)) {
-				result = this.decodeLiteralSubst(result);
-			}
-			else {
-				term = primary;
-				while (term != null) {
-					if (ThUtils.isLiteralSubst(term)) {
-						subst = this.decodeLiteralSubst(term);
-						result = result.replace(term, subst);
-						lsp = result.match(litSubstExpr);
-						if (lsp && lsp.length > 0) {
-							term = lsp[1];
-						}
-						else {
-							break;
-						}
-					}
-					else {
-						break;
-					}
-				}
-			}
-			return result;
-		},
 
-		decodeLiteralSubst : function(param) {
-			var result = param, parts, rep, i, iLimit;
-			result = result.trim();
-			result = result.substring(1, result.length - 1);
-			result = result.replace(/[\']/g, "&#39;");
-			parts = result.split(varRefExpr);
-			if (parts && parts.length > 0) {
-				rep = "";
-				for (i = 0, iLimit = parts.length; i < iLimit; i++) {
-					if (parts[i] != "") {
-						if (!parts[i].match(varRefExpr)) {
-							parts[i] = "'" + parts[i] + "'";
-						}
-						if (rep == "") {
-							rep = parts[i];
-						}
-						else {
-							rep = rep + "+" + parts[i];
-						}
-					}
-				}
-				result = rep;
-			}
-			return result;
-		},
+  };
+  function addDialect( spec ) {
+    var i, iLimit, prec = thymol.thDefaultPrecedence;
+    if( spec !== null && typeof spec !== "undefined" ) {
+      if( spec.attributeProcessors !== null && typeof spec.attributeProcessors !== "undefined" ) {
+        for( i = 0, iLimit = spec.attributeProcessors.length; i < iLimit; i++ ) {
+          if( spec.attributeProcessors[ i ].precedence !== null && typeof spec.attributeProcessors[ i ].precedence !== "undefined" ) {
+            prec = spec.attributeProcessors[ i ].precedence;
+          }
+          else {
+            prec = thymol.thDefaultPrecedence;
+          }
+          configureAttributeProcessor( spec.prefix, spec.attributeProcessors[ i ].name, spec.attributeProcessors[ i ].processor, prec, null );
+        }
+      }
+      if( spec.elementProcessors !== null && typeof spec.elementProcessors !== "undefined" ) {
+        for( i = 0, iLimit = spec.elementProcessors.length; i < iLimit; i++ ) {
+          configureElementProcessor( spec.prefix, spec.elementProcessors[ i ].name, spec.elementProcessors[ i ].processor );
+        }
+      }
+      if( spec.objects !== null && typeof spec.objects !== "undefined" ) {
+        for( i = 0, iLimit = spec.objects.length; i < iLimit; i++ ) {
+          if( spec.objects[ i ].name !== null && typeof spec.objects[ i ].name !== "undefined" ) {
+            spec.objects[ i ].object.thExpressionObjectName = spec.objects[ i ].name;
+            configureModule( spec.objects[ i ].object );
+          }
+          else {
+            configureModule( spec.objects[ i ] );
+          }
+        }
+      }
+    }
+  }
 
-		doReplace : function(isNode, element, content) {
-			if (isNode) {
-				if (content.nodeName.toLowerCase() == "html") {
-					this.doInsertion(element, content, function(e, n) {
-						if (n.nodeType == 1) {
-							n.removeAttribute(thymol.thFragment.name);
-							n.removeAttribute(thymol.thFragment.synonym);
-						}
-						e.parentNode.insertBefore(n, e);
-					});
-					element.parentNode.removeChild(element);
-				}
-				else {
-					var node = this.doClone(content);
-					if (node.nodeType == 1) {
-						node.removeAttribute(thymol.thFragment.name);
-						node.removeAttribute(thymol.thFragment.synonym);
-					}
-					element.parentNode.replaceChild(node, element);
-				}
-			}
-			else {
-				try {
-					while (element.firstChild != null) {
-						element.removeChild(element.firstChild);
-						if (element.firstChild == null) {
-							break;
-						}
-					}
-					this.doInsertion(element, content, function(e, n) {
-						if (n.nodeType == 1) {
-							n.removeAttribute(thymol.thFragment.name);
-							n.removeAttribute(thymol.thFragment.synonym);
-						}
-						e.appendChild(n);
-					});
-				}
-				catch (err) { // Work-around for IE
-					element.innerHTML = content.innerHTML;
-				}
-			}
-		},
+  /* Thymol internal classes */
 
-		doClone : function(old) {
-			var node = old.cloneNode(false), cNodes, i, iNode, aNode;
-			if (node !== null) {
-				if (node.nodeType == 1) {
-					if (old.thLocalVars !== null) {
-						node.thLocalVars = old.thLocalVars;
-					}
-				}
-				if (old.childNodes !== null) {
-					cNodes = old.childNodes.length;
-					if (cNodes > 0) {
-						for (i = 0; i < cNodes; i++) {
-							iNode = old.childNodes[i];
-							if (iNode !== null) {
-								aNode = this.doClone(iNode);
-								if (aNode !== null) {
-									node.appendChild(aNode);
-								}
-							}
-						}
-					}
-				}
-			}
-			return node;
-		},
+  function ThNode( thDocParam, visitedParam, parentDocParam, firstChildParam, nextSiblingParam, fileNameParam, fragNameParam, isNodeParam, elementParam ) {
+    this.thDoc = thDocParam;
+    this.visited = visitedParam;
+    this.parentDoc = parentDocParam;
+    this.firstChild = firstChildParam;
+    this.nextSibling = nextSiblingParam;
+    this.fileName = fileNameParam;
+    this.fragName = fragNameParam;
+    this.isNode = isNodeParam;
+    this.element = elementParam;
+  }
 
-		doInsertion : function(element, content, func) {
-			var topLevel = true, parent = element.parentElement, i, iLimit, iNode, elementName, j, jLimit, jNode, cJNode, cINode;
-			if (parent != null) {
-				topLevel = (element.parentElement.nodeName.toLowerCase() == "html");
-			}
-			for (i = 0, iLimit = content.childNodes.length; i < iLimit; i++) {
-				iNode = content.childNodes[i];
-				if (iNode) {
-					if (!topLevel) {
-						elementName = iNode.nodeName.toLowerCase();
-						if (elementName != "head") { // Don't insert head if not at top level
-							if (elementName == "body") { // Skip body element if not at top level and just insert it's children
-								for (j = 0, jLimit = iNode.childNodes.length; j < jLimit; j++) {
-									jNode = iNode.childNodes[j];
-									if (jNode) {
-										cJNode = this.doClone(jNode);
-										func(element, cJNode);
-									}
-								}
-							}
-							else {
-								cINode = this.doClone(iNode);
-								func(element, cINode);
-							}
-						}
-					}
-					else { // Insert anything at top level
-						cINode = this.doClone(iNode);
-						func(element, cINode);
-					}
-				}
-			}
-		},
+  function ThError( message, element, source ) {
+    this.name = "ThError";
+    this.message = message || "Default Message";
+    if( element !== null && typeof element !== "undefined" && element.isBlockChild ) {
+      this.suppress = true;
+    }
+    else {
+      this.element = element || {};
+      this.suppress = false;
+    }
+    if( !!source ) {
+      if( !!source.stack ) {
+        this.stack = source.stack;
+      }                                 
+    }
+  }
+  ThError.prototype = new Error();
+  ThError.prototype.constructor = ThError;
 
-		getThParam : function(paramName, isBoolean, isPath, defaultValue) {
-			var localValue = defaultValue, theParam = ThUtils.getParameter(paramName), paramValue;
-			if (isBoolean && theParam) {
-				localValue = theParam.getBooleanValue();
-			}
-			else {
-				try {
-					paramValue = window[paramName];
-					if (!(typeof paramValue === "undefined")) {
-						if (paramValue != null) {
-							if (isBoolean) {
-								localValue = (paramValue == true);
-							}
-							else {
-								localValue = paramValue;
-							}
-						}
-					}
-				}
-				catch (err) {
-					if (err instanceof ReferenceError) {
-						// Do nothing
-					}
-					if (err instanceof EvalError) {
-						// Do nothing
-					}
-				}
-			}
-			if (!isBoolean && isPath && localValue.length > 0 && localValue.charAt(localValue.length - 1) != '/') {
-				localValue = localValue + '/';
-			}
-			thymol.applicationContext.createVariable(paramName, localValue);
-			return localValue;
-		}
+  function ThParam( valueArg ) {
+    this.value = valueArg;
+    this.globalValue;
+    this[ "class" ] = new thymol.ThClass( "Thymol.ThParam" );
+    this.getBooleanValue = function() {
+      return !thymol.ThUtils.testLiteralFalse( this.value );
+    };
+    this.toString = function() {
+      return this.value;
+    };
+    this.getNumericValue = function() {
+      return Number( this.value );
+    };
+  }
 
-	};
+  function ThAttr( suffix, func, prec, list, pref, dataAttr ) {
+    var prefix = "", dataPrefix = null, escpPrefix = "";
+    if( typeof pref !== "undefined" && pref !== null ) {
+      prefix = pref + ":";
+      if( thymol.thThymeleafPrefixList.indexOf( prefix ) < 0 ) {
+        thymol.thThymeleafPrefixList.push( prefix );
+      }
+      escpPrefix = pref + "\\:";
+      if( typeof dataAttr === "undefined" || dataAttr === null ) {
+        dataPrefix = thymol.dataPrefix + "-" + pref + "-";
+        if( thymol.thThymeleafPrefixList.indexOf( dataPrefix ) < 0 ) {
+          thymol.thThymeleafPrefixList.push( dataPrefix );
+        }
+      }
+      else {
+        dataPrefix = dataAttr;
+      }
+    }
 
-	function addDialect(spec) {
-		var i, iLimit, prec = thymol.thDefaultPrecedence;
-		if (spec !== null && typeof spec !== "undefined") {
-			if (spec.attributeProcessors !== null && typeof spec.attributeProcessors !== "undefined") {
-				for (i = 0, iLimit = spec.attributeProcessors.length; i < iLimit; i++) {
-					if (spec.attributeProcessors[i].precedence !== null && typeof spec.attributeProcessors[i].precedence !== "undefined") {
-						prec = spec.attributeProcessors[i].precedence;
-					}
-					else {
-						prec = thymol.thDefaultPrecedence;
-					}
-					configureAttributeProcessor(spec.prefix, spec.attributeProcessors[i].name, spec.attributeProcessors[i].processor, prec, null );
-				}
-			}
-			if (spec.elementProcessors !== null && typeof spec.elementProcessors !== "undefined") {
-				for (i = 0, iLimit = spec.elementProcessors.length; i < iLimit; i++) {
-					configureElementProcessor(spec.prefix, spec.elementProcessors[i].name, spec.elementProcessors[i].processor);
-				}
-			}
-			if (spec.objects !== null && typeof spec.objects !== "undefined") {
-				for (i = 0, iLimit = spec.objects.length; i < iLimit; i++) {
-					if (spec.objects[i].name !== null && typeof spec.objects[i].name !== "undefined") {
-						spec.objects[i].object.thExpressionObjectName = spec.objects[i].name;
-						configureModule(spec.objects[i].object);
-					}
-					else {
-						configureModule(spec.objects[i]);						
-					}
-				}
-			}
-		}
-	}
+    // Need name, synonym, escpName and escpSynonym
+    this.suffix = suffix;
+    this.name = prefix + suffix;
+    this.regex = null;
+    if( suffix.indexOf( '*' ) >= 0 || suffix.indexOf( '?' ) >= 0 || suffix.indexOf( '+' ) >= 0 || suffix.indexOf( '\\' ) >= 0 || suffix.indexOf( '|' ) >= 0 || suffix.indexOf( '[' ) >= 0 || suffix.indexOf( ']' ) >= 0 || suffix.indexOf( '{' ) >= 0 || suffix.indexOf( '}' ) >= 0 ) {
+      if( "*" === suffix ) {
+        suffix = ".*";
+      }
+      suffix = prefix + suffix;
+      this.regex = new RegExp( suffix );
+    }
+    this.escpName = "[" + escpPrefix + suffix + "]";
+    if( dataPrefix !== null ) {
+      this.synonym = dataPrefix + suffix;
+      this.escpSynonym = "[" + this.synonym + "]";
+    }
+    else {
+      this.synonym = null;
+      this.escpSynonym = null;
+    }
+    if( typeof prec !== "undefined" && prec !== null ) {
+      this.precedence = prec;
+    }
+    else {
+      this.precedence = thymol.thDefaultPrecedence;
+    }
+    if( !!list ) {
+      var attrList = list[ pref ];
+      if( !attrList ) {
+        attrList = [];
+        list[ pref ] = attrList;
+        if( dataPrefix !== null ) {
+          list[ dataPrefix ] = attrList;
+        }
+      }
+      attrList.push( this );
+    }
+    this.process = function() {
+      thymol.thWindow.alert( "unsupported processing function for attribute \"" + this.name + "\"" );
+    };
+    if( ! ( typeof func === "undefined" ) ) {
+      this.process = func;
+    }
+    this.disable = function() {
+      this.name = null;
+      this.escpName = null;
+      this.escpSynonym = null;
+      this.process = function() {};
+    };
+  }
 
-	function ready(func) {
-		if (typeof thymolDeferredFunctions === "undefined" || thymolDeferredFunctions === null) {
-			thymolDeferredFunctions = [];
-		}
-		thymolDeferredFunctions.push(func);
-	}
+  function ThElement( suffix, func, pref ) {
+    var tha = new thymol.ThAttr( suffix, null, 0, null, pref );
+    this.name = tha.name;
+    this.synonym = tha.synonym;
+    this.endName = "/" + tha.name;
+    this.endSynonym = "/" + tha.synonym;
+    this.process = function() {
+      thymol.thWindow.alert( "unsupported processing function for element \"" + this.name + "\"" );
+    };
+    if( ! ( typeof func === "undefined" ) ) {
+      this.process = func;
+    }
+    this.disable = function() {
+      this.name = null;
+      this.synonym = null;
+      this.endName = null;
+      this.endSynonym = null;
+      this.process = null;
+    };
+    thymol.thThymeleafElementsList.push( this );
+  }
 
-	return {
+  function ThSet() {
+    this.that = this;
+    this.setSize = 0;
+    this.isContent = function( k ) {
+      return ( this.hasOwnProperty( k ) && typeof this[ k ] !== "function" && k !== "that" && k !== "setSize" );
+    };
+    this.add = function( k ) {
+      var contained = typeof this[ k ] !== "undefined";
+      this[ k ] = k;
+      if( contained !== ( typeof this[ k ] !== "undefined" ) ) {
+        this.setSize++;
+      }
+    };
+    this.addAll = function( other ) {
+      var k = null, value;
+      for( k in other ) {
+        if( other.hasOwnProperty( k ) ) {
+          value = other[ k ];
+          if( typeof value !== "function" ) {
+            add( value );
+          }
+        }
+      }
+    };
+    this.clear = function() {
+      for( var k in this ) {
+        if( this.hasOwnProperty( k ) ) {
+          delete this[ k ];
+        }
+      }
+      setSize = 0;
+    };
+    this.contains = function( k ) {
+      return typeof this[ k ] !== "undefined";
+    };
+    this.containsAll = function( keys ) {
+      var keySet = keys, k = null;
+      if( typeof keys === "Array" || Object.prototype.toString.call( keys ) === '[object Array]' ) {
+        keySet = ThSet.prototype.fromArray( keys );
+      }
+      for( k in keySet ) {
+        if( keySet.hasOwnProperty( k ) ) {
+          if( typeof this[ k ] === "undefined" ) {
+            return false;
+          }
+        }
+      }
+      return true;
+    };
+    this.isEmpty = function() {
+      return this.setSize === 0;
+    };
+    this.size = function() {
+      return this.setSize;
+    };
+    this.remove = function( k ) {
+      var contained = typeof this[ k ] !== "undefined";
+      delete this[ k ];
+      if( contained !== ( typeof this[ k ] !== "undefined" ) ) {
+        this.setSize--;
+      }
+    };
+    this.toArray = function() {
+      return getArray( this );
+    };
+    this.toString = function() {
+      var array = getArray();
+      return array.toString();
+    };
+    function getArray( obj ) {
+      var array = [], k = null, value;
+      for( k in obj ) {
+        if( obj.hasOwnProperty( k ) && k !== "that" && k !== "setSize" ) {
+          value = obj[ k ];
+          if( typeof value !== "function" ) {
+            array.push( value );
+          }
+        }
+      }
+      return array;
+    }
+  }
+  ThSet.prototype.fromArray = function( array ) {
+    var set = new thymol.ThSet(), i, iLimit;
+    for( i = 0, iLimit = array.length; i < iLimit; i++ ) {
+      set.add( array[ i ] );
+    }
+    return set;
+  };
 
-		Thymol : Thymol,
+  function ThMap() {
+    ThSet.apply( this );
+    this.containsKey = function( k ) {
+      return this.contains( k );
+    };
+    this.containsValue = function( target ) {
+      var k = null, value;
+      for( k in this.that ) {
+        if( this.that.hasOwnProperty( k ) && k !== "that" ) {
+          value = this.that[ k ];
+          if( value === target ) {
+            return true;
+          }
+        }
+      }
+      return false;
+    };
+    this.entrySet = function() {
+      return this.that;
+    };
+    this.get = function( k ) {
+      return this.that[ k ];
+    };
+    this.keySet = function() {
+      return this.that;
+    };
+    this.put = function( k, v ) {
+      var contained = typeof this[ k ] !== "undefined";
+      this.that[ k ] = v;
+      if( contained !== ( typeof this[ k ] !== "undefined" ) ) {
+        this.setSize++;
+      }
+    };
+    this.putAll = function( t ) {
+      for( var k in t ) {
+        put( k, t[ k ] );
+      }
+    };
+    this.values = function() {
+      return this.that;
+    };
+  }
+  ThMap.prototype = new ThSet();
+  ThMap.prototype.constructor = ThMap;
 
-		thVersion : thymol.thVersion,
-		thReleaseDate : thymol.thReleaseDate,
-		thURL : thymol.thURL,
-		thAltURL : thymol.thAltURL,
-		
-		thInclude : thymol.thInclude,
-		thReplace : thymol.thReplace,
-		thSubstituteby : thymol.thSubstituteby,
-		
-		thFragment : thymol.thFragment,
-		thRemove : thymol.thRemove,
-		
-		thBlock : thymol.thBlock,
-				
-		thScriptName : thymol.thScriptName,
+  function ThObject( dolly ) {
+    for( prop in dolly ) {
+      if( dolly.hasOwnProperty( prop ) ) {
+        if( prop ) {
+          if( !this[ prop ] ) {
+            this[ prop ] = dolly[ prop ];
+          }
+        }
+      }
+    }
+    this[ "class" ] = new thymol.ThClass( "Thymol.ThObject" );
+    this.toNonThObject = function() {
+      var plain = {};
+      for( prop in this ) {
+        if( this.hasOwnProperty( prop ) ) {
+          if( prop ) {
+            if( !plain[ prop ] ) {
+              if( prop !== "toNonThObject" ) {
+                if( prop !== "class" || ( prop === "class" && this[ prop ] !== null && this[ prop ].name !== "Thymol.ThObject" ) ) {
+                  plain[ prop ] = this[ prop ];
+                }
+              }
+            }
+          }
+        }
+      }
+      return plain;
+    };
+  }
 
-		thDefaultPrefix : thymol.thDefaultPrefix,
-		thDefaultDataPrefix : thymol.thDefaultDataPrefix,
-		thDefaultPrecision : thymol.thDefaultPrecision,
-		thDefaultProtocol : thymol.thDefaultProtocol,
-		thDefaultLocale : thymol.thDefaultLocale,
-		thDefaultPrecedence : thymol.thDefaultPrecedence,
+  function ThVarsAccessor( storeArg, storeNameArg ) {
+    this.store = storeArg;
+    this.arrayName = storeNameArg;
+    this.length = function() {
+      return this.store.length;
+    };
+    this.get = function( name ) {
+      return this.store[ name ];
+    };
+    this.set = function( name, value ) {
+      this.store[ name ] = value;
+    };
+  }
 
-		thDefaultMessagePath : thymol.thDefaultMessagePath,			
-		thDefaultMessagesBaseName : thymol.thDefaultMessagesBaseName,
-		thDefaultRelativeRootPath : thymol.thDefaultRelativeRootPath,
-		thDefaultExtendedMapping : thymol.thDefaultExtendedMapping,
-		thDefaultLocalMessages : thymol.thDefaultLocalMessages,
+  function ThClass( nValue ) {
+    this.name = nValue;
+  }
+  ;
 
-		thThymeleafPrefixList : thymol.thThymeleafPrefixList,
-		thThymeleafElementsList : thymol.thThymeleafElementsList,
-				
-		thLocation : thymol.thLocation,
-		
-		messagePath : thymol.messagePath,
-		relativeRootPath : thymol.relativeRootPath,			
-		messagesBaseName : thymol.messagesBaseName,
-		extendedMapping : thymol.extendedMapping,			
-		localMessages : thymol.localMessages,			
-		indexFile : thymol.indexFile,			
+  return {
 
-		prefix : thymol.prefix,
-		dataPrefix : thymol.dataPrefix,
-		templateName : thymol.templateName,
-		templatePath : thymol.templatePath,
-		objects : thymol.objects,
-				
-		init : init,
-		ready : ready,
-		addDialect : addDialect,
-		isFragmentChild : isFragmentChild,
-		preProcess : preProcess,
-		substitute : substitute,
-		substituteParam : substituteParam,
+    Thymol : Thymol,
+    ThError : ThError,
+    ThParam : ThParam,
 
-		configureModule : configureModule,
-		configureAttributeProcessor : configureAttributeProcessor,
-		configureElementProcessor : configureElementProcessor,
-		configurePreExecution : configurePreExecution,
-		configurePostExecution : configurePostExecution,
+    ThAttr : ThAttr,
+    ThElement : ThElement,
+    ThSet : ThSet,
+    ThMap : ThMap,
+    ThObject : ThObject,
+    ThVarsAccessor : ThVarsAccessor,
+    ThClass : ThClass,
 
-		getStandardURL : getStandardURL,
-		getMessage : getMessage,
-		getExpression : getExpression,
-		getWith : getWith,
-		getParsedExpr : getParsedExpr,
-		getLocale : getLocale,
-		getMapped : getMapped,
-		getBooleanValue : getBooleanValue,
+    thDomParser : thymol.thDomParser,
+    thDocument : thymol.thDocument,
+    thWindow : thymol.thWindow,
+    thTop : thymol.thTop,
+    thRequest : thymol.thRequest,
 
-		setLocale : setLocale		
+    thVersion : thymol.thVersion,
+    thReleaseDate : thymol.thReleaseDate,
+    thURL : thymol.thURL,
+    thAltURL : thymol.thAltURL,
 
-	};
+    thInclude : thymol.thInclude,
+    thReplace : thymol.thReplace,
+    thSubstituteby : thymol.thSubstituteby,
+
+    thFragment : thymol.thFragment,
+    thRemove : thymol.thRemove,
+
+    thBlock : thymol.thBlock,
+
+    thScriptName : thymol.thScriptName,
+
+    thDefaultPrefix : thymol.thDefaultPrefix,
+    thDefaultDataPrefix : thymol.thDefaultDataPrefix,
+    thDefaultPrecision : thymol.thDefaultPrecision,
+    thDefaultProtocol : thymol.thDefaultProtocol,
+    thDefaultLocale : thymol.thDefaultLocale,
+    thDefaultPrecedence : thymol.thDefaultPrecedence,
+
+    thDefaultMessagePath : thymol.thDefaultMessagePath,
+    thDefaultMessagesBaseName : thymol.thDefaultMessagesBaseName,
+    thDefaultRelativeRootPath : thymol.thDefaultRelativeRootPath,
+    thDefaultExtendedMapping : thymol.thDefaultExtendedMapping,
+    thDefaultLocalMessages : thymol.thDefaultLocalMessages,
+    thDefaultDisableMessages : thymol.thDefaultDisableMessages,
+    thDefaultTemplateSuffix : thymol.thDefaultTemplateSuffix,
+
+    thThymeleafPrefixList : thymol.thThymeleafPrefixList,
+    thThymeleafElementsList : thymol.thThymeleafElementsList,
+
+    thLocation : thymol.thLocation,
+
+    messagePath : thymol.messagePath,
+    relativeRootPath : thymol.relativeRootPath,
+    messagesBaseName : thymol.messagesBaseName,
+    extendedMapping : thymol.extendedMapping,
+    scriptPath : thymol.scriptPath,
+    absolutePath : thymol.absolutePath,
+    useAbsolutePath : thymol.useAbsolutePath,
+    keepRelative : thymol.keepRelative,
+    localMessages : thymol.localMessages,
+    indexFile : thymol.indexFile,
+		disableMessages : thymol.disableMessages,
+		templateSuffix : thymol.templateSuffix,			
+
+    prefix : thymol.prefix,
+    dataPrefix : thymol.dataPrefix,
+    templateName : thymol.templateName,
+    templatePath : thymol.templatePath,
+    objects : thymol.objects,
+
+    jqSetup : jqSetup,
+    execute : execute,
+    updatePrefix : updatePrefix,
+    init : init,
+    ready : ready,
+    addDialect : addDialect,
+    isFragmentChild : isFragmentChild,
+    preProcess : preProcess,
+    substitute : substitute,
+    substituteParam : substituteParam,
+
+    configureModule : configureModule,
+    configureAttributeProcessor : configureAttributeProcessor,
+    configureElementProcessor : configureElementProcessor,
+    configurePreExecution : configurePreExecution,
+    configurePostExecution : configurePostExecution,
+
+    getStandardURL : getStandardURL,
+    getMessage : getMessage,
+    getExpression : getExpression,
+    getWith : getWith,
+    getParsedExpr : getParsedExpr,
+    getLocale : getLocale,
+    getMapped : getMapped,
+    getBooleanValue : getBooleanValue,
+
+    setLocale : setLocale
+
+  };
 
 }();
