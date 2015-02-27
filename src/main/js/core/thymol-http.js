@@ -51,58 +51,57 @@ void 	setAttribute(java.lang.String name, java.lang.Object value)
 void 	setMaxInactiveInterval(int interval)
          Specifies the time, in seconds, between client requests before the servlet container will invalidate this session.
 
-*/
+ */
 
 thymol.objects.thHttpSessionObject = function() {
 
-	var thExpressionObjectName = "#httpSession";
-	
-	function getAttribute(name) {
-		var result = thymol.sessionContext[name];
-		return result;
-	}
+  var thExpressionObjectName = "#httpSession";
 
-	function getParameter(name) {
-		var result = thymol.sessionContext[name];
-		return result;
-	}
+  function getAttribute( name ) {
+    var result = thymol.sessionContext[ name ];
+    return result;
+  }
 
-	function getServletContext() {
-		var result = thymol.applicationContext;
-		return result;
-	}
+  function getParameter( name ) {
+    var result = thymol.sessionContext[ name ];
+    return result;
+  }
 
-	function getSessionContext() {
-		var result = thymol.sessionContext;
-		return result;
-	}
+  function getServletContext() {
+    var result = thymol.applicationContext;
+    return result;
+  }
 
-	function getContextPath() {
-		var result = "";
-		return result;
-	}
+  function getSessionContext() {
+    var result = thymol.sessionContext;
+    return result;
+  }
 
-	function getRequestName() {
-		var result = "";
-		return result;
-	}
+  function getContextPath() {
+    var result = "";
+    return result;
+  }
 
-	function getParameterValues(name) {
-		var result = thymol.sessionContext[name];
-		return result;
-	}
+  function getRequestName() {
+    var result = "";
+    return result;
+  }
 
+  function getParameterValues( name ) {
+    var result = thymol.sessionContext[ name ];
+    return result;
+  }
 
-	return {
-		thExpressionObjectName: thExpressionObjectName,
-		getAttribute : getAttribute,
-		getParameter : getParameter,
-		getServletContext : getServletContext,
-		getSessionContext : getSessionContext,
-		getContextPath : getContextPath,
-		getRequestName : getRequestName,
-		getParameterValues : getParameterValues
-	};
+  return {
+    thExpressionObjectName : thExpressionObjectName,
+    getAttribute : getAttribute,
+    getParameter : getParameter,
+    getServletContext : getServletContext,
+    getSessionContext : getSessionContext,
+    getContextPath : getContextPath,
+    getRequestName : getRequestName,
+    getParameterValues : getParameterValues
+  };
 
 }();
 
@@ -110,77 +109,77 @@ thymol.objects.thHttpSessionObject = function() {
 
 Excerpts from http://docs.oracle.com/javaee/6/api/javax/servlet/http/HttpServletRequest.html
 
-Copyright © 2009-2011, Oracle Corporation and/or its affiliates. All Rights Reserved. Use is subject to license terms. 
+Copyright ï¿½ 2009-2011, Oracle Corporation and/or its affiliates. All Rights Reserved. Use is subject to license terms. 
 
- static java.lang.String 	BASIC_AUTH
+ static java.lang.String  BASIC_AUTH
           String identifier for Basic authentication.
-static java.lang.String 	CLIENT_CERT_AUTH
+static java.lang.String   CLIENT_CERT_AUTH
           String identifier for Client Certificate authentication.
-static java.lang.String 	DIGEST_AUTH
+static java.lang.String   DIGEST_AUTH
           String identifier for Digest authentication.
-static java.lang.String 	FORM_AUTH
+static java.lang.String   FORM_AUTH
           String identifier for Form authentication.
 
 
 
- boolean 	authenticate(HttpServletResponse response)
+ boolean  authenticate(HttpServletResponse response)
           Use the container login mechanism configured for the ServletContext to authenticate the user making this request.
- java.lang.String 	getAuthType()          Returns the name of the authentication scheme used to protect the servlet.
- java.lang.String 	getContextPath()
+ java.lang.String   getAuthType()          Returns the name of the authentication scheme used to protect the servlet.
+ java.lang.String   getContextPath()
           Returns the portion of the request URI that indicates the context of the request.
- Cookie[] 	getCookies()
+ Cookie[]   getCookies()
           Returns an array containing all of the Cookie objects the client sent with this request.
- long 	getDateHeader(java.lang.String name)
+ long   getDateHeader(java.lang.String name)
           Returns the value of the specified request header as a long value that represents a Date object.
- java.lang.String 	getHeader(java.lang.String name)
+ java.lang.String   getHeader(java.lang.String name)
           Returns the value of the specified request header as a String.
- java.util.Enumeration<java.lang.String> 	getHeaderNames()
+ java.util.Enumeration<java.lang.String>  getHeaderNames()
           Returns an enumeration of all the header names this request contains.
- java.util.Enumeration<java.lang.String> 	getHeaders(java.lang.String name)
+ java.util.Enumeration<java.lang.String>  getHeaders(java.lang.String name)
           Returns all the values of the specified request header as an Enumeration of String objects.
- int 	getIntHeader(java.lang.String name)
+ int  getIntHeader(java.lang.String name)
           Returns the value of the specified request header as an int.
- java.lang.String 	getMethod()
+ java.lang.String   getMethod()
           Returns the name of the HTTP method with which this request was made, for example, GET, POST, or PUT.
- Part 	getPart(java.lang.String name)
+ Part   getPart(java.lang.String name)
           Gets the Part with the given name.
- java.util.Collection<Part> 	getParts()
+ java.util.Collection<Part>   getParts()
           Gets all the Part components of this request, provided that it is of type multipart/form-data.
- java.lang.String 	getPathInfo()
+ java.lang.String   getPathInfo()
           Returns any extra path information associated with the URL the client sent when it made this request.
- java.lang.String 	getPathTranslated()
+ java.lang.String   getPathTranslated()
           Returns any extra path information after the servlet name but before the query string, and translates it to a real path.
- java.lang.String 	getQueryString()
+ java.lang.String   getQueryString()
           Returns the query string that is contained in the request URL after the path.
- java.lang.String 	getRemoteUser()
+ java.lang.String   getRemoteUser()
           Returns the login of the user making this request, if the user has been authenticated, or null if the user has not been authenticated.
- java.lang.String 	getRequestedSessionId()
+ java.lang.String   getRequestedSessionId()
           Returns the session ID specified by the client.
- java.lang.String 	getRequestURI()
+ java.lang.String   getRequestURI()
           Returns the part of this request's URL from the protocol name up to the query string in the first line of the HTTP request.
- java.lang.StringBuffer 	getRequestURL()
+ java.lang.StringBuffer   getRequestURL()
           Reconstructs the URL the client used to make the request.
- java.lang.String 	getServletPath()
+ java.lang.String   getServletPath()
           Returns the part of this request's URL that calls the servlet.
- HttpSession 	getSession()
+ HttpSession  getSession()
           Returns the current session associated with this request, or if the request does not have a session, creates one.
- HttpSession 	getSession(boolean create)
+ HttpSession  getSession(boolean create)
           Returns the current HttpSession associated with this request or, if there is no current session and create is true, returns a new session.
- java.security.Principal 	getUserPrincipal()
+ java.security.Principal  getUserPrincipal()
           Returns a java.security.Principal object containing the name of the current authenticated user.
- boolean 	isRequestedSessionIdFromCookie()
+ boolean  isRequestedSessionIdFromCookie()
           Checks whether the requested session ID came in as a cookie.
- boolean 	isRequestedSessionIdFromUrl()
+ boolean  isRequestedSessionIdFromUrl()
           Deprecated. As of Version 2.1 of the Java Servlet API, use isRequestedSessionIdFromURL() instead.
- boolean 	isRequestedSessionIdFromURL()
+ boolean  isRequestedSessionIdFromURL()
           Checks whether the requested session ID came in as part of the request URL.
- boolean 	isRequestedSessionIdValid()
+ boolean  isRequestedSessionIdValid()
           Checks whether the requested session ID is still valid.
- boolean 	isUserInRole(java.lang.String role)
+ boolean  isUserInRole(java.lang.String role)
           Returns a boolean indicating whether the authenticated user is included in the specified logical "role".
- void 	login(java.lang.String username, java.lang.String password)
+ void   login(java.lang.String username, java.lang.String password)
           Validate the provided username and password in the password validation realm used by the web container login mechanism configured for the ServletContext.
- void 	logout()
+ void   logout()
           Establish null as the value returned when getUserPrincipal, getRemoteUser, and getAuthType is called on the request.
 
 *
@@ -227,51 +226,53 @@ startAsync
 
 thymol.objects.thHttpServletRequestObject = function() {
 
-	var thExpressionObjectName = "#httpServletRequest";
-	
-	function getAttribute(name) {
-		var result = thymol.requestContext[name][0];
-		if( result instanceof ThParam ) {
-			result = ThUtils.unQuote(result.value);
-		}
-		return result;
-	}
+  var thExpressionObjectName = "#httpServletRequest";
 
-	function getParameter(name) {
-		var result = thymol.requestContext[name];
-		return result;
-	}
+  function getAttribute( name ) {
+    var result = thymol.requestContext[ name ][ 0 ];
+    if( result instanceof thymol.ThParam ) {
+      result = thymol.ThUtils.unQuote( result.value );
+    }
+    return result;
+  }
 
-	function getContextPath() {
-		var result = "";
-		return result;
-	}
+  function getParameter( name ) {
+    var result = thymol.requestContext[ name ];
+    return result;
+  }
 
-	function getRequestName() {
-		var result = "";
-		return result;
-	}
+  function getContextPath() {
+    var result = "";
+    return result;
+  }
 
-	function getParameterValues(name) {
-		var result = thymol.requestContext[name];
-		return result;
-	}
+  function getRequestName() {
+    var result = "";
+    return result;
+  }
 
-//     Returns the current session associated with this request, or if the request does not have a session, creates one.
-//     Returns the current HttpSession associated with this request or, if there is no current session and create is true, returns a new session.
+  function getParameterValues( name ) {
+    var result = thymol.requestContext[ name ];
+    return result;
+  }
 
-	function getSession(create) {
-		return thymol.objects.thHttpSessionObject;
-	}
+  // Returns the current session associated with this request, or if the request
+  // does not have a session, creates one.
+  // Returns the current HttpSession associated with this request or, if there
+  // is no current session and create is true, returns a new session.
 
-	return {
-		thExpressionObjectName: thExpressionObjectName,
-		getAttribute : getAttribute,
-		getParameter : getParameter,
-		getContextPath : getContextPath,
-		getRequestName : getRequestName,
-		getParameterValues : getParameterValues,
-		getSession : getSession
-	};
+  function getSession( create ) {
+    return thymol.objects.thHttpSessionObject;
+  }
+
+  return {
+    thExpressionObjectName : thExpressionObjectName,
+    getAttribute : getAttribute,
+    getParameter : getParameter,
+    getContextPath : getContextPath,
+    getRequestName : getRequestName,
+    getParameterValues : getParameterValues,
+    getSession : getSession
+  };
 
 }();
