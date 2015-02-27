@@ -44,7 +44,7 @@
 		<thSourceforgeJQuerySource>http://code.jquery.com/jquery-1.11.1.min.js</thSourceforgeJQuerySource>
 		<thJsdelivrJQuerySource>http://cdn.jsdelivr.net/jquery/latest/jquery.min.js</thJsdelivrJQuerySource>
 		<thThymolPrelude>Date.prototype.toString=Date.prototype.toUTCString;</thThymolPrelude>
-		<thThymolNodeServer>/home/jim/Project/thymol-node-test/bin/thymol-server</thThymolNodeServer>
+		<thThymolNodeServer>/home/jim/Project/thymol-node-server/bin/thymol-server</thThymolNodeServer>
 	</properties>
 
 	<dependencies>
