@@ -133,8 +133,7 @@ thymol.ThParser = ( function( scope ) {
         var type_ = item.type_;
         if( type_ === TNUMBER ) {
           nstack.push( item.number_ );
-          if( i == L - 1 ) { // We only have a number left, this must be the
-                              // result
+          if( i == L - 1 ) { // We only have a number left, this must be the result
             break;
           }
         }
@@ -201,9 +200,7 @@ thymol.ThParser = ( function( scope ) {
                 if( typeof res === "function" ) { // TODO finish this
                   if( L - 1 > i ) {
                     next = this.tokens[ i + 1 ];
-                    if( next.type_ === TNUMBER && Object.prototype.toString.call( next.number_ ) == "[object Array]" && next.number_.length == 0 ) { // Empty
-                                                                                                                                                      // args
-                                                                                                                                                      // list
+                    if( next.type_ === TNUMBER && Object.prototype.toString.call( next.number_ ) == "[object Array]" && next.number_.length == 0 ) { // Empty args list
                       i += 1;
                       nstack.push( res );
                       n1.isDirect = true;
@@ -314,9 +311,7 @@ thymol.ThParser = ( function( scope ) {
         else if( type_ === TFUNCALL || type_ === MSGSUBST || type_ === ARGLIST ) {
           n1 = nstack.pop();
           f = nstack.pop();
-          if( type_ === MSGSUBST ) { // find first occurrence of {<int value>}
-                                      // in f and replace with n1 then push
-                                      // result
+          if( type_ === MSGSUBST ) { // find first occurrence of {<int value>} in f and replace with n1 then push result
             if( f instanceof NullReturn ) {
               res = "??" + f.varName + "_" + thymol.locale.value + "??";
             }
@@ -427,8 +422,7 @@ thymol.ThParser = ( function( scope ) {
                 res = f.call( element, n1 ); // Accepts an argument list
               }
               else {
-                res = f.apply( element, n1 ); // Accepts a single array of
-                                              // arguments.
+                res = f.apply( element, n1 ); // Accepts a single array of arguments.
               }
             }
             if( res instanceof String ) {
@@ -649,11 +643,7 @@ thymol.ThParser = ( function( scope ) {
           preprocessing = !preprocessing;
         }
         if( c === '\\' ) {
-          if( nc === '\'' && s.charAt( s.length - 1 ) !== '\\' ) { // previously
-                                                                    // appended
-                                                                    // '\'
-                                                                    // escapes
-                                                                    // this one!
+          if( nc === '\'' && s.charAt( s.length - 1 ) !== '\\' ) { // previously appended '\' escapes this one!
             c = "&#39;";
             if( i + 1 > end ) {
               break;
@@ -1110,8 +1100,7 @@ thymol.ThParser = ( function( scope ) {
       var prec = -1;
       while( this.pos < this.expression.length ) {
         var code = this.expression.charCodeAt( this.pos );
-        if( ( code >= 48 && code <= 57 ) || code === 46 ) { // 48 = '0', 57 =
-                                                            // '9', 46 = '.'
+        if( ( code >= 48 && code <= 57 ) || code === 46 ) { // 48 = '0', 57 = '9', 46 = '.'
           str += this.expression.charAt( this.pos );
           if( prec >= 0 || code === 46 ) {
             prec++;
@@ -1349,9 +1338,7 @@ thymol.ThParser = ( function( scope ) {
 
     isWhite : function() {
       var code = this.expression.charCodeAt( this.pos );
-      if( code === 32 || code === 9 || code === 10 || code === 13 ) { // space,
-                                                                      // tab, cr
-                                                                      // or lf
+      if( code === 32 || code === 9 || code === 10 || code === 13 ) { // space, tab, cr or lf
         this.pos++;
         return true;
       }
@@ -1406,9 +1393,7 @@ thymol.ThParser = ( function( scope ) {
 
     isOpX : function( str, group ) {
       if( str.str.length > 0 ) {
-        if( str.str in new Object() ) { // Don't match native Object function
-                                        // names like "toString" - there aren't
-                                        // any in ops2 (yet!)
+        if( str.str in new Object() ) { // Don't match native Object function names like "toString" - there aren't any in ops2 (yet!)
           return false;
         }
         if( str.str in group ) {
