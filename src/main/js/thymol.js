@@ -19,23 +19,23 @@
 
 ( function() {
   var thymolConfiguration = {
-      // Please set the values of the following fields!
+    // Please set the values of the following fields!
     thScriptName : "${thThymolSource}",
     thJQuerySource : "${thJQuerySource}",
-      // These are defaults, change them if you wish..
+    // These are defaults, change them if you wish..
     thDefaultPrefix : "th",
     thDefaultDataPrefix : "data",
     thDefaultPrecision : 10,
     thDefaultProtocol : "file:///",
     thDefaultLocale : "en",
-		thDefaultPrecedence : 20000,
+    thDefaultPrecedence : 20000,
     thDefaultMessagePath : "",
     thDefaultMessagesBaseName : "Messages",
-		thDefaultRelativeRootPath: "",  // Non-blank signifies use of thymol.js relative addressing
-		thDefaultExtendedMapping: false,
-		thDefaultLocalMessages: true,
-		thDefaultDisableMessages: false,
-		thDefaultTemplateSuffix: ".html"
+    thDefaultRelativeRootPath : "", // Non-blank signifies use of thymol.js relative addressing
+    thDefaultExtendedMapping : false,
+    thDefaultLocalMessages : true,
+    thDefaultDisableMessages : false,
+    thDefaultTemplateSuffix : ".html"
   };
   thymol = function( conf ) {
     conf.ready = function( func ) {
@@ -95,7 +95,7 @@
   }
   var parameters = null;
   for( var i = 0, iLimit = scripts.length; i < iLimit; i++ ) {
-    parameters = scripts[i].getAttribute( "data-thymol-parameters" );
+    parameters = scripts[ i ].getAttribute( "data-thymol-parameters" );
     if( !!parameters ) {
       break;
     }

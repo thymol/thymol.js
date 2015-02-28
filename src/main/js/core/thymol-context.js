@@ -164,7 +164,7 @@ thymol.makeContext = function( contextNameParam, varAccessorParam ) {
 
   context.javascriptify = function( fn ) {
     try {
-      return new Function( 'return ' + fn )();      
+      return new Function( 'return ' + fn )();
     }
     catch( err ) {
       return undefined;

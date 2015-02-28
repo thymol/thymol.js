@@ -125,11 +125,11 @@ thymol.ThParser = ( function( scope ) {
       var result;
       for( i = 0; i < L; i++ ) {
         item = this.tokens[ i ];
-				if( i === 0 && thymol.disableMessages && item.mode_ === 4 ) {
-					var nullReturn = new thymol.ThClass();
-					nullReturn.abort = true;
-					return nullReturn;
-				}								
+        if( i === 0 && thymol.disableMessages && item.mode_ === 4 ) {
+          var nullReturn = new thymol.ThClass();
+          nullReturn.abort = true;
+          return nullReturn;
+        }
         var type_ = item.type_;
         if( type_ === TNUMBER ) {
           nstack.push( item.number_ );

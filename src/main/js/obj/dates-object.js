@@ -447,15 +447,11 @@ thymol.objects.thDatesObject = function() {
   }
 
   /*
-   * Date Format 1.2.3 (c) 2007-2009 Steven Levithan <stevenlevithan.com> MIT
-   * license
+   * Date Format 1.2.3 (c) 2007-2009 Steven Levithan <stevenlevithan.com> MIT license
    * 
-   * Includes enhancements by Scott Trenda <scott.trenda.net> and Kris Kowal
-   * <cixar.com/~kris.kowal/>
+   * Includes enhancements by Scott Trenda <scott.trenda.net> and Kris Kowal <cixar.com/~kris.kowal/>
    * 
-   * Accepts a date, a mask, or a date and a mask. Returns a formatted version
-   * of the given date. The date defaults to the current date/time. The mask
-   * defaults to dateFormat.masks.default.
+   * Accepts a date, a mask, or a date and a mask. Returns a formatted version of the given date. The date defaults to the current date/time. The mask defaults to dateFormat.masks.default.
    */
 
   /*
@@ -464,27 +460,15 @@ thymol.objects.thDatesObject = function() {
    * 
    * Copyright � 2014 <copyright holders>
    * 
-   * Permission is hereby granted, free of charge, to any person obtaining a
-   * copy of this software and associated documentation files (the "Software"),
-   * to deal in the Software without restriction, including without limitation
-   * the rights to use, copy, modify, merge, publish, distribute, sublicense,
-   * and/or sell copies of the Software, and to permit persons to whom the
-   * Software is furnished to do so, subject to the following conditions:
+   * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the "Software"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
    * 
-   * The above copyright notice and this permission notice shall be included in
-   * all copies or substantial portions of the Software.
+   * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
    * 
-   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-   * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-   * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-   * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-   * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-   * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
-   * DEALINGS IN THE SOFTWARE.
+   * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
    * 
    */
 
-  // The MIT License applies to code starting here 
+  // The MIT License applies to code starting here
   // The MIT License applies to code starting here
   // The MIT License applies to code starting here
   // The MIT License applies to code starting here
@@ -540,45 +524,35 @@ thymol.objects.thDatesObject = function() {
         utc = true;
       }
 
-	var _ = utc ? "getUTC" : "get", 
-		d = date[_ + "Date"](), 
-		D = getDay(date), 
-		M = date[_ + "Month"](), 
-		y = date[_ + "FullYear"](), 
-		H = date[_ + "Hours"](), 
-		m = date[_ + "Minutes"](), 
-		s = date[_ + "Seconds"](), 
-		L = date[_ + "Milliseconds"](), 
-		o = utc ? 0 : date.getTimezoneOffset(), 
-		flags = {
-			d : d,
-			dd : pad(d),
-			ddd : dF.i18n.dayNames[D],
-			dddd : dF.i18n.dayNames[D + 7],
-			M : M + 1,
-			MM : pad(M + 1),
-			MMM : dF.i18n.monthNames[M],
-			MMMM : dF.i18n.monthNames[M + 12],
-			yy : String(y).slice(2),
-			yyyy : y,
-			h : H % 12 || 12,
-			hh : pad(H % 12 || 12),
-			H : H,
-			HH : pad(H),
-			m : m,
-			mm : pad(m),
-			s : s,
-			ss : pad(s),
-			l : pad(L, 3),
-			L : pad(L > 99 ? Math.round(L / 10) : L),
-			t : H < 12 ? "a" : "p",
-			tt : H < 12 ? "am" : "pm",
-			T : H < 12 ? "A" : "P",
-			TT : H < 12 ? "AM" : "PM",
-			Z : utc ? "UTC" : processTZ(date),
-			o : (o > 0 ? "-" : "+") + pad(Math.floor(Math.abs(o) / 60) * 100 + Math.abs(o) % 60, 4),
-			S : [ "th", "st", "nd", "rd" ][d % 10 > 3 ? 0 : (d % 100 - d % 10 != 10) * d % 10]
-		};
+      var _ = utc ? "getUTC" : "get", d = date[ _ + "Date" ](), D = getDay( date ), M = date[ _ + "Month" ](), y = date[ _ + "FullYear" ](), H = date[ _ + "Hours" ](), m = date[ _ + "Minutes" ](), s = date[ _ + "Seconds" ](), L = date[ _ + "Milliseconds" ](), o = utc ? 0 : date.getTimezoneOffset(), flags = {
+        d : d,
+        dd : pad( d ),
+        ddd : dF.i18n.dayNames[ D ],
+        dddd : dF.i18n.dayNames[ D + 7 ],
+        M : M + 1,
+        MM : pad( M + 1 ),
+        MMM : dF.i18n.monthNames[ M ],
+        MMMM : dF.i18n.monthNames[ M + 12 ],
+        yy : String( y ).slice( 2 ),
+        yyyy : y,
+        h : H % 12 || 12,
+        hh : pad( H % 12 || 12 ),
+        H : H,
+        HH : pad( H ),
+        m : m,
+        mm : pad( m ),
+        s : s,
+        ss : pad( s ),
+        l : pad( L, 3 ),
+        L : pad( L > 99 ? Math.round( L / 10 ) : L ),
+        t : H < 12 ? "a" : "p",
+        tt : H < 12 ? "am" : "pm",
+        T : H < 12 ? "A" : "P",
+        TT : H < 12 ? "AM" : "PM",
+        Z : utc ? "UTC" : processTZ( date ),
+        o : ( o > 0 ? "-" : "+" ) + pad( Math.floor( Math.abs( o ) / 60 ) * 100 + Math.abs( o ) % 60, 4 ),
+        S : [ "th", "st", "nd", "rd" ][ d % 10 > 3 ? 0 : ( d % 100 - d % 10 != 10 ) * d % 10 ]
+      };
 
       return mask.replace( token, function( $0 ) {
         return $0 in flags ? flags[ $0 ] : $0.slice( 1, $0.length - 1 );

@@ -1378,7 +1378,7 @@ thymol = function() {
 
     getContentRoot : function( rn ) {
       var rnd = rn.thDoc;
-      //      if( rnd.nodeName !== "#document" && rnd.nodeName !== "#document-fragment") {
+      // if( rnd.nodeName !== "#document" && rnd.nodeName !== "#document-fragment") {
       if( rnd.nodeName !== "#document" ) {
         rnd = rnd.childNodes;
       }
@@ -1476,9 +1476,9 @@ thymol = function() {
                         blockElement = blockDocBody.childNodes[ j ];
                         for( k = 0, kLimit = innerNodes.length; k < kLimit; k++ ) {
                           newNode = blockDoc.importNode( innerNodes[ k ], true );
-                          //                          newNode = innerNodes[ k ].cloneNode( true );
+                          // newNode = innerNodes[ k ].cloneNode( true );
                           blockElement.appendChild( newNode );
-                          // TODO                          jjb
+                          // TODO jjb
                         }
                       }
                     }
