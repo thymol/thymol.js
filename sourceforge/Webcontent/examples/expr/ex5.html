@@ -7,7 +7,7 @@
 	<script th:remove="all" type="text/javascript" src="../../../thymol.js" data-thymol-parameters="thProtocol=&qwerty=bloggs"></script>
 	<body>
  		<div style="color: red;">hello</div>
-		<div th:include="footer::copy">hello hello</div>
+		<div th:include="fter::copy">hello hello</div>
 		<div th:if="${visited}">
 			<div style="color: green;">hello again</div>
 		</div>
@@ -16,7 +16,7 @@
 		</div>
  		<div th:unless="${!visited}">
 			<div style="color: green;">do I know you?</div>
-			<div th:include="footer::copy">help!</div>
+			<div th:include="fter::copy">help!</div>
 		</div>
 		<div style="color: red;">hello hello hello</div>
 		<div th:unless="${!visited}">
@@ -31,7 +31,7 @@
 			<div style="color: orange;">hello again</div>
 			<div th:unless="${!visited}">
 				<div style="color: purple;">do you know me?</div>
-				<div th:include="footer::copy">au secours!</div>
+				<div th:include="fter::copy">au secours!</div>
 			</div>
 		</div>
 		<p><a href="index.html">Back</a></p>
