@@ -211,8 +211,14 @@ public class DatesCases extends SeleniumCases {
 	@Test
 	public void dates01() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates01.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "dates01node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "dates01.html", ResultMode.HTML );
+		}
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( dates01ResultThymol ), clean( result ) );
 		}
 		else {
@@ -223,7 +229,13 @@ public class DatesCases extends SeleniumCases {
 	@Test
 	public void dates02() {
 		localise( "thymol/dates/" );
-		String result = getResult( "dates02.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "dates02node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "dates02.html", ResultMode.HTML );
+		}
 		assertEquals( clean( dates02Result ), clean( result ) );
 	}
 
@@ -231,7 +243,7 @@ public class DatesCases extends SeleniumCases {
 	public void dates03() {
 		localise( "thymol/dates/" );
 		String result = getResult( "dates03.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( dates03ResultThymol ), clean( result ) );
 		}
 		else {

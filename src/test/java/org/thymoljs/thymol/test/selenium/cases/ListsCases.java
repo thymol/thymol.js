@@ -146,7 +146,7 @@ public class ListsCases extends SeleniumCases {
 	public void lists05() {
 		localise( "thymol/lists/" );
 		String result = getResult( "lists05.html", ResultMode.HTML );		
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( lists05ResultThymol ), clean( result ) );
 		}
 		else {			

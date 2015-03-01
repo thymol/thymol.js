@@ -286,7 +286,7 @@ public class IncludeCases21 extends SeleniumCases {
 	public void include10() {
 		localise("tests21/include/");
 		String result = getResult( "include10.html", ResultMode.ALERT );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( include10ResultThymol, clean( result ) );			
 		}
 		else {			
@@ -320,7 +320,7 @@ public class IncludeCases21 extends SeleniumCases {
 	public void include14() {
 		localise("tests21/include/");
 		String result = getResult( "include14.html", ResultMode.ALERT );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( include14ResultThymol ), clean( result ) );			
 		}
 		else {			
@@ -333,7 +333,7 @@ public class IncludeCases21 extends SeleniumCases {
 	public void include15() {
 		localise("tests21/include/");
 		String result = getResult( "include15.html", ResultMode.ALERT );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( include15ResultThymol ), clean( result ) );			
 		}
 		else {			
@@ -374,7 +374,7 @@ public class IncludeCases21 extends SeleniumCases {
 	public void include20() {
 		localise("tests21/include/");
 		String result = getResult( "include20.html", ResultMode.ALERT );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( include20ResultThymol ), clean( result ) );			
 		}
 		else {			
@@ -387,7 +387,7 @@ public class IncludeCases21 extends SeleniumCases {
 	public void include21() {
 		localise("tests21/include/");
 		String result = getResult( "include21.html", ResultMode.ALERT );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( include21ResultThymol ), clean( result ) );			
 		}
 		else {			

@@ -212,9 +212,15 @@ public class CalendarsCases extends SeleniumCases {
 	
 	@Test
 	public void calendars01() {
-		localise( "thymol/calendars/", new Locale( "en", "GB", "" ) );
-		String result = getResult( "calendars01.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		localise( "thymol/calendars/", new Locale( "en", "GB", "" ) );		
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "calendars01node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "calendars01.html", ResultMode.HTML );
+		}
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( calendars01ResultThymol ), clean( result ) );
 		}
 		else {
@@ -225,7 +231,13 @@ public class CalendarsCases extends SeleniumCases {
 	@Test
 	public void calendars02() {
 		localise( "thymol/calendars/" );
-		String result = getResult( "calendars02.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "calendars02node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "calendars02.html", ResultMode.HTML );
+		}
 		assertEquals( clean( calendars02Result ), clean( result ) );
 	}
 
@@ -233,7 +245,7 @@ public class CalendarsCases extends SeleniumCases {
 	public void calendars03() {
 		localise( "thymol/calendars/", new Locale( "en", "GB", "" ) );
 		String result = getResult( "calendars03.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( calendars03ResultThymol ), clean( result ) );
 		}
 		else {

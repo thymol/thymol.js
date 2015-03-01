@@ -591,7 +591,7 @@ public class StringsCases extends SeleniumCases {
 	public void strings17() {
 		localise( "thymol/strings/" );
 		String result = getResult( "strings17.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( strings17ResultThymol ), clean( result ) );
 		}
 		else {			
@@ -779,8 +779,14 @@ public class StringsCases extends SeleniumCases {
 	@Test
 	public void strings37() {
 		localise( "thymol/strings/" );
-		String result = getResult( "strings37.html", ResultMode.HTML );
-		assertEquals( clean( strings37Result ), clean( result ) );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "strings37-node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "strings37.html", ResultMode.HTML );
+		}
+		assertEquals( clean( strings37Result ), clean( result ) );	
 	}
 
 	@Test

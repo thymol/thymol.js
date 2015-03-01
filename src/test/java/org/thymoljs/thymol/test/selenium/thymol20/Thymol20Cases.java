@@ -82,7 +82,7 @@ public class Thymol20Cases extends SeleniumCases {
 	public void with02() {
 		localise("thymol20/with/");
 		String result = getResult( "with02.html", ResultMode.HTML );		
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( with02ResultThymol ), clean( result ) );			
 		}
 		else {			
@@ -92,36 +92,66 @@ public class Thymol20Cases extends SeleniumCases {
 
 	@Test
 	public void locale01() {
-		localise("thymol20/locale/", new Locale( "es", "", "" ) );
-		String result = getResult( "locale-example1.html", ResultMode.HTML );
+		localise("thymol20/locale/", new Locale( "es", "", "" ) );		
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "locale-example1-node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "locale-example1.html", ResultMode.HTML );
+		}
 		assertEquals( clean( locale01Result ), clean( result ) );
 	}
 
 	@Test
 	public void locale02() {
 		localise("thymol20/locale/", new Locale( "en", "GB", "" ));
-		String result = getResult( "locale-example2.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "locale-example2-node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "locale-example2.html", ResultMode.HTML );
+		}
 		assertEquals( clean( locale02Result ), clean( result ) );
 	}
 
 	@Test
 	public void locale03() {
 		localise("thymol20/locale/", new Locale( "en", "US", "" ));
-		String result = getResult( "locale-example3.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "locale-example3-node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "locale-example3.html", ResultMode.HTML );
+		}
 		assertEquals( clean( locale03Result ), clean( result ) );
 	}
 
 	@Test
 	public void locale04() {
 		localise("thymol20/locale/", new Locale( "gl", "", "" ));
-		String result = getResult( "locale-example4.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "locale-example4-node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "locale-example4.html", ResultMode.HTML );
+		}
 		assertEquals( clean( locale04Result ), clean( result ) );
 	}
 
 	@Test
 	public void locale05() {
 		localise("thymol20/locale/", new Locale( "en", "GB", "ICU4J" ));
-		String result = getResult( "locale-example5.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "locale-example5-node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "locale-example5.html", ResultMode.HTML );
+		}
 		assertEquals( clean( locale05Result ), clean( result ) );
 	}
 

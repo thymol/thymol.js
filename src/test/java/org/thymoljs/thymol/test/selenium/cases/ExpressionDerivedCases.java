@@ -317,28 +317,54 @@ public class ExpressionDerivedCases extends SeleniumCases {
 	@Test
 	public void ctx01() {
 		localise( "tests/expression/ctx/" );
-		String result = getResult( "ctx01.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "ctx01-node.html", ResultMode.HTML );
+		}
+		else {
+			result = getResult( "ctx01.html", ResultMode.HTML );
+		}
 		assertEquals( clean( ctx01Result ), clean( result ) );
 	}
 
 	@Test
 	public void ctx02() {
 		localise( "tests/expression/ctx/" );
-		String result = getResult( "ctx02.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "ctx02-node.html", ResultMode.HTML );
+		}
+		else {
+			result = getResult( "ctx02.html", ResultMode.HTML );
+		}				
 		assertEquals( clean( ctx02Result ), clean( result ) );
 	}
 
 	@Test
 	public void ctx03() {
 		localise( "tests/expression/ctx/" );
-		String result = getResult( "ctx03.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "ctx03-node.html", ResultMode.HTML );
+		}
+		else {
+			result = getResult( "ctx03.html", ResultMode.HTML );
+		}				
+		
+		
 		assertEquals( clean( ctx03Result ), clean( result ) );
 	}
 
 	@Test
 	public void ctx04() {
 		localise( "tests/expression/ctx/" );
-		String result = getResult( "ctx04.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "ctx04-node.html", ResultMode.HTML );
+		}
+		else {
+			result = getResult( "ctx04.html", ResultMode.HTML );
+		}				
 		assertEquals( clean( ctx04Result ), clean( result ) );
 	}
 
@@ -346,7 +372,7 @@ public class ExpressionDerivedCases extends SeleniumCases {
 	public void numbers01() {
 		localise( "tests/expression/numbers/" );
 		String result = getResult( "numbers01.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( numbers01ResultThymol ), clean( result ) );			
 		}
 		else {			
@@ -455,21 +481,39 @@ public class ExpressionDerivedCases extends SeleniumCases {
 	@Test
 	public void root01() {
 		localise( "tests/expression/root/" );
-		String result = getResult( "root01.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "root01-node.html", ResultMode.HTML );
+		}
+		else {
+			result = getResult( "root01.html", ResultMode.HTML );
+		}				
 		assertEquals( clean( root01Result ), clean( result ) );
 	}
 
 	@Test
 	public void root02() {
 		localise( "tests/expression/root/" );
-		String result = getResult( "root02.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "root02-node.html", ResultMode.HTML );
+		}
+		else {
+			result = getResult( "root02.html", ResultMode.HTML );
+		}				
 		assertEquals( clean( root02Result ), clean( result ) );
 	}
 
 	@Test
 	public void root03() {
 		localise( "tests/expression/root/" );
-		String result = getResult( "root03.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "root03-node.html", ResultMode.HTML );
+		}
+		else {
+			result = getResult( "root03.html", ResultMode.HTML );
+		}				
 		assertEquals( clean( root03Result ), clean( result ) );
 	}
 
@@ -483,8 +527,14 @@ public class ExpressionDerivedCases extends SeleniumCases {
 	@Test
 	public void strings02() {
 		localise( "tests/expression/strings/" );
-		String result = getResult( "strings02.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "strings02-node.html", ResultMode.HTML );
+		}
+		else {
+			result = getResult( "strings02.html", ResultMode.HTML );
+		}				
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( strings02ResultThymol ), clean( result ) );
 		}
 		else {			
@@ -495,21 +545,39 @@ public class ExpressionDerivedCases extends SeleniumCases {
 	@Test
 	public void vars01() {
 		localise( "tests/expression/vars/" );
-		String result = getResult( "vars01.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "vars01-node.html", ResultMode.HTML );
+		}
+		else {
+			result = getResult( "vars01.html", ResultMode.HTML );
+		}				
 		assertEquals( clean( vars01Result ), clean( result ) );
 	}
 
 	@Test
 	public void vars02() {
 		localise( "tests/expression/vars/" );
-		String result = getResult( "vars02.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "vars02-node.html", ResultMode.HTML );
+		}
+		else {
+			result = getResult( "vars02.html", ResultMode.HTML );
+		}				
 		assertEquals( clean( vars02Result ), clean( result ) );
 	}
 
 	@Test
 	public void vars03() {
 		localise( "tests/expression/vars/" );
-		String result = getResult( "vars03.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "vars03-node.html", ResultMode.HTML );
+		}
+		else {
+			result = getResult( "vars03.html", ResultMode.HTML );
+		}				
 		assertEquals( clean( vars03Result ), clean( result ) );
 	}
 

@@ -65,6 +65,16 @@ public class IssuesCases extends SeleniumCases {
 			"</tbody></table>\n" +
 			"\n\n";
 
+//	String issue08aResultMould = 
+//			"\n" +
+//			"<div><img src=\"%s/templates/image/?id=path_image_one\"></div><div><img src=\"%s/templates/image/?id=path_image_two\"></div>\n" +
+//			"\n\n";
+
+//	String issue08aResult = 
+//			"\n" +
+//			"<div><img src=\"/image/?id=path_image_one\"></div><div><img src=\"/image/?id=path_image_two\"></div>\n" +
+//			"\n\n";
+
 	String issue08aResult = 
 			"\n" +
 			"<div><img src=\"/image/?id=path_image_one\"></div><div><img src=\"/image/?id=path_image_two\"></div>\n" +
@@ -86,52 +96,25 @@ public class IssuesCases extends SeleniumCases {
 			"</div>\n" +
 			"\n";
 
-	String issue11aResultThymol = 
+//	String issue11ResultThymeleaf = 
+//			"\n" +
+//			"<div>\n" +
+//			"<p>This is some text</p>\n" +
+//			"<div>This is some text</div>\n" +
+//			"<p>This is some text</p>\n" +
+//			"</div>\n" +
+//			"\n";
+
+	String issue11aResult = 
 			"\n" +
 			"<div>\n" +
 			"<p>This is some text</p>\n" +
-			"<div th:include=\" this ::frag\">...</div>\n" +
+			"<div th:include=\" this   ::frag\">...</div>\n" +
 			"<p>This is some text</p>\n" +
 			"</div>\n" +
 			"\n";
 
-	String issue11aResultThymeleaf = 
-			"\n" +
-			"<div>\n" +
-			"<p>This is some text</p>\n" +
-			"<div>This is some text</div>\n" +
-			"<p>This is some text</p>\n" +
-			"</div>\n" +
-			"\n";
-
-	String issue11bResult = 
-			"\n" +
-			"<div>\n" +
-			"<p>This is some text</p>\n" +
-			"<div>This is some text</div>\n" +
-			"<p>This is some text</p>\n" +
-			"</div>\n" +
-			"\n";
-
-	String issue12ResultThymol = 
-			"\n" +
-			"<h1>Contents</h1>\n" +
-			"<div>\n" +
-			"\t<input name=\"command\" value=\"Review\">\n" +
-			"\t<input name=\"preamble\" value=\"Clear\">\n" +
-			"</div>\n" +
-			"\n\n";
-	
-	String issue12ResultThymeleaf = 
-			"\n" +
-			"<h1>Contents</h1>\n" +
-			"<div>\n" +
-			"\t<input name=\"command\" value=\"selected items\" type=\"text\">\n" +
-			"\t<input name=\"preamble\" value=\"items to be deleted\" type=\"text\">\n" +
-			"</div>\n" +
-			"\n\n";			
-	
-	String issue12aResultThymol =
+	String issue12Result =
 			"\n" +
 			"<h1>Contents</h1>\n" +
 			"<div>\n" +
@@ -140,6 +123,24 @@ public class IssuesCases extends SeleniumCases {
 			"</div>\n" +
 			"\n\n";			
 
+	String issue12ResultThymeleaf =
+			"\n" +
+			"<h1>Contents</h1>\n" +
+			"<div>\n" +
+			"\t<input name=\"command\" value=\"selected items\" type=\"text\">\n" +
+			"\t<input name=\"preamble\" value=\"items to be deleted\" type=\"text\">\n" +
+			"</div>\n" +
+			"\n\n";			
+
+	String issue12aResult = 
+			"\n" +
+			"<h1>Contents</h1>\n" +
+			"<div>\n" +
+			"\t<input name=\"command\" value=\"Review\">\n" +
+			"\t<input name=\"preamble\" value=\"Clear\">\n" +
+			"</div>\n" +
+			"\n\n";
+	
 	String issue13ResultThymol = 
 			"\n<div style=\"color: red;\">hello</div>\n" +
 			" 		<div>\n" +
@@ -192,7 +193,7 @@ public class IssuesCases extends SeleniumCases {
 	public void issue06() {
 		localise("issues/");
 		String result = getResult( "issue06.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( issue06ResultThymol ), clean( result ) );
 		}
 		else {
@@ -204,7 +205,7 @@ public class IssuesCases extends SeleniumCases {
 	public void issue06a() {
 		localise("issues/");
 		String result = getResult( "issue06a.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( issue06ResultThymol ), clean( result ) );
 		}
 		else {
@@ -219,17 +220,45 @@ public class IssuesCases extends SeleniumCases {
 		assertEquals( clean( issue08Result ), clean( result ) );
 	}
 
+//	@Test
+//	public void issue08a() {
+//		localise("issues/");		
+//		String refValue = issue08aResult;
+//		String result;
+//		if( expectNodeResult() ) {			
+//			String thDeploy = System.getProperty("thDeploy");						
+//			refValue = String.format(issue08aResultMould, thDeploy, thDeploy);			
+//			result = getResult( "issue08a-node.html", ResultMode.HTML );			
+//		}
+//		else {
+//			result = getResult( "issue08a.html", ResultMode.HTML );
+//		}
+//		assertEquals( clean( refValue ), clean( result ) );
+//	}
+
 	@Test
 	public void issue08a() {
-		localise("issues/");
-		String result = getResult( "issue08a.html", ResultMode.HTML );
+		localise("issues/");		
+		String result;
+		if( expectNodeResult() ) {			
+			result = getResult( "issue08a-node.html", ResultMode.HTML );			
+		}
+		else {
+			result = getResult( "issue08a.html", ResultMode.HTML );
+		}
 		assertEquals( clean( issue08aResult ), clean( result ) );
 	}
 
 	@Test
 	public void issue08_ru_RU() {
 		localise("issues/", new Locale( "ru", "RU", "" ) );
-		String result = getResult("issue08_russian.html", ResultMode.HTML);
+		String result;
+		if( expectNodeResult() ) {					
+			result = getResult("issue08_russian-node.html", ResultMode.HTML);		
+		}
+		else {
+			result = getResult("issue08_russian.html", ResultMode.HTML);
+		}
 		assertEquals(clean(issue08Result_ru_RU), clean(result));
 		localise("issues/", new Locale( "en", "GB", "" ));
 	}
@@ -251,28 +280,34 @@ public class IssuesCases extends SeleniumCases {
 	@Test
 	public void issue11a() {
 		localise("issues/" );
-		String result = getResult("issue11a.html", ResultMode.HTML);
-		if( expectThymolResult() ) {
-			assertEquals(clean(issue11aResultThymol), clean(result));
+		String result;
+		if( expectNodeResult() ) {					
+			result = getResult("issue11a-node.html", ResultMode.HTML);	
 		}
 		else {
-			assertEquals(clean(issue11aResultThymeleaf), clean(result));
-		}		
+			result = getResult("issue11a.html", ResultMode.HTML);
+		}
+		if( expectThymeleafResult() ) {
+			assertEquals(clean(issue11Result), clean(result));			
+		}
+		else {
+			assertEquals(clean(issue11aResult), clean(result));			
+		}
 	}
 
 	@Test
 	public void issue11b() {
 		localise("issues/" );
 		String result = getResult("issue11b.html", ResultMode.HTML);
-		assertEquals(clean(issue11bResult), clean(result));
+		assertEquals(clean(issue11Result), clean(result));
 	}
 
 	@Test
 	public void issue12() {
 		localise("issues/" );
 		String result = getResult("issue12.html", ResultMode.HTML);
-		if( expectThymolResult() ) {
-			assertEquals(clean(issue12ResultThymol), clean(result));
+		if( expectThymolResult() || expectNodeResult() ) {
+			assertEquals(clean(issue12Result), clean(result));
 		}
 		else {
 			assertEquals(clean(issue12ResultThymeleaf), clean(result));
@@ -283,8 +318,8 @@ public class IssuesCases extends SeleniumCases {
 	public void issue12a() {
 		localise("issues/" );
 		String result = getResult("issue12a.html", ResultMode.HTML);
-		if( expectThymolResult() ) {
-			assertEquals(clean(issue12aResultThymol), clean(result));
+		if( expectThymolResult() || expectNodeResult() ) {
+			assertEquals(clean(issue12aResult), clean(result));
 		}
 		else {
 			assertEquals(clean(issue12ResultThymeleaf), clean(result));
@@ -295,7 +330,7 @@ public class IssuesCases extends SeleniumCases {
 	public void issue13() {
 		localise("issues/" );
 		String result = getResult("issue13.html", ResultMode.HTML);
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals(clean(issue13ResultThymol), clean(result));
 		}
 		else {
@@ -307,7 +342,7 @@ public class IssuesCases extends SeleniumCases {
 	public void issue13a() {
 		localise("issues/" );
 		String result = getResult("issue13a.html", ResultMode.HTML);
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals(clean(issue13ResultThymol), clean(result));
 		}
 		else {
@@ -319,7 +354,7 @@ public class IssuesCases extends SeleniumCases {
 	public void issue13b() {
 		localise("issues/", "" );
 		String result = getResult("issue13b.html", ResultMode.HTML);
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals(clean(issue13ResultThymol), clean(result));
 		}
 		else {

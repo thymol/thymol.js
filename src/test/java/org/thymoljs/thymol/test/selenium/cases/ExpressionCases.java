@@ -661,7 +661,7 @@ public class ExpressionCases extends SeleniumCases {
 	public void expression04() {
 		localise( "tests/expression/" );
 		String result = getResult( "expression04.html?a='Some text'&b=123&c='Hello'&c='World'&c=0", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( expression04ResultThymol ), clean( result ) );
 		}
 		else {
@@ -680,7 +680,7 @@ public class ExpressionCases extends SeleniumCases {
 	public void expression06() {
 		localise( "tests/expression/" );
 		String result = getResult( "expression06.html?a6='Some text'&b6=123&c6='Hello'", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( expression06ResultThymol ), clean( result ) );
 		}
 		else {
@@ -706,7 +706,7 @@ public class ExpressionCases extends SeleniumCases {
 	public void expression08() {
 		localise( "tests/expression/" );
 		String result = getResult( "expression08.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( expression08ResultThymol ), clean( result ) );
 		}
 		else {
@@ -718,7 +718,7 @@ public class ExpressionCases extends SeleniumCases {
 	public void expression09() {
 		localise( "tests/expression/" );
 		String result = getResult( "expression09.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( expression08ResultThymol ), clean( result ) );
 		}
 		else {
@@ -758,7 +758,7 @@ public class ExpressionCases extends SeleniumCases {
 	public void expression12() {
 		localise( "tests/expression/" );
 		String result = getResult( "expression12.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( expression12ResultThymol ), clean( result ) );
 		}
 		else {
@@ -770,7 +770,7 @@ public class ExpressionCases extends SeleniumCases {
 	public void expression12a() {
 		localise( "tests/expression/" );
 		String result = getResult( "expression12a.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( expression12ResultThymol ), clean( result ) );
 		}
 		else {
@@ -782,7 +782,7 @@ public class ExpressionCases extends SeleniumCases {
 	public void expression13() {
 		localise( "tests/expression/" );
 		String result = getResult( "expression13.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( expression12ResultThymol ), clean( result ) );
 		}
 		else {
@@ -814,7 +814,13 @@ public class ExpressionCases extends SeleniumCases {
 	@Test
 	public void expression16() {
 		localise( "tests/expression/", new Locale( "pt", "PT" ) );
-		String result = getResult( "expression16.html", ResultMode.HTML );
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "expression16-node.html", ResultMode.HTML );
+		}
+		else {
+			result = getResult( "expression16.html", ResultMode.HTML );			
+		}
 		assertEquals( clean( expression16Result ), clean( result ) );
 	}
 
@@ -995,8 +1001,14 @@ public class ExpressionCases extends SeleniumCases {
 
 	@Test
 	public void expression42() {
-		localise( "tests/expression/" );
-		String result = getResult( "expression42.html", ResultMode.HTML );
+		localise( "tests/expression/" );		
+		String result;
+		if( expectNodeResult() ) {
+			result = getResult( "expression42-node.html", ResultMode.HTML );
+		}
+		else {
+			result = getResult( "expression42.html", ResultMode.HTML );			
+		}
 		assertEquals( clean( expression42Result ), clean( result ) );
 	}
 

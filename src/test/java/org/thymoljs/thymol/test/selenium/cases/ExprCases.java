@@ -806,7 +806,7 @@ public class ExprCases extends SeleniumCases {
 	@Test
 	public void firstFileNameVisitedTrueAndFred() {
 		localise("expr/");
-		String result = getResult( "ex7.html?firstFile=footer&secondFile=nil&firstName='Fred'&visited=true", ResultMode.TEXT );
+		String result = getResult( "ex7.html?firstFile=fter&secondFile=nil&firstName='Fred'&visited=true", ResultMode.TEXT );
 		assertEquals( firstFileNameVisitedTrueAndFredResult, result );
 	}
 
@@ -820,7 +820,7 @@ public class ExprCases extends SeleniumCases {
 	@Test
 	public void fileNamesVisitedTrueAndFred() {
 		localise("expr/");
-		String result = getResult( "ex7.html?firstFile=footer&secondFile=other&firstName='Fred'&visited=true", ResultMode.TEXT );
+		String result = getResult( "ex7.html?firstFile=fter&secondFile=other&firstName='Fred'&visited=true", ResultMode.TEXT );
 		assertEquals( visitedTrueAndFredResult, result );
 	}
 	

@@ -30,7 +30,7 @@ public class WithCases extends SeleniumCases {
 	public void with01() {
 		localise("tests/with/");
 		String result = getResult( "with01.html", ResultMode.ALERT );
-		if( expectThymolResult() ) {
+		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( with01ResultThymol, result );			
 		}
 		else {			
