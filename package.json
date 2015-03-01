@@ -1,13 +1,14 @@
 {
   "name": "thymol",
   "repository": "thymol/thymoljs",
-  "version": "2.0.0-SNAPSHOT",                                                                                                                               
+  "version": "2.0.0-beta3",                                                                                                                               
   "description": "JavaScript Thymeleaf Emulation",
   "main": "Gruntfile.js",
   "dependencies": {
     "jquery": "^1.11.2"
   },
   "devDependencies": {
+    "forever": "~0.14.1",
     "bower": "~1.3.12",
     "grunt": "~0.4.5",
     "grunt-contrib-clean": "~0.6.0",
