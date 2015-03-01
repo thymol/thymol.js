@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+		<title>Dates example 01 (for node)</title>
+	</head>
+	<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="force-utc.js,dates1-data.js"></script>
+	
+  	<body>
+		<p th:text="${#dates.format(onedate)}">...</p>
+		<p th:text="${#dates.format(twodate)}">...</p>
+	</body>
+</html>
+
+<!--
+
+<p>Fri Oct 12 00:00:00 1492</p>
+<p>The date is Fri Oct 12 00:00:00 1492</p>
+<p>1492-10/12</p>
+<p>The date is 1492-10/12</p>
+
+
+Wed Oct 12 1492 00:00:00 GMT+0100 (LMT)
+
+The date is Wed Oct 12 1492 00:00:00 GMT+0100 (LMT)
+
+Sun Oct 12 1732 00:00:00 GMT+0100 (LMT)
+
+The date is Sun Oct 12 1732 00:00:00 GMT+0100 (LMT)
+
+
+-->

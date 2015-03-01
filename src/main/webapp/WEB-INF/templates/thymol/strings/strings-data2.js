@@ -1,10 +1,10 @@
 thDebug = true;
 
 thymol.configurePreExecution( function() {
-    var p1 = new ThParam("Hello world!");
-    var p2 = new ThParam("Bonjour tout le monde!");
-    var p3 = new ThParam("Hola mundo!");
-    var p4 = new ThParam("Kaixo mundua!");
+    var p1 = new thymol.ThParam("Hello world!");
+    var p2 = new thymol.ThParam("Bonjour tout le monde!");
+    var p3 = new thymol.ThParam("Hola mundo!");
+    var p4 = new thymol.ThParam("Kaixo mundua!");
     var pArray = ([p1,p2,p3,p4]).sort();
     thymol.applicationContext.createVariable("p1", p1 );
     thymol.applicationContext.createVariable("p2", p2 );
@@ -12,7 +12,7 @@ thymol.configurePreExecution( function() {
     thymol.applicationContext.createVariable("p4", p4 );
     thymol.applicationContext.createVariable("pArray", pArray );
     thymol.applicationContext.createVariable("pList", pArray );
-    thymol.applicationContext.createVariable("pSet", ThSet.prototype.fromArray(pArray) );
+    thymol.applicationContext.createVariable("pSet", thymol.ThSet.prototype.fromArray(pArray) );
     var b1 = "o";
     var b2 = " ";
     var b3 = "X";
@@ -34,14 +34,14 @@ thymol.configurePreExecution( function() {
     thymol.applicationContext.createVariable("ps3", ps3 );
     thymol.applicationContext.createVariable("ps4", ps4 );
     thymol.applicationContext.createVariable("psArray", psArray );
-    thymol.applicationContext.createVariable("psSet", ThSet.prototype.fromArray(psArray) );
+    thymol.applicationContext.createVariable("psSet", thymol.ThSet.prototype.fromArray(psArray) );
     
     var s1 = "the quick brown fox jumps	over the\nlazy dog";
     var s2 = "\t\tevery\tgood\tboy\tdeserves\tfavour\t\t";
 //	    var s3 = "\na\n\"rose\"\nby\nany\n'other'\nname would n'ere smell\vas\fsweet\r"; // Selenium translates the /r to /n and so tests fail
     var s3 = "\na\n\"rose\"\nby\nany\n'other'\nname would n'ere smell\vas\fsweet\n";
     var sArray = ([s1,s2,s3]).sort();
-    var sSet = ThSet.prototype.fromArray(sArray);
+    var sSet = thymol.ThSet.prototype.fromArray(sArray);
     thymol.applicationContext.createVariable("s1", s1 );
     thymol.applicationContext.createVariable("s2", s2 );
     thymol.applicationContext.createVariable("s3", s3 );
@@ -52,7 +52,7 @@ thymol.configurePreExecution( function() {
     var sa2 = "~~~every:good@boy~deserves#favour~~~";
     var sa3 = "a?rose?by?any?other?name?would?n'ere?smell?as?sweet";
     var saArray = ([sa1,sa2,sa3]).sort();
-    var saSet = ThSet.prototype.fromArray(saArray);
+    var saSet = thymol.ThSet.prototype.fromArray(saArray);
     thymol.applicationContext.createVariable("sa1", sa1 );
     thymol.applicationContext.createVariable("sa2", sa2 );
     thymol.applicationContext.createVariable("sa3", sa3 );
@@ -69,7 +69,7 @@ thymol.configurePreExecution( function() {
     thymol.applicationContext.createVariable("xs4", xs4 );
     var xsArray = ([xs1,xs2,xs3,xs4]).sort();
     thymol.applicationContext.createVariable("xsArray", xsArray );
-    var xsSet = ThSet.prototype.fromArray(xsArray);
+    var xsSet = thymol.ThSet.prototype.fromArray(xsArray);
     thymol.applicationContext.createVariable("xsSet", xsSet );
 
     var s4 = "silly m\\u009";

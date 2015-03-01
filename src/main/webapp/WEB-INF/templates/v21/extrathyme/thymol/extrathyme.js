@@ -57,12 +57,14 @@ function classForPositionAttrProcessor(element, attr, thAttr) {
 function remarkForPositionAttrProcessor(element, attr, thAttr) {
 	var position = thymol.getExpression(attr.nodeValue, element);
 	var remark = "remarks." + getRemarkForPosition(position);
-        var message = thymol.getMessage(remark);
-	for (var i = 0, iLimit = element.childNodes.length; i < iLimit; i++) {
-	  if( element.childNodes[i].nodeType === Node.TEXT_NODE ) {
-	    element.childNodes[i].nodeValue = message;
-	  }
-	}
+  var message = thymol.getMessage(remark);
+  if( !!message ) {
+    for (var i = 0, iLimit = element.childNodes.length; i < iLimit; i++) {
+      if( element.childNodes[i].nodeType === 3 ) { // Node.TEXT_NODE
+        element.childNodes[i].nodeValue = message;
+      }
+    }    
+  }
 	element.removeAttribute(attr.name);
 	return true; // We modified the DOM, return "true"
 }
@@ -89,7 +91,7 @@ function headlinesElementProcessor(element) {
 	element.parentElement.insertBefore(newDiv, element);	
 	// N.B. ThUtils.removeTag leaves the children of "element" in place,
 	// we need to do this because some browsers won't honour the XHTML empty-tag style of closing the custom element.
-	ThUtils.removeTag(element);
+	thymol.ThUtils.removeTag(element);
 	return true; // We modified the DOM, return "true"
 }
 

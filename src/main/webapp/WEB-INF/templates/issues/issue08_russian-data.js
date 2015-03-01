@@ -1,0 +1,1 @@
+thLocale="ru_RU";

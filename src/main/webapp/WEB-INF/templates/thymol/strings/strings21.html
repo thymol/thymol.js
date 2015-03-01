@@ -4,7 +4,7 @@
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 		<title>Strings example 21</title>
 	</head>
-	<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"   data-thymol-load="strings-data.js"></script>
+	<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="strings-data.js"></script>
 	
   	<body>
 		<p>Array of strings: <span><!--/*/<th:block th:each="d,dStat : ${#strings.arraySplit(#strings.arrayJoin(pArray,' and '),' and ')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>		 

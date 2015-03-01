@@ -1,0 +1,21 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-3.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>test for issue08</title>
+</head>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="issue08_russian-data.js"></script>
+<body>
+<h1>Product list</h1>
+<table>
+<tr>
+<th rowspan="1" colspan="1">NAME</th>
+<th rowspan="1" colspan="1">PRICE</th>
+</tr>
+<tr>
+<td rowspan="1" colspan="1" th:text="#{prod1.name}">Onions</td>
+<td rowspan="1" colspan="1" th:text="#{prod1.price}">2.41</td>
+</tr>
+</table>
+</body>
+</html>

@@ -32,7 +32,7 @@ var  thVars = [
 thymol.ready(function () {
 	thymol.configurePreExecution( function() {
 		var msgArray1 = thymol.applicationContext["msgArray1"];
-		var msgSet1 = ThSet.prototype.fromArray(msgArray1);
+		var msgSet1 = thymol.ThSet.prototype.fromArray(msgArray1);
 	    thymol.applicationContext.createVariable("msgSet1", msgSet1 );
 	});
 });

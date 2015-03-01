@@ -46,18 +46,18 @@ thymol.ready(function () {
 		thymol.applicationContext.createVariable("ar12List", ar12 );
 		
 		
-	    thymol.applicationContext.createVariable("as1", ThSet.prototype.fromArray(ar1) );    
-	    thymol.applicationContext.createVariable("as2", ThSet.prototype.fromArray(ar2) );    
-	    thymol.applicationContext.createVariable("as3", ThSet.prototype.fromArray(ar3) );    
-	    thymol.applicationContext.createVariable("as4", ThSet.prototype.fromArray(ar4) );    
-	    thymol.applicationContext.createVariable("as5", ThSet.prototype.fromArray(ar5) );    
-	    thymol.applicationContext.createVariable("as6", ThSet.prototype.fromArray(ar6) );
-	    thymol.applicationContext.createVariable("as7", ThSet.prototype.fromArray(ar7) );
+	    thymol.applicationContext.createVariable("as1", thymol.ThSet.prototype.fromArray(ar1) );    
+	    thymol.applicationContext.createVariable("as2", thymol.ThSet.prototype.fromArray(ar2) );    
+	    thymol.applicationContext.createVariable("as3", thymol.ThSet.prototype.fromArray(ar3) );    
+	    thymol.applicationContext.createVariable("as4", thymol.ThSet.prototype.fromArray(ar4) );    
+	    thymol.applicationContext.createVariable("as5", thymol.ThSet.prototype.fromArray(ar5) );    
+	    thymol.applicationContext.createVariable("as6", thymol.ThSet.prototype.fromArray(ar6) );
+	    thymol.applicationContext.createVariable("as7", thymol.ThSet.prototype.fromArray(ar7) );
 	    
-	    thymol.applicationContext.createVariable("as9", ThSet.prototype.fromArray(ar9) );
-	    thymol.applicationContext.createVariable("as10", ThSet.prototype.fromArray(ar10) );
-	    thymol.applicationContext.createVariable("as11", ThSet.prototype.fromArray(ar11) );
-	    thymol.applicationContext.createVariable("as12", ThSet.prototype.fromArray(ar12) );
+	    thymol.applicationContext.createVariable("as9", thymol.ThSet.prototype.fromArray(ar9) );
+	    thymol.applicationContext.createVariable("as10", thymol.ThSet.prototype.fromArray(ar10) );
+	    thymol.applicationContext.createVariable("as11", thymol.ThSet.prototype.fromArray(ar11) );
+	    thymol.applicationContext.createVariable("as12", thymol.ThSet.prototype.fromArray(ar12) );
 
 	    thymol.applicationContext.createVariable("intOrder", intOrder );
 	});

@@ -20,14 +20,14 @@ thymol.ready(function () {
 			thymol.applicationContext.createVariable("ar13", ar13);
 			thymol.applicationContext.createVariable("ar14", ar14);
 	
-			thymol.applicationContext.createVariable("as1", ThSet.prototype.fromArray(ar1) );    
-			thymol.applicationContext.createVariable("as2", ThSet.prototype.fromArray(ar2) );    
+			thymol.applicationContext.createVariable("as1", thymol.ThSet.prototype.fromArray(ar1) );    
+			thymol.applicationContext.createVariable("as2", thymol.ThSet.prototype.fromArray(ar2) );    
 	
-			thymol.applicationContext.createVariable("as9", ThSet.prototype.fromArray(ar9) );
-			thymol.applicationContext.createVariable("as10", ThSet.prototype.fromArray(ar10) );
+			thymol.applicationContext.createVariable("as9", thymol.ThSet.prototype.fromArray(ar9) );
+			thymol.applicationContext.createVariable("as10", thymol.ThSet.prototype.fromArray(ar10) );
 	
-			thymol.applicationContext.createVariable("as13", ThSet.prototype.fromArray(ar13) );
-			thymol.applicationContext.createVariable("as14", ThSet.prototype.fromArray(ar14) );
+			thymol.applicationContext.createVariable("as13", thymol.ThSet.prototype.fromArray(ar13) );
+			thymol.applicationContext.createVariable("as14", thymol.ThSet.prototype.fromArray(ar14) );
 		});
 });
 

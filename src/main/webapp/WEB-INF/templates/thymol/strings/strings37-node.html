@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+<title>Strings example 37</title>
+</head>
+
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="strings37-data.js"></script>
+
+<body>
+ 	<p th:text="${#strings.multipleReplace(#strings.escapeXml(target),before,after)}">...</p>
+ 	<p th:text="${#strings.replace(#strings.escapeXml(#strings.replace(target,' ','+')),'&amp;','%26')}">...</p>
+	<p th:text="${#strings.multipleReplace(#strings.escapeXml(target),#strings.arraySplit('&amp;, ',','),#strings.arraySplit('%26,+',','))}">...</p>
+</body>
+
+</html>
+
+<!--
+
+Hi Chet3x16,
+
+  This can be a bit tricky as you need to watch out for character and entity escaping.
+
+  Assuming that you wish to replace all occurrences of ampersand and single-space in an expression variable named "item", you might try the following:
+
+      ${#strings.replace(#strings.escapeXml(#strings.replace(item,' ','+')),'&amp;amp;','%26')}
+
+  If you also define the character transformations using expressions such that:
+
+      String[] before = {"&"," "};
+      String[] after = {"%26","+"};
+
+  You could try this:
+
+      ${#strings.multipleReplace(#strings.escapeXml(item),before,after)}
+
+  Or even:
+
+      ${#strings.multipleReplace(#strings.escapeXml(item),#strings.arraySplit('&amp;amp;, ',','),#strings.arraySplit('%26,+',','))}
+
+  Hope this helps!
+
+     Jim
+
+-->

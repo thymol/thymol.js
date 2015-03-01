@@ -4,7 +4,7 @@
 		<meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
 		<title>Objects example 03</title>
 	</head>
-	<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"   data-thymol-load="objects-data.js"></script>
+	<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="objects-data.js"></script>
 	
   	<body>
 		<p>Set of strings: <span id="sort"><!--/*/<th:block th:each="d,dStat : ${#objects.setNullSafe(oxSet,'d\'accord')}" th:text="${!dStat.last}?(${d}+','):${d}"></th:block>/*/--></span></p>

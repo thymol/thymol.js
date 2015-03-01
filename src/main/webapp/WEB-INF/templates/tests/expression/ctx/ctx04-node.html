@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>ctx example 04</title>
+</head>
+<script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="ctx04-data.js"></script>
+<body>
+<div th:object="${product}">
+  <p th:text="${#ctx.variables.product.name}">...</p>
+</div>
+</body>
+</html>
+<!--
+
+<div>
+  <p>Lettuce</p>
+</div>
+
+-->
+
