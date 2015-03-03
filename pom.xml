@@ -189,6 +189,7 @@
 						<fileset>
 							<directory>${project.basedir}</directory>
 							<includes>
+								<include>bower.json</include>
 								<include>maven-properties.json</include>
 								<include>package.json</include>
 							</includes>

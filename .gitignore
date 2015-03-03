@@ -1,5 +1,6 @@
 /target
 /.settings
+/bower.json
 /bower_components
 /dist
 /jsdelivr
@@ -8,6 +9,7 @@
 /.classpath
 /.project
 /RunSureFire.launch
+/RunSureFireNode.launch
 /SeleniumFailSafe.launch
 /thymol-jettyrun.launch
 /maven-properties.json

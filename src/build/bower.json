@@ -1,0 +1,30 @@
+{
+  "name": "thymol",
+  "version": "${project.version}",                                                                                                                                 
+  "authors": [
+    "jjbenson@users.sf.net"
+  ],
+  "description": "Javascript Thymeleaf Emulation",
+  "main": "dist/thymol.js",
+  "keywords": [
+    "thymeleaf",
+    "template",
+    "javascript",
+    "emulation"
+  ],
+  "license": "Apache 2.0",
+  "homepage": "www.thymoljs.org",
+  "ignore": [
+    "jdelivr",
+    "sourceforge",
+    "src",
+    ".gitignore",
+    "Gruntfile.js",
+    "README.md",
+    "package.json",
+    "pom.xml"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.1"
+  }
+}
