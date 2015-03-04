@@ -17,6 +17,7 @@
   "ignore": [
     "jdelivr",
     "sourceforge",
+    "npm",
     "src",
     ".gitignore",
     "Gruntfile.js",
