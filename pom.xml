@@ -11,6 +11,8 @@
 	<url>http://www.thymoljs.org/</url>
 
 	<properties>
+		<thReleaseDate>not yet!</thReleaseDate>
+		<!-- -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<java-version>1.7</java-version>
@@ -33,8 +35,6 @@
 		<m2e-lifecycle-mapping-version>1.0.0</m2e-lifecycle-mapping-version>
 		<filtering-value>true</filtering-value>
 		<theWarName>${project.artifactId}-${project.version}</theWarName>
-		<!-- -->
-		<thReleaseDate>not yet!</thReleaseDate>
 		<!-- -->
 		<thThymolPath>${project.basedir}/bower_components/thymol/dist/</thThymolPath>
 		<thThymolSource>thymol-full.js</thThymolSource>
@@ -185,6 +185,9 @@
 						</fileset>
 						<fileset>
 							<directory>jsdelivr</directory>
+						</fileset>
+						<fileset>
+							<directory>npm</directory>
 						</fileset>
 						<fileset>
 							<directory>${project.basedir}</directory>
