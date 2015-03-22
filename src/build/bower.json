@@ -4,28 +4,25 @@
   "authors": [
     "jjbenson@users.sf.net"
   ],
-  "description": "Javascript Thymeleaf Emulation",
-  "main": "dist/thymol.js",
+  "description": "JavaScript Thymeleaf Emulation",
+  "main": [
+  	"dist/thymol.js",
+  	"dist/thymol-full.js"
+  ],
   "keywords": [
-    "thymeleaf",
+    "Thymol",
+    "Thymeleaf",
     "template",
-    "javascript",
+    "JavaScript",
     "emulation"
   ],
-  "license": "Apache 2.0",
+  "license": "Apache-2.0",
   "homepage": "www.thymoljs.org",
   "ignore": [
-    "jdelivr",
-    "sourceforge",
-    "npm",
-    "src",
-    ".gitignore",
-    "Gruntfile.js",
-    "README.md",
-    "package.json",
-    "pom.xml"
+    "/*",
+    "!/dist"
   ],
   "dependencies": {
-    "jquery": "~2.1.1"
+    "jquery": "^1.11.2"
   }
 }
