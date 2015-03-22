@@ -30,6 +30,7 @@
     thDefaultLocale : "en",
     thDefaultPrecedence : 20000,
     thDefaultMessagePath : "",
+    thDefaultResourcePath : "",
     thDefaultMessagesBaseName : "Messages",
     thDefaultRelativeRootPath : "", // Non-blank signifies use of thymol.js relative addressing
     thDefaultExtendedMapping : false,
