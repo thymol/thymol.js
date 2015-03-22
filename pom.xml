@@ -344,6 +344,9 @@
 								<exec executable="forever" spawn="false">
 									<arg value="start" />
 									<arg value="${thThymolNodeServer}" />
+									<arg value="${thDeploy}/templates" />									
+									<arg value="" />									
+									<arg value="${project.basedir}/dist/thymol-node" />									
 								</exec>
 							</target>
 						</configuration>
