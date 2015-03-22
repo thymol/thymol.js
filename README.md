@@ -1,6 +1,6 @@
 thymol.js
 =========
 
-JavaScript emulation of [Thymeleaf](http://www.thymeleaf.org/) templating system.
+A JavaScript implementation of the [Thymeleaf](http://www.thymeleaf.org/) templating system.
 
-[Thymol Homepage](http://www.thymoljs.org/)
+For more details please visit the [Thymol Homepage](http://www.thymoljs.org/).
