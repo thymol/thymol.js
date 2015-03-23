@@ -181,8 +181,8 @@ thymol.makeContext = function( contextNameParam, varAccessorParam ) {
           try {
             value = isReq ? decodeURIComponent( value ) : decodeURI( value );
           }
-          catch( err ) {
-            value = "";
+          catch( err ) {  // If decode fails, then it's best to leave value unchanged
+ //           value = "";
           }
         }
         if( tt === "boolean" || tt === "number" ) {

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+
+<html xmlns:th="http://www.thymeleaf.org" xmlns:hello="http://hello">
+
+  <head>
+    <title>Say Hello! - Extending Thymol in 5 minutes (hopefully!)</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  </head>
+
+  <script th:remove="all" type="text/javascript" src="../../../../../../thymol.js"></script>
+  <script th:remove="all" type="text/javascript" data-thymol-load="hello-attributes2.js"></script>
+  <script th:remove="all" type="text/javascript" data-thymol-load="planets-data2.js"></script>
+
+  <body>
+
+    <h1>To the world...</h1>
+    
+    <p hello:sayto="World">Hi ya!</p>
+
+    <h1>To each planet...</h1>
+
+    <ul>
+      <li th:each="planet : ${planets}" hello:saytoplanet="${planet}">Hi Planet X!</li>
+    </ul>
+
+    <p><a href="../../../../index.html">Back</a></p>
+    
+  </body>
+</html>

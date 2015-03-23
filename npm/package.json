@@ -1,0 +1,28 @@
+{
+  "name": "thymol-node",
+  "version": "2.0.0-beta4",
+  "description": "thymol thymeleaf template engine for nodejs",
+  "main": "thymol-node.js",
+  "dependencies": {
+    "jquery": "^1.11.2"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thymol/thymol-node"
+  },
+  "keywords": [
+    "thymol",
+    "thymoljs",
+    "thymeleaf",
+    "template-engine"
+  ],
+  "author": "<jjbenson@user.sf.net> (http://www.thymoljs.org)",
+  "license": "Apache 2.0",
+  "bugs": {
+    "url": "https://github.com/thymol/thymol-node/issues"
+  },
+  "homepage": "https://github.com/thymol/thymol-node"
+}

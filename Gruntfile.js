@@ -113,7 +113,7 @@ module.exports = function( grunt ) {
       + '* Copyright (c) <%= grunt.template.today("yyyy") %> <%= pkg.author.name %>;'
       + ' Licensed <%= _.pluck(pkg.licenses, "type").join(", ") %> */\n',
 
-    clean : [ "dist/", "sourceforge/", "jsdelivr/", tmpDir, bowerThymolPath ],
+    clean : [ "npm/", "dist/", "sourceforge/", "jsdelivr/", tmpDir, bowerThymolPath ],
 
     uglify : {
       thymol : {
@@ -230,6 +230,34 @@ module.exports = function( grunt ) {
             content = content.replace( "${thThymolSource}", fullFileMin );
             content = content.replace( "${thThymolSource}", nodeFileMin );
             return content.replace( "${thJQuerySource}", mavenProperties.jsdelivrJQuerySource );
+          }
+        }
+      },
+      thymol_npm : {
+        expand : true,
+        cwd : tmpDir,
+        src : [ "**/*node.js" ],
+        dest : "npm/",
+        options : {
+          flatten : true,
+          process : function( content, srcpath ) {
+            content = content.replace( "${thymolVersion}", mavenProperties.thymolVersion );
+            content = content.replace( "${thymolReleaseDate}", mavenProperties.thymolReleaseDate );
+            content = content.replace( "${thThymolSource}", fullFileMin );
+            content = content.replace( "${thThymolSource}", nodeFileMin );
+            return content.replace( "${thJQuerySource}", mavenProperties.jsdelivrJQuerySource );
+          }
+        }
+      },
+      json_npm : {
+        expand : true,
+        cwd : "src/build/npm",
+        src : [ "**/*" ],
+        dest : "npm/",
+        options : {
+          flatten : true,
+          process : function( content, srcpath ) {
+            return content.replace( "${project.version}", mavenProperties.thymolVersion );
           }
         }
       },
