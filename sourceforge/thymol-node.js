@@ -1,6 +1,6 @@
 /*-------------------- Thymol - the flavour of Thymeleaf --------------------*
 
-   Thymol version 2.0.0-beta3 Copyright (C) 2012-2015 James J. Benson
+   Thymol version 2.0.0-beta4 Copyright (C) 2012-2015 James J. Benson
    jjbenson .AT. users.sf.net (http://www.thymoljs.org/)
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,8 +18,8 @@
  *---------------------------------------------------------------------------*/
 
 thymol = function() {
-    thymol.thVersion = "2.0.0-beta3";
-    thymol.thReleaseDate = "2015-03-01";
+    thymol.thVersion = "2.0.0-beta4";
+    thymol.thReleaseDate = "2015-03-23";
     thymol.thURL = "http://www.thymoljs.org";
     thymol.thAltURL = "http://www.thymeleaf.org";
     thymol.thUsingNullPrefix = false;
@@ -28,6 +28,18 @@ thymol = function() {
     thymol.objects = {};
     var textFuncSynonym = "~~~~", varRefExpr = /([$#]{.*?})/, literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/, startParserLevelCommentExpr = /^\s*\/\*\s*$/, endParserLevelCommentExpr = /^\s*\*\/\s*$/, startParserLevelCommentExpr2 = /^\/\*[^\/].*/, endParserLevelCommentExpr2 = /.*[^\/]\*\/$/, prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//, varExpr3 = /[\$\*#@]{1}\{(.*)\}$/, nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/, numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/, varParExpr = /([^(]*)\s*[(]([^)]*?)[)]/, domSelectExpr = /([\/]{1,2})?([A-Za-z0-9_\-]*(?:[\(][\)])?)?([^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*(?:[\.\/#]?[^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*)*)?([\[][^\]]*?[\]])?/, litSubstExpr = /\.*?([\|][^\|]*?[\|])\.*?/;
     function Thymol() {}
+    function isClientSide() {
+        if (typeof thymol.isServerSide !== "undefined" && !!thymol.isServerSide()) {
+            thymol.isClientSide = function() {
+                return false;
+            };
+            return false;
+        }
+        thymol.isClientSide = function() {
+            return true;
+        };
+        return true;
+    }
     function execute(doc) {
         if (typeof thymol.protocol === "undefined") {
             thymol.protocol = "";
@@ -108,23 +120,28 @@ thymol = function() {
         thymol.prefix = Thymol.prototype.getThParam("thPrefix", false, false, thymol.thDefaultPrefix);
         thymol.dataPrefix = Thymol.prototype.getThParam("thDataPrefix", false, false, thymol.thDefaultDataPrefix);
         thymol.messagePath = Thymol.prototype.getThParam("thMessagePath", false, true, thymol.thDefaultMessagePath);
+        thymol.resourcePath = Thymol.prototype.getThParam("thResourcePath", false, true, thymol.thDefaultResourcePath);
         thymol.messagesBaseName = Thymol.prototype.getThParam("thMessagesBaseName", false, false, thymol.thDefaultMessagesBaseName);
         thymol.relativeRootPath = Thymol.prototype.getThParam("thRelativeRootPath", false, true, thymol.thDefaultRelativeRootPath);
         thymol.extendedMapping = Thymol.prototype.getThParam("thExtendedMapping", true, false, thymol.thDefaultExtendedMapping);
         thymol.localMessages = Thymol.prototype.getThParam("thLocalMessages", true, false, thymol.thDefaultLocalMessages);
         thymol.disableMessages = Thymol.prototype.getThParam("thDisableMessages", true, false, thymol.thDefaultDisableMessages);
         thymol.templateSuffix = Thymol.prototype.getThParam("thTemplateSuffix", false, false, thymol.thDefaultTemplateSuffix);
+        thymol.scriptPath = "";
         if (typeof thymol.thScriptPath !== "undefined") {
             thymol.scriptPath = Thymol.prototype.getThParam("thScriptPath", false, true, thymol.thScriptPath);
         }
+        thymol.absolutePath = "";
         if (typeof thymol.thAbsolutePath !== "undefined") {
             thymol.absolutePath = Thymol.prototype.getThParam("thAbsolutePath", false, true, thymol.thAbsolutePath);
         }
+        thymol.useAbsolutePath = false;
         if (typeof thymol.thUseAbsolutePath !== "undefined") {
             thymol.useAbsolutePath = Thymol.prototype.getThParam("thUseAbsolutePath", true, false, thymol.thUseAbsolutePath);
         }
-        if (typeof thymol.thKeepRelative !== "undefined") {
-            thymol.keepRelative = Thymol.prototype.getThParam("thKeepRelative", true, false, thymol.thKeepRelative);
+        thymol.useFullURLPath = true;
+        if (typeof thymol.thUseFullURLPath !== "undefined") {
+            thymol.useFullURLPath = Thymol.prototype.getThParam("thUseFullURLPath", true, false, thymol.thUseFullURLPath);
         }
         thymol.indexFile = Thymol.prototype.getThParam("thIndexFile", false, false, null);
         thymol.debug = Thymol.prototype.getThParam("thDebug", true, false, false);
@@ -156,6 +173,7 @@ thymol = function() {
             }
         }
         thymol.protocol = Thymol.prototype.getThParam("thProtocol", false, false, thymol.protocol);
+        thymol.resourcePath = Thymol.prototype.getThParam("thResourcePath", false, true, thymol.resourcePath);
     }
     function updatePrefix(pref) {
         thymol.prefix = pref;
@@ -278,6 +296,10 @@ thymol = function() {
 
                   case "thMessagePath":
                     thymol.messagePath = e[2];
+                    break;
+
+                  case "thResourcePath":
+                    thymol.resourcePath = e[2];
                     break;
 
                   case "thMessagesBaseName":
@@ -593,8 +615,8 @@ thymol = function() {
                     result = result.substring(1);
                 }
                 if (!/^\/\/.*$/.test(result)) {
-                    if (!thymol.keepRelative) {
-                        head = thymol.root;
+                    if (thymol.useFullURLPath) {
+                        head = thymol.root + thymol.resourcePath;
                         if (head != "") {
                             if (head.charAt(head.length - 1) !== "/") {
                                 head = head + "/";
@@ -605,6 +627,8 @@ thymol = function() {
                                 result = head + result;
                             }
                         }
+                    } else {
+                        result = thymol.resourcePath + result;
                     }
                 }
             }
@@ -993,7 +1017,7 @@ thymol = function() {
         var propsPath = "";
         if (thymol.useAbsolutePath) {
             propsPath += thymol.protocol + thymol.root + thymol.path;
-        } else {}
+        }
         propsPath += thymol.messagePath;
         if (propsPath !== "") {
             propsPath += "/";
@@ -1096,16 +1120,18 @@ thymol = function() {
                 }
                 var allAttributes = element.attributes;
                 if (allAttributes && allAttributes.length > 0) {
-                    var attributes = [];
+                    var attributes = [], aii = 0;
                     if (!thymol.thUsingNullPrefix) {
                         for (i = 0, iLimit = allAttributes.length; i < iLimit; i++) {
-                            if (allAttributes[i]) {
+                            var ai = allAttributes[i];
+                            if (ai) {
                                 for (j = 0, jLimit = thymol.thThymeleafPrefixList.length; j < jLimit; j++) {
-                                    var attrName = allAttributes[i].name.toString();
+                                    var attrName = ai.name.toString();
                                     if (attrName.length > thymol.thThymeleafPrefixList[j].length) {
                                         attrName = attrName.substring(0, thymol.thThymeleafPrefixList[j].length);
                                         if (attrName === thymol.thThymeleafPrefixList[j]) {
-                                            attributes.push(allAttributes[i]);
+                                            ai.order = i;
+                                            attributes[aii++] = ai;
                                         }
                                     }
                                 }
@@ -1115,7 +1141,9 @@ thymol = function() {
                         attributes = allAttributes;
                     }
                     if (attributes.length > 0) {
-                        attributes.reverse();
+                        attributes.sort(function(a, b) {
+                            return b.order - a.order;
+                        });
                         var matchedAttributes = [];
                         for (i = 0, iLimit = attributes.length; i < iLimit; i++) {
                             var splits = attributes[i].name.toString().split(":");
@@ -1734,7 +1762,8 @@ thymol = function() {
             if (mapped) {
                 result = mapped;
             } else {
-                if (result && (thymol.useAbsolutePath || result.charAt(0) != ".")) {
+                var dotFirst = result.charAt(0) === ".";
+                if (result && (thymol.useAbsolutePath || !dotFirst)) {
                     slashpos = result.indexOf("/");
                     if (thymol.useAbsolutePath || slashpos >= 0) {
                         if (slashpos == 0 && !thymol.useAbsolutePath) {
@@ -1747,7 +1776,11 @@ thymol = function() {
                         if (thymol.useAbsolutePath && !!thymol.absolutePath) {
                             result = proto + thymol.absolutePath + result;
                         } else {
-                            result = proto + thymol.root + thymol.path + result;
+                            if (dotFirst) {
+                                result = thymol.templatePath + result;
+                            } else {
+                                result = proto + thymol.root + thymol.path + result;
+                            }
                         }
                     }
                 }
@@ -2306,6 +2339,7 @@ thymol = function() {
         thDefaultLocale: thymol.thDefaultLocale,
         thDefaultPrecedence: thymol.thDefaultPrecedence,
         thDefaultMessagePath: thymol.thDefaultMessagePath,
+        thDefaultResourcePath: thymol.thDefaultResourcePath,
         thDefaultMessagesBaseName: thymol.thDefaultMessagesBaseName,
         thDefaultRelativeRootPath: thymol.thDefaultRelativeRootPath,
         thDefaultExtendedMapping: thymol.thDefaultExtendedMapping,
@@ -2316,13 +2350,14 @@ thymol = function() {
         thThymeleafElementsList: thymol.thThymeleafElementsList,
         thLocation: thymol.thLocation,
         messagePath: thymol.messagePath,
+        resourcePath: thymol.resourcePath,
         relativeRootPath: thymol.relativeRootPath,
         messagesBaseName: thymol.messagesBaseName,
         extendedMapping: thymol.extendedMapping,
         scriptPath: thymol.scriptPath,
         absolutePath: thymol.absolutePath,
         useAbsolutePath: thymol.useAbsolutePath,
-        keepRelative: thymol.keepRelative,
+        useFullURLPath: thymol.useFullURLPath,
         localMessages: thymol.localMessages,
         indexFile: thymol.indexFile,
         disableMessages: thymol.disableMessages,
@@ -2333,6 +2368,7 @@ thymol = function() {
         templatePath: thymol.templatePath,
         objects: thymol.objects,
         jqSetup: jqSetup,
+        isClientSide: isClientSide,
         execute: execute,
         updatePrefix: updatePrefix,
         init: init,
@@ -2524,9 +2560,7 @@ thymol.makeContext = function(contextNameParam, varAccessorParam) {
                 if (tt === "string") {
                     try {
                         value = isReq ? decodeURIComponent(value) : decodeURI(value);
-                    } catch (err) {
-                        value = "";
-                    }
+                    } catch (err) {}
                 }
                 if (tt === "boolean" || tt === "number") {
                     param = new thymol.ThParam(value);
@@ -8222,6 +8256,10 @@ thymol.thObjectsConfigureModules = function() {
     thymol.addDialect({
         objects: [ thymol.objects.thAggregatesObject, thymol.objects.thArraysObject, thymol.objects.thBoolsObject, thymol.objects.thDatesObject, thymol.objects.thCalendarsObject, thymol.objects.thIdsObject, thymol.objects.thListsObject, thymol.objects.thMapsObject, thymol.objects.thMessagesObject, thymol.objects.thNumbersObject, thymol.objects.thObjectsObject, thymol.objects.thSetsObject, thymol.objects.thStringsObject ]
     });
+};
+
+thymol.isServerSide = function() {
+    return true;
 };
 
 exports.thymol = thymol;

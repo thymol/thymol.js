@@ -1,6 +1,6 @@
 /*-------------------- Thymol - the flavour of Thymeleaf --------------------*
 
-   Thymol version 2.0.0-beta3 Copyright (C) 2012-2015 James J. Benson
+   Thymol version 2.0.0-beta4 Copyright (C) 2012-2015 James J. Benson
    jjbenson .AT. users.sf.net (http://www.thymoljs.org/)
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -28,6 +28,7 @@
         thDefaultLocale: "en",
         thDefaultPrecedence: 2e4,
         thDefaultMessagePath: "",
+        thDefaultResourcePath: "",
         thDefaultMessagesBaseName: "Messages",
         thDefaultRelativeRootPath: "",
         thDefaultExtendedMapping: false,
