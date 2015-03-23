@@ -503,7 +503,6 @@
 									<directory>src/main/webapp/WEB-INF</directory>
 									<filtering>${filtering-value}</filtering>
 									<includes>
-										<include>templates/billS/**/*.*</include>
 										<include>templates/thattrs/**/*.*</include>
 										<include>templates/v21/**/*.*</include>
 										<include>templates/thymol/2.0/**/*.*</include>
