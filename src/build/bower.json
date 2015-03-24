@@ -20,9 +20,10 @@
   "homepage": "www.thymoljs.org",
   "ignore": [
     "/*",
-    "!/dist"
+    "!/dist",
+    "!bower.json"
   ],
   "dependencies": {
-    "jquery": "^1.11.2"
+    "jquery": "^2.1.3"
   }
 }

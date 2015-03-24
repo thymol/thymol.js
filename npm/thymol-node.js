@@ -1,6 +1,6 @@
 /*-------------------- Thymol - the flavour of Thymeleaf --------------------*
 
-   Thymol version 2.0.0-beta4 Copyright (C) 2012-2015 James J. Benson
+   Thymol version 2.0.0-beta5 Copyright (C) 2012-2015 James J. Benson
    jjbenson .AT. users.sf.net (http://www.thymoljs.org/)
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,8 +18,8 @@
  *---------------------------------------------------------------------------*/
 
 thymol = function() {
-    thymol.thVersion = "2.0.0-beta4";
-    thymol.thReleaseDate = "2015-03-23";
+    thymol.thVersion = "2.0.0-beta5";
+    thymol.thReleaseDate = "2015-03-24";
     thymol.thURL = "http://www.thymoljs.org";
     thymol.thAltURL = "http://www.thymeleaf.org";
     thymol.thUsingNullPrefix = false;

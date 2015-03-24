@@ -1,10 +1,10 @@
 {
   "name": "thymol-node",
-  "version": "2.0.0-beta4",
-  "description": "thymol thymeleaf template engine for nodejs",
+  "version": "2.0.0-beta5",
+  "description": "The Thymol Thymeleaf syntax template engine for nodejs",
   "main": "thymol-node.js",
   "dependencies": {
-    "jquery": "^1.11.2"
+    "jquery": "^2.1.3"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
