@@ -1,7 +1,7 @@
 {
   "name": "thymol",
   "repository": "thymol/thymoljs",
-  "version": "2.0.0-beta5",                                                                                                                               
+  "version": "2.0.0",                                                                                                                               
   "description": "JavaScript Thymeleaf Emulation",
   "main": "Gruntfile.js",
   "dependencies": {
