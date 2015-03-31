@@ -3,7 +3,7 @@
 
 	<groupId>org.thymoljs</groupId>
 	<artifactId>thymol</artifactId>
-	<version>2.0.0-beta5</version>
+	<version>2.0.0</version>
 
 	<name>Thymol Project</name>
 	<description>Javascript Thymeleaf Emulation</description>
@@ -11,7 +11,7 @@
 	<url>http://www.thymoljs.org/</url>
 
 	<properties>
-		<thReleaseDate>2015-03-24</thReleaseDate>
+		<thReleaseDate>2015-03-31</thReleaseDate>
 		<!-- -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
