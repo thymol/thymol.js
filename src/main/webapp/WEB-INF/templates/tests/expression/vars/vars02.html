@@ -6,10 +6,12 @@
 </head>
 <script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"></script>
 <script th:remove="all" type="text/javascript">
-var	thVars = [        
-     	   	  	["class",	"This is a class text" ]
-       ];
-var thDebug = true;       
+thymol.ready(function () {
+	thVars = [        
+		["class", "This is a class text" ]
+	];
+	thDebug = true;       
+});                
 </script>
 <body>
 <p th:text="${#vars.class}">...</p>

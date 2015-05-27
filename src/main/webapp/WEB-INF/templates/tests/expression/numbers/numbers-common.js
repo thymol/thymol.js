@@ -1,6 +1,3 @@
-var	thRoot="${thDeploy}";
-var	thPath="templates/tests/expression/numbers";
-
 var	thDebug=true;
 
 thVars = [

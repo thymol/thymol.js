@@ -1,0 +1,2 @@
+thDebug = true;
+thAllowNullText = false;

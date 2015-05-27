@@ -1,12 +1,9 @@
-var	thRoot="${thDeploy}";
-var	thPath="templates/tests21/syntax";
-
 var	thDebug=true;
 var thShowNullOperands=true;
 
 var	thVars = [
 
-   	    ["value1",		"Joe Bloggs"],   	        
+   	["value1",		"Joe Bloggs"],   	        
 		["value2",		"was here!"],   	    
 		// Simulate missing Expression objects
 		["#httpServletRequest.servletPath",    	                        "/ownerDetails.html"],
@@ -14,6 +11,6 @@ var	thVars = [
 		["#dates.format(visit.pet.birthDate.toDate(), \'yyyy/MM/dd\')",	"2011/10/06"],
 		["#fields.hasErrors('*')",	true],
 		["#fields.errors('*')",	"#[ 'mistakes', 'errors' ]"],
-        ["#lists.isEmpty(allSeedStarters)",	false] // Hack to prevent a debug alert
+    ["#lists.isEmpty(allSeedStarters)",	false] // Hack to prevent a debug alert
    	    
-     ];
+];
