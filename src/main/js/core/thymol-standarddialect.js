@@ -357,8 +357,8 @@
               node.thLocalVars[ statVarName ] = stat;
               if( count < expr.length ) {
                 newNode = element.cloneNode( true );
-                if( node.nextElementSibling != null ) {
-                  next = root.insertBefore( newNode, node.nextElementSibling );
+                if( node.nextSibling != null ) {
+                  next = root.insertBefore( newNode, node.nextSibling );
                 }
                 else {
                   next = root.appendChild( newNode );
