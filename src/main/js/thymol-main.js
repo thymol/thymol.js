@@ -1,5 +1,6 @@
 $( function() {
   thymol.jqSetup($);
+  thymol.setup();
   thymol.execute( document );
 } );
 
