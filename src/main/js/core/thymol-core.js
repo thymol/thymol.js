@@ -28,7 +28,10 @@ thymol = function() {
   // For internal use
   thymol.thUsingNullPrefix = false;
   thymol.thThymeleafPrefixList = [];
+  thymol.thDisabledList = [];
   thymol.thThymeleafElementsList = [];
+  thymol.thImportAttrList = [];
+
   thymol.objects = {};
 
   var textFuncSynonym = "~~~~", varRefExpr = /([$#]{.*?})/, literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/, startParserLevelCommentExpr = /^\s*\/\*\s*$/, endParserLevelCommentExpr = /^\s*\*\/\s*$/, startParserLevelCommentExpr2 = /^\/\*[^\/].*/, endParserLevelCommentExpr2 = /.*[^\/]\*\/$/, prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//, varExpr3 = /[\$\*#@]{1}\{(.*)\}$/, // Retain the content
@@ -126,6 +129,131 @@ thymol = function() {
         return result;
       }
     } );
+
+    jq.ajaxSetup( {
+      async : false,
+      isLocal : true,
+      dataType : "text"
+    } );
+    
+  }
+
+  function reset() {
+    
+    thymol.thCache = {};
+
+    var accessor = undefined, i, iLimit, j, jLimit;
+
+    if( typeof thVars !== "undefined" ) {
+      delete thVars;
+    }    
+    thVars = [];
+    accessor = new thymol.ThVarsAccessor( thVars, "thVars" );
+
+    if( typeof thDisable !== "undefined" ) {
+      delete thDisable;
+    }    
+    
+    if( !!thymol.applicationContext ) {
+      delete thymol.applicationContext;
+    }
+    thymol.applicationContext = thymol.makeContext("application", accessor);
+
+    if( !!thymol.booleanAndNullTokens ) {
+      delete thymol.booleanAndNullTokens;
+    }
+    thymol.booleanAndNullTokens = new Array();
+    thymol.booleanAndNullTokens[ "null" ] = thymol.applicationContext.createVariable( "null", null );
+    thymol.booleanAndNullTokens[ "true" ] = thymol.applicationContext.createVariable( "true", true );
+    thymol.booleanAndNullTokens[ "false" ] = thymol.applicationContext.createVariable( "false", false );
+   
+    
+    var theTop = thymol.thTop;
+    if( typeof thymol.thTop === "undefined" ) {
+      if( typeof top !== "undefined" ) {
+        theTop = top;
+      }
+    }
+    thymol.thTop = theTop;    
+
+    if( !!thymol.sessionContext ) {
+      delete thymol.sessionContext;
+    }    
+    thymol.sessionContext = thymol.makeContext( "session", undefined );
+    thymol.sessionContext.persist = function() { // Only decorate the session context with persist
+      var save = thymol.sessionContext.serialise();
+      thymol.thTop.name = save;
+    };
+    
+    if( !!thymol.requestContext ) {
+      delete thymol.requestContext;
+    }
+    thymol.requestContext = thymol.makeContext( "request", undefined );
+    
+    thymol.thExpressionObjects = {};
+    
+    thymol.thExpressionObjects[ "#object" ] = {};
+    thymol.thExpressionObjects[ "#locale" ] = {};
+
+    thymol.thExpressionObjects[ "#ctx" ] = [];
+
+    thymol.thExpressionObjects[ "#ctx" ][ "variables" ] = thymol.applicationContext;
+    thymol.thExpressionObjects[ "#ctx" ][ "servletContext" ] = thymol.applicationContext;
+    
+    thymol.thExpressionObjects[ "#vars" ] = thymol.applicationContext;
+    thymol.thExpressionObjects[ "#root" ] = thymol.applicationContext;
+
+    thymol.configureModule( thymol.objects.thHttpServletRequestObject );
+    thymol.configureModule( thymol.objects.thHttpSessionObject );
+    if( typeof thymol.thObjectsConfigureModules !== "undefined" ) {
+      thymol.thObjectsConfigureModules();
+    }
+
+    thymol.thExpressionObjects[ "#ctx" ][ "httpServletRequest" ] = thymol.thExpressionObjects[ "#httpServletRequest" ];
+    thymol.thExpressionObjects[ "#ctx" ][ "httpSession" ] = thymol.thExpressionObjects[ "#httpSession" ];
+    
+    var dLength = thymol.thDisabledList.length;
+    if( dLength > 0 ) {
+      for( i = 0; i < dLength; i++ ) {
+        thymol.thDisabledList[ i ].reEnable();
+      }      
+      thymol.thDisabledList = [];
+    }
+    
+  }
+
+  function setup() {
+    
+    reset();
+    
+    thymol.prefix = Thymol.prototype.getThParam( "thPrefix", false, false, thymol.thDefaultPrefix );
+    thymol.dataPrefix = Thymol.prototype.getThParam( "thDataPrefix", false, false, thymol.thDefaultDataPrefix );
+    
+    thymol.thInclude = new thymol.ThAttr( "include", null, 100, null, thymol.prefix );
+    thymol.thReplace = new thymol.ThAttr( "replace", null, 100, null, thymol.prefix );
+    thymol.thSubstituteby = new thymol.ThAttr( "substituteby", null, 100, null, thymol.prefix );
+    thymol.thFragment = new thymol.ThAttr( "fragment", null, 20000, null, thymol.prefix );
+    
+    thymol.thImportAttrList = [ thymol.thFragment, thymol.thInclude, thymol.thReplace, thymol.thSubstituteby ];
+        
+    thymol.thRemove = null;
+
+    thymol.thBlock = new thymol.ThElement( "block", function( element ) {
+      var i, limit = element.childNodes.length;
+      for( i = 0; i < limit; i++ ) {
+        if( element.childNodes[ i ].nodeType === 1 ) {
+          element.childNodes[ i ].isBlockChild = true;
+        }
+      }
+    }, thymol.prefix );
+
+    thymol.setupAttrList();
+
+//    thymol.thCache = {};
+    thymol.thDeferredFunctions = [];
+    thymol.thPreExecutionFunctions = [];
+    thymol.thPostExecutionFunctions = [];
+    
   }
 
   function ready( func ) {
@@ -136,8 +264,6 @@ thymol = function() {
   }
 
   function setupEnv() {
-    thymol.prefix = Thymol.prototype.getThParam( "thPrefix", false, false, thymol.thDefaultPrefix );
-    thymol.dataPrefix = Thymol.prototype.getThParam( "thDataPrefix", false, false, thymol.thDefaultDataPrefix );
 
     thymol.messagePath = Thymol.prototype.getThParam( "thMessagePath", false, true, thymol.thDefaultMessagePath );
     thymol.resourcePath = Thymol.prototype.getThParam( "thResourcePath", false, true, thymol.thDefaultResourcePath );
@@ -204,97 +330,94 @@ thymol = function() {
   }
 
   function updatePrefix( pref ) {
-    thymol.prefix = pref;
-    thymol.thThymeleafPrefixList = [];
-    thymol.thThymeleafElementsList = [];
+    if( thymol.prefix !== pref ) {
+      var newPref = pref + ":";
+      var newEscpPref = pref + "\\:";
+      var newSynonymPref = "data-" + pref + "-";     
+      var current = thymol.thThymeleafPrefixList[ thymol.prefix ];
+      for( j = 0, jLimit = current.length; j < jLimit; j++ ) {        
+        var suffix1 = current[j].suffix;        
+        current[j].name = newPref + suffix1;
+        current[j].escpName = "[" + newEscpPref + suffix1 + "]";
+        current[j].synonym = newSynonymPref + suffix1;
+        current[j].escpSynonym = "[" + current[j].synonym + "]";        
+      }
+      var current = thymol.thThymeleafElementsList;
+      for( j = 0, jLimit = current.length; j < jLimit; j++ ) {        
+        var splits = current[j].name.split(":");        
+        var suffix2 = splits[1];        
+        current[j].name = newPref + suffix2;
+        current[j].endName = "/" + current[j].name;
+        current[j].synonym = newSynonymPref + suffix2;
+        current[j].endSynonym = "/" + current[j].synonym;        
+      }      
+      thymol.thThymeleafPrefixList[ pref ] = thymol.thThymeleafPrefixList[ thymol.prefix ];
+      thymol.thThymeleafPrefixList[ newSynonymPref ] = thymol.thThymeleafPrefixList[ thymol.prefix ];      
+      var oldPref = thymol.prefix  + ":";     
+      var oldSynonymPref = "data-" + thymol.prefix  + "-";     
+      delete thymol.thThymeleafPrefixList[thymol.prefix];
+      delete thymol.thThymeleafPrefixList[oldSynonymPref];
+      for( j = 0, jLimit = thymol.thThymeleafPrefixList.length; j < jLimit; j++ ) {
+        if( thymol.thThymeleafPrefixList[j] === oldPref ) {
+          thymol.thThymeleafPrefixList[j] = newPref;
+        }
+        else if( thymol.thThymeleafPrefixList[j] === oldSynonymPref ) {
+          thymol.thThymeleafPrefixList[j] = newSynonymPref;
+        }
+      }
+      for( j = 0, jLimit = thymol.thImportAttrList.length; j < jLimit; j++ ) {        
+        var suffix3 = thymol.thImportAttrList[j].suffix;        
+        thymol.thImportAttrList[j].name = newPref + suffix3;
+        thymol.thImportAttrList[j].escpName = "[" + newEscpPref + suffix3 + "]";
+        thymol.thImportAttrList[j].synonym = newSynonymPref + suffix3;
+        thymol.thImportAttrList[j].escpSynonym = "[" + thymol.thImportAttrList[j].synonym + "]";        
+      }      
+      thymol.prefix = pref;
+      thymol.applicationContext.createVariable( "thPrefix", pref );
+    }
   }
 
   function init() {
 
-    this.messages = null;
-    this.mappings = null;
+    thymol.messages = null;
+    thymol.mappings = null;
 
-    this.debug = null;
+    thymol.debug = null;
 
     getLocations( this );
 
-    this.locale = new thymol.ThObject();
+    thymol.locale = new thymol.ThObject();
     getLanguage();
-
-    var accessor = undefined, i, iLimit, j, jLimit;
-    if( typeof thVars !== "undefined" ) {
-      accessor = new thymol.ThVarsAccessor( thVars, "thVars" );
-    }
-    this.applicationContext = thymol.makeContext( "application", accessor );
-    this.sessionContext = thymol.makeContext( "session", undefined );
-    this.sessionContext.persist = function() { // Only decorate the session context with persist
-      var save = this.serialise();
-      thymol.thTop.name = save;
-    };
-    this.requestContext = thymol.makeContext( "request", undefined );
-
-    this.booleanAndNullTokens = new Array();
-    this.booleanAndNullTokens[ "null" ] = this.applicationContext.createVariable( "null", null );
-    this.booleanAndNullTokens[ "true" ] = this.applicationContext.createVariable( "true", true );
-    this.booleanAndNullTokens[ "false" ] = this.applicationContext.createVariable( "false", false );
-    this.allowNullText = null;
+    
+    thymol.allowNullText = null;
 
     setupEnv();
-
-    this.thCache = {};
-    this.thExpressionObjects;
-    this.thDeferredFunctions;
-    this.thPreExecutionFunctions;
-    this.thPostExecutionFunctions;
-
-    if( typeof this.thExpressionObjects === "undefined" || this.thExpressionObjects === null ) {
-      this.thExpressionObjects = {};
-    }
-    this.thExpressionObjects[ "#object" ] = {};
-    this.thExpressionObjects[ "#locale" ] = {};
-
-    this.thExpressionObjects[ "#ctx" ] = [];
-    this.thExpressionObjects[ "#ctx" ][ "variables" ] = {};
-
-    thymol.configureModule( thymol.objects.thHttpServletRequestObject );
-    thymol.configureModule( thymol.objects.thHttpSessionObject );
-    if( typeof thymol.thObjectsConfigureModules !== "undefined" ) {
-      thymol.thObjectsConfigureModules();
-    }
-    var scripts = thymol.thDocument.getElementsByTagName( "script" );
-    for( var i = 0, iLimit = scripts.length; i < iLimit; i++ ) {
-      var parameters = scripts[ i ].getAttribute( "data-thymol-load" );
-      if( !!parameters ) {
-        var splits = parameters.split( "," );
-        for( var j = 0, jLimit = splits.length; j < jLimit; j++ ) {
-          thymol.ThUtils.loadScript( splits[ j ] );
+    
+    if( typeof thymol.thDataThymolLoading === "undefined" || thymol.thDataThymolLoading === null || !!thymol.thDataThymolLoading ) {
+      var scripts = thymol.thDocument.getElementsByTagName( "script" );
+      for( var i = 0, iLimit = scripts.length; i < iLimit; i++ ) {
+        var parameters = scripts[ i ].getAttribute( "data-thymol-load" );
+        if( !!parameters ) {
+          var splits = parameters.split( "," );
+          for( var j = 0, jLimit = splits.length; j < jLimit; j++ ) {
+            thymol.ThUtils.loadScript( splits[ j ] );
+          }
         }
-      }
+      }      
+      var newPrefix = Thymol.prototype.getThParam( "thPrefix", false, false, thymol.prefix );
+      thymol.updatePrefix( newPrefix );
     }
-
-    setupEnv(); // Environment set-up is repeated just in case the script loads wanted to change anything
-
-    if( typeof thymol.thPreExecutionFunctions === "undefined" || thymol.thPreExecutionFunctions === null ) {
-      thymol.thPreExecutionFunctions = [];
-    }
-    if( typeof thymol.thPostExecutionFunctions === "undefined" || thymol.thPostExecutionFunctions === null ) {
-      thymol.thPostExecutionFunctions = [];
-    }
-
-    $.ajaxSetup( {
-      async : false,
-      isLocal : true,
-      dataType : "text"
-    } );
-
-    if( ! ( typeof thVars === "undefined" ) ) {
-      for( i = 0, iLimit = thVars.length; i < iLimit; i++ ) {
-        this.applicationContext.createVariable( thVars[ i ][ 0 ], thVars[ i ][ 1 ] );
-      }
-    }
+    
+    setupEnv(); // Environment set-up is repeated just in case the loaded scripts wanted to change anything
 
     executeDeferred();
 
+    if( ! ( typeof thVars === "undefined" ) ) {
+      for( i = 0, iLimit = thVars.length; i < iLimit; i++ ) {
+        thymol.applicationContext.createVariable( thVars[ i ][ 0 ], thVars[ i ][ 1 ] );
+      }
+    }
+    
     ( function() {
       var htmlTagAttrs = $( "html" )[ 0 ].attributes, tp = null, tu, nsspec;
       $( [ thymol.thURL, thymol.thAltURL ] ).each( function() {
@@ -313,131 +436,42 @@ thymol = function() {
           return false;
         }
       } );
-    } )();
+    } )(); 
+    
     var defaultScriptUrl = "";
     if( !!thymol.thRequest ) {
       thymol.thWindow.location.search = thymol.thRequest;
     }
     ( function( app, req ) {
-      var e, f, a = /\+/g, r = /([^&=]+)=?([^&]*)/g, d = function( s ) {
-        return decodeURIComponent( s.replace( a, " " ) );
-      }, q = thymol.thWindow.location.search.substring( 1 ), surl, scriptUrl = defaultScriptUrl;
-
-      $( "script" ).each( function() {
-        surl = this.src;
+      var surl, scriptUrl = defaultScriptUrl;      
+      var scripts = thymol.thDocument.getElementsByTagName( "script" );
+      for( var i = 0, iLimit = scripts.length; i < iLimit; i++ ) {        
+        var surl = scripts[i].src;
         if( surl.indexOf( thymol.thScriptName ) >= 0 ) {
-          scriptUrl = d( surl );
-          return false;
-        }
-      } );
+          scriptUrl = doDecode( surl );
+          break;
+        }        
+      }                  
+      setFromURL( app, scriptUrl );      
+      setFromURL( req, thymol.thWindow.location.href, true );      
+    } )( thymol.applicationContext, thymol.requestContext );
 
-      while( e = r.exec( scriptUrl ) ) {
-        f = e[ 1 ].split( "?" );
-        switch( f[ 1 ] ) {
-          case "thPrefix":
-            thymol.prefix = e[ 2 ];
-            break;
-          case "thDataPrefix":
-            thymol.dataPrefix = e[ 2 ];
-            break;
-          case "thMessagePath":
-            thymol.messagePath = e[ 2 ];
-            break;
-          case "thResourcePath":
-            thymol.resourcePath = e[ 2 ];
-            break;
-          case "thMessagesBaseName":
-            thymol.messagesBaseName = e[ 2 ];
-            break;
-          case "thRelativeRootPath":
-            thymol.relativeRootPath = e[ 2 ];
-            break;
-          case "thExtendedMapping":
-            thymol.extendedMapping = e[ 2 ];
-            break;
-          case "thTemplateSuffix":
-            thymol.templateSuffix = e[ 2 ];
-            break;
-          case "thLocalMessages":
-            thymol.localMessages = e[ 2 ];
-            break;
-          case "thDisableMessages":
-            thymol.disableMessages = e[ 2 ];
-            break;
-          case "thIndexFile":
-            thymol.indexFile = e[ 2 ];
-            break;
-          case "thProtocol":
-            thymol.protocol = e[ 2 ];
-            break;
-          case "thDebug":
-            thymol.debug = e[ 2 ];
-            break;
-          case "thRoot":
-            thymol.root = e[ 2 ];
-            break;
-          case "thPath":
-            thymol.path = e[ 2 ];
-            break;
-          case "thAllowNullText":
-            thymol.allowNullText = e[ 2 ];
-            break;
-          case "thLocale":
-            thymol.locale.value = e[ 2 ];
-            break;
-          case "thDefaultPrecision":
-            thymol.thDefaultPrecision = e[ 2 ];
-            break;
-          case "thDefaultPrecedence":
-            thymol.thDefaultPrecedence = e[ 2 ];
-            break;
-          default:
-            app.createVariable( e[ 1 ], e[ 2 ] );
-        }
-      }
-      while( e = r.exec( q ) ) {
-        req.createVariable( d( e[ 1 ] ), e[ 2 ], true );
-      }
-    } )( this.applicationContext, this.requestContext );
+    thymol.applicationContext.resolveJSONReferences();
 
-    thymol.thInclude = new thymol.ThAttr( "include", null, 100, null, thymol.prefix );
-    thymol.thReplace = new thymol.ThAttr( "replace", null, 100, null, thymol.prefix );
-    thymol.thSubstituteby = new thymol.ThAttr( "substituteby", null, 100, null, thymol.prefix );
+    preExecute( thymol.applicationContext );
 
-    thymol.thFragment = new thymol.ThAttr( "fragment", null, 20000, null, thymol.prefix );
-    thymol.thRemove = null;
+    thymol.sessionContext.init();
+    thymol.sessionContext.resolveJSONReferences();
+    thymol.requestContext.resolveJSONReferences();
 
-    thymol.thBlock = new thymol.ThElement( "block", function( element ) {
-      var i, limit = element.childNodes.length;
-      for( i = 0; i < limit; i++ ) {
-        if( element.childNodes[ i ].nodeType === 1 ) {
-          element.childNodes[ i ].isBlockChild = true;
-        }
-      }
-    }, thymol.prefix );
+    thymol.thExpressionObjects[ "#ctx" ][ "requestParameters" ] = thymol.requestContext;
 
-    this.applicationContext.resolveJSONReferences();
-    thymol.setupAttrList();
-    preExecute( this.applicationContext );
 
-    this.thExpressionObjects[ "#vars" ] = this.applicationContext;
-    this.thExpressionObjects[ "#root" ] = this.applicationContext;
+    thymol.protocol = Thymol.prototype.override( "thProtocol", thymol.protocol );
+    thymol.debug = Thymol.prototype.override( "thDebug", thymol.debug );
+    thymol.root = Thymol.prototype.override( "thRoot", thymol.root );
 
-    this.sessionContext.init();
-    this.sessionContext.resolveJSONReferences();
-    this.requestContext.resolveJSONReferences();
-
-    this.thExpressionObjects[ "#ctx" ][ "variables" ] = this.applicationContext;
-    this.thExpressionObjects[ "#ctx" ][ "requestParameters" ] = this.requestContext;
-    this.thExpressionObjects[ "#ctx" ][ "servletContext" ] = this.applicationContext;
-    this.thExpressionObjects[ "#ctx" ][ "httpServletRequest" ] = this.thExpressionObjects[ "#httpServletRequest" ];
-    this.thExpressionObjects[ "#ctx" ][ "httpSession" ] = this.thExpressionObjects[ "#httpSession" ];
-
-    this.protocol = Thymol.prototype.override( "thProtocol", this.protocol );
-    this.debug = Thymol.prototype.override( "thDebug", this.debug );
-    this.root = Thymol.prototype.override( "thRoot", this.root );
-
-    if( "" !== this.relativeRootPath ) { // If we have a relativeRootPath, generate an absolute root path and set thRoot to this value
+    if( "" !== thymol.relativeRootPath ) { // If we have a relativeRootPath, generate an absolute root path and set thRoot to this value
       var rootURI = thymol.thDocument.location.href;
       var quePos = rootURI.indexOf( "?" );
       if( quePos >= 0 ) {
@@ -447,37 +481,37 @@ thymol = function() {
       if( sepPos >= 0 ) {
         rootURI = rootURI.substring( 0, sepPos + 1 );
       }
-      var newThRoot = rootURI + this.thLocation + this.relativeRootPath;
-      this.thRoot = Thymol.prototype.getThParam( "thRoot", false, true, newThRoot );
+      var newThRoot = rootURI + thymol.thLocation + thymol.relativeRootPath;
+      thymol.thRoot = Thymol.prototype.getThParam( "thRoot", false, true, newThRoot );
     }
 
-    this.path = Thymol.prototype.override( "thPath", this.path );
-    this.allowNullText = Thymol.prototype.override( "thAllowNullText", this.allowNullText );
-    this.locale.value = Thymol.prototype.override( "thLocale", this.locale.value );
+    thymol.path = Thymol.prototype.override( "thPath", thymol.path );
+    thymol.allowNullText = Thymol.prototype.override( "thAllowNullText", thymol.allowNullText );
+    thymol.locale.value = Thymol.prototype.override( "thLocale", thymol.locale.value );
 
     if( ! ( typeof thMappings === "undefined" ) ) {
-      this.mappings = [];
+      thymol.mappings = [];
       for( j = 0, jLimit = thMappings.length; j < jLimit; j++ ) {
-        this.mappings.push( [ thMappings[ j ][ 0 ], thMappings[ j ][ 1 ] ] );
+        thymol.mappings.push( [ thMappings[ j ][ 0 ], thMappings[ j ][ 1 ] ] );
       }
-      this.mappings.sort( function( a, b ) {
+      thymol.mappings.sort( function( a, b ) {
         return a[ 0 ].length > b[ 0 ].length ? -1 : 1;
       } );
     }
-    this.messages = {};
+    thymol.messages = {};
     setLocaleValue();
 
     if( ! ( typeof thMessages === "undefined" ) ) {
-      this.messages[ "" ] = [];
+      thymol.messages[ "" ] = [];
       for( j = 0, jLimit = thMessages.length; j < jLimit; j++ ) {
-        this.messages[ "" ][ thMessages[ j ][ 0 ] ] = thMessages[ j ][ 1 ];
+        thymol.messages[ "" ][ thMessages[ j ][ 0 ] ] = thMessages[ j ][ 1 ];
       }
       for( var k in thMessages ) {
         if( thMessages.hasOwnProperty( k ) ) {
           if( !k.match( numericExpr ) ) {
-            this.messages[ k ] = [];
+            thymol.messages[ k ] = [];
             for( j = 0, jLimit = thMessages[ k ].length; j < jLimit; j++ ) {
-              this.messages[ k ][ thMessages[ k ][ j ][ 0 ] ] = thMessages[ k ][ j ][ 1 ];
+              thymol.messages[ k ][ thMessages[ k ][ j ][ 0 ] ] = thMessages[ k ][ j ][ 1 ];
             }
           }
         }
@@ -492,6 +526,96 @@ thymol = function() {
 
     thymol.thRemove = Thymol.prototype.getThAttrByName( "remove" );
 
+  }
+  
+  function doDecode( s ) {
+      return decodeURIComponent( s.replace( /\+/g, " " ) );    
+  }
+
+  function setFromURL( ctx, url, isReq ) {
+    var pq = url.indexOf( "?" );
+    if( pq > 0 ) {
+      var rem = url.substring( pq + 1 );
+      if( !!rem ) {
+        var parts = rem.split( "&" );
+        for( j = 0, jLimit = parts.length; j < jLimit; j++ ) {
+          var pair = parts[j].split( "=" );
+          if( pair.length > 1 ) {
+            setControl( ctx, doDecode( pair[0] ), doDecode( pair[1] ), isReq );
+          }
+        }        
+      }
+    }
+  }
+
+  function setControl( ctx, name, value, isReq ) {
+    switch( name ) {
+      case "thPrefix":
+        updatePrefix(value)
+        break;
+      case "thDataPrefix":
+        thymol.dataPrefix = setThParam( name, value );
+        break;
+      case "thMessagePath":
+        thymol.messagePath = setThParam( name, value );
+        break;
+      case "thResourcePath":
+        thymol.resourcePath = setThParam( name, value );
+        break;
+      case "thMessagesBaseName":
+        thymol.messagesBaseName = setThParam( name, value );
+        break;
+      case "thRelativeRootPath":
+        thymol.relativeRootPath = setThParam( name, value );
+        break;
+      case "thExtendedMapping":
+        thymol.extendedMapping = setThParam( name, getBooleanValue( value ) );
+        break;
+      case "thTemplateSuffix":
+        thymol.templateSuffix = setThParam( name, value );
+        break;
+      case "thLocalMessages":
+        thymol.localMessages = setThParam( name, getBooleanValue( value ) );
+        break;
+      case "thDisableMessages":
+        thymol.disableMessages = setThParam( name, getBooleanValue( value ) );
+        break;
+      case "thIndexFile":
+        thymol.indexFile = setThParam( name, value );
+        break;
+      case "thProtocol":
+        thymol.protocol = setThParam( name, value );
+        break;
+      case "thDebug":
+        thymol.debug = setThParam( name, getBooleanValue( value ) );
+        break;
+      case "thRoot":
+        thymol.root = setThParam( name, value );
+        break;
+      case "thPath":
+        thymol.path = setThParam( name, value );
+        break;
+      case "thAllowNullText":
+        thymol.allowNullText = setThParam( name, getBooleanValue( value ) );
+        break;
+      case "thLocale":
+        thymol.locale.value = setThParam( name, value );
+        break;
+      case "thDefaultPrecision":
+        thymol.thDefaultPrecision = setThParam( name, value );
+        break;
+      case "thDefaultPrecedence":
+        thymol.thDefaultPrecedence = setThParam( name, value );
+        break;
+      default:
+        ctx.createVariable( name, value, isReq );
+    }    
+  }
+  
+  function setThParam( name, value ) {
+    var thp = thymol.applicationContext[ name ];
+    thp.value = value;
+    return value;
   }
 
   function getLocations( thiz ) {
@@ -515,7 +639,7 @@ thymol = function() {
     thymol.thExpressionObjects[ module.thExpressionObjectName ] = module;
   }
 
-  function configureAttributeProcessor( prefix, suffix, func, prec, dataAttr ) {
+  function configureAttributeProcessor( prefix, suffix, func, prec, override, dataAttr ) {
     var p = prefix + ":";
     if( p !== null ) {
       if( thymol.thThymeleafPrefixList.indexOf( p ) < 0 ) {
@@ -525,6 +649,16 @@ thymol = function() {
     else {
       thymol.thUsingNullPrefix = true;
     }
+    if( !!override ) {
+      var attrList = thymol.thThymeleafPrefixList[prefix];      
+      var i, iLimit = attrList.length;
+      for( i = 0; i < iLimit; i++ ) {
+        if( suffix === attrList[ i ].suffix ) {
+          attrList.splice(i, 1);
+          break;
+        }
+      }            
+    }
     p = new thymol.ThAttr( suffix, func, prec, thymol.thThymeleafPrefixList, prefix, dataAttr );
   }
 
@@ -533,16 +667,10 @@ thymol = function() {
   }
 
   function configurePreExecution( func ) {
-    if( typeof thymol.thPreExecutionFunctions === "undefined" || thymol.thPreExecutionFunctions === null ) {
-      thymol.thPreExecutionFunctions = [];
-    }
     thymol.thPreExecutionFunctions.push( func );
   }
 
   function configurePostExecution( func ) {
-    if( typeof thymol.thPostExecutionFunctions === "undefined" || thymol.thPostExecutionFunctions === null ) {
-      thymol.thPostExecutionFunctions = [];
-    }
     thymol.thPostExecutionFunctions.push( func );
   }
 
@@ -584,7 +712,7 @@ thymol = function() {
         }
         var head = result.substring( 0, fp );
         var centre = result.substring( fp + 2, lp );
-        centre = this.getParsedExpr( centre, element );
+        centre = thymol.getParsedExpr( centre, element );
         var tail = result.substring( lp + 2 );
         result = head + centre + tail;
         fp = result.indexOf( "__" );
@@ -820,7 +948,7 @@ thymol = function() {
           token = args[ 1 ];
           token = token.replace( /[$]/g, "[$]" ).replace( /[*]/g, "[*]" ).replace( /[\']/g, "[\']" ).replace( /[+]/g, "[\+]" ).replace( /[\(]/g, "[\(]" ).replace( /[\)]/g, "[\)]" );
           re = new RegExp( token );
-          subs = this.getExpression( args[ 2 ], element );
+          subs = thymol.getExpression( args[ 2 ], element );
           if( subs != args[ 2 ] ) {
             result = result.replace( re, subs, "g" );
             if( result == "null" ) {
@@ -1221,10 +1349,10 @@ thymol = function() {
       var i, iLimit, j, jLimit, k, kLimit;
       var elements = rootNode.thDoc.getElementsByTagName( "*" );
       for( k = 0, kLimit = elements.length; k < kLimit; k++ ) {
-        var element = elements[ k ];
+        var elem1 = elements[ k ];
         for( j = 0, jLimit = thymol.thThymeleafElementsList.length; j < jLimit; j++ ) {
-          if( element.localName == thymol.thThymeleafElementsList[ j ].name || element.localName == thymol.thThymeleafElementsList[ j ].synonym ) {
-            var updated = thymol.thThymeleafElementsList[ j ].process( element );
+          if( elem1.localName == thymol.thThymeleafElementsList[ j ].name || elem1.localName == thymol.thThymeleafElementsList[ j ].synonym ) {
+            var updated = thymol.thThymeleafElementsList[ j ].process( elem1 );
             if( updated ) {
               elements = rootNode.thDoc.getElementsByTagName( "*" );
               k--;
@@ -1233,13 +1361,13 @@ thymol = function() {
             break; // Element names should be distinct and we don't want to repeat any processing!
           }
         }
-        var allAttributes = element.attributes;
+        var allAttributes = elem1.attributes;
         if( allAttributes && allAttributes.length > 0 ) {
           var attributes = [], aii = 0;
           if( !thymol.thUsingNullPrefix ) {
             for( i = 0, iLimit = allAttributes.length; i < iLimit; i++ ) {
               var ai = allAttributes[ i ];
-	            if( ai ) {
+              if( ai ) {
                 for( j = 0, jLimit = thymol.thThymeleafPrefixList.length; j < jLimit; j++ ) {
                   var attrName = ai.name.toString();
                   if( attrName.length > thymol.thThymeleafPrefixList[ j ].length ) {
@@ -1307,7 +1435,7 @@ thymol = function() {
               } );
               var updated = false;
               for( i = 0, iLimit = matchedAttributes.length; i < iLimit; i++ ) {
-                var exp = thymol.ThUtils.processElement( matchedAttributes[ i ].attr.process, element, matchedAttributes[ i ].elementAttr, matchedAttributes[ i ].attr, 1 );
+                var exp = thymol.ThUtils.processElement( matchedAttributes[ i ].attr.process, elem1, matchedAttributes[ i ].elementAttr, matchedAttributes[ i ].attr, 1 );
                 updated = exp || updated; // No short-circuiting!
               }
               if( updated ) {
@@ -1322,10 +1450,10 @@ thymol = function() {
       elements = rootNode.thDoc.getElementsByTagName( "*" );
       var kc = 0;
       for( k = 0, kLimit = elements.length; k < kLimit; k++ ) {
-        var element = elements[ kc ];
-        var elName = element.nodeName.toLowerCase();
+        var elem2 = elements[ kc ];
+        var elName = elem2.nodeName.toLowerCase();
         if( elName == thymol.thBlock.name || elName == thymol.thBlock.synonym ) {
-          thymol.ThUtils.removeTag( element );
+          thymol.ThUtils.removeTag( elem2 );
           elements = rootNode.thDoc.getElementsByTagName( "*" );
         }
         else {
@@ -1335,30 +1463,20 @@ thymol = function() {
     },
 
     override : function( paramName, paramValue ) {
-      var param = paramValue, thv;
-      thv = thymol.thWindow[ paramName ];
-      if( typeof thv === "undefined" ) {
-        thv = thymol.applicationContext.javascriptify( paramName );
+      var param = paramValue, thv;      
+      if( !!thymol.requestContext ) {       
+        thv = thymol.requestContext[ paramName ];
       }
-      if( thv ) {
-        if( thv instanceof thymol.ThParam ) {
-          param = thv.value;
-        }
-        else {
-          param = thv;
+      if( typeof thv === "undefined" && !!thymol.applicationContext ) {
+        thv = thymol.applicationContext[ paramName ];
+        if( typeof thv === "undefined" ) {
+          thv = thymol.applicationContext.javascriptify( paramName );
         }
       }
-      thv = thymol.applicationContext[ paramName ];
-      if( thv ) {
-        if( thv instanceof thymol.ThParam ) {
-          param = thv.value;
-        }
-        else {
-          param = thv;
-        }
+      if( typeof thv === "undefined" && !!thymol.thWindow ) {
+        thv = thymol.thWindow[ paramName ];
       }
-      thv = thymol.requestContext[ paramName ];
-      if( thv ) {
+      if( typeof thv !== "undefined" ) {
         if( thv instanceof thymol.ThParam ) {
           param = thv.value;
         }
@@ -1383,11 +1501,14 @@ thymol = function() {
 
     getThAttrByName : function( name ) {
       var attrList = thymol.thThymeleafPrefixList[ thymol.prefix ];
-      attrList.push( thymol.thInclude );
-      attrList.push( thymol.thReplace );
-      attrList.push( thymol.thSubstituteby );
-      attrList.push( thymol.thFragment );
       var i, iLimit = attrList.length;
+      for( i = 0; i < iLimit; i++ ) {
+        if( name === attrList[ i ].suffix ) {
+          return attrList[ i ];
+        }
+      }
+      var attrList = thymol.thImportAttrList;
+      iLimit = attrList.length;
       for( i = 0; i < iLimit; i++ ) {
         if( name === attrList[ i ].suffix ) {
           return attrList[ i ];
@@ -1405,7 +1526,6 @@ thymol = function() {
 
     getContentRoot : function( rn ) {
       var rnd = rn.thDoc;
-      // if( rnd.nodeName !== "#document" && rnd.nodeName !== "#document-fragment") {
       if( rnd.nodeName !== "#document" ) {
         rnd = rnd.childNodes;
       }
@@ -2131,7 +2251,10 @@ thymol = function() {
     },
 
     getThParam : function( paramName, isBoolean, isPath, defaultValue ) {
-      var localValue = defaultValue, globalValue = thymol.thWindow[ paramName ], theParam = thymol.ThUtils.getParameter( paramName );
+      var localValue = defaultValue, globalValue, theParam = thymol.ThUtils.getParameter( paramName );
+      if( !!thymol.thWindow ) {
+        globalValue = thymol.thWindow[ paramName ];
+      }
       if( typeof globalValue === "undefined" ) {
         globalValue = thymol.applicationContext.javascriptify( paramName );
       }
@@ -2178,7 +2301,7 @@ thymol = function() {
           else {
             prec = thymol.thDefaultPrecedence;
           }
-          configureAttributeProcessor( spec.prefix, spec.attributeProcessors[ i ].name, spec.attributeProcessors[ i ].processor, prec, null );
+          configureAttributeProcessor( spec.prefix, spec.attributeProcessors[ i ].name, spec.attributeProcessors[ i ].processor, prec, spec.attributeProcessors[ i ].override, null );
         }
       }
       if( spec.elementProcessors !== null && typeof spec.elementProcessors !== "undefined" ) {
@@ -2311,11 +2434,22 @@ thymol = function() {
       this.process = func;
     }
     this.disable = function() {
+      thymol.thDisabledList.push( this );      
+      this.saveName = this.name;
+      this.saveEscpName = this.escpName;
+      this.saveEscpSynonym = this.escpSynonym;
+      this.saveProcess = this.process;            
       this.name = null;
       this.escpName = null;
       this.escpSynonym = null;
       this.process = function() {
       };
+    };
+    this.reEnable = function() {      
+      this.name = this.saveName;
+      this.escpName = this.saveEscpName;
+      this.escpSynonym = this.saveEscpSynonym;
+      this.process = this.saveProcess;
     };
   }
 
@@ -2578,7 +2712,9 @@ thymol = function() {
     thDefaultTemplateSuffix : thymol.thDefaultTemplateSuffix,
 
     thThymeleafPrefixList : thymol.thThymeleafPrefixList,
+    thDisabledList : thymol.thDisabledList,
     thThymeleafElementsList : thymol.thThymeleafElementsList,
+    thImportAttrList : thymol.thImportAttrList,
 
     thLocation : thymol.thLocation,
 
@@ -2603,8 +2739,11 @@ thymol = function() {
     objects : thymol.objects,
 
     jqSetup : jqSetup,
-    isClientSide : isClientSide,
+    reset: reset,
+    setup: setup,
     execute : execute,
+
+    isClientSide : isClientSide,
     updatePrefix : updatePrefix,
     init : init,
     ready : ready,
