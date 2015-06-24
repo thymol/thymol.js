@@ -69,10 +69,6 @@
         }
       }
     }
-    //		mapped = thymol.getMapped(result, thymol.extendedMapping);  // Historically extendedMapping has always been true in thymol.doExpression
-    //		if (mapped) {
-    //			result = mapped.trim();
-    //		}
     return result;
   };
 
@@ -691,10 +687,6 @@
     element.removeAttribute( thUrlAttr.name );
   };
 
-  thymol.processFragment = function( element, thUrlAttr, thAttrObj ) {
-    element.removeAttribute( thUrlAttr.name );
-  };
-
   thymol.getBoolean = function( param, element ) {
     if( param == null ) {
       return false;
@@ -739,7 +731,7 @@
     thCase = new thymol.ThAttr( "case", null, 275, thymol.thThymeleafPrefixList, thymol.prefix );
     thymol.addDialect( {
       prefix : thymol.prefix,
-      attributeProcessors : [
+      attributeProcessors : [                                                          
         { name : 'each', processor : thymol.processEach, precedence : 200 },          
         { name : 'switch', processor : thymol.processSwitch, precedence : 250 },
         { name : 'if', processor : thymol.processConditional, precedence : 300 },
@@ -756,7 +748,6 @@
         { name : 'styleappend', processor : thymol.processCSSAttr, precedence : 1100 },         
         { name : 'text', processor : thymol.processText, precedence : 1300 },
         { name : 'utext', processor : thymol.processText, precedence : 1400 },
-        { name : 'fragment', processor : thymol.processFragment, precedence : 1500 },
         { name : 'assert', processor : thymol.processAssert, precedence : 1550 },         
         { name : 'remove', processor : thymol.processRemove, precedence : 1600 }                              
       ]

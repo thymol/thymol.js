@@ -110,7 +110,7 @@ public class IssuesCases extends SeleniumCases {
 			"<div>\n" +
 			"<p>This is some text</p>\n" +
 			"<div th:include=\" this   ::frag\">...</div>\n" +
-			"<p>This is some text</p>\n" +
+			"<p th:fragment=\"frag\">This is some text</p>\n" +
 			"</div>\n" +
 			"\n";
 
@@ -182,6 +182,14 @@ public class IssuesCases extends SeleniumCases {
 			"\t\t<p><a href=\"index.html\">Back</a></p>\n" +
 			"\t\n";
 
+	String issue14Result = 
+			"\n" +
+			" Literal : Literal<br>\n" +
+			" Variable : Alex<br>\n" +
+			" Object : Alex<br>\n" +
+			" Object : Jim<br> \n" +
+			"\n\n";
+	
 	@Test
 	public void issue01() {
 		localise("issues/");
@@ -360,6 +368,13 @@ public class IssuesCases extends SeleniumCases {
 		else {
 			assertEquals(clean(issue13ResultThymeleaf), clean(result));
 		}		
+	}
+
+	@Test
+	public void issue14() {
+		localise("issues/", "" );
+		String result = getResult("issue14.html", ResultMode.HTML);
+		assertEquals(clean(issue14Result), clean(result));
 	}
 
 }
