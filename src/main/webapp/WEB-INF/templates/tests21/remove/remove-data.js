@@ -1,6 +1,3 @@
-var	thRoot="${thDeploy}";
-var	thPath="templates/tests21/remove";
-
 var	thDebug=true;
 var thShowNullOperands=true;
 

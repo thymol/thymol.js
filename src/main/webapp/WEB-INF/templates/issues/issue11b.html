@@ -6,8 +6,12 @@
 </head>
 <script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"></script>
 <script>
-	var thDebug = true;
-	var thDisable = [ "substituteby", "replace" ];
+thymol.ready(function () {
+  thymol.configurePreExecution( function() {
+  	thDebug = true;
+  	thDisable = [ "substituteby", "replace" ];
+  });
+});
 </script>
 <body>
 <div>

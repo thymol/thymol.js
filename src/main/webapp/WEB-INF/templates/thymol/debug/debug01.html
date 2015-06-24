@@ -2,23 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-<title>expression example 42</title>
+<title>params example 01</title>
 </head>
 <script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"></script>
-<script th:remove="all" type="text/javascript">
-thymol.ready(function () {
-  thVars = [        
-    ["size", 123]
-  ];
-  thDebug = true;       
-});                
-</script>
 <body>
-<p th:text="${size}">...</p>
+<p th:text="${euros}">...</p>
 </body>
 </html>
-<!--
-
-<p>123</p>
-
--->

@@ -1,5 +1,3 @@
-
-var	thRoot="/";
 var	thDebug=true;
 var thShowNullOperands=false;
 

@@ -7,6 +7,7 @@ import org.thymoljs.thymol.test.selenium.cases.AttrCases;
 import org.thymoljs.thymol.test.selenium.cases.BoolsCases;
 import org.thymoljs.thymol.test.selenium.cases.CalendarsCases;
 import org.thymoljs.thymol.test.selenium.cases.DatesCases;
+import org.thymoljs.thymol.test.selenium.cases.DebugCases;
 import org.thymoljs.thymol.test.selenium.cases.DomSelectorCases;
 import org.thymoljs.thymol.test.selenium.cases.EachCases;
 import org.thymoljs.thymol.test.selenium.cases.ExprCases;
@@ -55,6 +56,7 @@ import org.junit.runners.Suite;
 	BoolsCases.class,
 	CalendarsCases.class,
 	DatesCases.class,
+	DebugCases.class,
 	DomSelectorCases.class,                                                                                                                                                                                                                        
 	EachCases.class,                                                                                                                                                                                                                               
 	ExprCases.class,                                                                                                                                                                                                                               

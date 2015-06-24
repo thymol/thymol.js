@@ -1205,7 +1205,21 @@ var receipt = {
 		
 		List<String> imagesPaths = Arrays.asList( new String[] { "path_image_one", "path_image_two" } );
 		ctx.setVariable( "images_paths", imagesPaths );
+	
+//              ["pvar", [{name: 'Alex', role: 'User'}, {name: 'Jim', role: 'Dev'}] ]
 		
+		Map<String,Object> pv1 = new HashMap<String,Object>();
+		pv1.put("name", "Alex");
+		pv1.put("role", "User");
+		Map<String,Object> pv2 = new HashMap<String,Object>();
+		pv2.put("name", "Jim");
+		pv2.put("role", "Dev");
+
+		List<Map<String,Object>> pvar = new LinkedList<Map<String,Object>>();
+		pvar.add(pv1);
+		pvar.add(pv2);
+		ctx.setVariable( "pvar", pvar );
+
 	}
 	
 	public static class JunkObject {

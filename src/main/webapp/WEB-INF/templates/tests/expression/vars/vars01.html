@@ -6,11 +6,13 @@
 </head>
 <script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js"></script>
 <script th:remove="all" type="text/javascript">
-var	thVars = [        
-     	   	  	["a",	"Letter A" ],
-       	   	  	["b",	"Letter B" ]
-       ];
-var thDebug = true;       
+thymol.ready(function () {
+	thVars = [        
+		["a", "Letter A" ],
+		["b", "Letter B" ]
+	];
+	thDebug = true;       
+});                
 </script>
 <body>
 <p th:text="${#vars.a}">...</p>

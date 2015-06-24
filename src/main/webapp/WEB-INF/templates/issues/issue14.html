@@ -1,0 +1,18 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-3.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+	<head>
+		<meta charset="utf-8" /> 
+	    <script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="issue14-data.js"></script>		
+	</head>
+	<body>
+		<th:block th:fragment="test(vv)">
+			<span th:remove="tag" th:text="${vv}"></span>
+		</th:block>
+		Literal : <span th:replace="::test(vv='Literal')">literal</span><br/>
+		Variable : <span th:replace="::test(vv=${pvar[0].name})">variable</span><br/>
+		<th:block th:each="person : ${pvar}">
+ 			Object : <span th:replace="::test(vv=${person.name})">variable</span><br/>
+<!--		    Object : <span th:text="${person.name}">variable</span><br/> -->
+		</th:block>		
+	</body>
+</html>

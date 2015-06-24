@@ -79,8 +79,8 @@ thymol.makeContext = function( contextNameParam, varAccessorParam ) {
               instanceValue = context[ instanceName ];
               if( instanceValue === null || typeof instanceValue === "undefined" ) {
                 isTaken = false;
-                for( i = 0, iLimit = varStore.length; i < iLimit; i++ ) {
-                  if( instanceName === varStore[ i ][ 0 ] ) {
+                for( i = 0, iLimit = context.varStore.length; i < iLimit; i++ ) {
+                  if( instanceName === context.varStore[ i ][ 0 ] ) {
                     isTaken = true;
                     break;
                   }
@@ -124,11 +124,11 @@ thymol.makeContext = function( contextNameParam, varAccessorParam ) {
     var entry = [];
     entry[ 0 ] = name;
     entry[ 1 ] = value;
-    varStore.push( entry );
+    context.varStore.push( entry );
   };
 
   context.serialise = function() {
-    varStore = [];
+    context.varStore = [];
     var serialised = "[", key = null, value, cn, view, name, i, iLimit;
     for( key in context ) {
       if( key ) {
@@ -149,9 +149,9 @@ thymol.makeContext = function( contextNameParam, varAccessorParam ) {
         }
       }
     }
-    for( i = 0, iLimit = varStore.length; i < iLimit; i++ ) {
-      name = varStore[ i ][ 0 ];
-      view = varStore[ i ][ 1 ];
+    for( i = 0, iLimit = context.varStore.length; i < iLimit; i++ ) {
+      name = context.varStore[ i ][ 0 ];
+      view = context.varStore[ i ][ 1 ];
       serialised = serialised + ",[";
       serialised = serialised + "\"" + name + "\"";
       serialised = serialised + ",";
@@ -249,17 +249,17 @@ thymol.makeContext = function( contextNameParam, varAccessorParam ) {
 
   context.createJSONVariable = function( initial ) {
     var current = initial.trim(), parts = " ", substIndex, token, re, vName, obj, result;
-    substIndex = this.varAccessor.length() + 1;
+    substIndex = context.varAccessor.length() + 1;
     while( parts ) {
       parts = current.match( jsonDeclExpr );
       if( parts && parts.length > 2 ) {
         token = parts[ 2 ];
         token = token.replace( /[\']/g, "[\']" ).replace( /[$]/g, "[$]" );
         re = new RegExp( token );
-        vName = this.varNamePrefix + substIndex + "]";
+        vName = context.varNamePrefix + substIndex + "]";
         obj = new Object();
         obj.name = parts[ 2 ].substring( 1 );
-        this.varAccessor.set( substIndex, obj );
+        context.varAccessor.set( substIndex, obj );
         substIndex = substIndex + 1;
         current = current.replace( re, "'" + vName + "'", "g" );
       }
@@ -273,7 +273,7 @@ thymol.makeContext = function( contextNameParam, varAccessorParam ) {
   };
 
   context.resolveJSONReferences = function() {
-    var key = null, param, prop = null, val, ref, subst, isReq = ( "request" === this.contextName );
+    var key = null, param, prop = null, val, ref, subst, isReq = ( "request" === context.contextName );
     for( key in context ) {
       if( key ) {
         param = context[ key ];
@@ -294,11 +294,11 @@ thymol.makeContext = function( contextNameParam, varAccessorParam ) {
                   if( prop ) {
                     val = param[ prop ];
                     if( typeof val === "string" ) {
-                      if( val.indexOf( this.varNamePrefix ) == 0 ) {
+                      if( val.indexOf( context.varNamePrefix ) == 0 ) {
                         subst = null;
                         if( prop.match( /\d*/ ) ) { // Array index!
-                          ref = val.substring( this.varNamePrefix.length, val.length - 1 );
-                          ref = this.varAccessor.get( ref );
+                          ref = val.substring( context.varNamePrefix.length, val.length - 1 );
+                          ref = context.varAccessor.get( ref );
                           subst = context[ ref.name ];
                         }
                         else {

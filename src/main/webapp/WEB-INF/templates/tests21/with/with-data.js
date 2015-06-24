@@ -1,7 +1,6 @@
 
-var	thDebug=true;
-var thAllowNullText=false;
+var	thDebug = true;
 
 var	thVars = [
 	    ["user", 		"#{ 'name': 'Jack Melon', 'role': 'finance' }" ]
-	   ];
+];
