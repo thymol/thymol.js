@@ -1,6 +1,6 @@
 {
   "name": "thymol-node",
-  "version": "2.0.1-pre.1",
+  "version": "2.0.1-pre.2",
   "description": "The Thymol Thymeleaf syntax template engine for nodejs",
   "main": "thymol-node.js",
   "dependencies": {
