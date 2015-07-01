@@ -87,7 +87,7 @@ public class ExpressionDerivedCases extends SeleniumCases {
 	        "<p>254123154123124</p>\n" +
 	        "<p>0.124</p>\n" +
 	        "<p>0.12435412311231231</p>\n" +
-	        "<p>254123154123124.12</p>\n" +
+	        "<p>254123154123124.13</p>\n" +
 	        "\n" +
 			"\n\n";	
 
