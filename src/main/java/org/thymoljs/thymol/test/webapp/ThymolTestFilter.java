@@ -1220,6 +1220,9 @@ var receipt = {
 		pvar.add(pv2);
 		ctx.setVariable( "pvar", pvar );
 
+		ctx.setVariable( "tplName", "Fish" );
+		ctx.setVariable( "tplName2", "Fowl" );
+
 	}
 	
 	public static class JunkObject {

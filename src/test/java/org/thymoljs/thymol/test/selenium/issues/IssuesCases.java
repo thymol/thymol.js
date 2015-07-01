@@ -190,6 +190,13 @@ public class IssuesCases extends SeleniumCases {
 			" Object : Jim<br> \n" +
 			"\n\n";
 	
+	String issue15Result = 
+			"\n" +
+			"<p><span>This is an example of fish</span></p>\n" +
+			"<p><span>This is an example of fowl</span></p>\n" +
+			" \n" +
+			"\n\n";
+	
 	@Test
 	public void issue01() {
 		localise("issues/");
@@ -368,13 +375,35 @@ public class IssuesCases extends SeleniumCases {
 		else {
 			assertEquals(clean(issue13ResultThymeleaf), clean(result));
 		}		
+		localise("issues/", ".html" );
 	}
 
 	@Test
 	public void issue14() {
-		localise("issues/", "" );
+		localise("issues/", ".html" );
 		String result = getResult("issue14.html", ResultMode.HTML);
 		assertEquals(clean(issue14Result), clean(result));
+	}
+
+	@Test
+	public void issue15() {
+		localise("issues/", ".html" );
+		String result = getResult("issue15.html", ResultMode.HTML);
+		assertEquals(clean(issue15Result), clean(result));
+	}
+
+	@Test
+	public void issue15a() {
+		localise("issues/", ".html" );
+		String result = getResult("issue15a.html", ResultMode.HTML);
+		assertEquals(clean(issue15Result), clean(result));
+	}
+
+	@Test
+	public void issue15b() {
+		localise("issues/", ".html" );
+		String result = getResult("issue15b.html", ResultMode.HTML);
+		assertEquals(clean(issue15Result), clean(result));
 	}
 
 }

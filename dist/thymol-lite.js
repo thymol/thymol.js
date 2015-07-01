@@ -1,6 +1,6 @@
 /*-------------------- Thymol - the flavour of Thymeleaf --------------------*
 
-   Thymol version 2.0.1-pre.2 Copyright (C) 2012-2015 James J. Benson
+   Thymol version 2.0.1-pre.3 Copyright (C) 2012-2015 James J. Benson
    jjbenson .AT. users.sf.net (http://www.thymoljs.org/)
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@
  *---------------------------------------------------------------------------*/
 
 thymol = function() {
-    thymol.thVersion = "2.0.1-pre.2";
+    thymol.thVersion = "2.0.1-pre.3";
     thymol.thReleaseDate = "not yet!";
     thymol.thURL = "http://www.thymoljs.org";
     thymol.thAltURL = "http://www.thymeleaf.org";
@@ -28,7 +28,7 @@ thymol = function() {
     thymol.thThymeleafElementsList = [];
     thymol.objects = {};
     thymol.varParExpr = /([^(]*)\s*[(]([^)]*?)[)]/;
-    var textFuncSynonym = "~~~~", varRefExpr = /([$#]{.*?})/, literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/, startParserLevelCommentExpr = /^\s*\/\*\s*$/, endParserLevelCommentExpr = /^\s*\*\/\s*$/, startParserLevelCommentExpr2 = /^\/\*[^\/].*/, endParserLevelCommentExpr2 = /.*[^\/]\*\/$/, prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//, varExpr3 = /[\$\*#@]{1}\{(.*)\}$/, nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/, numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/, domSelectExpr = /([\/]{1,2})?([A-Za-z0-9_\-]*(?:[\(][\)])?)?([^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*(?:[\.\/#]?[^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*)*)?([\[][^\]]*?[\]])?/, litSubstExpr = /\.*?([\|][^\|]*?[\|])\.*?/;
+    var textFuncSynonym = "~~~~", varRefExpr = /([$#]{.*?})/, literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/, startParserLevelCommentExpr = /^\s*\/\*\s*$/, endParserLevelCommentExpr = /^\s*\*\/\s*$/, startParserLevelCommentExpr2 = /^\/\*[^\/].*/, endParserLevelCommentExpr2 = /.*[^\/]\*\/$/, prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//, varExpr3 = /[^\$\*#@]{1}\{(.*)\}$/, nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/, numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/, domSelectExpr = /([\/]{1,2})?([A-Za-z0-9_\-]*(?:[\(][\)])?)?([^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*(?:[\.\/#]?[^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*)*)?([\[][^\]]*?[\]])?/, litSubstExpr = /\.*?([\|][^\|]*?[\|])\.*?/;
     function Thymol() {}
     function isClientSide() {
         if (typeof thymol.isServerSide !== "undefined" && !!thymol.isServerSide()) {
@@ -827,6 +827,15 @@ thymol = function() {
                 }
             }
         }
+        var splits = result.split("+");
+        if (splits.length > 1) {
+            var line = "";
+            for (var i = 0, iLimit = splits.length; i < iLimit; i++) {
+                argValue = thymol.ThUtils.unQuote(splits[i]);
+                line += argValue;
+            }
+            result = line;
+        }
         return result;
     }
     function getWith(element, content) {
@@ -1512,6 +1521,14 @@ thymol = function() {
                             }
                         }
                     }
+                    var tfn = thymol.substitute(fragmentName, element);
+                    if (!!tfn) {
+                        fragmentName = tfn;
+                    }
+                    tfn = thymol.substitute(filePart, element);
+                    if (!!tfn) {
+                        filePart = tfn;
+                    }
                     content = Thymol.prototype.getFromCache(element, filePart, fragmentName);
                     if (!!content) {
                         importNode = Thymol.prototype.getImportNode(element, filePart, fragmentName, fragmentPart, argsCount, content, true);
@@ -1668,15 +1685,17 @@ thymol = function() {
             return matched;
         },
         getDOMSelection: function(initial, content) {
-            var spec = initial, result = null, scope = "", query = new Array(), parts = "", innr = thymol.ThUtils.unBracket(spec), i, iLimit, j, jLimit, k, kLimit, m, mLimit, token, indx, saved, indxed, start, selection, descend, subQuery, exprFrags, classSpecs, qTerms, subSelect, partial, html, newNode;
+            var junk = false, spec = initial, result = null, scope = "", query = new Array(), parts = "", innr = thymol.ThUtils.unBracket(spec), i, iLimit, j, jLimit, k, kLimit, m, mLimit, token, indx, saved, indxed, start, selection, descend, subQuery, exprFrags, classSpecs, qTerms, subSelect, partial, html, newNode;
             if (spec != innr && innr.charAt(innr.length - 1) == "]") {
                 spec = innr;
             }
-            while (spec != "") {
+            while (spec != "" && !junk) {
+                junk = true;
                 parts = spec.match(domSelectExpr);
                 if (parts != null && parts.length > 1) {
                     for (i = 1, iLimit = parts.length; i < iLimit; i++) {
-                        if (parts[i] != null) {
+                        if (!!parts[i]) {
+                            junk = false;
                             token = parts[i];
                             indx = null;
                             innr = thymol.ThUtils.unBracket(token);
