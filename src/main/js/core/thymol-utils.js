@@ -348,7 +348,7 @@ thymol.ThUtils = ( function() {
     // otherwise, globalEval is `undefined` since nothing is returned
   })();  
 
-  function loadScript( file, context ) {
+  function loadScript( file ) {
     var script = thymol.Thymol.prototype.getFilePath( file );
     var status = "";    
     var jqxhr = $.ajax( {

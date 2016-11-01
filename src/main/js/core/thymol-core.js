@@ -363,7 +363,7 @@ thymol = function() {
         if( !!parameters ) {
           var splits = parameters.split( "," );
           for( var j = 0, jLimit = splits.length; j < jLimit; j++ ) {
-            thymol.ThUtils.loadScript( splits[ j ], this );
+            thymol.ThUtils.loadScript( splits[ j ] );
           }
         }
       }      
