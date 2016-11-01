@@ -2,12 +2,22 @@ package org.thymoljs.thymol.test.selenium.cases;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
-import org.junit.Test;
+
+import com.cedarsoftware.util.io.JsonObject;
 
 public class EachCases extends SeleniumCases {
 
+	Context eachBaseContext = new Context( "tests/each/" );
+	
 	String each01Result =
 			"\n" +
 			"<table>\n" +
@@ -200,37 +210,73 @@ public class EachCases extends SeleniumCases {
 			"  <span>Cantabria</span> : <span>Santander</span>\n" +
 			"</div>";
  	
+	private Context getEachContext() {
+
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+				
+		List< Object > products = new LinkedList< Object >();
+		Map< String, Object > product1Var = new LinkedHashMap< String, Object >();
+		product1Var.put("name", "Lettuce");
+		product1Var.put("price", "12");
+		products.add(product1Var);
+		Map< String, Object > product2Var = new LinkedHashMap< String, Object >();
+		product2Var.put("name", "Apricot");
+		product2Var.put("price", "8");
+		products.add(product2Var);
+		Map< String, Object > product3Var = new LinkedHashMap< String, Object >();
+		product3Var.put("name", "Thyme");
+		product3Var.put("price", "1.23");
+		products.add(product3Var);
+		Map< String, Object > product4Var = new LinkedHashMap< String, Object >();
+		product4Var.put("name", "Carrot");
+		product4Var.put("price", "2");
+		products.add(product4Var);
+		variables.put( "products", products );		
+		
+		Map< String, String > capitals = new LinkedHashMap< String, String >();
+		capitals.put("Galicia", "Santiago de Compostela" );
+		capitals.put("Asturias", "Oviedo" );
+		capitals.put("Cantabria", "Santander" );
+		variables.put( "capitals", capitals );
+		
+		
+		return eachBaseContext.copy().setVariables( variables );
+
+	}
+	
+	private Context eachContext = getEachContext();
+	
 	@Test
 	public void each01() {
-		localise("tests/each/");
+		localise( eachContext );
 		String result = getResult( "each01.html", ResultMode.HTML );
 		assertEquals( clean(each01Result), clean(result) );
 	}
 
 	@Test
 	public void each02() {
-		localise("tests/each/");
+		localise( eachContext );
 		String result = getResult( "each02.html", ResultMode.HTML );
 		assertEquals( clean(each02Result), clean(result) );
 	}
 
 	@Test
 	public void each03() {
-		localise("tests/each/");
+		localise( eachContext );
 		String result = getResult( "each03.html", ResultMode.HTML );
 		assertEquals( clean(each03Result), clean(result) );
 	}
 
 	@Test
 	public void each04() {
-		localise("tests/each/");
+		localise( eachContext );
 		String result = getResult( "each04.html", ResultMode.HTML );
 		assertEquals( clean(each04Result), clean(result) );
 	}
 
 	@Test
 	public void each05() {
-		localise("tests/each/");
+		localise( eachContext );
 		String result = getResult( "each05.html", ResultMode.HTML );
 		assertEquals( clean(each05Result), clean(result) );
 	}

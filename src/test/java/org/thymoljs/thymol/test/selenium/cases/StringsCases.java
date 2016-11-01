@@ -1,12 +1,22 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.junit.Test;
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
-import org.junit.Test;
+
+import com.cedarsoftware.util.io.JsonObject;
 
 public class StringsCases extends SeleniumCases {
+	
+	Context stringsBaseContext = new Context( "thymol/strings/" );
 	
 	String strings01Result =
 			"\n" +
@@ -467,129 +477,149 @@ public class StringsCases extends SeleniumCases {
 			"\t\t<p>Set of strings: <span id=\"sort\">fred,a?rose?by?any?other?name?would?n'ere?smell?as?sweet,the~quick#brown@fox:jumps:@~over#the#lazy#dog,~~~every:good@boy~deserves#favour~~~</span></p>\n" +
 			"\t\n\n\n\n";
 			
-/* 
-	String xxx =
-			"\n" +
-			"\t\t<p></p>\n" +
-			"\t\n" +
-			"\n\n";		
-*/
+	
+	private Context getStrings01Context() {
+		
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+		
+		String p1 = "Hello world!";
+		String p2 = "Bonjour tout le monde!";
+		String p3 = "Hola mundo!";
+		String p4 = "Kaixo mundua!";
+		variables.put( "p1", p1 );
+		variables.put( "p2", p2 );
+		variables.put( "p3", p3 );
+		variables.put( "p4", p4 );
+		String[] pArray = {p1,p2,p3,p4};
+		Arrays.sort( pArray );
+		variables.put( "pArray", pArray );
+		List<String> pList = Arrays.asList( pArray );
+		variables.put( "pList", pList );
+		Set<String> pSet = new TreeSet<String>( pList );
+		variables.put( "pSet", pSet );
+
+	    return stringsBaseContext.copy().setVariables( variables );
+		
+	}
+	
+	private Context strings01Context = getStrings01Context();
+	
 
 	@Test
 	public void strings01() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings01.html", ResultMode.HTML );
 		assertEquals( clean( strings01Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings02() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings02.html", ResultMode.HTML );
 		assertEquals( clean( strings02Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings03() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings03.html", ResultMode.HTML );
 		assertEquals( clean( strings03Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings04() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings04.html", ResultMode.HTML );
 		assertEquals( clean( strings04Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings05() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings05.html", ResultMode.HTML );
 		assertEquals( clean( strings05Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings06() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings06.html", ResultMode.HTML );
 		assertEquals( clean( strings06Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings07() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings07.html", ResultMode.HTML );
 		assertEquals( clean( strings07Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings08() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings08.html", ResultMode.HTML );
 		assertEquals( clean( strings08Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings09() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings09.html", ResultMode.HTML );
 		assertEquals( clean( strings09Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings10() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings10.html", ResultMode.HTML );
 		assertEquals( clean( strings10Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings11() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings11.html", ResultMode.HTML );
 		assertEquals( clean( strings11Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings12() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings12.html", ResultMode.HTML );
 		assertEquals( clean( strings12Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings13() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings13.html", ResultMode.HTML );
 		assertEquals( clean( strings13Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings14() {
-		localise( "thymol/strings/" );
+		localise( stringsBaseContext );
 		String result = getResult( "strings14.html", ResultMode.HTML );
 		assertEquals( clean( strings14Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings15() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings15.html", ResultMode.HTML );
 		assertEquals( clean( strings15Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings16() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings16.html", ResultMode.HTML );
 		assertEquals( clean( strings16Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings17() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings17.html", ResultMode.HTML );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( strings17ResultThymol ), clean( result ) );
@@ -601,126 +631,272 @@ public class StringsCases extends SeleniumCases {
 
 	@Test
 	public void strings18() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings18.html", ResultMode.HTML );
 		assertEquals( clean( strings18Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings19() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings19.html", ResultMode.HTML );
 		assertEquals( clean( strings19Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings19a() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings19a.html", ResultMode.HTML );
 		assertEquals( clean( strings19aResult ), clean( result ) );
 	}
 
 	@Test
 	public void strings20() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings20.html", ResultMode.HTML );
 		assertEquals( clean( strings20Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings20a() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings20a.html", ResultMode.HTML );
 		assertEquals( clean( strings20aResult ), clean( result ) );
 	}
 
 	@Test
 	public void strings21() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings21.html", ResultMode.HTML );
 		assertEquals( clean( strings21Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings22() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings22.html", ResultMode.HTML );
 		assertEquals( clean( strings22Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings23() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings23.html", ResultMode.HTML );
 		assertEquals( clean( strings23Result ), clean( result ) );
 	}
 
+	private Context getStrings24Context() {
+		
+		JsonObject< String, Object > variables24 = new JsonObject< String, Object >();
+		
+		String b1 = "o";
+		String b2 = " ";
+		String b3 = "X";
+		String[] bArray = {b1,b2,b3};
+		variables24.put( "bArray", bArray );
+		
+		String a1 = "O";
+		String a2 = "";
+		String a3 = "!";
+		String[] aArray = {a1,a2,a3};
+		variables24.put( "aArray", aArray );
+
+		variables24.putAll( strings01Context.getVariables() );
+		
+	    return stringsBaseContext.copy().setVariables( variables24 );
+				
+	}
+	
 	@Test
 	public void strings24() {
-		localise( "thymol/strings/" );
+		localise( getStrings24Context() );
 		String result = getResult( "strings24.html", ResultMode.HTML );
 		assertEquals( clean( strings24Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings25() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings25.html", ResultMode.HTML );
 		assertEquals( clean( strings25Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings26() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings26.html", ResultMode.HTML );
 		assertEquals( clean( strings26Result ), clean( result ) );
 	}
 
+	private Context getStrings27Context() {
+		
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+		
+		String ps1 = "Bonjour tout le monde!   ";
+		String ps2 = "   Hello world!  ";
+		String ps3 = "    Hola mundo!";
+		String ps4 = "\tKaixo mundua!\t\n";
+		String[] psArray = {ps1,ps2,ps3,ps4};
+//		psArray = psArray.sort();
+	    variables.put("ps1", ps1 );
+	    variables.put("ps2", ps2 );
+	    variables.put("ps3", ps3 );
+	    variables.put("ps4", ps4 );
+	    variables.put("psArray", psArray );
+
+		List<String> psList = Arrays.asList( psArray );
+		variables.put( "psList", psList );
+		Set<String> psSet = new TreeSet<String>( psList );
+		variables.put( "psSet", psSet );
+
+		
+	    return stringsBaseContext.copy().setVariables( variables );
+				
+	}
+	
 	@Test
 	public void strings27() {
-		localise( "thymol/strings/" );
+		localise( getStrings27Context() );
 		String result = getResult( "strings27.html", ResultMode.HTML );
 		assertEquals( clean( strings27Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings28() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings28.html", ResultMode.HTML );
 		assertEquals( clean( strings28Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings29() {
-		localise( "thymol/strings/" );
+		localise( strings01Context );
 		String result = getResult( "strings29.html", ResultMode.HTML );
 		assertEquals( clean( strings29Result ), clean( result ) );
 	}
 
+	private Context getStrings30Context() {
+		
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+		
+		String s1 = "the quick brown fox jumps	over the\nlazy dog";
+		String s2 = "\t\tevery\tgood\tboy\tdeserves\tfavour\t\t";
+//		char cr = 13;
+//	    var s3 = "\na\n\"rose\"\nby\nany\n'other'\nname would n'ere smell\vas\fsweet\r"; // Selenium translates the /r to /n and so tests fail
+//	    var s3 = "\na\n\"rose\"\nby\nany\n'other'\nname would n'ere smell\vas\fsweet\n";
+//		String s3 = "\na\n\"rose\"\nby\nany\n'other'\nname would n'ere smell" + "\u000B" + "as\fsweet" + cr;
+		String s3 = "\na\n\"rose\"\nby\nany\n'other'\nname would n'ere smell" + "\u000B" + "as\fsweet\n";
+	    variables.put("s1", s1 );
+	    variables.put("s2", s2 );
+	    variables.put("s3", s3 );
+		String[] sArray = {s1,s2,s3};
+		Arrays.sort( sArray );
+	    variables.put("sArray", sArray );
+
+		List<String> sList = Arrays.asList( sArray );
+		variables.put( "sList", sList );
+		Set<String> sSet = new TreeSet<String>( sList );
+		variables.put( "sSet", sSet );
+		
+	    String s4 = "silly m\\u009";
+	    String s5 = "someone needs a\\";
+	    String s6 = "silly M\\u09ngo and Midge";
+	    variables.put( "s4", s4 );
+	    variables.put( "s5", s5 );
+	    variables.put( "s6", s6 );
+		
+	    return stringsBaseContext.copy().setVariables( variables );
+				
+	}
+	
+	private Context strings30Context = getStrings30Context();
+	
 	@Test
 	public void strings30() {
-		localise( "thymol/strings/" );
+		localise( strings30Context );
 		String result = getResult( "strings30.html", ResultMode.HTML );
 		assertEquals( clean( strings30Result ), clean( result ) );
 	}
 
+	private Context getStrings31Context() {
+		
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+		
+		String sa1 = "the~quick#brown@fox:jumps:@~over#the#lazy#dog";
+		String sa2 = "~~~every:good@boy~deserves#favour~~~";
+		String sa3 = "a?rose?by?any?other?name?would?n'ere?smell?as?sweet";
+	    variables.put("sa1", sa1 );
+	    variables.put("sa2", sa2 );
+	    variables.put("sa3", sa3 );
+		String[] saArray = {sa1,sa2,sa3};
+		Arrays.sort( saArray );
+	    variables.put("saArray", saArray );
+
+		List<String> saList = Arrays.asList( saArray );
+		variables.put( "saList", saList );
+		Set<String> saSet = new TreeSet<String>( saList );
+		variables.put( "saSet", saSet );
+		
+		String[] sa2Array = {sa1,null,"",sa2,"",null,sa3};
+	    variables.put("sa2Array", sa2Array );
+
+		String[] sa3Array = {sa1,"",sa2,"",sa3}; // Don't include the nulls Sets don't like nulls
+//		Arrays.sort( sa3Array );
+		List<String> sa3List = Arrays.asList( sa3Array );
+		Set<String> sa2Set = new TreeSet<String>( sa3List );
+	    variables.put("sa2Set", sa2Set );		
+		
+	    return stringsBaseContext.copy().setVariables( variables );
+				
+	}
+	
+	private Context strings31Context = getStrings31Context();
+	
 	@Test
 	public void strings31() {
-		localise( "thymol/strings/" );
+		localise( strings31Context );
 		String result = getResult( "strings31.html", ResultMode.HTML );
 		assertEquals( clean( strings31Result ), clean( result ) );
 	}
 
+	
+	private Context getStrings32Context() {
+		
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+		
+	    String xs1 = "<a>b<c></a>";
+		variables.put( "xs1", xs1 );		
+	    String xs2 = "Be consistent when you use apostrophes after words that end in \"s.</b><b>\"</b> When someone's name ends with an \"s,\" it is acceptable to use an apostrophe without an \"s\" to show ownership, but linguists with the Chicago Manual of Style, along with others, prefer to add an \"s\" after the apostrophe.";
+	    variables.put( "xs2", xs2 );    
+	    String xs3 = "If the family's last name ends in \"s,\" make it plural before adding an apostrophe. For instance, if you wanted to discuss the Williams family, they would become \"the Williamses\" in a plural sense. If you wanted to reference their dog, you'd say \"the Williamses' dog.\" If the last name seems awkward to say that way, sidestep the issue by saying \"the Williams family\" and \"the Williams family's dog.\"";
+	    variables.put( "xs3", xs3 );
+	    String xs4 = "<b class=\"whb\">Use apostrophes in contractions.</b> Sometimes, especially in <a href=\"/Avoid-Colloquial-(Informal)-Writing\" title=\"Avoid Colloquial (Informal) Writing\">informal writing</a>, apostrophes are used to indicate one or more missing letters. For example, the word \"don't\" is short for \"do not\"; other examples include \"isn't,\" \"wouldn't,\" and \"can't.\" Contractions can also be made with the verbs \"is,\" \"has,\" and \"have.\" For example, we can write \"She's going to school\" instead of \"She is going to school\"; or \"He's lost the game\" instead of \"He has lost the game.\"<div class=\"clearall\"></div>";
+	    variables.put( "xs4", xs4 );
+		String[] xsArray = {xs1,xs2,xs3,xs4};
+		Arrays.sort( xsArray );
+	    variables.put("xsArray", xsArray );
+		List<String> xsList = Arrays.asList( xsArray );
+		variables.put( "xsList", xsList );
+		Set<String> xsSet = new TreeSet<String>( xsList );
+		variables.put( "xsSet", xsSet );
+
+	    return stringsBaseContext.copy().setVariables( variables );
+		
+	}
+	
+	private Context strings32Context = getStrings32Context();
+	
+	
 	@Test
 	public void strings32() {
-		localise( "thymol/strings/" );
+		localise( strings32Context );
 		String result = getResult( "strings32.html", ResultMode.HTML );
 		assertEquals( clean( strings32Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings32a() {
-		localise( "thymol/strings/" );
+		localise( strings32Context );
 		if( expectThymolResult() ) {
 			String result = getResult( "strings32a.html", ResultMode.HTML );
 			assertEquals( clean( strings32aResult ), clean( result ) );
@@ -729,56 +905,73 @@ public class StringsCases extends SeleniumCases {
 
 	@Test
 	public void strings33() {
-		localise( "thymol/strings/" );
+		localise( strings32Context );
 		String result = getResult( "strings33.html", ResultMode.HTML );
 		assertEquals( clean( strings33Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings33a() {
-		localise( "thymol/strings/" );
+		localise( strings30Context );
 		String result = getResult( "strings33a.html", ResultMode.HTML );
 		assertEquals( clean( strings33aResult ), clean( result ) );
 	}
 
 	@Test
 	public void strings34() {
-		localise( "thymol/strings/" );
+		localise( strings30Context );
 		String result = getResult( "strings34.html", ResultMode.HTML );
 		assertEquals( clean( strings34Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings34a() {
-		localise( "thymol/strings/" );
+		localise( strings30Context );
 		String result = getResult( "strings34a.html", ResultMode.HTML );
 		assertEquals( clean(strings34aResult), clean(result) );			
 	}
 
 	@Test
 	public void strings35() {
-		localise( "thymol/strings/" );
+		localise( strings32Context );
 		String result = getResult( "strings35.html", ResultMode.HTML );
 		assertEquals( clean( strings35Result ), clean( result ) );
 	}
 
 	@Test
 	public void strings35a() {
-		localise( "thymol/strings/" );
+		localise( strings30Context );
 		String result = getResult( "strings35a.html", ResultMode.HTML );
 		assertEquals( clean( strings35aResult ), clean( result ) );
 	}
 
+// strings-data-2	
+	
 	@Test
 	public void strings35b() {
-		localise( "thymol/strings/" );
+		localise( strings30Context );
 		String result = getResult( "strings35b.html", ResultMode.HTML );
 		assertEquals( clean( strings35aResult ), clean( result ) );
 	}
 
+	private Context getStrings37Context() {
+			
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+		
+		String target = "<stuff>hello world!</stuff>";
+		String[] before = {"&"," "};
+		String[] after = {"%26","+"};
+		variables.put( "target", target );
+		variables.put( "before", before );
+		variables.put( "after", after );
+
+		return stringsBaseContext.copy().setVariables( variables );
+		
+	}
+	
 	@Test
 	public void strings37() {
-		localise( "thymol/strings/" );
+		localise( getStrings37Context() );
 		String result;
 		if( expectNodeResult() ) {
 			result = getResult( "strings37-node.html", ResultMode.HTML );			
@@ -791,7 +984,7 @@ public class StringsCases extends SeleniumCases {
 
 	@Test
 	public void strings38() {
-		localise( "thymol/strings/" );
+		localise( strings31Context );
 		String result = getResult( "strings38.html", ResultMode.HTML );
 		assertEquals( clean( strings38Result ), clean( result ) );
 	}

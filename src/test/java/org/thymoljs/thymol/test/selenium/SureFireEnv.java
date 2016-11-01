@@ -1,42 +1,32 @@
 package org.thymoljs.thymol.test.selenium;
 
-import java.util.Locale;
+import org.thymoljs.thymol.test.context.Context;
 
 
 public class SureFireEnv implements URIGetter {
 	
-	private String path = "";
-
+	private static final String BASE_URI = "target/test-classes/templates/";
+	
+	Context context = null;
+	
 	public SureFireEnv() {
 		super();
 	}
 
 	@Override
-	public void localise(String path) {
-		this.path = path;
-	}
-	
-	@Override
-	public void localise(String path, Locale locale) {
-		this.path = path;
-	}
-	
-	@Override
-	public void localise(String path, String suffix) {
-		this.path = path;
-	}
-	
-	@Override
-	public void localise(String path, String suffix, Locale locale) {		
-		this.path = path;
-	}
+	public void localise( Context contextValue ) {
+		this.context = contextValue;
+	}	
 	
 	
 	@Override
-	public String getURI(String junk) {
-		StringBuilder sb = new StringBuilder("target/test-classes/templates/");
-		sb.append(this.path);
+	public String getURI(String relative ) {
+		StringBuffer sb = new StringBuffer( BASE_URI );
+		if( context != null ) {
+			sb.append( context.getPath() );
+		}
 //		sb.append('/');
+		sb.append( relative );
 		String uri = makeURI( sb.toString() );
 		return uri;
 	}
@@ -49,12 +39,12 @@ public class SureFireEnv implements URIGetter {
 		String userdir = System.getProperty( "user.dir" );
 		userdir = userdir.replace( '\\', '/' );
 		if( userdir.endsWith( "/" ) ) {
-			return sb.append( '/' ).append( userdir ).append( pathname ).toString();
+			sb.append( '/' ).append( userdir );
 		}
 		else {
-//			return sb.append( '/' ).append( userdir ).append( '/' ).append( pathname ).toString();
-			return sb.append( userdir ).append( '/' ).append( pathname ).toString();
+			sb.append( userdir ).append( '/' );
 		}
+		return sb.append( pathname ).toString();
 	}
 
 }

@@ -1,21 +1,34 @@
 package org.thymoljs.thymol.test.selenium.issues;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import org.junit.Test;
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import com.cedarsoftware.util.io.JsonObject;
+
 public class IssuesCases extends SeleniumCases {
+	
+	Context issuesBaseContext = new Context( "issues/" );
 
 	String issue01Result = 
 			"\n" +
 			"<table>\n" +
 			"<tbody>\n" +
 			"<tr>\n" +
-			"<td style=\"padding: 0px 21px 0px 21px;\" valign=\"center\" align=\"right\">\n" +
+			"<td style=\"padding: 0px 21px 0px 21px;\" valign=\"middle\" align=\"right\">\n" +
 			"<span>Card Issue No.</span>\n" +
 			"<span>01</span>\n" +
 			"</td>\n" +
@@ -181,7 +194,7 @@ public class IssuesCases extends SeleniumCases {
 			"\t\t</div>\n" +
 			"\t\t<p><a href=\"index.html\">Back</a></p>\n" +
 			"\t\n";
-
+	
 	String issue14Result = 
 			"\n" +
 			" Literal : Literal<br>\n" +
@@ -197,16 +210,56 @@ public class IssuesCases extends SeleniumCases {
 			" \n" +
 			"\n\n";
 	
+	
+	public Context getIssue01Context() {
+		
+		JsonObject< String, Object > variables = new JsonObject<String,Object>();
+
+		Map<String,Object> details1 = new HashMap<String,Object>();
+		details1.put("key", "PaymentDetailsMaskedAccount");
+		details1.put("label", "Account");
+		details1.put("value", "1234");
+		Map<String,Object> details2 = new HashMap<String,Object>();
+		details2.put("key", "PaymentDetailsSource");
+		details2.put("label", "Entry Mode");
+		details2.put("value", "Magstripe");
+		Map<String,Object> details3 = new HashMap<String,Object>();
+		details3.put("key", "PaymentDetailsCardIssueNumber");
+		details3.put("label", "Card Issue No.");
+		details3.put("value", "01");
+		
+		List<Map<String,Object>> paymentDetails = new LinkedList<Map<String,Object>>();
+		paymentDetails.add(details1);
+		paymentDetails.add(details2);
+		paymentDetails.add(details3);
+
+		Map<String,List<Map<String,Object>>> receipt = new HashMap<String,List<Map<String,Object>>>();
+		receipt.put("paymentDetails",paymentDetails);
+		
+		variables.put("receipt",receipt);
+		
+		return issuesBaseContext.copy().setVariables( variables );		
+	}	
+	
+	
 	@Test
 	public void issue01() {
-		localise("issues/");
+		localise( getIssue01Context() );		
 		String result = getResult( "issue01.html", ResultMode.HTML );
 		assertEquals( clean( issue01Result ), clean( result ) );
 	}
 
+	public Context getIssue06Context() {
+		JsonObject< String, Object > variables = new JsonObject<String,Object>();
+		Calendar bdc = new GregorianCalendar(1940, Calendar.OCTOBER, 9);
+		Date bDate = bdc.getTime();			
+		variables.put("birthDate1",bDate);		
+		return issuesBaseContext.copy().setVariables( variables );
+	}	
+	
 	@Test
 	public void issue06() {
-		localise("issues/");
+		localise( getIssue06Context() );
 		String result = getResult( "issue06.html", ResultMode.HTML );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( issue06ResultThymol ), clean( result ) );
@@ -216,9 +269,18 @@ public class IssuesCases extends SeleniumCases {
 		}
 	}
 
+	public Context getStateForIssue06a() {				
+		JsonObject< String, Object > variables = new JsonObject<String,Object>();
+		Calendar bdc = new GregorianCalendar(1940, Calendar.OCTOBER, 9);
+		Date bDate = bdc.getTime();	
+		variables.put("birthDate2",bDate);
+		return issuesBaseContext.copy().setVariables( variables );
+	}	
+	
+	
 	@Test
 	public void issue06a() {
-		localise("issues/");
+		localise( getStateForIssue06a() );
 		String result = getResult( "issue06a.html", ResultMode.HTML );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( issue06ResultThymol ), clean( result ) );
@@ -228,16 +290,25 @@ public class IssuesCases extends SeleniumCases {
 		}
 	}
 
+	public Context getStateForIssue08a() {				
+		JsonObject< String, Object > variables = new JsonObject<String,Object>();
+		List<String> imagesPaths = Arrays.asList( new String[] { "path_image_one", "path_image_two" } );
+		variables.put( "images_paths", imagesPaths );
+		return issuesBaseContext.copy().setVariables( variables );
+	}	
+	
+
+	
 	@Test
 	public void issue08() {
-		localise("issues/");
+		localise( getStateForIssue08a() );
 		String result = getResult( "issue08.html", ResultMode.HTML );
 		assertEquals( clean( issue08Result ), clean( result ) );
 	}
 
 //	@Test
 //	public void issue08a() {
-//		localise("issues/");		
+//		localise( issuesBaseContext );		
 //		String refValue = issue08aResult;
 //		String result;
 //		if( expectNodeResult() ) {			
@@ -253,7 +324,7 @@ public class IssuesCases extends SeleniumCases {
 
 	@Test
 	public void issue08a() {
-		localise("issues/");		
+		localise( getStateForIssue08a() );		
 		String result;
 		if( expectNodeResult() ) {			
 			result = getResult( "issue08a-node.html", ResultMode.HTML );			
@@ -266,7 +337,8 @@ public class IssuesCases extends SeleniumCases {
 
 	@Test
 	public void issue08_ru_RU() {
-		localise("issues/", new Locale( "ru", "RU", "" ) );
+//		localise("issues/", null, new Locale( "ru", "RU", "" ) );
+		localise( issuesBaseContext.copy().setLocale( new Locale( "ru", "RU", "" ) ) );
 		String result;
 		if( expectNodeResult() ) {					
 			result = getResult("issue08_russian-node.html", ResultMode.HTML);		
@@ -275,26 +347,25 @@ public class IssuesCases extends SeleniumCases {
 			result = getResult("issue08_russian.html", ResultMode.HTML);
 		}
 		assertEquals(clean(issue08Result_ru_RU), clean(result));
-		localise("issues/", new Locale( "en", "GB", "" ));
 	}
 
 	@Test
 	public void issue10() {
-		localise("issues/" );
+		localise( issuesBaseContext );
 		String result = getResult("issue10.html", ResultMode.HTML);
 		assertEquals(clean(issue10Result), clean(result));
 	}
 
 	@Test
 	public void issue11() {
-		localise("issues/" );
+		localise( issuesBaseContext );
 		String result = getResult("issue11.html", ResultMode.HTML);
 		assertEquals(clean(issue11Result), clean(result));
 	}
 
 	@Test
 	public void issue11a() {
-		localise("issues/" );
+		localise( issuesBaseContext );
 		String result;
 		if( expectNodeResult() ) {					
 			result = getResult("issue11a-node.html", ResultMode.HTML);	
@@ -312,14 +383,14 @@ public class IssuesCases extends SeleniumCases {
 
 	@Test
 	public void issue11b() {
-		localise("issues/" );
+		localise( issuesBaseContext );
 		String result = getResult("issue11b.html", ResultMode.HTML);
 		assertEquals(clean(issue11Result), clean(result));
 	}
 
 	@Test
 	public void issue12() {
-		localise("issues/" );
+		localise( issuesBaseContext );
 		String result = getResult("issue12.html", ResultMode.HTML);
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals(clean(issue12Result), clean(result));
@@ -331,7 +402,7 @@ public class IssuesCases extends SeleniumCases {
 
 	@Test
 	public void issue12a() {
-		localise("issues/" );
+		localise( issuesBaseContext );
 		String result = getResult("issue12a.html", ResultMode.HTML);
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals(clean(issue12aResult), clean(result));
@@ -343,7 +414,7 @@ public class IssuesCases extends SeleniumCases {
 
 	@Test
 	public void issue13() {
-		localise("issues/" );
+		localise( issuesBaseContext );
 		String result = getResult("issue13.html", ResultMode.HTML);
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals(clean(issue13ResultThymol), clean(result));
@@ -355,7 +426,7 @@ public class IssuesCases extends SeleniumCases {
 
 	@Test
 	public void issue13a() {
-		localise("issues/" );
+		localise( issuesBaseContext );
 		String result = getResult("issue13a.html", ResultMode.HTML);
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals(clean(issue13ResultThymol), clean(result));
@@ -367,7 +438,7 @@ public class IssuesCases extends SeleniumCases {
 
 	@Test
 	public void issue13b() {
-		localise("issues/", "" );
+		localise( issuesBaseContext.copy().setSuffix( "" ) );
 		String result = getResult("issue13b.html", ResultMode.HTML);
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals(clean(issue13ResultThymol), clean(result));
@@ -375,33 +446,56 @@ public class IssuesCases extends SeleniumCases {
 		else {
 			assertEquals(clean(issue13ResultThymeleaf), clean(result));
 		}		
-		localise("issues/", ".html" );
 	}
 
+	public Context getIssue14Context() {				
+		JsonObject< String, Object > variables = new JsonObject<String,Object>();
+		Map<String,Object> pv1 = new HashMap<String,Object>();
+		pv1.put("name", "Alex");
+		pv1.put("role", "User");
+		Map<String,Object> pv2 = new HashMap<String,Object>();
+		pv2.put("name", "Jim");
+		pv2.put("role", "Dev");
+		List<Map<String,Object>> pvar = new LinkedList<Map<String,Object>>();
+		pvar.add(pv1);
+		pvar.add(pv2);
+		variables.put( "pvar", pvar );
+		return issuesBaseContext.copy().setVariables( variables );
+	}	
+	
 	@Test
 	public void issue14() {
-		localise("issues/", ".html" );
+		localise( getIssue14Context() );
 		String result = getResult("issue14.html", ResultMode.HTML);
 		assertEquals(clean(issue14Result), clean(result));
 	}
 
+	public Context getIssue15Context() {				
+		JsonObject< String, Object > variables = new JsonObject<String,Object>();
+		variables.put( "tplName", "Fish" );
+		variables.put( "tplName2", "Fowl" );
+		return issuesBaseContext.copy().setVariables( variables );
+	}	
+	
+	private  Context issue15Context = getIssue15Context();			
+	
 	@Test
 	public void issue15() {
-		localise("issues/", ".html" );
+		localise( issue15Context );
 		String result = getResult("issue15.html", ResultMode.HTML);
 		assertEquals(clean(issue15Result), clean(result));
 	}
 
 	@Test
 	public void issue15a() {
-		localise("issues/", ".html" );
+		localise( issue15Context );
 		String result = getResult("issue15a.html", ResultMode.HTML);
 		assertEquals(clean(issue15Result), clean(result));
 	}
 
 	@Test
 	public void issue15b() {
-		localise("issues/", ".html" );
+		localise( issue15Context );
 		String result = getResult("issue15b.html", ResultMode.HTML);
 		assertEquals(clean(issue15Result), clean(result));
 	}

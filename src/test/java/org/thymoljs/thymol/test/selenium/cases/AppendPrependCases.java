@@ -2,11 +2,17 @@ package org.thymoljs.thymol.test.selenium.cases;
 
 import static org.junit.Assert.assertEquals;
 
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
+
+import com.cedarsoftware.util.io.JsonObject;
+
 import org.junit.Test;
 
 public class AppendPrependCases extends SeleniumCases {
+	
+	private Context appendPrependBaseContext = new Context( "tests/appendprepend/" );
 	
 	String attrappend01Result =
 			"\n" +
@@ -61,24 +67,34 @@ public class AppendPrependCases extends SeleniumCases {
 			"<div class=\"\">mi</div>\n" +
 			"<div class=\"\">fa</div>\n" +
 			"\n\n";
+	
+	private Context getAppendPrependContext() {
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+		variables.put( "one", "color:blue;" );
+		variables.put( "two", "text-align:center;" );
+		variables.put( "three", "intro" );
+		return appendPrependBaseContext.copy().setVariables( variables );				
+	}
+	
+	private Context appendPrependContext = getAppendPrependContext();
 
 	@Test
 	public void attrAppend01() {
-		localise("tests/appendprepend/");
+		localise( appendPrependContext );
 		String result = getResult( "attrappend01.html", ResultMode.HTML );
 		assertEquals( clean(attrappend01Result), clean(result) );
 	}
 
 	@Test
 	public void attrPrepend01() {
-		localise("tests/appendprepend/");
+		localise( appendPrependContext );
 		String result = getResult( "attrprepend01.html", ResultMode.HTML );
 		assertEquals( clean(attrprepend01Result), clean(result) );
 	}
 
 	@Test
 	public void classAppend01() {
-		localise("tests/appendprepend/");
+		localise( appendPrependContext );
 		String result = getResult( "classappend01.html", ResultMode.HTML );
 		assertEquals( clean(classappend01Result), clean(result) );
 	}

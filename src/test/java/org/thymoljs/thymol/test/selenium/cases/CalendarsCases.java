@@ -1,14 +1,27 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
+
+import com.cedarsoftware.util.io.JsonObject;
+
 import org.junit.Test;
+import org.thymeleaf.expression.Calendars;
 
 public class CalendarsCases extends SeleniumCases {
+	
+	Context calendarsBaseContext = new Context( "thymol/calendars/" );
 	
 	String calendars01ResultThymol =
 			"\n" +
@@ -210,9 +223,29 @@ public class CalendarsCases extends SeleniumCases {
 			"\n" +
 			"\n\n";	
 	
+	private Calendars calendars = new Calendars(Locale.UK);
+	
+	private Context getCalendars01Context() {
+
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+				
+		Calendar onecalendar = calendars.create(1992,10,12);
+		variables.put( "onecalendar", onecalendar );
+		
+		Calendar twocalendar = calendars.create(1732,10,12);
+		variables.put( "twocalendar", twocalendar );
+		
+		return calendarsBaseContext.copy().setVariables( variables );
+
+	}
+	
+	private Context calendars01Context = getCalendars01Context();
+	private Context calendars01LocalContext = calendars01Context.deepCopy().setLocale( new Locale( "en", "GB", "" ) ) ;
+	
+	
 	@Test
 	public void calendars01() {
-		localise( "thymol/calendars/", new Locale( "en", "GB", "" ) );		
+		localise( calendars01LocalContext );		
 		String result;
 		if( expectNodeResult() ) {
 			result = getResult( "calendars01node.html", ResultMode.HTML );			
@@ -230,7 +263,7 @@ public class CalendarsCases extends SeleniumCases {
 
 	@Test
 	public void calendars02() {
-		localise( "thymol/calendars/" );
+		localise( calendars01Context );
 		String result;
 		if( expectNodeResult() ) {
 			result = getResult( "calendars02node.html", ResultMode.HTML );			
@@ -241,9 +274,40 @@ public class CalendarsCases extends SeleniumCases {
 		assertEquals( clean( calendars02Result ), clean( result ) );
 	}
 
+	private Context getCalendars03Context() {
+
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+		
+		Calendar calendar0 = calendars.create(1492,10,12);		
+		Calendar calendar1 = calendars.create(1666,9,2);
+		Calendar calendar2 = calendars.create(1835,12,16);
+		Calendar calendar3 = calendars.create(1901,5,3);
+		Calendar calendar4 = calendars.create(1922,9,13);
+		variables.put( "calendar0", calendar0 );
+		variables.put( "calendar1", calendar1 );
+		variables.put( "calendar2", calendar2 );
+		variables.put( "calendar3", calendar3 );
+		variables.put( "calendar4", calendar4 );
+		Calendar[] calendarArray = {calendar0,calendar1,calendar2,calendar3,calendar4};
+		variables.put( "calendarArray", calendarArray );
+		Set<Calendar> calendarSet = new HashSet<Calendar>();
+		
+		List<Calendar> calendarArrayAsList = Arrays.asList( calendarArray );
+		Collections.sort( calendarArrayAsList );
+		calendarSet.addAll( calendarArrayAsList );				
+		variables.put( "calendarSet", calendarSet );
+		
+		return calendarsBaseContext.copy().setVariables( variables );
+
+	}
+	
+	private Context calendars03Context = getCalendars03Context();
+	private Context calendars03LocalContext = calendars03Context.deepCopy().setLocale( new Locale( "en", "GB", "" ) ) ;
+	
+	
 	@Test
 	public void calendars03() {
-		localise( "thymol/calendars/", new Locale( "en", "GB", "" ) );
+		localise( calendars03LocalContext );
 		String result = getResult( "calendars03.html", ResultMode.HTML );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( calendars03ResultThymol ), clean( result ) );
@@ -255,84 +319,113 @@ public class CalendarsCases extends SeleniumCases {
 
 	@Test
 	public void calendars04() {
-		localise( "thymol/calendars/" );
+		localise( calendars03Context );
 		String result = getResult( "calendars04.html", ResultMode.HTML );		
 		assertEquals( clean( calendars04Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars05() {
-		localise( "thymol/calendars/" );
+		localise( calendars03Context );
 		String result = getResult( "calendars05.html", ResultMode.HTML );
 		assertEquals( clean( calendars05Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars06() {
-		localise( "thymol/calendars/" );
+		localise( calendars03Context );
 		String result = getResult( "calendars06.html", ResultMode.HTML );
 		assertEquals( clean( calendars06Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars07() {
-		localise( "thymol/calendars/" );
+		localise( calendars03Context );
 		String result = getResult( "calendars07.html", ResultMode.HTML );
 		assertEquals( clean( calendars07Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars08() {
-		localise( "thymol/calendars/" );
+		localise( calendars03Context );
 		String result = getResult( "calendars08.html", ResultMode.HTML );
 		assertEquals( clean( calendars08Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars09() {
-		localise( "thymol/calendars/" );
+		localise( calendars03Context );
 		String result = getResult( "calendars09.html", ResultMode.HTML );
 		assertEquals( clean( calendars09Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars10() {
-		localise( "thymol/calendars/" );
+		localise( calendars03Context );
 		String result = getResult( "calendars10.html", ResultMode.HTML );
 		assertEquals( clean( calendars10Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars11() {
-		localise( "thymol/calendars/" );
+		localise( calendars03Context );
 		String result = getResult( "calendars11.html", ResultMode.HTML );
 		assertEquals( clean( calendars11Result ), clean( result ) );
 	}
+	
+	
+	private Context getCalendars12Context() {
+
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+		
+		Calendar calendarTime1 = calendars.create(1501, 3, 12, 8, 25, 9, 321);
+		Calendar calendarTime2 = calendars.create(1711, 4, 13, 12, 35, 19, 543);
+		Calendar calendarTime3 = calendars.create(1921, 5, 14, 14, 45, 29, 765);
+		Calendar calendarTime4 = calendars.create(2031, 6, 15, 16, 55, 39, 987);
+		variables.put( "calendarTime1", calendarTime1 );
+		variables.put( "calendarTime2", calendarTime2 );
+		variables.put( "calendarTime3", calendarTime3 );
+		variables.put( "calendarTime4", calendarTime4 );
+		Calendar[] calendarTimeArray = {calendarTime1,calendarTime2,calendarTime3,calendarTime4};
+		variables.put( "calendarTimeArray", calendarTimeArray );
+		Set<Calendar> calendarTimeSet = new HashSet<Calendar>();
+		List<Calendar> calendarTimeArrayAsList = Arrays.asList( calendarTimeArray );
+		Collections.sort( calendarTimeArrayAsList );
+		calendarTimeSet.addAll( calendarTimeArrayAsList );
+		variables.put( "calendarTimeSet", calendarTimeSet );
+		
+		return calendarsBaseContext.copy().setVariables( variables );
+
+	}
+	
+	private Context calendars12Context = getCalendars12Context();
+//	private Context calendars03LocalContext = calendars03Context.copy().setLocale( new Locale( "en", "GB", "" ) ) ;
+	
 
 	@Test
 	public void calendars12() {
-		localise( "thymol/calendars/" );
+		localise( calendars12Context );
 		String result = getResult( "calendars12.html", ResultMode.HTML );
 		assertEquals( clean( calendars12Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars13() {
-		localise( "thymol/calendars/" );
+		localise( calendars12Context );
 		String result = getResult( "calendars13.html", ResultMode.HTML );
 		assertEquals( clean( calendars13Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars14() {
-		localise( "thymol/calendars/" );
+		localise( calendars12Context );
 		String result = getResult( "calendars14.html", ResultMode.HTML );
 		assertEquals( clean( calendars14Result ), clean( result ) );
 	}
 
 	@Test
 	public void calendars15() {
-		localise( "thymol/calendars/" );
+		localise( calendars12Context );
 		String result = getResult( "calendars15.html", ResultMode.HTML );
 		assertEquals( clean( calendars15Result ), clean( result ) );
 	}

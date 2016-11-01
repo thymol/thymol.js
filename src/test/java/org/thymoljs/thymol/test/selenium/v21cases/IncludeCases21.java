@@ -1,14 +1,18 @@
 package org.thymoljs.thymol.test.selenium.v21cases;
 
-import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
-import org.junit.Test;
+
+import com.cedarsoftware.util.io.JsonObject;
 
 public class IncludeCases21 extends SeleniumCases {
 
+	Context includeBaseContext = new Context( "tests21/include/" );
+	
 	String include01Result = 		
 			"\n" +
 			"<div>\n" +
@@ -219,72 +223,80 @@ public class IncludeCases21 extends SeleniumCases {
 			"<p>Problem accessing /include21.html. Reason:\n" +
 			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mss2\", which is not specified at the fragment selection. (include21:11)\n";
 
+	private Context getIncludeContext() {
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+		variables.put( "m22", "...and for you too!" );		
+		return includeBaseContext.copy().setVariables( variables );
+	}
+	
+	private Context includeContext = getIncludeContext(); 
+	
 	@Test
 	public void include01() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include01.html", ResultMode.HTML );
 		assertEquals( clean( include01Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include02() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include02.html", ResultMode.HTML );
 		assertEquals( clean( include02Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include03() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include03.html", ResultMode.HTML );
 		assertEquals( clean( include03Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include04() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include04.html", ResultMode.HTML );
 		assertEquals( clean( include04Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include05() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include05.html", ResultMode.HTML );
 		assertEquals( clean( include05Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include06() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include06.html", ResultMode.HTML );
 		assertEquals( clean( include06Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include07() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include07.html", ResultMode.HTML );
 		assertEquals( clean( include07Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include08() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include08.html", ResultMode.HTML );
 		assertEquals( clean( include08Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include09() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include09.html", ResultMode.HTML );
 		assertEquals( clean( include09Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include10() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include10.html", ResultMode.ALERT );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( include10ResultThymol, clean( result ) );			
@@ -297,28 +309,28 @@ public class IncludeCases21 extends SeleniumCases {
 	
 	@Test
 	public void include11() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include11.html", ResultMode.HTML );
 		assertEquals( clean( include11Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include12() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include12.html", ResultMode.HTML );
 		assertEquals( clean( include12Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include13() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include13.html", ResultMode.HTML );
 		assertEquals( clean( include13Result ), clean( result ) );
 	}
 		
 	@Test
 	public void include14() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include14.html", ResultMode.ALERT );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( include14ResultThymol ), clean( result ) );			
@@ -331,7 +343,7 @@ public class IncludeCases21 extends SeleniumCases {
 	
 	@Test
 	public void include15() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include15.html", ResultMode.ALERT );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( include15ResultThymol ), clean( result ) );			
@@ -344,35 +356,35 @@ public class IncludeCases21 extends SeleniumCases {
 	
 	@Test
 	public void include16() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include16.html", ResultMode.HTML );
 		assertEquals( clean( include16Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include17() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include17.html", ResultMode.HTML );
 		assertEquals( clean( include17Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include18() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include18.html", ResultMode.HTML );
 		assertEquals( clean( include18Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include19() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include19.html", ResultMode.HTML );
 		assertEquals( clean( include19Result ), clean( result ) );
 	}
 	
 	@Test
 	public void include20() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include20.html", ResultMode.ALERT );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( include20ResultThymol ), clean( result ) );			
@@ -385,7 +397,7 @@ public class IncludeCases21 extends SeleniumCases {
 	
 	@Test
 	public void include21() {
-		localise("tests21/include/");
+		localise( includeContext );
 		String result = getResult( "include21.html", ResultMode.ALERT );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( include21ResultThymol ), clean( result ) );			

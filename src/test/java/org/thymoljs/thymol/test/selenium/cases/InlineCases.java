@@ -1,13 +1,24 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
+
+import com.cedarsoftware.util.io.JsonObject;
+
 import org.junit.Test;
 
 public class InlineCases extends SeleniumCases {
 
+	Context inlineBaseContext = new Context( "tests/inline/" );
+	
 	String inline01Result = 		
 			"\n" +
 			"<script> \n" +
@@ -28,12 +39,12 @@ public class InlineCases extends SeleniumCases {
 			"\n" +
 			"<script> \n" +
 			"    objArray: {\n" +
-			"        obj1:{\n" +
+			"        obj1: {\n" +
 			"            attr11: 'fooo!',\n" +
 			"            attr12: 'fooo!',\n" +
 			"            attr13: 'fooo!'\n" +
 			"        },\n" +
-			"        obj2:{\n" +
+			"        obj2: {\n" +
 			"            attr21: 'fooo!',\n" +
 			"            attr22: 'fooo!', // some comment here\n" +
 			"            attr23: 'fooo!' // some comment here\n" +
@@ -46,12 +57,12 @@ public class InlineCases extends SeleniumCases {
 			"\n" +
 			"<script> \n" +
 			"    objArray: {\n" +
-			"        obj1:{\n" +
+			"        obj1: {\n" +
 			"            attr11: 'fooo!',\n" +
 			"            attr12: 'fooo!',\n" +
 			"            attr13: 'fooo!'\n" +
 			"        },\n" +
-			"        obj2:{\n" +
+			"        obj2: {\n" +
 			"            attr21: 'fooo!',\n" +
 			"            attr22: 'fooo!', // some comment here\n" +
 			"            attr23: 'fooo!'// some comment here\n" +
@@ -64,17 +75,17 @@ public class InlineCases extends SeleniumCases {
 			"\n" +
 			"<script> \n" +
 			"    objArray: {\n" +
-			"        obj1:{\n" +
+			"        obj1: {\n" +
 			"            attr11: 'http://www.thymeleaf.org/download.html',\n" +
 			"            attr12: 'http://www.thymeleaf.org/download.html',\n" +
 			"            attr13: 'http://www.thymeleaf.org/download.html'\n" +
 			"        },\n" +
-			"        obj2:{\n" +
+			"        obj2: {\n" +
 			"            attr21: 'http://www.thymeleaf.org/download.html',\n" +
 			"            attr22: 'http://www.thymeleaf.org/download.html',\n" +
 			"            attr23: 'http://www.thymeleaf.org/download.html' // some comment here\n" +
 			"        },\n" +
-			"        obj3:{\n" +
+			"        obj3: {\n" +
 			"            attr11: 'http://www.thymeleaf.org/download.html',\n" +
 			"            attr12: 'http://www.thymeleaf.org/download.html',\n" +
 			"            attr13: 'http://www.thymeleaf.org/download.html'\n" +
@@ -87,17 +98,17 @@ public class InlineCases extends SeleniumCases {
 			"\n" +
 			"<script> \n" +
 			"    objArray: {\n" +
-			"        obj1:{\n" +
+			"        obj1: {\n" +
 			"            attr11: 'http://www.thymeleaf.org/download.html',\n" +
 			"            attr12: 'http://www.thymeleaf.org/download.html',\n" +
 			"            attr13: 'http://www.thymeleaf.org/download.html'\n" +
 			"        },\n" +
-			"        obj2:{\n" +
+			"        obj2: {\n" +
 			"            attr21: 'http://www.thymeleaf.org/download.html',\n" +
 			"            attr22: 'http://www.thymeleaf.org/download.html',\n" +
 			"            attr23: 'http://www.thymeleaf.org/download.html'// some comment here\n" +
 			"        },\n" +
-			"        obj3:{\n" +
+			"        obj3: {\n" +
 			"            attr11: 'http://www.thymeleaf.org/download.html',\n" +
 			"            attr12: 'http://www.thymeleaf.org/download.html',\n" +
 			"            attr13: 'http://www.thymeleaf.org/download.html'\n" +
@@ -110,17 +121,17 @@ public class InlineCases extends SeleniumCases {
 			"\n" +
 			"<script> \n" +
 			"    objArray: {\n" +
-			"        obj1:{\n" +
+			"        obj1: {\n" +
 			"            attr11: 'fooo!',\n" +
 			"            attr12: 'fooo!',\n" +
 			"            attr13: 'fooo!'\n" +
 			"        },\n" +
-			"        obj2:{\n" +
+			"        obj2: {\n" +
 			"            attr21: 'fooo!',\n" +
 			"            attr22: 'fooo!',\n" +
 			"            attr23: 'fooo!' // some comment here\n" +
 			"        },\n" +
-			"        obj3:{\n" +
+			"        obj3: {\n" +
 			"            attr11: 'fooo!',\n" +
 			"            attr12: 'fooo!',\n" +
 			"            attr13: 'fooo!'\n" +
@@ -133,17 +144,17 @@ public class InlineCases extends SeleniumCases {
 			"\n" +
 			"<script> \n" +
 			"    objArray: {\n" +
-			"        obj1:{\n" +
+			"        obj1: {\n" +
 			"            attr11: 'fooo!',\n" +
 			"            attr12: 'fooo!',\n" +
 			"            attr13: 'fooo!'\n" +
 			"        },\n" +
-			"        obj2:{\n" +
+			"        obj2: {\n" +
 			"            attr21: 'fooo!',\n" +
 			"            attr22: 'fooo!',\n" +
 			"            attr23: 'fooo!'// some comment here\n" +
 			"        },\n" +
-			"        obj3:{\n" +
+			"        obj3: {\n" +
 			"            attr11: 'fooo!',\n" +
 			"            attr12: 'fooo!',\n" +
 			"            attr13: 'fooo!'\n" +
@@ -199,7 +210,7 @@ public class InlineCases extends SeleniumCases {
 			"<script type=\"text/javascript\">\n" +
 			"    /* <![CDATA[ */\n" +
 			"            fooUrl:'/fooservice/foo/',\n" +
-			"            barUrl:'/barservice/bar/'\n" +
+			"            barUrl:'/barservice/bar/';\n" +
 			"    /* ]]> */\n" +
 			"</script>\n" +
 			"\n\n";
@@ -242,23 +253,49 @@ public class InlineCases extends SeleniumCases {
 			"</div>\n" +
 			"\n\n";
  		
+	private Context getInlineContext() {
+		
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+				
+		Map< String, Object > objVar = new LinkedHashMap< String, Object >();
+		objVar.put("a", "12" );
+		objVar.put("ba", "lala" );
+		variables.put( "obj", objVar );		
+
+		List< String > userRoles = new LinkedList< String >();
+		userRoles.add("MANAGER");
+		userRoles.add("SALES");
+		variables.put( "userRoles", userRoles );		
+		
+		variables.put( "foo", "fooo!" );		
+		variables.put( "someVar", "Hi there!" );		
+	
+		variables.put( "value", 23 );
+		
+		return inlineBaseContext.copy().setVariables( variables );
+		
+	}
+	
+	private Context inlineContext = getInlineContext();
+
+	
 	@Test
 	public void inline01() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline01.html", ResultMode.HTML );
 		assertEquals( clean(inline01Result), clean(result) );			
 	}
 
 	@Test
 	public void inline02() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline02.html", ResultMode.HTML );
 		assertEquals( clean(inline02Result), clean(result) );			
 	}
 
 	@Test
 	public void inline03() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline03.html", ResultMode.HTML );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean(inline03ResultThymol), clean(result) );			
@@ -270,7 +307,7 @@ public class InlineCases extends SeleniumCases {
 
 	@Test
 	public void inline04() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline04.html", ResultMode.HTML );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean(inline04ResultThymol), clean(result) );			
@@ -282,7 +319,7 @@ public class InlineCases extends SeleniumCases {
 
 	@Test
 	public void inline05() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline05.html", ResultMode.HTML );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean(inline05ResultThymol), clean(result) );			
@@ -294,91 +331,91 @@ public class InlineCases extends SeleniumCases {
 
 	@Test
 	public void inline06() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline06.html", ResultMode.HTML );
 		assertEquals( clean(inline06Result), clean(result) );			
 	}
 
 	@Test
 	public void inline07() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline07.html", ResultMode.HTML );
 		assertEquals( clean(inline07Result), clean(result) );			
 	}
 
 	@Test
 	public void inline08() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline08.html", ResultMode.HTML );
 		assertEquals( clean(inline08Result), clean(result) );			
 	}
 
 	@Test
 	public void inline09() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline09.html", ResultMode.HTML );
 		assertEquals( clean(inline09Result), clean(result) );			
 	}
 
 	@Test
 	public void inline10() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline10.html", ResultMode.HTML );
 		assertEquals( clean(inline10Result), clean(result) );			
 	}
 
 	@Test
 	public void inline11() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline11.html", ResultMode.HTML );
 		assertEquals( clean(inline11Result), clean(result) );			
 	}
 
 	@Test
 	public void inline12() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline12.html", ResultMode.HTML );
 		assertEquals( clean(inline12Result), clean(result) );			
 	}
 
 	@Test
 	public void inline13() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline13.html", ResultMode.HTML );
 		assertEquals( clean(inline13Result), clean(result) );			
 	}
 
 	@Test
 	public void inline14() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline14.html", ResultMode.HTML );
 		assertEquals( clean(inline14Result), clean(result) );			
 	}
 
 	@Test
 	public void inline_body() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline-body.html", ResultMode.HTML );
 		assertEquals( clean(inline_body_Result), clean(result) );			
 	}
 
 	@Test
 	public void inline21() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline21.html", ResultMode.HTML );
 		assertEquals( clean(inline01Result), clean(result) );			
 	}
 
 	@Test
 	public void inline26() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline26.html", ResultMode.HTML );
 		assertEquals( clean(inline06Result), clean(result) );			
 	}
 
 	@Test
 	public void inline27() {
-		localise("tests/inline/");
+		localise( inlineContext );
 		String result = getResult( "inline27.html", ResultMode.HTML );
 		assertEquals( clean(inline07Result), clean(result) );			
 	}

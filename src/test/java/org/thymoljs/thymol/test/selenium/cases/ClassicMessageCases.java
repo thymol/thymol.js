@@ -1,15 +1,20 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 import java.util.Locale;
 
 import org.junit.Test;
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
 
+import com.cedarsoftware.util.io.JsonObject;
+
 public class ClassicMessageCases extends SeleniumCases {
 	
+	Context messagesBaseContext = new Context( "tests/messages/" );
+
 	String messages01Result = 
 			"\n" +
 			"<span>Hello!</span>\n" +
@@ -78,23 +83,40 @@ public class ClassicMessageCases extends SeleniumCases {
 			"\n" +
 			"\n\n";
 	
+	private Context getMessagesContext() {
+		
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+				
+		variables.put( "var01", "John Apricot" );
+		variables.put( "var02", "John Apricot Jr." );
+		variables.put( "var03", "Saturn" );
+
+		variables.put( "value01", Boolean.FALSE );
+		variables.put( "value02", Boolean.TRUE );
+	
+		return messagesBaseContext.copy().setVariables( variables );
+		
+	}
+	
+	private Context messagesContext = getMessagesContext();
+	
 	@Test
 	public void messages01() {
-		localise("tests/messages/");
+		localise( messagesContext );
 		String result = getResult( "messages01.html", ResultMode.HTML );
 		assertEquals( clean( messages01Result ), clean( result ) );
 	}
 
 	@Test
 	public void messages02() {
-		localise("tests/messages/");
+		localise( messagesContext );
 		String result = getResult( "messages02.html", ResultMode.HTML );
 		assertEquals( clean( messages01Result ), clean( result ) );
 	}
 
 	@Test
 	public void messages03() {
-		localise("tests/messages/",new Locale( "gl", "ES", "" ));
+		localise( messagesContext.deepCopy().setLocale( new Locale( "gl", "ES", "" ) ) );
 		String result;
 		if( expectNodeResult() ) {
 			result = getResult( "messages03-node.html", ResultMode.HTML );			
@@ -107,7 +129,7 @@ public class ClassicMessageCases extends SeleniumCases {
 
 	@Test
 	public void messages04() {
-		localise("tests/messages/");
+		localise( messagesContext );
 		String result = getResult( "messages04.html", ResultMode.HTML );
 		assertEquals( clean( messages04Result ), clean( result ) );
 	}
@@ -115,7 +137,7 @@ public class ClassicMessageCases extends SeleniumCases {
 
 	@Test
 	public void messages05() {
-		localise("tests/messages/",new Locale( "en", "US", "" ));
+		localise( messagesContext.deepCopy().setLocale( new Locale( "en", "US", "" ) ) );
 		String result;
 		if( expectNodeResult() ) {
 			result = getResult( "messages05-node.html", ResultMode.HTML );			

@@ -25,7 +25,7 @@ public class ThymolTestApplication {
 
 	public static TemplateEngine initializeTemplateEngine(String prefix, String suffix, Locale locale) {
 		templateEngine = new TemplateEngine();		
-		addResolver(prefix,suffix,locale);
+		addResolver(prefix,suffix,locale);		
 		return templateEngine;
 	}
 		
