@@ -33,6 +33,7 @@ thymol = function() {
 
   thymol.objects = {};
   thymol.varParExpr = /([^(]*)\s*[(]([^)]*?)[)]/;
+  
   var textFuncSynonym = "~~~~", varRefExpr = /([$#]{.*?})/, literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/, startParserLevelCommentExpr = /^\s*\/\*\s*$/, endParserLevelCommentExpr = /^\s*\*\/\s*$/, startParserLevelCommentExpr2 = /^\/\*[^\/].*/, endParserLevelCommentExpr2 = /.*[^\/]\*\/$/, prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//, 
   varExpr3 = /[^\$\*#@]{1}\{(.*)\}$/, // Retain the content
   nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/, numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/, domSelectExpr = /([\/]{1,2})?([A-Za-z0-9_\-]*(?:[\(][\)])?)?([^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*(?:[\.\/#]?[^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*)*)?([\[][^\]]*?[\]])?/, litSubstExpr = /\.*?([\|][^\|]*?[\|])\.*?/;
@@ -40,7 +41,7 @@ thymol = function() {
   function Thymol() {
     // Empty apart from this!
   }
-
+  
   function isClientSide() {
     if( (typeof thymol.isServerSide !== "undefined" ) && !!thymol.isServerSide() ) {
       thymol.isClientSide = function() {
@@ -362,7 +363,7 @@ thymol = function() {
         if( !!parameters ) {
           var splits = parameters.split( "," );
           for( var j = 0, jLimit = splits.length; j < jLimit; j++ ) {
-            thymol.ThUtils.loadScript( splits[ j ] );
+            thymol.ThUtils.loadScript( splits[ j ], this );
           }
         }
       }      
@@ -1169,6 +1170,7 @@ thymol = function() {
   }
 
   function getProperties( propFile ) {
+//    propFile = thymol.ThUtils.resolvePath( propFile );  // If we use the jsdom built-in XMLHttpRequest, then we need to canonicalise the absolute file path
     var props = null;
     var messages = [];
     $.get( propFile, function( textContent, status ) {
@@ -1235,7 +1237,7 @@ thymol = function() {
     messages = getProperties( propsFile );
     return messages;
   }
-
+    
   Thymol.prototype = {
 
     process : function( rootNode ) {
@@ -2162,13 +2164,33 @@ thymol = function() {
               break;
             }
           }
-          this.doInsertion( element, content, function( e, n ) {
-            if( n.nodeType == 1 ) {
-              n.removeAttribute( thymol.thFragment.name );
-              n.removeAttribute( thymol.thFragment.synonym );
+          if( element.nodeType === 9 ) { // document node
+            if( content.nodeType !== 9 ) {
+              element.appendChild( content );
             }
-            e.appendChild( n );
-          } );
+            else {
+              if( content.childNodes !== null ) {
+                var cNodes = content.childNodes.length;
+                if( cNodes > 0 ) {
+                  for( i = 0; i < cNodes; i++ ) {
+                    var iNode = content.childNodes[ i ];
+                    if( !!iNode && iNode.nodeType !== 9 && iNode.nodeType !== 10 && iNode.nodeType !== 11 ) {
+                      element.appendChild( iNode );
+                    }
+                  }
+                }
+              }
+            }
+          }
+          else {
+            this.doInsertion( element, content, function( e, n ) {
+              if( n.nodeType == 1 ) {
+                n.removeAttribute( thymol.thFragment.name );
+                n.removeAttribute( thymol.thFragment.synonym );
+              }
+              e.appendChild( n );
+            } );
+          }
         }
         catch( err ) { // Work-around for IE
           element.innerHTML = content.innerHTML;
@@ -2314,7 +2336,7 @@ thymol = function() {
       }
     }
   }
-
+  
   /* Thymol internal classes */
 
   function ThError( message, element, source ) {
