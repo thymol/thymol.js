@@ -3,5 +3,6 @@
 	"thymolReleaseDate": "${thReleaseDate}",
 	"bowerJQuerySource": "${thBowerJQuerySource}",
 	"sourceforgeJQuerySource": "${thSourceforgeJQuerySource}",
-	"jsdelivrJQuerySource": "${thJsdelivrJQuerySource}"
+	"jsdelivrJQuerySource": "${thJsdelivrJQuerySource}",
+	"thymolJQueryVersion": "${thymol-jquery-version}"
 }
