@@ -6,7 +6,6 @@ import java.util.concurrent.TimeUnit;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
-//import org.openqa.selenium.remote.DesiredCapabilities;
 
 public class FirefoxFactory implements WebDriverFactory {
 
@@ -21,9 +20,15 @@ public class FirefoxFactory implements WebDriverFactory {
 		
 		Locale loc = Locale.getDefault();				
 		profile.setPreference("intl.accept_languages", loc.toString() );
+//		profile.setPreference("log.level", "ERROR" );
 		
-		WebDriver driver = new FirefoxDriver(profile);
-		driver.manage().timeouts().implicitlyWait( 2, TimeUnit.SECONDS );
+		FirefoxDriver driver = new FirefoxDriver(profile);
+//		Capabilities caps = driver.getCapabilities();
+		
+//		Map<String,?> capsMap = caps.asMap();
+		
+//		driver.manage().timeouts().implicitlyWait( 2, TimeUnit.SECONDS );
+		
 		return driver;
 	}
 

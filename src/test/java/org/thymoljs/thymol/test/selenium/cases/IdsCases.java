@@ -1,12 +1,15 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
 import org.junit.Test;
 
 public class IdsCases extends SeleniumCases {
+	
+	Context idsBaseContext = new Context( "thymol/ids/" );
 	
 	String ids01Result = 
 			"\n" +
@@ -64,7 +67,7 @@ public class IdsCases extends SeleniumCases {
 				
 	@Test
 	public void ids01() {
-		localise( "thymol/ids/" );		
+		localise( idsBaseContext );		
 		String result;
 		if( expectNodeResult() ) {
 			result = getResult( "ids01-node.html", ResultMode.HTML );			
@@ -77,7 +80,7 @@ public class IdsCases extends SeleniumCases {
 
 	@Test
 	public void ids02() {
-		localise( "thymol/ids/" );
+		localise( idsBaseContext );		
 		String result;
 		if( expectNodeResult() ) {
 			result = getResult( "ids02-node.html", ResultMode.HTML );			

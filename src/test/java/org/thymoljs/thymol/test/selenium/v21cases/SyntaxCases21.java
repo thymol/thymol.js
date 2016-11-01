@@ -2,11 +2,23 @@ package org.thymoljs.thymol.test.selenium.v21cases;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
+import org.thymoljs.thymol.test.webapp.ThymolTestFilter.PCDate;
+
+import com.cedarsoftware.util.io.JsonObject;
+
 import org.junit.Test;
 
 public class SyntaxCases21 extends SeleniumCases {
+
+    Context syntaxBaseContext = new Context( "tests21/syntax/" );
 
 	String fragments01Result =
 			"\n" +
@@ -150,44 +162,96 @@ public class SyntaxCases21 extends SeleniumCases {
 			"\n\n\n";
 */
 
+/*	
+   	["value1",		"Joe Bloggs"],   	        
+		["value2",		"was here!"],   	    
+		// Simulate missing Expression objects
+		["#httpServletRequest.servletPath",    	                        "/ownerDetails.html"],
+		["#dates.format(pet.birthDate.toDate(), \'yyyy-MM-dd\')",          "2010-09-05"],
+		["#dates.format(visit.pet.birthDate.toDate(), \'yyyy/MM/dd\')",	"2011/10/06"],
+		["#fields.hasErrors('*')",	true],
+		["#fields.errors('*')",	"#[ 'mistakes', 'errors' ]"],
+    ["#lists.isEmpty(allSeedStarters)",	false] // Hack to prevent a debug alert
+*/	
+	
+	private Context getFragments01Context() {
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+
+		variables.put( "value1", "Joe Bloggs" );
+		variables.put( "value2", "was here!" );
+		// Simulate missing Expression objects
+		variables.put( "#httpServletRequest.servletPath", "/ownerDetails.html" );
+		variables.put( "#dates.format(pet.birthDate.toDate(), \'yyyy-MM-dd\')", "2010-09-05" );
+		variables.put( "#dates.format(visit.pet.birthDate.toDate(), \'yyyy/MM/dd\')", "2011/10/06" );
+		variables.put( "#fields.hasErrors('*')", true );
+		Map< String, Object > errorsVar = new LinkedHashMap< String, Object >();
+		errorsVar.put( "mistakes", "errors" );
+		variables.put( "#fields.errors('*')", errorsVar );
+		variables.put( "#lists.isEmpty(allSeedStarters)", false );
+
+		return syntaxBaseContext.copy().setVariables( variables );
+	}		
+	
+	private Context fragments01Context = getFragments01Context();
+	
 	@Test
 	public void fragments01() {
-		localise("tests21/syntax/");
+		localise( fragments01Context );
 		String result = getResult( "fragments01.html", ResultMode.HTML );
 		assertEquals( clean( fragments01Result ), clean( result ) );
 	}
 
 	@Test
 	public void fragments02() {
-		localise("tests21/syntax/");
+		localise( fragments01Context );
 		String result = getResult( "fragments02.html", ResultMode.HTML );
 		assertEquals( clean( fragments02Result ), clean( result ) );
 	}
 
 	@Test
 	public void issue245() {
-		localise("tests21/syntax/");
+		localise( syntaxBaseContext );
 		String result = getResult( "issue245.html", ResultMode.HTML );
 		assertEquals( clean( issue245Result ), clean( result ) );
 	}
 
 	@Test
 	public void issue245a() {
-		localise("tests21/syntax/");
+		localise( syntaxBaseContext );
 		String result = getResult( "issue245a.html", ResultMode.HTML );
 		assertEquals( clean( issue245aResult ), clean( result ) );
 	}
 
 	@Test
 	public void issue245b() {
-		localise("tests21/syntax/");
+		localise( syntaxBaseContext );
 		String result = getResult( "issue245b.html", ResultMode.HTML );
 		assertEquals( clean( issue245bResult ), clean( result ) );
 	}
 
+	private Context getSyntax01Context() {
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+
+//	   	    ["bd1", new PCDate('2008-04-23')],
+//	   	    ["pet",				"#{ 'id': '23pet1', 'name': 'Tiddles', 'type': { 'name': 'Cat' }, 'owner': #smith1, 'birthDate': #bd1 }"]	       	    
+		
+		
+		Map< String, Object > petVar = new LinkedHashMap< String, Object >();
+		//'2008-04-23'
+		PCDate petVarBirthDate = new PCDate( new GregorianCalendar(2008, Calendar.APRIL, 23) );
+		petVar.put("birthDate", petVarBirthDate);
+		variables.put( "pet", petVar );
+
+		variables.put( "#lists.isEmpty(allSeedStarters)", false );
+
+		return syntaxBaseContext.copy().setVariables( variables );
+	}		
+	
+	private Context syntax01Context = getSyntax01Context();	
+	
 	@Test
 	public void syntax01() {
-		localise("tests21/syntax/");
+		localise( syntax01Context );
 		String result = getResult( "syntax01.html", ResultMode.HTML );
 		assertEquals( clean( syntax01Result ), clean( result ) );
 	}

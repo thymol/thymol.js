@@ -1,13 +1,22 @@
 package org.thymoljs.thymol.test.selenium.v21cases;
 
-import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import org.junit.Test;
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
-import org.junit.Test;
+
+import com.cedarsoftware.util.io.JsonObject;
 
 public class ParsingCases21 extends SeleniumCases {
+
+	Context parsingBaseContext = new Context( "tests21/parsing/" );
 
 	String parsing01Result =
 			"\n" +
@@ -356,51 +365,83 @@ public class ParsingCases21 extends SeleniumCases {
 			"\n\n\n\n" +
 			"\n\n";	 			
 
+	private Context getParsingContext() {
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+
+		List< Object > caps = new LinkedList< Object >();
+		
+		Map< String, Object > cap1Var = new LinkedHashMap< String, Object >();
+		cap1Var.put("city", "Madrid");
+		cap1Var.put("country", "Spain");
+		variables.put( "cap1", "cap1Var" );		
+		caps.add(cap1Var);
+		
+		Map< String, Object > cap2Var = new LinkedHashMap< String, Object >();
+		cap2Var.put("city", "Lisboa");
+		cap2Var.put("country", "Portugal");
+		variables.put( "cap2", "cap2Var" );		
+		caps.add(cap2Var);
+		
+		Map< String, Object > cap3Var = new LinkedHashMap< String, Object >();
+		cap3Var.put("city", "Paris");
+		cap3Var.put("country", "France");
+		variables.put( "cap3", "cap3Var" );		
+		caps.add(cap3Var);
+		
+		variables.put( "caps", caps );		
+		
+		variables.put( "msg", "Hello, World!" );
+		
+		return parsingBaseContext.copy().setVariables( variables );
+	}
+	
+	private Context parsingContext = getParsingContext(); 
+	
 	@Test
 	public void parsing01() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing01.html", ResultMode.HTML );
 		assertEquals( clean( parsing01Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing02() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing02.html", ResultMode.HTML );
 		assertEquals( clean( parsing02Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing03() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing03.html", ResultMode.HTML );
 		assertEquals( clean( parsing03Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing04() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing04.html", ResultMode.HTML );
 		assertEquals( clean( parsing04Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing05() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing05.html", ResultMode.HTML );
 		assertEquals( clean( parsing05Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing06() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing06.html", ResultMode.HTML );
 		assertEquals( clean( parsing06Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing07() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing07.html", ResultMode.HTML );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( parsing07ResultThymol ), clean( result ) );			
@@ -412,7 +453,7 @@ public class ParsingCases21 extends SeleniumCases {
 
 	@Test
 	public void parsing07a() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing07a.html", ResultMode.HTML );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( parsing07aResultThymol ), clean( result ) );			
@@ -424,7 +465,7 @@ public class ParsingCases21 extends SeleniumCases {
 
 	@Test
 	public void parsing07b() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing07b.html", ResultMode.HTML );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( parsing07bResultThymol ), clean( result ) );			
@@ -436,77 +477,77 @@ public class ParsingCases21 extends SeleniumCases {
 
 	@Test
 	public void parsing08() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing08.html", ResultMode.HTML );
 		assertEquals( clean( parsing08Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing09() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing09.html", ResultMode.HTML );
 		assertEquals( clean( parsing09Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing10() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing10.html", ResultMode.HTML );
 		assertEquals( clean( parsing10Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing11() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing11.html", ResultMode.HTML );
 		assertEquals( clean( parsing11Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing12() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing12.html", ResultMode.HTML );
 		assertEquals( clean( parsing12Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing13() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing13.html", ResultMode.HTML );
 		assertEquals( clean( parsing13Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing14() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing14.html", ResultMode.HTML );
 		assertEquals( clean( parsing14Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing15() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing15.html", ResultMode.HTML );
 		assertEquals( clean( parsing15Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing16() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing16.html", ResultMode.HTML );
 		assertEquals( clean( parsing16Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing17() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing17.html", ResultMode.HTML );
 		assertEquals( clean( parsing17Result ), clean( result ) );
 	}
 
 	@Test
 	public void parsing18() {
-		localise("tests21/parsing/");
+		localise( parsingContext );
 		String result = getResult( "parsing18.html", ResultMode.HTML );
 		assertEquals( clean( parsing18Result ), clean( result ) );
 	}

@@ -1,6 +1,6 @@
 /*-------------------- Thymol - the flavour of Thymeleaf --------------------*
 
-   Thymol version 2.0.1-pre.3 Copyright (C) 2012-2015 James J. Benson
+   Thymol version 2.0.1-pre.4 Copyright (C) 2012-2016 James J. Benson
    jjbenson .AT. users.sf.net (http://www.thymoljs.org/)
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,7 +18,7 @@
  *---------------------------------------------------------------------------*/
 
 thymol = function() {
-    thymol.thVersion = "2.0.1-pre.3";
+    thymol.thVersion = "2.0.1-pre.4";
     thymol.thReleaseDate = "not yet!";
     thymol.thURL = "http://www.thymoljs.org";
     thymol.thAltURL = "http://www.thymeleaf.org";
@@ -1928,13 +1928,31 @@ thymol = function() {
                             break;
                         }
                     }
-                    this.doInsertion(element, content, function(e, n) {
-                        if (n.nodeType == 1) {
-                            n.removeAttribute(thymol.thFragment.name);
-                            n.removeAttribute(thymol.thFragment.synonym);
+                    if (element.nodeType === 9) {
+                        if (content.nodeType !== 9) {
+                            element.appendChild(content);
+                        } else {
+                            if (content.childNodes !== null) {
+                                var cNodes = content.childNodes.length;
+                                if (cNodes > 0) {
+                                    for (i = 0; i < cNodes; i++) {
+                                        var iNode = content.childNodes[i];
+                                        if (!!iNode && iNode.nodeType !== 9 && iNode.nodeType !== 10 && iNode.nodeType !== 11) {
+                                            element.appendChild(iNode);
+                                        }
+                                    }
+                                }
+                            }
                         }
-                        e.appendChild(n);
-                    });
+                    } else {
+                        this.doInsertion(element, content, function(e, n) {
+                            if (n.nodeType == 1) {
+                                n.removeAttribute(thymol.thFragment.name);
+                                n.removeAttribute(thymol.thFragment.synonym);
+                            }
+                            e.appendChild(n);
+                        });
+                    }
                 } catch (err) {
                     element.innerHTML = content.innerHTML;
                 }
@@ -3019,13 +3037,59 @@ thymol.ThUtils = function() {
         }
         return result;
     }
+    function resolvePath(path) {
+        if (path.indexOf(".") == 0) {
+            return path;
+        }
+        var protoPos = path.indexOf("://");
+        var proto = "";
+        if (protoPos >= 0) {
+            protoPos += 3;
+            proto = path.substring(0, protoPos);
+            path = path.substring(protoPos);
+        }
+        path = path.replace(/\/\//g, "/");
+        var dotPos = path.indexOf("..");
+        var base = path.substring(0, dotPos - 1);
+        var relative = path.substring(dotPos);
+        var stack = base.split("/"), parts = relative.split("/");
+        for (var i = 0; i < parts.length; i++) {
+            if (parts[i] == "." || parts[i].length == 0) {
+                continue;
+            }
+            if (parts[i] == "..") {
+                stack.pop();
+            } else {
+                stack.push(parts[i]);
+            }
+        }
+        return proto + stack.join("/");
+    }
+    var globalEval = function() {
+        var isIndirectEvalGlobal = function(original, Object) {
+            try {
+                return (1, eval)("Object") === original;
+            } catch (err) {
+                return false;
+            }
+        }(Object, 123);
+        if (isIndirectEvalGlobal) {
+            return function(expression) {
+                return (1, eval)(expression);
+            };
+        } else if (typeof window.execScript !== "undefined") {
+            return function(expression) {
+                return window.execScript(expression);
+            };
+        }
+    }();
     function loadScript(file) {
         var script = thymol.Thymol.prototype.getFilePath(file);
         var status = "";
         var jqxhr = $.ajax({
             type: "GET",
             url: script,
-            dataType: "script",
+            dataType: "text",
             cache: true,
             async: false
         }).done(function() {
@@ -3033,6 +3097,9 @@ thymol.ThUtils = function() {
         }).fail(function() {
             status = "error";
         });
+        if ("success" === status) {
+            globalEval(jqxhr.responseText);
+        }
     }
     function unescape(text) {
         var result = text, i, iLimit, iUpper, c, cc;
@@ -3098,13 +3165,10 @@ thymol.ThUtils = function() {
     function getRequestEncoded(initial) {
         var result = initial;
         result = encodeURIComponent(result);
-        result = result.replace(/%20/g, "+");
         result = result.replace(/%26/g, "&");
         result = result.replace(/%3A/g, ":");
         result = result.replace(/!/g, "%21");
         result = result.replace(/'/g, "%27");
-        result = result.replace(/\(/g, "%28");
-        result = result.replace(/\)/g, "%29");
         result = result.replace(/\*/g, "%2A");
         result = result.replace(/~/g, "%7E");
         return result;
@@ -3122,6 +3186,7 @@ thymol.ThUtils = function() {
         charOcurrences: charOcurrences,
         isLiteral: isLiteral,
         isLiteralSubst: isLiteralSubst,
+        resolvePath: resolvePath,
         loadScript: loadScript,
         unescape: unescape,
         unicodeUnescape: unicodeUnescape,
@@ -5977,7 +6042,7 @@ thymol.objects.thDatesObject = function() {
         };
     }();
     dateFormat.masks = {
-        "default": "dd MMMM yyyy HH:mm:ss Z",
+        default: "dd MMMM yyyy HH:mm:ss Z",
         shortDate: "M/d/yy",
         mediumDate: "MMM d, yyyy",
         longDate: "d MMMM yyyy",
@@ -7257,7 +7322,7 @@ thymol.objects.thStringsObject = function() {
         if (target !== null) {
             var str = target.toString();
             if (str !== null) {
-                str = str.replace(/(?:[\\]t)/g, "	").replace(/(?:[\\]n)/g, "\n").replace(/(?:[\\]v)/g, "").replace(/(?:[\\]f)/g, "\f").replace(/(?:[\\]r)/g, "\r");
+                str = str.replace(/(?:[\\]t)/g, "\t").replace(/(?:[\\]n)/g, "\n").replace(/(?:[\\]v)/g, "\v").replace(/(?:[\\]f)/g, "\f").replace(/(?:[\\]r)/g, "\r");
                 str = str.trim();
                 if (str.length !== 0) {
                     return false;
@@ -7676,7 +7741,7 @@ thymol.objects.thStringsObject = function() {
     function capitalizeWords(target, delimiters) {
         var splitter;
         if (typeof delimiters === "undefined") {
-            splitter = new RegExp("[^ 	\r\n\f]\\w*", "g");
+            splitter = new RegExp("[^ \t\r\n\f\v]\\w*", "g");
         } else {
             var spec = "[^ " + delimiters + "]\\w*";
             splitter = new RegExp(spec, "g");
@@ -7906,7 +7971,7 @@ thymol.objects.thStringsObject = function() {
                 }
             } else {
                 switch (c) {
-                  case "	":
+                  case "\t":
                     c = "\\t";
                     break;
 
@@ -8033,7 +8098,7 @@ thymol.objects.thStringsObject = function() {
                 } else {
                     switch (c) {
                       case "t":
-                        c = "	";
+                        c = "\t";
                         break;
 
                       case "n":

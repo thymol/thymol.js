@@ -1,13 +1,15 @@
 package org.thymoljs.thymol.test.selenium.thymol20;
 
-import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 
 import java.util.Locale;
 
+import org.junit.Test;
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
-import org.junit.Test;
+
+import com.cedarsoftware.util.io.JsonObject;
 
 public class Thymol20Cases extends SeleniumCases {
 
@@ -71,16 +73,24 @@ public class Thymol20Cases extends SeleniumCases {
 			"User isn't in any known group\n" + 
 			"Back";
 
+	private Context thymol20WithBaseContext = new Context( "thymol20/with/" );
+	
 	@Test
 	public void with01() {
-		localise("thymol20/with/");
+		localise(  thymol20WithBaseContext );
 		String result = getResult( "with01.html", ResultMode.HTML );
 		assertEquals( clean( with01Result ), clean( result ) );
 	}
 
+	private Context getThymol20With02Context() {		
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();		
+		variables.put( "level", "../../" );
+	    return thymol20WithBaseContext.copy().setVariables( variables );		
+	}
+	
 	@Test
 	public void with02() {
-		localise("thymol20/with/");
+		localise( getThymol20With02Context() );
 		String result = getResult( "with02.html", ResultMode.HTML );		
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( with02ResultThymol ), clean( result ) );			
@@ -90,9 +100,12 @@ public class Thymol20Cases extends SeleniumCases {
 		}
 	}
 
+	Context thymol20LocaleBaseContext = new Context( "thymol20/locale/" );
+	
+	
 	@Test
 	public void locale01() {
-		localise("thymol20/locale/", new Locale( "es", "", "" ) );		
+		localise( thymol20LocaleBaseContext.copy().setLocale( new Locale( "es", "", "" ) ) );		
 		String result;
 		if( expectNodeResult() ) {
 			result = getResult( "locale-example1-node.html", ResultMode.HTML );			
@@ -105,7 +118,7 @@ public class Thymol20Cases extends SeleniumCases {
 
 	@Test
 	public void locale02() {
-		localise("thymol20/locale/", new Locale( "en", "GB", "" ));
+		localise( thymol20LocaleBaseContext.copy().setLocale( new Locale( "en", "GB", "" ) ) );		
 		String result;
 		if( expectNodeResult() ) {
 			result = getResult( "locale-example2-node.html", ResultMode.HTML );			
@@ -118,7 +131,7 @@ public class Thymol20Cases extends SeleniumCases {
 
 	@Test
 	public void locale03() {
-		localise("thymol20/locale/", new Locale( "en", "US", "" ));
+		localise( thymol20LocaleBaseContext.copy().setLocale( new Locale( "en", "US", "" ) ) );		
 		String result;
 		if( expectNodeResult() ) {
 			result = getResult( "locale-example3-node.html", ResultMode.HTML );			
@@ -131,7 +144,7 @@ public class Thymol20Cases extends SeleniumCases {
 
 	@Test
 	public void locale04() {
-		localise("thymol20/locale/", new Locale( "gl", "", "" ));
+		localise( thymol20LocaleBaseContext.copy().setLocale( new Locale( "gl", "" ) ) );		
 		String result;
 		if( expectNodeResult() ) {
 			result = getResult( "locale-example4-node.html", ResultMode.HTML );			
@@ -144,7 +157,7 @@ public class Thymol20Cases extends SeleniumCases {
 
 	@Test
 	public void locale05() {
-		localise("thymol20/locale/", new Locale( "en", "GB", "ICU4J" ));
+		localise( thymol20LocaleBaseContext.copy().setLocale( new Locale( "en", "GB", "ICU4J" ) ) );		
 		String result;
 		if( expectNodeResult() ) {
 			result = getResult( "locale-example5-node.html", ResultMode.HTML );			
@@ -155,9 +168,11 @@ public class Thymol20Cases extends SeleniumCases {
 		assertEquals( clean( locale05Result ), clean( result ) );
 	}
 
+	Context thymol20PrefixContext = new Context( "thymol20/prefix/" );
+	
 	@Test
 	public void prefix01() {
-		localise("thymol20/prefix/");
+		localise( thymol20PrefixContext );
 		String result = getResult( "prefix01.html", ResultMode.TEXT );
 		if( expectThymolResult() ) {
 			assertEquals( clean( prefix01Result ), clean( result ) );			
@@ -166,7 +181,7 @@ public class Thymol20Cases extends SeleniumCases {
 
 	@Test
 	public void prefix02() {
-		localise("thymol20/prefix/");
+		localise( thymol20PrefixContext );
 		String result = getResult( "prefix02.html", ResultMode.TEXT );
 		if( expectThymolResult() ) {
 			assertEquals( clean( prefix01Result ), clean( result ) );			
@@ -175,7 +190,7 @@ public class Thymol20Cases extends SeleniumCases {
 
 	@Test
 	public void prefix02a() {
-		localise("thymol20/prefix/");
+		localise( thymol20PrefixContext );
 		String result = getResult( "prefix02a.html", ResultMode.TEXT );
 		if( expectThymolResult() ) {
 			assertEquals( clean( prefix01Result ), clean( result ) );			
@@ -184,7 +199,7 @@ public class Thymol20Cases extends SeleniumCases {
 
 	@Test
 	public void prefix02b() {
-		localise("thymol20/prefix/");
+		localise( thymol20PrefixContext );
 		String result = getResult( "prefix02b.html", ResultMode.TEXT );
 		if( expectThymolResult() ) {
 			assertEquals( clean( prefix01Result ), clean( result ) );			
@@ -193,16 +208,16 @@ public class Thymol20Cases extends SeleniumCases {
 
 	@Test
 	public void prefix03() {
-		localise("thymol20/prefix/");
+		localise( thymol20PrefixContext );
 		String result = getResult( "prefix03.html", ResultMode.TEXT );
 		if( expectThymolResult() ) {
 			assertEquals( clean( prefix01Result ), clean( result ) );			
 		}
 	}
-
+//here
 	@Test
 	public void prefix04() {
-		localise("thymol20/prefix/");
+		localise( thymol20PrefixContext );
 		String result = getResult( "prefix04.html", ResultMode.TEXT );
 		if( expectThymolResult() ) {
 			assertEquals( clean( prefix01Result ), clean( result ) );			
@@ -211,7 +226,7 @@ public class Thymol20Cases extends SeleniumCases {
 
 	@Test
 	public void prefix05() {
-		localise("thymol20/prefix/");
+		localise( thymol20PrefixContext );
 		String result = getResult( "prefix05.html", ResultMode.TEXT );
 		if( expectThymolResult() ) {
 			assertEquals( clean( prefix01Result ), clean( result ) );			

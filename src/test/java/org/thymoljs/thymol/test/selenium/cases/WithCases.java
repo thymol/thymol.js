@@ -1,13 +1,21 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.junit.Test;
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
-import org.junit.Test;
+
+import com.cedarsoftware.util.io.JsonObject;
 
 public class WithCases extends SeleniumCases {
 
+	Context withBaseContext = new Context( "tests/with/" );
+	
 	String with01ResultThymol = 		
 			"ThError: while evaluating expression: a: null, name: name";
 	
@@ -26,9 +34,25 @@ public class WithCases extends SeleniumCases {
 			"<div><p>Jack Melon</p></div>\n" +
 			"\n";
  	
+	private Context getWithContext() {
+		
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+		
+		Map< String, Object > userVar = new LinkedHashMap< String, Object >();
+		userVar.put( "name", "Jack Melon" );
+		userVar.put( "role", "finance" );
+		userVar.put( "age", Integer.valueOf(24) );
+		variables.put( "user", userVar );
+
+	    return withBaseContext.copy().setVariables( variables );
+		
+	}
+	
+	private Context withContext = getWithContext();
+	
 	@Test
 	public void with01() {
-		localise("tests/with/");
+		localise( withContext );
 		String result = getResult( "with01.html", ResultMode.ALERT );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( with01ResultThymol, result );			
@@ -41,14 +65,14 @@ public class WithCases extends SeleniumCases {
 
 	@Test
 	public void with02() {
-		localise("tests/with/");
+		localise( withContext );
 		String result = getResult( "with02.html", ResultMode.HTML );
 		assertEquals( with02Result, result );
 	}
 	
 	@Test
 	public void with03() {
-		localise("tests/with/");
+		localise( withContext );
 		String result = getResult( "with03.html", ResultMode.HTML );
 		assertEquals( with03Result, result );
 	}

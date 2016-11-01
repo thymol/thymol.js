@@ -1,15 +1,24 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
-import static junit.framework.Assert.assertEquals;
 import static org.junit.Assert.assertEquals;
 
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
+
+import com.cedarsoftware.util.io.JsonObject;
+
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public class AttrCases extends SeleniumCases {
+	
+	Context attrBaseContext = new Context( "tests/attr/" );
 	
 	String attr01Result =
 			"\n" +
@@ -75,19 +84,20 @@ public class AttrCases extends SeleniumCases {
 			"<option>..</option>" +
 			"\n\n\n";
 	
-	String attr05ResultThymol = 					
-			"\n" +
-			"  <ul>\n" +
-			"    <li><a href=\"#1234\">Link v1</a></li>\n" +
-			"    <li><a data-target=\"#1234\" href=\"#\">Link v2</a></li>\n" +
-			"    <li><a data-target=\"#1234\" href=\"#\">Link v3</a></li>\n" +
-			"    <li><a data-target=\"#5678\" href=\"#\">Link v4</a></li>\n" +
-			"    <li><a data-target=\"#1234\" href=\"#\">Link v5</a></li>\n" +
-			"    <li><a data-target=\"#5678\" href=\"#\">Link v6</a></li>\n" +
-			"  </ul>\n" +
-			"\n";	
+//	String attr05ResultThymol = 					
+//			"\n" +
+//			"  <ul>\n" +
+//			"    <li><a href=\"#1234\">Link v1</a></li>\n" +
+//			"    <li><a data-target=\"#1234\" href=\"#\">Link v2</a></li>\n" +
+//			"    <li><a data-target=\"#1234\" href=\"#\">Link v3</a></li>\n" +
+//			"    <li><a data-target=\"#5678\" href=\"#\">Link v4</a></li>\n" +
+//			"    <li><a data-target=\"#1234\" href=\"#\">Link v5</a></li>\n" +
+//			"    <li><a data-target=\"#5678\" href=\"#\">Link v6</a></li>\n" +
+//			"  </ul>\n" +
+//			"\n";	
 	
-	String attr05ResultThymeleaf = 					
+//	String attr05ResultThymeleaf = 					
+	String attr05Result = 					
 			"\n" +
 			"  <ul>\n" +
 			"    <li><a href=\"#1234\">Link v1</a></li>\n" +
@@ -99,13 +109,40 @@ public class AttrCases extends SeleniumCases {
 			"  </ul>\n" +
 			"\n";	
 	
+	
+	private Context getAttrContext() {
+		
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+				
+		Map< String, String > pricesVar = new LinkedHashMap< String, String >();
+		pricesVar.put( "euros", "9" );
+		pricesVar.put( "dollars", "12" );
+		Map< String, Object > productVar = new LinkedHashMap< String, Object >();
+		productVar.put( "name", "Lettuce" );
+		productVar.put( "prices", pricesVar );
+		variables.put( "product", productVar );
+		
+		variables.put( "identifier", new Integer(32) );
+		variables.put( "sel", Boolean.TRUE );
+	
+		Map<String,Object> affiliate = new HashMap<String,Object>();
+		affiliate.put("identificationCode1","1234");
+		affiliate.put("identificationCode2","5678");
+		variables.put( "affiliate", affiliate );		
+	
+		return attrBaseContext.copy().setVariables( variables );
+		
+	}
+	
+	private Context attrContext = getAttrContext();
+	
 	@Test
 	public void attr01() {
 		
 //		String thDeploy = System.getProperty("thDeploy");		
 //		String attr01NodeResult = String.format(attr01NodeResultMould, thDeploy);
 		
-		localise("tests/attr/");
+		localise( attrContext );
 		String result = getResult( "attr01.html", ResultMode.HTML );
 		result = result.replaceAll(";jsessionid=[^\"]*", "");
 		result = clean(result);
@@ -142,14 +179,14 @@ public class AttrCases extends SeleniumCases {
 
 	@Test
 	public void attr02() {
-		localise("tests/attr/");
+		localise( attrBaseContext );
 		String result = getResult( "attr02.html", ResultMode.HTML );
 		assertEquals( clean(attr02Result), clean(result) );
 	}
 	
 	@Test
 	public void attr03() {
-		localise("tests/attr/");
+		localise( attrContext );
 		WebElement result = getResultBody( "attr03.html", ResultMode.TEXT );
 		WebElement span = result.findElement( By.tagName( "span" ) );
 		String classAttr = span.getAttribute( "class" );
@@ -163,21 +200,22 @@ public class AttrCases extends SeleniumCases {
 	
 	@Test
 	public void attr04() {
-		localise("tests/attr/");
+		localise( attrContext );
 		String result = getResult( "attr04.html", ResultMode.HTML );
 		assertEquals( clean(attr04Result), clean(result) );
 	}
 	
 	@Test
 	public void attr05() {
-		localise("tests/attr/");
+		localise( attrContext );
 		String result = getResult( "attr05.html", ResultMode.HTML );
-		if( expectThymolResult() ) {
-			assertEquals( clean(attr05ResultThymol), clean(result) );			
-		}
-		else {			
-			assertEquals( clean(attr05ResultThymeleaf), clean(result) );			
-		}
+		assertEquals( clean(attr05Result), clean(result) );			
+//		if( expectThymolResult() ) {
+//			assertEquals( clean(attr05ResultThymol), clean(result) );			
+//		}
+//		else {			
+//			assertEquals( clean(attr05ResultThymeleaf), clean(result) );			
+//		}
 	}
 
 }

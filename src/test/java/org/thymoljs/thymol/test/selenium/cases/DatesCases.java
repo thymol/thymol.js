@@ -1,12 +1,27 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Locale;
+import java.util.Set;
+
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
+
+import com.cedarsoftware.util.io.JsonObject;
+
 import org.junit.Test;
+import org.thymeleaf.expression.Dates;
 
 public class DatesCases extends SeleniumCases {
+	
+	Context datesBaseContext = new Context( "thymol/dates/" );
 	
 	String dates01ResultThymol =
 			"\n" +
@@ -208,9 +223,28 @@ public class DatesCases extends SeleniumCases {
 			"\n" +
 			"\n\n";	
 	
+	private Dates dates = new Dates(Locale.UK);
+	
+	private Context getDates01Context() {
+
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+				
+		Date onedate = dates.create(1992,10,12);
+		variables.put( "onedate", onedate );
+		
+		Date twodate = dates.create(1732,10,12);
+		variables.put( "twodate", twodate );
+		
+		return datesBaseContext.copy().setVariables( variables );
+
+	}
+	
+	private Context dates01Context = getDates01Context();
+	private Context dates01LocalContext = dates01Context.deepCopy().setLocale( new Locale( "en", "GB", "" ) ) ;
+	
 	@Test
 	public void dates01() {
-		localise( "thymol/dates/" );
+		localise( dates01LocalContext );		
 		String result;
 		if( expectNodeResult() ) {
 			result = getResult( "dates01node.html", ResultMode.HTML );			
@@ -228,7 +262,7 @@ public class DatesCases extends SeleniumCases {
 
 	@Test
 	public void dates02() {
-		localise( "thymol/dates/" );
+		localise( dates01Context );
 		String result;
 		if( expectNodeResult() ) {
 			result = getResult( "dates02node.html", ResultMode.HTML );			
@@ -239,9 +273,39 @@ public class DatesCases extends SeleniumCases {
 		assertEquals( clean( dates02Result ), clean( result ) );
 	}
 
+	private Context getDates03Context() {
+
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+		
+		Date date0 = dates.create(1492,10,12);		
+		Date date1 = dates.create(1666,9,2);
+		Date date2 = dates.create(1835,12,16);
+		Date date3 = dates.create(1901,5,3);
+		Date date4 = dates.create(1922,9,13);
+		variables.put( "date0", date0 );
+		variables.put( "date1", date1 );
+		variables.put( "date2", date2 );
+		variables.put( "date3", date3 );
+		variables.put( "date4", date4 );
+		Date[] dateArray = {date0,date1,date2,date3,date4};
+		variables.put( "dateArray", dateArray );
+		Set<Date> dateSet = new HashSet<Date>();
+		
+		List<Date> dateArrayAsList = Arrays.asList( dateArray );
+		Collections.sort( dateArrayAsList );
+		dateSet.addAll( dateArrayAsList );				
+		variables.put( "dateSet", dateSet );
+		
+		return datesBaseContext.copy().setVariables( variables );
+
+	}
+	
+	private Context dates03Context = getDates03Context();
+	private Context dates03LocalContext = dates03Context.deepCopy().setLocale( new Locale( "en", "GB", "" ) ) ;
+	
 	@Test
 	public void dates03() {
-		localise( "thymol/dates/" );
+		localise( dates03LocalContext );
 		String result = getResult( "dates03.html", ResultMode.HTML );
 		if( expectThymolResult() || expectNodeResult() ) {
 			assertEquals( clean( dates03ResultThymol ), clean( result ) );
@@ -253,84 +317,111 @@ public class DatesCases extends SeleniumCases {
 
 	@Test
 	public void dates04() {
-		localise( "thymol/dates/" );
+		localise( dates03Context );
 		String result = getResult( "dates04.html", ResultMode.HTML );		
 		assertEquals( clean( dates04Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates05() {
-		localise( "thymol/dates/" );
+		localise( dates03Context );
 		String result = getResult( "dates05.html", ResultMode.HTML );
 		assertEquals( clean( dates05Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates06() {
-		localise( "thymol/dates/" );
+		localise( dates03Context );
 		String result = getResult( "dates06.html", ResultMode.HTML );
 		assertEquals( clean( dates06Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates07() {
-		localise( "thymol/dates/" );
+		localise( dates03Context );
 		String result = getResult( "dates07.html", ResultMode.HTML );
 		assertEquals( clean( dates07Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates08() {
-		localise( "thymol/dates/" );
+		localise( dates03Context );
 		String result = getResult( "dates08.html", ResultMode.HTML );
 		assertEquals( clean( dates08Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates09() {
-		localise( "thymol/dates/" );
+		localise( dates03Context );
 		String result = getResult( "dates09.html", ResultMode.HTML );
 		assertEquals( clean( dates09Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates10() {
-		localise( "thymol/dates/" );
+		localise( dates03Context );
 		String result = getResult( "dates10.html", ResultMode.HTML );
 		assertEquals( clean( dates10Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates11() {
-		localise( "thymol/dates/" );
+		localise( dates03Context );
 		String result = getResult( "dates11.html", ResultMode.HTML );
 		assertEquals( clean( dates11Result ), clean( result ) );
 	}
 
+	private Context getDates12Context() {
+
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+		
+		Date time1 = dates.create(1501, 3, 12, 8, 25, 9, 321);
+		Date time2 = dates.create(1711, 4, 13, 12, 35, 19, 543);
+		Date time3 = dates.create(1921, 5, 14, 14, 45, 29, 765);
+		Date time4 = dates.create(2031, 6, 15, 16, 55, 39, 987);
+		variables.put( "time1", time1 );
+		variables.put( "time2", time2 );
+		variables.put( "time3", time3 );
+		variables.put( "time4", time4 );
+		Date[] timeArray = {time1,time2,time3,time4};
+		variables.put( "timeArray", timeArray );
+		Set<Date> timeSet = new HashSet<Date>();
+		List<Date> timeArrayAsList = Arrays.asList( timeArray );
+		Collections.sort( timeArrayAsList );
+		timeSet.addAll( timeArrayAsList );
+
+		variables.put( "timeSet", timeSet );
+		
+		return datesBaseContext.copy().setVariables( variables );
+
+	}
+	
+	private Context dates12Context = getDates12Context();
+	
 	@Test
 	public void dates12() {
-		localise( "thymol/dates/" );
+		localise( dates12Context );
 		String result = getResult( "dates12.html", ResultMode.HTML );
 		assertEquals( clean( dates12Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates13() {
-		localise( "thymol/dates/" );
+		localise( dates12Context );
 		String result = getResult( "dates13.html", ResultMode.HTML );
 		assertEquals( clean( dates13Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates14() {
-		localise( "thymol/dates/" );
+		localise( dates12Context );
 		String result = getResult( "dates14.html", ResultMode.HTML );
 		assertEquals( clean( dates14Result ), clean( result ) );
 	}
 
 	@Test
 	public void dates15() {
-		localise( "thymol/dates/" );
+		localise( dates12Context );
 		String result = getResult( "dates15.html", ResultMode.HTML );
 		assertEquals( clean( dates15Result ), clean( result ) );
 	}

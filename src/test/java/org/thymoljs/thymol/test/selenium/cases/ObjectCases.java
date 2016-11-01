@@ -1,14 +1,21 @@
 package org.thymoljs.thymol.test.selenium.cases;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
+
+import org.junit.Test;
+import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.ResultMode;
 import org.thymoljs.thymol.test.selenium.SeleniumCases;
-import org.thymoljs.thymol.test.selenium.SureFireEnv;
-import org.junit.Test;
+
+import com.cedarsoftware.util.io.JsonObject;
 
 public class ObjectCases extends SeleniumCases {
 
+	Context objectBaseContext = new Context( "tests/object/" );
+	
 	String object01Result = 					
 			"\n" +
 			"<p>9</p>\n" +
@@ -57,16 +64,35 @@ public class ObjectCases extends SeleniumCases {
 			"</p>\n" +
 			"\n";
 
+	private Context getObjectContext() {
+		
+		JsonObject< String, Object > variables = new JsonObject< String, Object >();
+		
+		Map< String, String > pricesVar = new LinkedHashMap< String, String >();
+		pricesVar.put( "euros", "9" );
+		pricesVar.put( "dollars", "12" );
+		Map< String, Object > productVar = new LinkedHashMap< String, Object >();
+		productVar.put( "name", "Lettuce" );
+		productVar.put( "prices", pricesVar );
+		variables.put( "product", productVar );
+		
+		return objectBaseContext.copy().setVariables( variables );
+		
+	}
+	
+	private Context objectContext = getObjectContext();
+	
+	
 	@Test
 	public void object01() {
-		localise("tests/object/");
+		localise( objectContext );
 		String result = getResult( "object01.html", ResultMode.HTML );
 		assertEquals( object01Result, result );
 	}
 
 	@Test
 	public void object02() {
-		localise("tests/object/");
+		localise( objectContext );
 		String result = getResult( "object02.html", ResultMode.ALERT );
 //		if( getter.getClass().isAssignableFrom( SureFireEnv.class ) ) {
 		if( expectThymolResult() || expectNodeResult() ) {
@@ -80,14 +106,14 @@ public class ObjectCases extends SeleniumCases {
 
 	@Test
 	public void object03() {
-		localise("tests/object/");
+		localise( objectContext );
 		String result = getResult( "object03.html", ResultMode.HTML );
 		assertEquals( object03Result, result );
 	}
 
 	@Test
 	public void object04() {
-		localise("tests/object/");
+		localise( objectContext );
 		String result = getResult( "object04.html", ResultMode.HTML );
 		assertEquals( object04Result, result );
 	}

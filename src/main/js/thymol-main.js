@@ -4,7 +4,7 @@ $( function() {
   thymol.execute( document );
 } );
 
-$( window ).unload( function() {
+$( window ).on( 'unload', function() {
   if( thymol.sessionContext && thymol.sessionContext.persist ) {
     thymol.sessionContext.persist();
   }
