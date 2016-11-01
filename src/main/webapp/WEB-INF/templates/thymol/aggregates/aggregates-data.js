@@ -1,5 +1,4 @@
 thDebug = true;
-	
 thymol.ready(function () {
 	thymol.configurePreExecution( function() {
 			var ar1 = [ 1, 3, 57, 99 ];

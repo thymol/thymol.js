@@ -7,7 +7,7 @@
 <body>
 <table>
 <tr th:each="detail : ${receipt.paymentDetails}" th:if="${detail.key} == 'PaymentDetailsCardIssueNumber'">
-<td valign="center" align="right" style="padding: 0px 21px 0px 21px;">
+<td valign="middle" align="right" style="padding: 0px 21px 0px 21px;">
 <span th:text="${detail.label}">XXXX.</span>
 <span th:text="${detail.value}">YY</span>
 </td>

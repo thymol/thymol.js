@@ -7,13 +7,13 @@
 <script th:remove="all" type="text/javascript" src="${thInstall}/thymol.js" data-thymol-load="block10-data.js"></script>
 <body>
 <table>
-    <!--/*/ <th:block th:each="user : ${users}"> /*/-->
+    <!--/*/ <th:block th:each="userv : ${users}"> /*/-->
     <tr>
-        <td th:text="${user.login}">...</td>
-        <td th:text="${user.name}">...</td>
+        <td th:text="${userv.login}">...</td>
+        <td th:text="${userv.name}">...</td>
     </tr>
     <tr>
-        <td colspan="2" th:text="${user.address}">...</td>
+        <td colspan="2" th:text="${userv.address}">...</td>
     </tr>
     <!--/*/ </th:block> /*/-->
 </table>
