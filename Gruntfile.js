@@ -155,7 +155,7 @@ module.exports = function( grunt ) {
       thymol_min : {
         files : tmpThymolFileMinObj,
         options : {
-          compress : true,
+          compress : {},
           mangle : true,
           banner : shortBannerComment
         }
@@ -163,7 +163,7 @@ module.exports = function( grunt ) {
       lite_min : {
         files : tmpLiteFileMinObj,
         options : {
-          compress : true,
+          compress : {},
           mangle : true,
           banner : shortBannerComment
         }
@@ -171,7 +171,7 @@ module.exports = function( grunt ) {
       full_min : {
         files : tmpFullFileMinObj,
         options : {
-          compress : true,
+          compress : {},
           mangle : true,
           banner : shortBannerComment
         }
@@ -179,7 +179,7 @@ module.exports = function( grunt ) {
       node_min : {
         files : tmpNodeFileMinObj,
         options : {
-          compress : true,
+          compress : {},
           mangle : true,
           banner : shortBannerComment
         }
@@ -257,6 +257,7 @@ module.exports = function( grunt ) {
         options : {
           flatten : true,
           process : function( content, srcpath ) {
+            content = content.replace( "${thymol-jquery-version}", mavenProperties.thymolJQueryVersion );
             return content.replace( "${project.version}", mavenProperties.thymolVersion );
           }
         }
