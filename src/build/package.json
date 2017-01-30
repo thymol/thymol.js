@@ -4,9 +4,6 @@
   "version": "${project.version}",                                                                                                                               
   "description": "JavaScript Thymeleaf Emulation",
   "main": "Gruntfile.js",
-  "dependencies": {
-    "jquery": "^${thymol-jquery-version}"
-  },
   "devDependencies": {
     "forever": "^${thymol-forever-version}",
     "bower": "^${thymol-bower-version}",

@@ -12,19 +12,18 @@ public class ChromeFactory implements WebDriverFactory {
 	@Override
 	public WebDriver create() {
 		DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-//"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --allow-file-access-from-files --disable-web-security			
+		//"C:\Program Files (x86)\Google\Chrome\Application\chrome.exe" --allow-file-access-from-files --disable-web-security			
 		ChromeOptions options = new ChromeOptions();
-		options.addArguments("allow-file-access-from-files");			
-		options.addArguments("disable-web-security");			
-		capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-		WebDriver driver = new ChromeDriver(capabilities);								
+		options.addArguments( "allow-file-access-from-files" );
+		options.addArguments( "disable-web-security" );
+		capabilities.setCapability( ChromeOptions.CAPABILITY, options );
+		WebDriver driver = new ChromeDriver( capabilities );
 		driver.manage().timeouts().implicitlyWait( 2, TimeUnit.SECONDS );
 
-//		In Chrome I can do
-//		var options = new ChromeOptions();
-//		options.AddArgument("--lang=" + "en-GB");		
-		
-		
+		//		In Chrome I can do
+		//		var options = new ChromeOptions();
+		//		options.AddArgument("--lang=" + "en-GB");		
+
 		return driver;
 	}
 
@@ -34,6 +33,5 @@ public class ChromeFactory implements WebDriverFactory {
 		driver = null;
 		return driver;
 	}
-
 
 }

@@ -30,6 +30,7 @@ import org.thymoljs.thymol.test.selenium.cases.RemoveCases;
 import org.thymoljs.thymol.test.selenium.cases.ReplaceCases;
 import org.thymoljs.thymol.test.selenium.cases.SetsCases;
 import org.thymoljs.thymol.test.selenium.cases.StringsCases;
+import org.thymoljs.thymol.test.selenium.cases.SwitchCases;
 import org.thymoljs.thymol.test.selenium.cases.WithCases;
 import org.thymoljs.thymol.test.selenium.issues.IssuesCases;
 import org.thymoljs.thymol.test.selenium.thymol20.Thymol20Cases;
@@ -49,37 +50,38 @@ import org.junit.runners.Suite;
 
 @RunWith(Suite.class)
 @Suite.SuiteClasses({	
-	AggregatesCases.class,
 	AppendPrependCases.class,
-	ArraysCases.class,
 	AttrCases.class,
-	BoolsCases.class,
-	CalendarsCases.class,
-	DatesCases.class,
-	DebugCases.class,
 	DomSelectorCases.class,                                                                                                                                                                                                                        
 	EachCases.class,                                                                                                                                                                                                                               
-	ExprCases.class,                                                                                                                                                                                                                               
 	ExpressionCases.class,                                                                                                                                                                                                                         
-	ExpressionDerivedCases.class,                                                                                                                                                                                                                  
-	IdsCases.class,                                                                                                                                                                                                                                
 	IfCases.class,                                                                                                                                                                                                                                 
 	IncludeCases.class,                                                                                                                                                                                                                            
 	InlineCases.class,                                                                                                                                                                                                                             
 	LinkCases.class,                                                                                                                                                                                                                              
+	MessagesCases.class,                                                                                                                                                                                                                           
+	ObjectCases.class,                                                                                                                                                                                                                             
+	RemoveCases.class,                                                                                                                                                                                                                             
+	ReplaceCases.class,                                                                                                                                                                                                                            
+	SwitchCases.class,                                                                                                                                                                                                                            
+	WithCases.class,                                                                                                                                                                                                                               		
+	ArraysCases.class,
+	AggregatesCases.class,
+	BoolsCases.class,
+	CalendarsCases.class,
+	DatesCases.class,
+	DebugCases.class,
+	ExprCases.class,                                                                                                                                                                                                                               
+	ExpressionDerivedCases.class,                                                                                                                                                                                                                  
+	IdsCases.class,                                                                                                                                                                                                                                
 	ClassicMessageCases.class,                                                                                                                                                                                                                              
 	ListsCases.class,                                                                                                                                                                                                                              
 	MapsCases.class,                                                                                                                                                                                                                               
-	MessagesCases.class,                                                                                                                                                                                                                           
-	ObjectCases.class,                                                                                                                                                                                                                             
-	ObjectsCases.class,                                                                                                                                                                                                                            
 	ParamsCases.class,                                                                                                                                                                                                                            
 	RefCases.class,                                                                                                                                                                                                                                
-	RemoveCases.class,                                                                                                                                                                                                                             
-	ReplaceCases.class,                                                                                                                                                                                                                            
+	ObjectsCases.class,                                                                                                                                                                                                                            
 	SetsCases.class,                                                                                                                                                                                                                               
 	StringsCases.class,                                                                                                                                                                                                                            
-	WithCases.class,                                                                                                                                                                                                                               		
 	Thymol20Cases.class,
 	AssertCases21.class,
 	BlockCases21.class,

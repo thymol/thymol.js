@@ -1,5 +1,8 @@
 ( function() {
 
+  ELEMENT_NODE = 1;
+  TEXT_NODE = 3;
+  
   var specAttrModList = [ "abbr", "accept", "accept-charset", "accesskey", "action", "align", "alt", "archive", "audio", "autocomplete", "axis", "background", "bgcolor", "border", "cellpadding", "cellspacing", "challenge", "charset", "cite", "class", "classid", "codebase", "codetype", "cols", "colspan", "compact", "content", "contenteditable", "contextmenu", "data", "datetime", "dir", "draggable", "dropzone", "enctype", "for", "form", "formaction", "formenctype", "formmethod", "formtarget", "frame", "frameborder", "headers", "height", "high", "href", "hreflang", "hspace", "http-equiv", "icon", "id", "keytype", "kind", "label", "lang", "list", "longdesc", "low", "manifest", "marginheight", "marginwidth", "max", "maxlength", "media", "method", "min", "name", "optimum", "pattern", "placeholder", "poster", "preload", "radiogroup", "rel", "rev", "rows", "rowspan", "rules", "sandbox", "scheme", "scope", "scrolling", "size", "sizes", "span", "spellcheck", "src", "srclang", "standby", "start", "step", "style", "summary", "tabindex", "target", "title", "type", "usemap", "value", "valuetype", "vspace", "width", "wrap", "xmlbase", "xmllang", "xmlspace" ];
 
   var fixedValBoolAttrList = [ "async", "autofocus", "autoplay", "checked", "controls", "declare", "default", "defer", "disabled", "formnovalidate", "hidden", "ismap", "loop", "multiple", "novalidate", "nowrap", "open", "pubdate", "readonly", "required", "reversed", "scoped", "seamless", "selected" ];
@@ -417,10 +420,10 @@
     for( i = 0, iLimit = element.childNodes.length; i < iLimit; i++ ) {
       do {
         changed = false;
-        if( element.childNodes[ i ].nodeType == 1 ) {
+        if( element.childNodes[ i ].nodeType === ELEMENT_NODE ) {
           thymol.doInlineText( element.childNodes[ i ] );
         }
-        else if( element.childNodes[ i ].nodeType == 3 ) {
+        else if( element.childNodes[ i ].nodeType === TEXT_NODE ) {
           value = element.childNodes[ i ].nodeValue;
           if( value ) {
             expr = textInlineCommentExpr.exec( value );
@@ -539,8 +542,7 @@
   };
 
   thymol.processRemove = function( element, thUrlAttr ) {
-    var haveRemoved = false;
-    var locals = element.thLocalVars, savedLocals = element.thLocalVars, arg, nodes, first;
+    var locals = element.thLocalVars, savedLocals = element.thLocalVars, arg, children, first, haveRemoved = false;
     if( !locals ) {
       locals = {};
     }
@@ -577,20 +579,30 @@
       thymol.ThUtils.removeTag( element );
       haveRemoved = true;
     }
-    else if( "all-but-first" == arg ) {
-      nodes = element.childNodes;
-      first = true;
-      $( nodes ).each( function() {
-        if( this.nodeType == 1 ) {
-          if( !first ) {
-            element.removeChild( this );
-            haveRemoved = true;
+    else if( "all-but-first" == arg ) {      
+      if( element.hasChildNodes() ) {
+        nodes = element.childNodes;
+        var kids = new Array();
+        first = true;
+        for( var i = 0, iLimit = nodes.length; i < iLimit; i++  ) {
+          if( nodes[i].nodeType === ELEMENT_NODE ) {
+            if( !first ) {
+              kids.push( nodes[i] );
+            }
+            first = false; 
           }
-          first = false;
         }
-      } );
-    }
-    else if( "none" == arg || null == arg ) { // V2.1 do nothing!
+        for( var i = 0, iLimit = kids.length; i < iLimit; i++  ) {
+          element.removeChild( kids[i] );
+          haveRemoved = true;
+        }        
+      }   
+//      if( element.firstElementChild ) {
+//        while( element.firstElementChild != element.lastElementChild ) {
+//          element.removeChild( element.lastElementChild );
+//          haveRemoved = true;
+//        }
+//      }         
     }
     return haveRemoved;
   };
@@ -605,37 +617,43 @@
       }
     }
     val = thymol.ThUtils.unQuote( val );
-    thCaseSpecs = $( thCase.escpName, element );
-    thCaseSpecs.each( function() {
-      caseClause = this;
+    thCaseSpecs = element.querySelectorAll( thCase.escpName + "," + thCase.escpSynonym );
+    for( i = 0, iLimit = thCaseSpecs.length; i < iLimit; i++ ) {
       remove = true;
-      $( caseClause.attributes ).each( function() {
-        ccAttr = this;
-        if( thCase.name == ccAttr.name || thCase.synonym == ccAttr.name ) {
-          if( !matched ) {
-            matched = thymol.processCase( element, ccAttr, val );
-            if( matched ) {
-              remove = false;
+      for( j = 0, jLimit = thCaseSpecs[ i ].attributes.length; j < jLimit; j++ ) {
+        ccAttr = thCaseSpecs[ i ].attributes.item( j );
+        if( !!ccAttr ) {
+          if( thCase.name == ccAttr.name || thCase.synonym == ccAttr.name ) {
+            if( !matched ) {
+              matched = thymol.processCase( element, ccAttr, val );
+              if( matched ) {
+                remove = false;
+              }
             }
+            thCaseSpecs[ i ].removeAttribute( ccAttr.name );
           }
-          caseClause.removeAttribute( ccAttr.name );
         }
-      } );
+      }
       if( remove ) {
-        element.removeChild( caseClause );
+        element.removeChild( thCaseSpecs[ i ] );
         updated = true;
       }
-    } );
+    }
+    element.removeAttribute( attr.name );
     return updated;
   };
 
   thymol.processCase = function( element, attr, param ) {
-    var val = thymol.substitute( attr.value, element );
-    val = thymol.ThUtils.unQuote( val );
-    if( val == "*" || ( param && ( param == val ) ) ) {
-      return true;
+    if( attr.value != "*" ) {
+      var val = thymol.getExpression( attr.value, element);
+      //thymol.substitute( attr.value, element );
+      val = thymol.ThUtils.unQuote( val );
+      if( param && ( param == val ) ) {
+        return true;
+      }
+      return false; 
     }
-    return false;
+    return true;
   };
 
   thymol.processWith = function( element, thUrlAttr ) {

@@ -20,10 +20,12 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.thymoljs.thymol.test.context.Context;
 import org.thymoljs.thymol.test.selenium.webdriver.ChromeFactory;
 import org.thymoljs.thymol.test.selenium.webdriver.FirefoxFactory;
+import org.thymoljs.thymol.test.selenium.webdriver.HtmlUnitFactory;
 import org.thymoljs.thymol.test.selenium.webdriver.InternetExplorerFactory;
+import org.thymoljs.thymol.test.selenium.webdriver.PhantomJSFactory;
 import org.thymoljs.thymol.test.selenium.webdriver.WebDriverFactory;
 
-public class SeleniumCases implements URIGetter {
+public class SeleniumCases {
 
 	protected static WebDriverFactory driverFactory = null;
 	protected static WebDriver driver = null;
@@ -40,7 +42,13 @@ public class SeleniumCases implements URIGetter {
 		getter = g;
 		String webDriverProperty = System.getProperty( "webDriver" );
 		System.out.println( " webDriver is: " + webDriverProperty );
-		if( webDriverProperty == null || "firefox".equals( webDriverProperty ) ) {
+		if( webDriverProperty == null || "phantomjs".equals( webDriverProperty ) ) {
+			driverFactory = new PhantomJSFactory();
+		}
+		else if( "htmlunit".equals( webDriverProperty ) ) {
+			driverFactory = new HtmlUnitFactory();
+		}
+		else if( "firefox".equals( webDriverProperty ) ) {
 			driverFactory = new FirefoxFactory();
 		}
 		else if( "chrome".equals( webDriverProperty ) ) {

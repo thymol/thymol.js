@@ -22,8 +22,5 @@
     "/*",
     "!/dist",
     "!bower.json"
-  ],
-  "dependencies": {
-    "jquery": "^${thymol-jquery-version}"
-  }
+  ]
 }

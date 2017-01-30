@@ -208,7 +208,7 @@ public class IncludeCases21 extends SeleniumCases {
 			"\n\n";	 			
 
 	String include20ResultThymol = 		
-			"Error: Syntax error, unrecognized expression: %frag-1";	 			
+			"ThError: getImportNode cannot match fragment: \"%frag-1\"";	 			
 	
 	String include20ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
@@ -216,7 +216,7 @@ public class IncludeCases21 extends SeleniumCases {
 			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mss2\", which is not specified at the fragment selection. (include20:11)\n";
 
 	String include21ResultThymol = 		
-			"Error: Syntax error, unrecognized expression: %frag-1";	 			
+			"ThError: getImportNode cannot match fragment: \"footer%frag-1\"";	 			
 	
 	String include21ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +

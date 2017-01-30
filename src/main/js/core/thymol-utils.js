@@ -338,11 +338,11 @@ thymol.ThUtils = ( function() {
         return (1,eval)(expression);
       };
     }
-    else if (typeof window.execScript !== 'undefined') {
+    else if (typeof thymol.thWindow.execScript !== 'undefined') {
 
       // if `window.execScript exists`, use it
       return function(expression) {
-        return window.execScript(expression);
+        return thymol.thWindow.execScript(expression);
       };
     }
     // otherwise, globalEval is `undefined` since nothing is returned
@@ -350,23 +350,47 @@ thymol.ThUtils = ( function() {
 
   function loadScript( file ) {
     var script = thymol.Thymol.prototype.getFilePath( file );
-    var status = "";    
-    var jqxhr = $.ajax( {
-      type : "GET",
-      url : script,
-      dataType : "text",
-      cache : true,
-      async : false
-    } ).done( function() {
-      status = "success";
-    } ).fail( function() {
-      status = "error";
-    } );
-    if( "success" === status ) {
-      globalEval( jqxhr.responseText );     
-    }
+    globalEval( getFileContent( script ) );
   }
 
+  function getXMLHttpRequest( xhr ) {
+    if( xhr === undefined ) {
+        if( thymol.thWindow.XDomainRequest ) {
+            xhr = new XDomainRequest();
+        }
+        else if( thymol.thWindow.XMLHttpRequest ) {// code for IE7+, Firefox, Chrome, Opera, Safari
+            xhr = new XMLHttpRequest();
+        }
+        else {// code for IE6, IE5
+            xhr = new ActiveXObject( "Microsoft.XMLHTTP" );
+        }
+    }            
+    xhr.timeout = 0;
+    return xhr;
+  }  
+
+  function getFileContent( url, report ) {
+    var content = "", xhr = getXMLHttpRequest( xhr );            
+    try {
+      if( thymol.thWindow.XDomainRequest ) {
+        xhr.open( 'get', url );
+      }
+      else {
+        xhr.open( 'GET', url, false );
+      }
+      xhr.send( null );
+      if ( xhr.readyState === 4 || xhr.status === 200 ) {
+        content = xhr.responseText;
+      }      
+    }
+    catch( err ) {
+      if( thymol.debug && !!report ) {
+        thymol.thWindow.alert( "getFileContent failed for url: " + url + " error: " + err );
+      }
+    }
+    return content;
+  }
+  
   function unescape( text ) {
     var result = text, i, iLimit, iUpper, c, cc;
     if( text !== null && typeof text !== "undefined" ) {
@@ -466,6 +490,7 @@ thymol.ThUtils = ( function() {
     isLiteralSubst : isLiteralSubst,
     resolvePath : resolvePath,
     loadScript : loadScript,
+    getFileContent : getFileContent,
     unescape : unescape,
     unicodeUnescape : unicodeUnescape,
     removeTag : removeTag,

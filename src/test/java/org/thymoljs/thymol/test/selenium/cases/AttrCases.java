@@ -19,8 +19,18 @@ import org.openqa.selenium.WebElement;
 public class AttrCases extends SeleniumCases {
 	
 	Context attrBaseContext = new Context( "tests/attr/" );
-	
+		
 	String attr01Result =
+			"\n" +
+			"<form action=\"/subscribe\">\n" +
+			"  <fieldset>\n" +
+			"    <input type=\"text\" name=\"email\">\n" +
+			"    <input type=\"submit\" value=\"Subscribe me please!\">\n" +
+			"  </fieldset>\n" +
+			"</form>" +
+			"\n\n\n";
+	
+	String attr01ResultVariant =
 			"\n" +
 			"<form action=\"/subscribe\">\n" +
 			"  <fieldset>\n" +
@@ -139,12 +149,12 @@ public class AttrCases extends SeleniumCases {
 	@Test
 	public void attr01() {
 		
-//		String thDeploy = System.getProperty("thDeploy");		
+/*//		String thDeploy = System.getProperty("thDeploy");		
 //		String attr01NodeResult = String.format(attr01NodeResultMould, thDeploy);
 		
 		localise( attrContext );
 		String result = getResult( "attr01.html", ResultMode.HTML );
-		result = result.replaceAll(";jsessionid=[^\"]*", "");
+//		result = result.replaceAll(";jsessionid=[^\"]*", "");
 		result = clean(result);
 
 //		if( expectNodeResult() ) {
@@ -173,7 +183,19 @@ public class AttrCases extends SeleniumCases {
 //		}
 		
 		
-		
+*/		
+	
+		localise( attrContext );
+		String result = clean( getResult( "attr01.html", ResultMode.HTML ) );
+		if( result.equals( clean( attr01Result ) ) ) {
+			assertEquals( clean( attr01Result ), result );
+		}
+		else if( result.equals( clean( attr01ResultVariant ) ) ) {
+			assertEquals( clean( attr01ResultVariant ), result );
+		}
+		else {
+			assertEquals( clean( attr01aResult ), result );
+		}
 		
 	}
 
