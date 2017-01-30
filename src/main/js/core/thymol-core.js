@@ -1284,7 +1284,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
         }
         var elements = rootNode.getElementsByTagName( "*" );
         var kc = 0;
-        for( k = 0, kLimit = elements.length; k < kLimit; k++ ) {
+        for( var k = 0, kLimit = elements.length; k < kLimit; k++ ) {
           var elem2 = elements[ kc ];
           var elName = elem2.nodeName.toLowerCase();
           if( elName == thymol.thBlock.name || elName == thymol.thBlock.synonym ) {
@@ -1296,9 +1296,9 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
           }
         }
         var removeArray = rootNode.querySelectorAll( thymol.thRemove.escpName + "," + thymol.thRemove.escpSynonym );
-        for( i = 0, iLimit = removeArray.length; i < iLimit; i++ ) {
+        for( var i = 0, iLimit = removeArray.length; i < iLimit; i++ ) {
           var rmElement = removeArray[ i ];
-          for( j = 0, jLimit = rmElement.attributes.length; j < jLimit; j++ ) {
+          for( var j = 0, jLimit = rmElement.attributes.length; j < jLimit; j++ ) {
             var attr = rmElement.attributes.item(j);
             if( thymol.thRemove.name == attr.localName || thymol.thRemove.synonym == attr.localName ) {
               thymol.processRemove( rmElement, attr );
