@@ -1,15 +1,9 @@
 module.exports = function( grunt ) {
 
-  var bower = require( 'bower' );
-  var path = require( 'path' );
-
   mavenProperties = grunt.file.readJSON( 'maven-properties.json' );
   grunt.log.writeln( 'Thymol version is: ' + mavenProperties.thymolVersion );
   grunt.log.writeln( 'Release date is: ' + mavenProperties.thymolReleaseDate );
   grunt.log.writeln( '\n' );
-  grunt.log.writeln( 'bower path to jQuery is: ' + mavenProperties.bowerJQuerySource );
-  grunt.log.writeln( 'sourceforge path to jQuery is: ' + mavenProperties.sourceforgeJQuerySource );
-  grunt.log.writeln( 'jsdelivr path to jQuery is: ' + mavenProperties.jsdelivrJQuerySource );
 
   var tmpDir = "target/dist-tmp/";
   var bowerThymolPath = "bower_components/thymol/";
@@ -197,8 +191,7 @@ module.exports = function( grunt ) {
           process : function( content, srcpath ) {
             content = content.replace( "${thymolVersion}", mavenProperties.thymolVersion );
             content = content.replace( "${thymolReleaseDate}", mavenProperties.thymolReleaseDate );
-            content = content.replace( "${thThymolSource}", fullFile );
-            return content.replace( "${thJQuerySource}", mavenProperties.bowerJQuerySource );
+            return content.replace( "${thThymolSource}", fullFile );
           }
         }
       },
@@ -212,8 +205,7 @@ module.exports = function( grunt ) {
           process : function( content, srcpath ) {
             content = content.replace( "${thymolVersion}", mavenProperties.thymolVersion );
             content = content.replace( "${thymolReleaseDate}", mavenProperties.thymolReleaseDate );
-            content = content.replace( "${thThymolSource}", fullFile );
-            return content.replace( "${thJQuerySource}", mavenProperties.sourceforgeJQuerySource );
+            return content.replace( "${thThymolSource}", fullFile );
           }
         }
       },
@@ -228,8 +220,7 @@ module.exports = function( grunt ) {
             content = content.replace( "${thymolVersion}", mavenProperties.thymolVersion );
             content = content.replace( "${thymolReleaseDate}", mavenProperties.thymolReleaseDate );
             content = content.replace( "${thThymolSource}", fullFileMin );
-            content = content.replace( "${thThymolSource}", nodeFileMin );
-            return content.replace( "${thJQuerySource}", mavenProperties.jsdelivrJQuerySource );
+            return content.replace( "${thThymolSource}", nodeFileMin );
           }
         }
       },
@@ -244,8 +235,7 @@ module.exports = function( grunt ) {
             content = content.replace( "${thymolVersion}", mavenProperties.thymolVersion );
             content = content.replace( "${thymolReleaseDate}", mavenProperties.thymolReleaseDate );
             content = content.replace( "${thThymolSource}", fullFileMin );
-            content = content.replace( "${thThymolSource}", nodeFileMin );
-            return content.replace( "${thJQuerySource}", mavenProperties.jsdelivrJQuerySource );
+            return content.replace( "${thThymolSource}", nodeFileMin );
           }
         }
       },
@@ -257,7 +247,6 @@ module.exports = function( grunt ) {
         options : {
           flatten : true,
           process : function( content, srcpath ) {
-            content = content.replace( "${thymol-jquery-version}", mavenProperties.thymolJQueryVersion );
             return content.replace( "${project.version}", mavenProperties.thymolVersion );
           }
         }
