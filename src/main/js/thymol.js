@@ -1,6 +1,6 @@
 /*-------------------- Thymol - the flavour of Thymeleaf --------------------*
 
-   Thymol version ${thymolVersion} Copyright (C) 2012-2015 James J. Benson.
+   Thymol version ${thymolVersion} Copyright (C) 2012-2017 James J. Benson.
    jjbenson .AT. users.sf.net (http://www.thymoljs.org/)
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,7 +21,6 @@
   var thymolConfiguration = {
     // Please set the values of the following fields!
     thScriptName : "${thThymolSource}",
-    thJQuerySource : "${thJQuerySource}",
     // These are defaults, change them if you wish..
     thDefaultPrefix : "th",
     thDefaultDataPrefix : "data",
@@ -47,7 +46,9 @@
     };
     return conf;
   }( thymolConfiguration );
-  thymol.thDomParser = DOMParser;
+  thymol.thDomParse = function(text,type) {
+	  return new DOMParser().parseFromString(text,type);
+  };
   thymol.thWindow = window;
   var toc = 0;
   var loadScript = function( script, params ) {
@@ -68,27 +69,6 @@
   var pathEnd = scriptSrc.lastIndexOf( "/" );
   if( pathEnd >= 0 ) {
     thymol.thLocation = scriptSrc.substring( 0, 1 + pathEnd );
-  }
-  var jquerySrc = script.getAttribute( "data-jquery-src" );
-  if( !!jquerySrc || "" === jquerySrc ) {
-    thymol.thJQuerySource = jquerySrc;
-    if( "" !== thymol.thJQuerySource ) {
-      loadScript( thymol.thJQuerySource );
-    }
-  }
-  else if( typeof thymol.thJQuerySource !== "undefined" && thymol.thJQuerySource !== null && thymol.thJQuerySource.length > 0 ) {
-    var hasProtocol = thymol.thJQuerySource.indexOf( ":/" ) >= 0;
-    if( hasProtocol || thymol.thJQuerySource.charAt( 0 ) === "/" ) {
-      if( !hasProtocol ) {
-        loadScript( thymol.thDefaultProtocol + thymol.thJQuerySource );
-      }
-      else {
-        loadScript( thymol.thJQuerySource );
-      }
-    }
-    else {
-      loadScript( thymol.thLocation + thymol.thJQuerySource );
-    }
   }
   var thymolSrc = script.getAttribute( "data-thymol-src" );
   if( !!thymolSrc ) {

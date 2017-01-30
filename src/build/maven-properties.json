@@ -1,8 +1,4 @@
 {
 	"thymolVersion": "${project.version}",
-	"thymolReleaseDate": "${thReleaseDate}",
-	"bowerJQuerySource": "${thBowerJQuerySource}",
-	"sourceforgeJQuerySource": "${thSourceforgeJQuerySource}",
-	"jsdelivrJQuerySource": "${thJsdelivrJQuerySource}",
-	"thymolJQueryVersion": "${thymol-jquery-version}"
+	"thymolReleaseDate": "${thReleaseDate}"
 }

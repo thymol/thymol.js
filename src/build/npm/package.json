@@ -3,9 +3,6 @@
   "version": "${project.version}",
   "description": "The Thymol Thymeleaf syntax template engine for nodejs",
   "main": "thymol-node.js",
-  "dependencies": {
-    "jquery": "^${thymol-jquery-version}"
-  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

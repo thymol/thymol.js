@@ -265,7 +265,7 @@ thymol.makeContext = function( contextNameParam, varAccessorParam ) {
       }
     }
     current = current.replace( /[\']/g, "\"" );
-    result = $.parseJSON( current );
+    result = JSON.parse( current );
     if( "[object Array]" !== Object.prototype.toString.call( result ) ) {
       result = new thymol.ThObject( result );
     }
