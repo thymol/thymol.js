@@ -13,13 +13,13 @@ thymol.ThParser = ( function( scope ) {
     this.varName = varName;
   }
 
-  var TNUMBER = 0;
-  var TOP1 = 1;
-  var TOP2 = 2;
-  var TVAR = 3;
-  var TFUNCALL = 4;
-  var MSGSUBST = 5;
-  var ARGLIST = 6;
+  const TNUMBER = 0;
+  const TOP1 = 1;
+  const TOP2 = 2;
+  const TVAR = 3;
+  const TFUNCALL = 4;
+  const MSGSUBST = 5;
+  const ARGLIST = 6;
 
   function Token( type_p, index_p, prio_p, number_p, mode_p, meta_p ) {
     this.type_ = type_p;

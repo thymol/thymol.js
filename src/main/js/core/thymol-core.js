@@ -63,20 +63,19 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
   const unsigned long       SHOW_NOTATION                  = 0x00000800;  
 */  
 
-    ELEMENT_NODE = 1;
-    TEXT_NODE = 3;
-    COMMENT_NODE = 8;
-    DOCUMENT_NODE = 9;
-    DOCUMENT_TYPE_NODE = 10;
-    DOCUMENT_FRAGMENT_NODE = 11;
+  const ELEMENT_NODE = 1;
+  const TEXT_NODE = 3;
+  const COMMENT_NODE = 8;
+  const DOCUMENT_NODE = 9;
+  const DOCUMENT_TYPE_NODE = 10;
+  const DOCUMENT_FRAGMENT_NODE = 11;
   
-    FILTER_ACCEPT = 1;
-    FILTER_REJECT = 2;
+  const FILTER_ACCEPT = 1;
+  const FILTER_REJECT = 2;
 
-    SHOW_ALL = -1;
-    SHOW_TEXT = 4;  
-    SHOW_COMMENT = 128;
-
+  const SHOW_ALL = -1;
+  const SHOW_TEXT = 4;  
+  const SHOW_COMMENT = 128;
     
   // Version data
   thymol.thVersion = "${thymolVersion}";
@@ -93,7 +92,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
   thymol.objects = {};
   thymol.varParExpr = /([^(]*)\s*[(]([^)]*?)[)]/;
   
-  var varRefExpr = /([$#]{.*?})/, literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/, startParserLevelCommentExpr = /^\s*\/\*\s*$/, endParserLevelCommentExpr = /^\s*\*\/\s*$/, startParserLevelCommentExpr2 = /^\/\*[^\/].*/, endParserLevelCommentExpr2 = /.*[^\/]\*\/$/, prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//, 
+  const varRefExpr = /([$#]{.*?})/, literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/, startParserLevelCommentExpr = /^\s*\/\*\s*$/, endParserLevelCommentExpr = /^\s*\*\/\s*$/, startParserLevelCommentExpr2 = /^\/\*[^\/].*/, endParserLevelCommentExpr2 = /.*[^\/]\*\/$/, prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//, 
   varExpr3 = /[^\$\*#@]{1}\{(.*)\}$/, // Retain the content
   nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/, numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/, domSelectExpr = /([\/]{1,2})?([A-Za-z0-9_\-]*(?:[\(][\)])?)?([^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*(?:[\.\/#]?[^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*)*)?([\[][^\]]*?[\]])?/, litSubstExpr = /\.*?([\|][^\|]*?[\|])\.*?/;
 
@@ -1223,8 +1222,8 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
 //    propFile = thymol.ThUtils.resolvePath( propFile );  // If we use the jsdom built-in XMLHttpRequest, then we need to canonicalise the absolute file path
     var props = null;
     var messages = [];
-    props = thymol.ThUtils.getFileContent( propFile );
-    if( props !== null ) {
+    props = thymol.readFile( propFile );
+    if( !!props ) {
       var splits = props.split( "\n" );
       if( splits.length > 0 ) {
         for( var i = 0, iLimit = splits.length; i < iLimit; i++ ) {
@@ -1753,7 +1752,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
             importError = null;
             if( filePart != "" ) { // Signifies v2.1 local fragment
               fileName = filePart + thymol.templateSuffix;
-              var textContent = thymol.ThUtils.getFileContent( fileName );
+              var textContent = thymol.readFile( fileName );
               content = thymol.thDomParse( textContent, "text/html" );
               fragment = Thymol.prototype.getImportNode( element, filePart, fragmentName, fragmentPart, argsCount, content, false );
             }
@@ -2783,6 +2782,10 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
     ThVarsAccessor : ThVarsAccessor,
     ThClass : ThClass,
 
+    fileSystem: thymol.fileSystem,
+    readFile : thymol.readFile,
+    getFileContent : thymol.getFileContent,
+    getXMLHttpRequest : thymol.getXMLHttpRequest,
     thDomParse : thymol.thDomParse,
     thDocument : thymol.thDocument,
     thWindow : thymol.thWindow,

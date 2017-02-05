@@ -1,6 +1,6 @@
 thymol.makeContext = function( contextNameParam, varAccessorParam ) {
 
-  var jsonDeclSpec = "(?:\\W*([\\'][A-Za-z]+(?:\\w|[$])*[\\'])\\s*[:])?\\s*([#][A-Za-z]+(?:\\w|[$])*)(?:\\W|[^$])*", jsonDeclExpr = new RegExp( jsonDeclSpec ), context = new Array();
+  const jsonDeclSpec = "(?:\\W*([\\'][A-Za-z]+(?:\\w|[$])*[\\'])\\s*[:])?\\s*([#][A-Za-z]+(?:\\w|[$])*)(?:\\W|[^$])*", jsonDeclExpr = new RegExp( jsonDeclSpec ), context = new Array();
 
   context.contextName = contextNameParam;
   context.varAccessor = varAccessorParam;
