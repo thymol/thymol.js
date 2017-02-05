@@ -46,9 +46,6 @@
     };
     return conf;
   }( thymolConfiguration );
-  thymol.thDomParse = function(text,type) {
-	  return new DOMParser().parseFromString(text,type);
-  };
   thymol.thWindow = window;
   var toc = 0;
   var loadScript = function( script, params ) {
