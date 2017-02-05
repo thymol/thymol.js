@@ -56,12 +56,11 @@ module.exports = function( grunt ) {
   ];
 
   var mainThymolFiles = [ 
-      "src/main/js/thymol-system.js",
-      "src/main/js/thymol-main.js"
+      "src/main/js/thymol-clientside.js",
   ];
 
   var nodeThymolFiles = [ 
-      "src/main/js/thymol-exports.js"
+      "src/main/js/thymol-serverside.js"
   ];
 
   var tmpLiteFileObj = {};
