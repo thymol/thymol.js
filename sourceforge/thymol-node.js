@@ -1,6 +1,6 @@
 /*-------------------- Thymol - the flavour of Thymeleaf --------------------*
 
-   Thymol version 2.0.1-pre.5 Copyright (C) 2012-2017 James J. Benson
+   Thymol version 2.0.1-pre.6 Copyright (C) 2012-2017 James J. Benson
    jjbenson .AT. users.sf.net (http://www.thymoljs.org/)
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -18,18 +18,18 @@
  *---------------------------------------------------------------------------*/
 
 thymol = function() {
-    ELEMENT_NODE = 1;
-    TEXT_NODE = 3;
-    COMMENT_NODE = 8;
-    DOCUMENT_NODE = 9;
-    DOCUMENT_TYPE_NODE = 10;
-    DOCUMENT_FRAGMENT_NODE = 11;
-    FILTER_ACCEPT = 1;
-    FILTER_REJECT = 2;
-    SHOW_ALL = -1;
-    SHOW_TEXT = 4;
-    SHOW_COMMENT = 128;
-    thymol.thVersion = "2.0.1-pre.5";
+    const ELEMENT_NODE = 1;
+    const TEXT_NODE = 3;
+    const COMMENT_NODE = 8;
+    const DOCUMENT_NODE = 9;
+    const DOCUMENT_TYPE_NODE = 10;
+    const DOCUMENT_FRAGMENT_NODE = 11;
+    const FILTER_ACCEPT = 1;
+    const FILTER_REJECT = 2;
+    const SHOW_ALL = -1;
+    const SHOW_TEXT = 4;
+    const SHOW_COMMENT = 128;
+    thymol.thVersion = "2.0.1-pre.6";
     thymol.thReleaseDate = "not yet!";
     thymol.thURL = "http://www.thymoljs.org";
     thymol.thAltURL = "http://www.thymeleaf.org";
@@ -39,7 +39,7 @@ thymol = function() {
     thymol.thThymeleafElementsList = [];
     thymol.objects = {};
     thymol.varParExpr = /([^(]*)\s*[(]([^)]*?)[)]/;
-    var varRefExpr = /([$#]{.*?})/, literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/, startParserLevelCommentExpr = /^\s*\/\*\s*$/, endParserLevelCommentExpr = /^\s*\*\/\s*$/, startParserLevelCommentExpr2 = /^\/\*[^\/].*/, endParserLevelCommentExpr2 = /.*[^\/]\*\/$/, prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//, varExpr3 = /[^\$\*#@]{1}\{(.*)\}$/, nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/, numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/, domSelectExpr = /([\/]{1,2})?([A-Za-z0-9_\-]*(?:[\(][\)])?)?([^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*(?:[\.\/#]?[^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*)*)?([\[][^\]]*?[\]])?/, litSubstExpr = /\.*?([\|][^\|]*?[\|])\.*?/;
+    const varRefExpr = /([$#]{.*?})/, literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/, startParserLevelCommentExpr = /^\s*\/\*\s*$/, endParserLevelCommentExpr = /^\s*\*\/\s*$/, startParserLevelCommentExpr2 = /^\/\*[^\/].*/, endParserLevelCommentExpr2 = /.*[^\/]\*\/$/, prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//, varExpr3 = /[^\$\*#@]{1}\{(.*)\}$/, nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/, numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/, domSelectExpr = /([\/]{1,2})?([A-Za-z0-9_\-]*(?:[\(][\)])?)?([^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*(?:[\.\/#]?[^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*)*)?([\[][^\]]*?[\]])?/, litSubstExpr = /\.*?([\|][^\|]*?[\|])\.*?/;
     function Thymol() {}
     function isClientSide() {
         if (typeof thymol.isServerSide !== "undefined" && !!thymol.isServerSide()) {
@@ -1039,8 +1039,8 @@ thymol = function() {
     function getProperties(propFile) {
         var props = null;
         var messages = [];
-        props = thymol.ThUtils.getFileContent(propFile);
-        if (props !== null) {
+        props = thymol.readFile(propFile);
+        if (!!props) {
             var splits = props.split("\n");
             if (splits.length > 0) {
                 for (var i = 0, iLimit = splits.length; i < iLimit; i++) {
@@ -1529,7 +1529,7 @@ thymol = function() {
                         importError = null;
                         if (filePart != "") {
                             fileName = filePart + thymol.templateSuffix;
-                            var textContent = thymol.ThUtils.getFileContent(fileName);
+                            var textContent = thymol.readFile(fileName);
                             content = thymol.thDomParse(textContent, "text/html");
                             fragment = Thymol.prototype.getImportNode(element, filePart, fragmentName, fragmentPart, argsCount, content, false);
                         } else {
@@ -2448,6 +2448,10 @@ thymol = function() {
         ThObject: ThObject,
         ThVarsAccessor: ThVarsAccessor,
         ThClass: ThClass,
+        fileSystem: thymol.fileSystem,
+        readFile: thymol.readFile,
+        getFileContent: thymol.getFileContent,
+        getXMLHttpRequest: thymol.getXMLHttpRequest,
         thDomParse: thymol.thDomParse,
         thDocument: thymol.thDocument,
         thWindow: thymol.thWindow,
@@ -2529,7 +2533,7 @@ thymol = function() {
 }();
 
 thymol.makeContext = function(contextNameParam, varAccessorParam) {
-    var jsonDeclSpec = "(?:\\W*([\\'][A-Za-z]+(?:\\w|[$])*[\\'])\\s*[:])?\\s*([#][A-Za-z]+(?:\\w|[$])*)(?:\\W|[^$])*", jsonDeclExpr = new RegExp(jsonDeclSpec), context = new Array();
+    const jsonDeclSpec = "(?:\\W*([\\'][A-Za-z]+(?:\\w|[$])*[\\'])\\s*[:])?\\s*([#][A-Za-z]+(?:\\w|[$])*)(?:\\W|[^$])*", jsonDeclExpr = new RegExp(jsonDeclSpec), context = new Array();
     context.contextName = contextNameParam;
     context.varAccessor = varAccessorParam;
     context.varStore = [];
@@ -3130,39 +3134,7 @@ thymol.ThUtils = function() {
     }();
     function loadScript(file) {
         var script = thymol.Thymol.prototype.getFilePath(file);
-        globalEval(getFileContent(script));
-    }
-    function getXMLHttpRequest(xhr) {
-        if (xhr === undefined) {
-            if (thymol.thWindow.XDomainRequest) {
-                xhr = new XDomainRequest();
-            } else if (thymol.thWindow.XMLHttpRequest) {
-                xhr = new XMLHttpRequest();
-            } else {
-                xhr = new ActiveXObject("Microsoft.XMLHTTP");
-            }
-        }
-        xhr.timeout = 0;
-        return xhr;
-    }
-    function getFileContent(url, report) {
-        var content = "", xhr = getXMLHttpRequest(xhr);
-        try {
-            if (thymol.thWindow.XDomainRequest) {
-                xhr.open("get", url);
-            } else {
-                xhr.open("GET", url, false);
-            }
-            xhr.send(null);
-            if (xhr.readyState === 4 || xhr.status === 200) {
-                content = xhr.responseText;
-            }
-        } catch (err) {
-            if (thymol.debug && !!report) {
-                thymol.thWindow.alert("getFileContent failed for url: " + url + " error: " + err);
-            }
-        }
-        return content;
+        globalEval(thymol.readFile(script));
     }
     function unescape(text) {
         var result = text, i, iLimit, iUpper, c, cc;
@@ -3251,7 +3223,6 @@ thymol.ThUtils = function() {
         isLiteralSubst: isLiteralSubst,
         resolvePath: resolvePath,
         loadScript: loadScript,
-        getFileContent: getFileContent,
         unescape: unescape,
         unicodeUnescape: unicodeUnescape,
         removeTag: removeTag,
@@ -3268,13 +3239,13 @@ thymol.ThParser = function(scope) {
     function NullReturn(varName) {
         this.varName = varName;
     }
-    var TNUMBER = 0;
-    var TOP1 = 1;
-    var TOP2 = 2;
-    var TVAR = 3;
-    var TFUNCALL = 4;
-    var MSGSUBST = 5;
-    var ARGLIST = 6;
+    const TNUMBER = 0;
+    const TOP1 = 1;
+    const TOP2 = 2;
+    const TVAR = 3;
+    const TFUNCALL = 4;
+    const MSGSUBST = 5;
+    const ARGLIST = 6;
     function Token(type_p, index_p, prio_p, number_p, mode_p, meta_p) {
         this.type_ = type_p;
         this.index_ = index_p || 0;
@@ -4542,18 +4513,18 @@ thymol.ThParser = function(scope) {
 }();
 
 (function() {
-    ELEMENT_NODE = 1;
-    TEXT_NODE = 3;
+    const ELEMENT_NODE = 1;
+    const TEXT_NODE = 3;
     var specAttrModList = [ "abbr", "accept", "accept-charset", "accesskey", "action", "align", "alt", "archive", "audio", "autocomplete", "axis", "background", "bgcolor", "border", "cellpadding", "cellspacing", "challenge", "charset", "cite", "class", "classid", "codebase", "codetype", "cols", "colspan", "compact", "content", "contenteditable", "contextmenu", "data", "datetime", "dir", "draggable", "dropzone", "enctype", "for", "form", "formaction", "formenctype", "formmethod", "formtarget", "frame", "frameborder", "headers", "height", "high", "href", "hreflang", "hspace", "http-equiv", "icon", "id", "keytype", "kind", "label", "lang", "list", "longdesc", "low", "manifest", "marginheight", "marginwidth", "max", "maxlength", "media", "method", "min", "name", "optimum", "pattern", "placeholder", "poster", "preload", "radiogroup", "rel", "rev", "rows", "rowspan", "rules", "sandbox", "scheme", "scope", "scrolling", "size", "sizes", "span", "spellcheck", "src", "srclang", "standby", "start", "step", "style", "summary", "tabindex", "target", "title", "type", "usemap", "value", "valuetype", "vspace", "width", "wrap", "xmlbase", "xmllang", "xmlspace" ];
     var fixedValBoolAttrList = [ "async", "autofocus", "autoplay", "checked", "controls", "declare", "default", "defer", "disabled", "formnovalidate", "hidden", "ismap", "loop", "multiple", "novalidate", "nowrap", "open", "pubdate", "readonly", "required", "reversed", "scoped", "seamless", "selected" ];
     var eventAttrList = [ "onabort", "onafterprint", "onbeforeprint", "onbeforeunload", "onblur", "oncanplay", "oncanplaythrough", "onchange", "onclick", "oncontextmenu", "ondblclick", "ondrag", "ondragend", "ondragenter", "ondragleave", "ondragover", "ondragstart", "ondrop", "ondurationchanged", "onemptied", "onended", "onerror", "onfocus", "onformchange", "onforminput", "onhashchange", "oninput", "oninvalid", "onkeydown", "onkeypress", "onkeyup", "onload", "onloadeddata", "onloadedmetadata", "onloadstart", "onmessage", "onmousedown", "onmousemove", "onmouseout", "onmouseover", "onmouseup", "onmousewheel", "onoffline", "ononline", "onpause", "onplay", "onplaying", "onpopstate", "onprogress", "onratechange", "onreadystatechange", "onredo", "onreset", "onresize", "onscroll", "onseeked", "onseeking", "onselect", "onshow", "onstalled", "onstorage", "onsubmit", "onsuspend", "ontimeupdate", "onundo", "onunload", "onvolumechange", "onwaiting" ];
-    var literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/;
-    var numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/;
-    var nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/;
-    var varExpr = /[\$\*#@]{1}\{(!?[^}]*)\}/;
-    var textInlineCommentExpr = /\[\[(.*)\]\]/;
-    var javascriptInlineCommentExpr = /\/\*\[\[(.*)\]\]\*\//;
-    var javascriptInlineRemainderExpr = /\s*(?:['][^']*['])*(?:["][^"]*["])*(?:[\(][^\(\)]*[\)])*(?:[\{][^\{\}]*[\}])*(?:[\[][^\[\]]*[\]])*((?:[;,\(\)\[\]:\{\}](?=(?:\s*\/\/.*?(?:\n|$)))(?:\s*\/\/.*?(?:\n|$)))|(?:\s*\/\/.*?(?:\n|$))|(?:[;,\(\)\[\]:\{\}](?=(?:\s*(?:\n|$)))(?:\s*(?:\n|$)))|(?:\s*(?:\n|$)))/;
+    const literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/;
+    const numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/;
+    const nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/;
+    const varExpr = /[\$\*#@]{1}\{(!?[^}]*)\}/;
+    const textInlineCommentExpr = /\[\[(.*)\]\]/;
+    const javascriptInlineCommentExpr = /\/\*\[\[(.*)\]\]\*\//;
+    const javascriptInlineRemainderExpr = /\s*(?:['][^']*['])*(?:["][^"]*["])*(?:[\(][^\(\)]*[\)])*(?:[\{][^\{\}]*[\}])*(?:[\[][^\[\]]*[\]])*((?:[;,\(\)\[\]:\{\}](?=(?:\s*\/\/.*?(?:\n|$)))(?:\s*\/\/.*?(?:\n|$)))|(?:\s*\/\/.*?(?:\n|$))|(?:[;,\(\)\[\]:\{\}](?=(?:\s*(?:\n|$)))(?:\s*(?:\n|$)))|(?:\s*(?:\n|$)))/;
     var thCase;
     thymol.getThAttribute = function(part, element) {
         var result = thymol.ThUtils.unParenthesise(part);
@@ -8465,6 +8436,16 @@ thymol.thObjectsConfigureModules = function() {
     thymol.addDialect({
         objects: [ thymol.objects.thAggregatesObject, thymol.objects.thArraysObject, thymol.objects.thBoolsObject, thymol.objects.thDatesObject, thymol.objects.thCalendarsObject, thymol.objects.thIdsObject, thymol.objects.thListsObject, thymol.objects.thMapsObject, thymol.objects.thMessagesObject, thymol.objects.thNumbersObject, thymol.objects.thObjectsObject, thymol.objects.thSetsObject, thymol.objects.thStringsObject ]
     });
+};
+
+thymol.readFile = function(uri, report) {
+    try {
+        return thymol.fileSystem.readFileSync(uri, "UTF-8");
+    } catch (err) {
+        if (thymol.debug && !!report) {
+            thymol.thWindow.alert("readFile failed for uri: " + uri + " error: " + err);
+        }
+    }
 };
 
 thymol.isServerSide = function() {
