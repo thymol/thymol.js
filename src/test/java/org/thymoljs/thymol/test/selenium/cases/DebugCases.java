@@ -16,8 +16,29 @@ public class DebugCases extends SeleniumCases {
 			"<p></p>" +
 			"\n\n";	
 		
+//	String debug02Result =
+//			"thymol.processText cannot process: th:text=\"${euros}\"\n..." +
+//			"\n\nError in: target/test-classes/templates/thymol/debug/debug01.html?thDebug=true&thAllowNullText=false.html at line: 9 column: 0";	
+			
 	String debug02Result =
-			"thymol.processText cannot process: th:text=\"${euros}\"\n...";	
+			"thymol.processText cannot process: th:text=\"${euros}\"\n..." +
+			"\n\nError in: target/test-classes/templates/thymol/debug/debug01.html at line: 9 column: 0";	
+			
+	String debug02NodeResult =
+			"thymol.processText cannot process: th:text=\"${euros}\"\n..." +
+			"\n\nError in: thymol/debug/debug01.html at line: 9 column: 0";	
+			
+	String debug03Result =
+			"thymol.processText cannot process: th:text=\"${euros}\"\n..." +
+			"\n\nError in: target/test-classes/templates/thymol/debug/debug02.html at line: 9 column: 0";	
+			
+	String debug04Result =
+			"thymol.processText cannot process: th:text=\"${euros}\"\n..." +
+			"\n\nError in: target/test-classes/templates/thymol/debug/debug03.html at line: 9 column: 0";	
+			
+	String debug04NodeResult =
+			"thymol.processText cannot process: th:text=\"${euros}\"\n..." +
+			"\n\nError in: thymol/debug/debug03.html at line: 9 column: 0";	
 			
 	@Test
 	public void debug01() {
@@ -33,6 +54,9 @@ public class DebugCases extends SeleniumCases {
 		if( expectThymeleafResult() ) {
 			  assertEquals( clean( debug01Result ), clean( result ) );			
 		}
+		else if( expectNodeResult() ) {
+			  assertEquals( clean( debug02NodeResult ), clean( result ) );			
+		}
 		else {
 		  assertEquals( clean( debug02Result ), clean( result ) );
 		}
@@ -46,7 +70,7 @@ public class DebugCases extends SeleniumCases {
 		  assertEquals( clean( debug01Result ), clean( result ) );			
 		}
 		else {
-		  assertEquals( clean( debug02Result ), clean( result ) );
+		  assertEquals( clean( debug03Result ), clean( result ) );
 		}
 	}
 
@@ -57,8 +81,11 @@ public class DebugCases extends SeleniumCases {
 		if( expectThymeleafResult() ) {
 			  assertEquals( clean( debug01Result ), clean( result ) );			
 		}
+		else if( expectNodeResult() ) {
+			  assertEquals( clean( debug04NodeResult ), clean( result ) );			
+		}
 		else {
-		  assertEquals( clean( debug02Result ), clean( result ) );
+		  assertEquals( clean( debug04Result ), clean( result ) );
 		}
 	}
 

@@ -26,7 +26,12 @@ public class MapsCases extends SeleniumCases {
 			"\n\n\n";
 					
 	String maps02ResultThymol = 
-			"ThError: #maps.size Cannot get size of non-map type \"object\"";
+			"#maps.size Cannot get size of non-map type \"object\"" +
+	        "Error in: target/test-classes/templates/thymol/maps/maps02.html at line: 10 column: 2 (2tabs)";
+
+	String maps02ResultNode = 
+			"#maps.size Cannot get size of non-map type \"object\"" +
+	        "Error in: thymol/maps/maps02.html at line: 10 column: 2 (2tabs)";
 
 	String maps02ResultThymeleaf =			
 			"<h2>HTTP ERROR 500</h2>\n" +
@@ -40,7 +45,12 @@ public class MapsCases extends SeleniumCases {
 			"\n\n\n";
 
 	String maps04ResultThymol = 
-			"ThError: #maps.size Cannot get size of non-map type \"object\"";
+			"#maps.size Cannot get size of non-map type \"object\"" +
+            "Error in: target/test-classes/templates/thymol/maps/maps04.html at line: 10 column: 2 (2tabs)";
+		
+	String maps04ResultNode = 
+			"#maps.size Cannot get size of non-map type \"object\"" +
+            "Error in: thymol/maps/maps04.html at line: 10 column: 2 (2tabs)";
 		
 	String maps04ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
@@ -235,8 +245,11 @@ public class MapsCases extends SeleniumCases {
 	public void maps02() {
 		localise( mapsContext );
 		String result = getResult( "maps02.html", ResultMode.ALERT );
-		if( expectThymolResult() || expectNodeResult() ) {
+		if( expectThymolResult() ) {
 			assertEquals( maps02ResultThymol, clean( result ) );			
+		}
+		else if( expectNodeResult() ) {
+			assertEquals( maps02ResultNode, clean( result ) );			
 		}
 		else {			
 			String subs = result.substring( 0, result.indexOf( "\tat" ) );
@@ -255,8 +268,11 @@ public class MapsCases extends SeleniumCases {
 	public void maps04() {
 		localise( mapsContext );
 		String result = getResult( "maps04.html", ResultMode.ALERT );
-		if( expectThymolResult() || expectNodeResult() ) {
+		if( expectThymolResult() ) {
 			assertEquals( maps04ResultThymol, clean( result ) );			
+		}
+		else if( expectNodeResult() ) {
+			assertEquals( maps04ResultNode, clean( result ) );			
 		}
 		else {			
 			String subs = result.substring( 0, result.indexOf( "\tat" ) );

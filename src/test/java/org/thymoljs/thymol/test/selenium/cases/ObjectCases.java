@@ -33,8 +33,13 @@ public class ObjectCases extends SeleniumCases {
 			"\n";
 	
 	String object02ResultThymol = 		
-			"thymol.processText cannot process: th:text=\"*{euros}\"\n...";
-	
+			"thymol.processText cannot process: th:text=\"*{euros}\"\n..." +
+	        "\n\nError in: target/test-classes/templates/tests/object/object02.html at line: 9 column: 0";
+		
+	String object02ResultNode = 		
+			"thymol.processText cannot process: th:text=\"*{euros}\"\n..." +
+	        "\n\nError in: tests/object/object02.html at line: 9 column: 0";
+		
 	String object02ResultThymeleaf =			
 			"<h2>HTTP ERROR 500</h2>\n" +
 			"<p>Problem accessing /object02.html. Reason:\n" +
@@ -95,8 +100,11 @@ public class ObjectCases extends SeleniumCases {
 		localise( objectContext );
 		String result = getResult( "object02.html", ResultMode.ALERT );
 //		if( getter.getClass().isAssignableFrom( SureFireEnv.class ) ) {
-		if( expectThymolResult() || expectNodeResult() ) {
+		if( expectThymolResult() ) {
 			assertEquals( object02ResultThymol, result );			
+		}
+		else if( expectNodeResult() ) {
+			assertEquals( object02ResultNode, result );			
 		}
 		else {			
 			String subs = result.substring( 0, result.indexOf( "\tat" ) );
