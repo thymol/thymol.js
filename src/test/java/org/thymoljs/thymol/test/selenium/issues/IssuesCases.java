@@ -224,6 +224,14 @@ public class IssuesCases extends SeleniumCases {
 			" \n" +
 			"\n\n";
 	
+	String issue22Result = 
+			"\n" +
+			"<script type=\"application/ld+json\">\n" +
+			" {\"foo\":\"bar\"}\n" +
+			"</script>\n" +
+			" \n" +
+			"\n\n";
+	
 	
 	public Context getIssue01Context() {
 		
@@ -517,6 +525,24 @@ public class IssuesCases extends SeleniumCases {
 		localise( issue15Context );
 		String result = getResult("issue15b.html", ResultMode.HTML);
 		assertEquals(clean(issue15Result), clean(result));
+	}
+
+	public Context getIssue22Context() {				
+		JsonObject< String, Object > variables = new JsonObject<String,Object>();		
+		Map<String,Object> obj = new HashMap<String,Object>();
+		// "obj", { "foo": "bar" }
+		obj.put( "foo", "bar" );
+		variables.put( "obj", obj );
+		return issuesBaseContext.copy().setVariables( variables );
+	}	
+	
+	private Context issue22Context = getIssue22Context();			
+	
+	@Test
+	public void issue22() {
+		localise( issue22Context );
+		String result = getResult("issue22.html", ResultMode.HTML);
+		assertEquals(clean(issue22Result), clean(result));
 	}
 
 }
