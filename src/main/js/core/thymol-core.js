@@ -150,7 +150,8 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
 
   function reset() {
     
-    thymol.thCache = {};
+    thymol.thFileCache = {};
+    thymol.thFragmentCache = {};
 
     var accessor = undefined, i, iLimit, j, jLimit;
 
@@ -257,7 +258,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
 
     thymol.setupAttrList();
 
-//    thymol.thCache = {};
+//    thymol.thFragmentCache = {};
     thymol.thDeferredFunctions = [];
     thymol.thPreExecutionFunctions = [];
     thymol.thPostExecutionFunctions = [];
@@ -281,6 +282,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
     thymol.localMessages = Thymol.prototype.getThParam( "thLocalMessages", true, false, thymol.thDefaultLocalMessages );
     thymol.disableMessages = Thymol.prototype.getThParam( "thDisableMessages", true, false, thymol.thDefaultDisableMessages );
     thymol.templateSuffix = Thymol.prototype.getThParam( "thTemplateSuffix", false, false, thymol.thDefaultTemplateSuffix );
+    thymol.inlineQuote = Thymol.prototype.getThParam( "thDefaultInlineQuote", false, false, thymol.thDefaultInlineQuote );
 
     thymol.scriptPath = "";      
     if( typeof thymol.thScriptPath !== "undefined" ) {
@@ -401,7 +403,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
         if( !!parameters ) {
           var splits = parameters.split( "," );
           for( var j = 0, jLimit = splits.length; j < jLimit; j++ ) {
-            thymol.ThUtils.loadScript( splits[ j ] );
+            loadScript( splits[ j ] );
           }
         }
       }      
@@ -577,6 +579,9 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
       case "thTemplateSuffix":
         thymol.templateSuffix = setThParam( name, value );
         break;
+      case "thInlineQuote":
+        thymol.inlineQuote = setThParam( name, value );
+        break;
       case "thLocalMessages":
         thymol.localMessages = setThParam( name, getBooleanValue( value ) );
         break;
@@ -610,8 +615,17 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
       case "thDefaultPrecedence":
         thymol.thDefaultPrecedence = setThParam( name, value );
         break;
-      default:
-        ctx.createVariable( name, value, isReq );
+      default: {
+        if( name.startsWith( "thymol.") ) {  // Special treatment for thymol variables
+          var endw = name.substring( 7 );
+          if( thymol.hasOwnProperty(endw) ) {
+            thymol[endw] = value;
+          }
+        }
+        else {
+          ctx.createVariable( name, value, isReq );
+        }
+      }
     }    
   }
   
@@ -711,7 +725,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
           lp = result.lastIndexOf( "__" );
         }
         if( lp <= 0 ) {
-          throw new thymol.ThError( "Mismatched pre-processing indicators", element );
+          thymol.error( true, "Mismatched pre-processing indicators", element );
         }
         var head = result.substring( 0, fp );
         var centre = result.substring( fp + 2, lp );
@@ -969,8 +983,8 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
           }
           else {
             subs = ""; // Substitution failed
-            if( thymol.debug && !lenient ) {
-              thymol.thWindow.alert( "thymol variable substitution failed: \"" + initial + "\"" );
+            if( !lenient ) {
+              thymol.error( false, "variable substitution failed: \"" + initial + "\"", element );
             }
           }
           saved = argValue;
@@ -1222,7 +1236,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
 //    propFile = thymol.ThUtils.resolvePath( propFile );  // If we use the jsdom built-in XMLHttpRequest, then we need to canonicalise the absolute file path
     var props = null;
     var messages = [];
-    props = thymol.readFile( propFile );
+    props = getFile( propFile );
     if( !!props ) {
       var splits = props.split( "\n" );
       if( splits.length > 0 ) {
@@ -1308,16 +1322,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
       
       }
       catch( err ) {
-        if( thymol.debug ) {
-          if( err instanceof thymol.ThError ) {
-            if( !err.suppress ) {
-              thymol.thWindow.alert( err );
-            }
-          }
-          else {
-            thymol.thWindow.alert( err );
-          }
-        }
+        thymol.alert( err );
       }
     },
 
@@ -1462,9 +1467,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
         tha.disable();
       }
       else {
-        if( thymol.debug ) {
-          thymol.thWindow.alert( "cannot disable unknown attribute \"" + attrName + "\"" );
-        }
+        thymol.error( false, "cannot disable unknown attribute \"" + attrName + "\"" );
       }
     },
 
@@ -1752,7 +1755,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
             importError = null;
             if( filePart != "" ) { // Signifies v2.1 local fragment
               fileName = filePart + thymol.templateSuffix;
-              var textContent = thymol.readFile( fileName );
+              var textContent = getFile( fileName );
               content = thymol.thDomParse( textContent, "text/html" );
               fragment = Thymol.prototype.getImportNode( element, filePart, fragmentName, fragmentPart, argsCount, content, false );
             }
@@ -1760,12 +1763,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
               fragment = Thymol.prototype.getImportNode( element, filePart, fragmentName, fragmentPart, argsCount, thymol.thDocument, false );
             }
             if( fragment == null ) {
-//              if( importError !== null ) {
-//                throw importError;
-//              }
-              if( thymol.debug ) {
-                thymol.thWindow.alert( "thymol.processImport fragment import failed: " + filePart + " fragment: " + fragmentPart );
-              }
+              thymol.error( false, "processImport fragment import failed: " + filePart + " fragment: " + fragmentPart, element );
             }
             else {
               importNode = fragment;
@@ -1782,9 +1780,9 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
     
     getFromCache : function( element, filePart, fragmentName ) {
       var content = null;
-      if( thymol.thCache[ filePart ] != null ) {
+      if( thymol.thFragmentCache[ filePart ] != null ) {
         var signature = Thymol.prototype.getFragmentSignature( fragmentName, element.thLocalVars ); 
-        content = thymol.thCache[ filePart ][ signature ];
+        content = thymol.thFragmentCache[ filePart ][ signature ];
       }
       return content;
     },
@@ -1826,16 +1824,16 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
         }
         else {
           if( !element.isBlockChild ) {
-            throw new thymol.ThError( "getImportNode cannot match fragment: \"" + fragmentName + "\"", element );
+            thymol.error( true, "getImportNode cannot match fragment: \"" + fragmentName + "\"", element );
           }
         }
       }
       if( matched ) {
         var signature = Thymol.prototype.getFragmentSignature( fragmentName, element.thLocalVars );        
-        if( thymol.thCache[ filePart ] == null ) {
-          thymol.thCache[ filePart ] = new Object();
+        if( thymol.thFragmentCache[ filePart ] == null ) {
+          thymol.thFragmentCache[ filePart ] = new Object();
         }        
-        thymol.thCache[ filePart ][ signature ] = result;
+        thymol.thFragmentCache[ filePart ][ signature ] = result;
         newElement = result.cloneNode( true );
         if( newElement.nodeType === ELEMENT_NODE ) {
           newElement.removeAttribute( thymol.thFragment.name );
@@ -1844,6 +1842,18 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
             fragment.removeAttribute( thymol.thFragment.name );
             fragment.removeAttribute( thymol.thFragment.synonym );            
           }
+          var fragState = null;  // Set the state objects for the elements of the matched fragment
+          if( filePart == "" && !!element.state ) {
+            fragState = element.state;
+          }
+          else {
+            fragState = new ThState( filePart, content );   
+          }    
+          var elements = newElement.getElementsByTagName( "*" );
+          for( var k = 0, kLimit = elements.length; k < kLimit; k++ ) {
+            elements[k].state = fragState;
+          }
+        
         }
         result = newElement;
         result.thLocalVars = element.thLocalVars;
@@ -1893,7 +1903,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
 //                    element.thLocalVars[ "..." ] = null;
                 }
               }
-              else { // Non-postional: match all specified names
+              else { // Non-positional: match all specified names
                 var vlOk = true;
                 for( k = 0, kLimit = vlArgs.length; k < kLimit; k++ ) {
                   var lv = element.thLocalVars[ vlArgs[k] ];
@@ -2317,6 +2327,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
         if( node.nodeType === ELEMENT_NODE ) {
           if( old.thLocalVars !== null ) {
             node.thLocalVars = old.thLocalVars;
+            node.state = old.state;
           }
         }
         if( old.childNodes !== null ) {
@@ -2444,18 +2455,162 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
     }
   }
   
+  function getFile( file, report ) {
+    var content = thymol.thFragmentCache[ file ];
+    if( content == null ) {
+      content = thymol.readFile( file, report );
+      thymol.thFragmentCache[ file ] = content;
+    }
+    return content;
+  }
+  
+  var globalEval = (function() {  // Ace Kangax - http://perfectionkills.com/global-eval-what-are-the-options/
+    var isIndirectEvalGlobal = (function(original, Object) {
+      try {
+        // Does `Object` resolve to a local variable, or to a global, built-in `Object`,
+        // reference to which we passed as a first argument?
+        return (1,eval)('Object') === original;
+      }
+      catch(err) {
+        // if indirect eval errors out (as allowed per ES3), then just bail out with `false`
+        return false;
+      }
+    })(Object, 123);
+
+    if (isIndirectEvalGlobal) {
+
+      // if indirect eval executes code globally, use it
+      return function(expression) {
+        return (1,eval)(expression);
+      };
+    }
+    else if (typeof thymol.thWindow.execScript !== 'undefined') {
+
+      // if `window.execScript exists`, use it
+      return function(expression) {
+        return thymol.thWindow.execScript(expression);
+      };
+    }
+    // otherwise, globalEval is `undefined` since nothing is returned
+  })();  
+
+  function loadScript( file ) {
+    var script = Thymol.prototype.getFilePath( file );
+    globalEval( getFile( script ) );
+  }
+  
+  function diffTail( region, path ) {
+    var result = path;
+    if( !!region ) {
+      var regParts = region.split("/");      
+      if( !!path ) {
+        var pathParts = path.split("/");
+        for( var k = 0, kLimit = pathParts.length; k < kLimit; k++ ) {
+          if( pathParts[k] !== regParts[k] ) {
+            break;
+          }
+        }
+        if( k < kLimit ) {
+          result = pathParts.slice(k).join("/");
+        }      
+      }
+    }
+    return result;
+  } 
+
+  function pointInCode( element ) {
+    var elements = element.state.dom.getElementsByTagName( "*" );
+    var count = 0;
+    for( var k = 0, kLimit = elements.length; k < kLimit; k++ ) {
+      if( element.tagName === elements[k].tagName ) {
+        count++;
+        if( element.isSameNode( elements[k] ) ) {
+          break;
+        }
+      }
+    }
+    var lineInFile = undefined;
+    var columnInFile = undefined;
+    var tabsBeforeColumnInFile = undefined;
+    if( count >= 0 ) {
+      var html = element.state.content.toLowerCase();
+      var result;
+      var tag = "<" + element.tagName.toLowerCase();      
+      result = findNthOccurence( html, tag, count, 0, html.length );
+      var elementPosition = result.nextPosition;
+      var startPosition = 0;
+      if( count > 0 ) {        
+        result = findNthOccurence( html, "\n", -1, 0, elementPosition );
+        startPosition = result.position;
+        lineInFile = result.matchCount + 1;        
+        result = findNthOccurence( html, "\t", -1, startPosition, elementPosition );
+        tabsBeforeColumnInFile = result.matchCount;
+      }
+      columnInFile = elementPosition - startPosition;
+    }
+    return {
+        line : lineInFile,
+        column : columnInFile,
+        tabs : tabsBeforeColumnInFile
+    }
+  }  
+  
+  function findNthOccurence( range, item, n, start, stop ) {
+    var position = start;
+    var nextPosition = -1;
+    var matchCount = 0;
+    while( true ) {
+      nextPosition = range.indexOf( item, position );
+      if( nextPosition >= 0 ) {
+        if( nextPosition >= stop ) {
+          break
+        }                    
+        matchCount++;
+        if( matchCount === n ) {
+          break;
+        }        
+        position = nextPosition + 1;
+      }
+      else {
+        break;
+      }
+    }
+    return {
+      position: position,
+      nextPosition: nextPosition,
+      matchCount: matchCount
+    }    
+  }
+  
+  function error( doThrow, text, element, source ) {
+    var exception = thymol.handleError( new thymol.ThError( doThrow, text, element, source ) );
+    if( !!exception ) {
+      throw exception;
+    }
+  }
+  
   /* Thymol internal classes */
 
-  function ThError( message, element, source ) {
+  function ThError( doThrow, text, element, source ) {
     this.name = "ThError";
-    this.message = message || "Default Message";
+    this.doThrow = doThrow;
     if( element !== null && typeof element !== "undefined" && element.isBlockChild ) {
       this.suppress = true;
     }
     else {
-      this.element = element || {};
       this.suppress = false;
     }
+    this.element = element || {};
+    var message = text || "Default Message";
+    if( !this.element.state ) {
+      this.element.state = new thymol.ThState( "", thymol.thDocument );
+    }
+    this.point = {};
+    if( !!this.element.state ) {
+      this.point = pointInCode( this.element );
+      message+= "\n\nError in: " + diffTail( thymol.location, this.element.state.file ) + " at line: " + this.point.line + " column: " + this.point.column + ( this.point.tabs > 0 ? " (" + this.point.tabs + "tabs)" : "" );
+    }
+    this.message = message;
     if( !!source ) {
       if( !!source.stack ) {
         this.stack = source.stack;
@@ -2464,7 +2619,22 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
   }
   ThError.prototype = new Error();
   ThError.prototype.constructor = ThError;
-
+  
+  function ThState( filePart, domArg ) {
+    var fileName = filePart;
+    if( filePart != "" ) {      
+      if( !filePart.endsWith( thymol.templateSuffix )  ) {
+        fileName = fileName + thymol.templateSuffix;
+      }
+    }
+    else {
+      fileName = thymol.templateName + thymol.templateSuffix;
+    }
+    this.file = fileName;
+    this.content = getFile( fileName );
+    this.dom = domArg;    
+  }
+  
   function ThParam( valueArg ) {
     this.value = valueArg;
     this.globalValue;
@@ -2537,7 +2707,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
       attrList.push( this );
     }
     this.process = function() {
-      thymol.thWindow.alert( "unsupported processing function for attribute \"" + this.name + "\"" );
+      thymol.error( false, "unsupported processing function for attribute \"" + this.name + "\"" );
     };
     if( ! ( typeof func === "undefined" ) ) {
       this.process = func;
@@ -2569,7 +2739,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
     this.endName = "/" + tha.name;
     this.endSynonym = "/" + tha.synonym;
     this.process = function() {
-      thymol.thWindow.alert( "unsupported processing function for element \"" + this.name + "\"" );
+      thymol.error( false, "unsupported processing function for element \"" + this.name + "\"" );
     };
     if( ! ( typeof func === "undefined" ) ) {
       this.process = func;
@@ -2772,6 +2942,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
 
     Thymol : Thymol,
     ThError : ThError,
+    ThState : ThState,
     ThParam : ThParam,
 
     ThAttr : ThAttr,
@@ -2783,7 +2954,6 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
     ThClass : ThClass,
 
     fileSystem: thymol.fileSystem,
-    readFile : thymol.readFile,
     getFileContent : thymol.getFileContent,
     getXMLHttpRequest : thymol.getXMLHttpRequest,
     thDomParse : thymol.thDomParse,
@@ -2818,6 +2988,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
     thDefaultLocalMessages : thymol.thDefaultLocalMessages,
     thDefaultDisableMessages : thymol.thDefaultDisableMessages,
     thDefaultTemplateSuffix : thymol.thDefaultTemplateSuffix,
+    thDefaultInlineQuote : thymol.thDefaultInlineQuote,
 
     thThymeleafPrefixList : thymol.thThymeleafPrefixList,
     thDisabledList : thymol.thDisabledList,
@@ -2851,12 +3022,15 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
     reset: reset,
     setup: setup,
     execute : execute,
+    error: error,
 
     isClientSide : isClientSide,
     updatePrefix : updatePrefix,
     init : init,
     ready : ready,
     addDialect : addDialect,
+    getFile : getFile,
+    loadScript : loadScript,
     isFragmentChild : isFragmentChild,
     preProcess : preProcess,
     substitute : substitute,
