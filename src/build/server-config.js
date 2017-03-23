@@ -20,7 +20,8 @@ var thymolServerConfiguration = {
     extendedMapping: false,
     localMessages: true,
     disableMessages: false,
-    templateSuffix: ".html"
+    templateSuffix: ".html",
+    inlineQuote: "'"
   }
 };
   

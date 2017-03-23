@@ -35,7 +35,8 @@
     thDefaultExtendedMapping : false,
     thDefaultLocalMessages : true,
     thDefaultDisableMessages : false,
-    thDefaultTemplateSuffix : ".html"
+    thDefaultTemplateSuffix : ".html",
+    thDefaultInlineQuote : "'"
   };
   thymol = function( conf ) {
     conf.ready = function( func ) {
