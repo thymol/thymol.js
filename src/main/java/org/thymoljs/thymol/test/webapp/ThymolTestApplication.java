@@ -3,6 +3,8 @@ package org.thymoljs.thymol.test.webapp;
 import java.util.Locale;
 import java.util.Properties;
 
+import javax.servlet.ServletContext;
+
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.messageresolver.StandardMessageResolver;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
@@ -14,18 +16,16 @@ public class ThymolTestApplication {
 	private static TemplateEngine templateEngine;
 	
 	private static final String APP_PREFIX = "/WEB-INF/templates/";
-
-	private ThymolTestApplication() {
-		super();
-	}
-
+	
 	public static TemplateEngine initializeTemplateEngine() {
-		return initializeTemplateEngine(APP_PREFIX,ThymolTestFilter.APP_SUFFIX,null);
+		return initializeTemplateEngine(APP_PREFIX,ThymolTestFilter.APP_SUFFIX,null, null);
 	}
 
-	public static TemplateEngine initializeTemplateEngine(String prefix, String suffix, Locale locale) {
-		templateEngine = new TemplateEngine();		
-		addResolver(prefix,suffix,locale);		
+	public static TemplateEngine initializeTemplateEngine(String prefix, String suffix, Locale locale, ServletContext sctxValue ) {
+		templateEngine = new TemplateEngine();
+		if( sctxValue != null ) {
+			addResolver(prefix,suffix,locale);
+		}
 		return templateEngine;
 	}
 		

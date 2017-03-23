@@ -103,7 +103,36 @@ public class ThymolTestFilter implements Filter {
 					}
 					uri.append( template );
 					locale = context.getLocale();
-					addConfiguration( prefix.toString(), suffix, locale );
+					addConfiguration( prefix.toString(), suffix, locale, servletContext );
+					
+					JsonObject requestHolder = context.getRequest();
+					if( requestHolder != null ) {
+						for( Entry< String, JsonElement > entry: requestHolder.entrySet() ) {
+							JsonElement jse = entry.getValue();
+							Object obj = getAsObject( jse );
+							request.setAttribute( entry.getKey(), obj );
+						}
+					}
+
+					JsonObject sessionHolder = context.getSession();
+					if( sessionHolder != null ) {
+						HttpSession session = request.getSession();
+						for( Entry< String, JsonElement > entry: sessionHolder.entrySet() ) {
+							JsonElement jse = entry.getValue();
+							Object obj = getAsObject( jse );
+							session.setAttribute( entry.getKey(), obj );
+						}
+					}
+					
+					JsonObject servletContextHolder = context.getContext();
+					if( servletContextHolder != null ) {
+						for( Entry< String, JsonElement > entry: servletContextHolder.entrySet() ) {
+							JsonElement jse = entry.getValue();
+							Object obj = getAsObject( jse );
+							servletContext.setAttribute( entry.getKey(), obj );
+						}
+					}
+					
 					WebContext ctx;
 					if( locale == null ) {
 						ctx = new WebContext( request, response, servletContext );
@@ -111,27 +140,7 @@ public class ThymolTestFilter implements Filter {
 					else {
 						ctx = new WebContext( request, response, servletContext, locale );
 					}
-
-					JsonObject sessionHolder = context.getSession();
-					if( sessionHolder != null ) {
-						HttpSession session = ctx.getHttpSession();
-						for( Entry< String, JsonElement > entry: sessionHolder.entrySet() ) {
-							JsonElement jse = entry.getValue();
-							Object obj = getAsObject( jse );
-							session.setAttribute( entry.getKey(), obj );
-						}
-					}
-
-					JsonObject servletContextHolder = context.getContext();
-					if( servletContextHolder != null ) {
-						ServletContext ctxServletContext = ctx.getServletContext();
-						for( Entry< String, JsonElement > entry: servletContextHolder.entrySet() ) {
-							JsonElement jse = entry.getValue();
-							Object obj = getAsObject( jse );
-							ctxServletContext.setAttribute( entry.getKey(), obj );
-						}
-					}
-
+										
 					com.cedarsoftware.util.io.JsonObject< String, Object > variables = context.getVariables();
 					if( variables != null ) {
 						for( Entry< String, Object > entry: variables.entrySet() ) {
@@ -169,7 +178,7 @@ public class ThymolTestFilter implements Filter {
 		}
 	}
 
-	public static void addConfiguration( String prefix, String suffix, Locale locale ) {
+	public static void addConfiguration( String prefix, String suffix, Locale locale, ServletContext sctx  ) {
 		Set< ITemplateResolver > resolvers = templateEngine.getTemplateResolvers();
 		TemplateResolver prefixResolver = null;
 		for( ITemplateResolver resolver: resolvers ) {
@@ -185,7 +194,7 @@ public class ThymolTestFilter implements Filter {
 			}
 		}
 		if( prefixResolver == null ) {
-			templateEngine = ThymolTestApplication.initializeTemplateEngine( prefix, suffix, locale ); //TODO
+			templateEngine = ThymolTestApplication.initializeTemplateEngine( prefix, suffix, locale, sctx ); //TODO
 		}
 	}
 
