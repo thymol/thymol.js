@@ -22,13 +22,17 @@ thymol.objects.thListsObject = function() {
           if( typeof comparator === "function" ) {
             return list.sort( comparator );
           }
-          throw new thymol.ThError( "#lists.sort Cannot execute list sort: comparator is not a function" );
+          listsError( "sort Cannot execute list sort: comparator is not a function", this );
         }
-        throw new thymol.ThError( "#lists.sort Cannot execute list sort: comparator is null" );
+        listsError( "sort Cannot execute list sort: comparator is null", this );
       }
       return list.sort();
     }
-    throw new thymol.ThError( "#lists.sort Cannot execute list sort: list is null" );
+    listsError( "sort Cannot execute list sort: list is null", this );
+  }
+
+  function listsError( text, element ) {
+    thymol.error( true, "#lists." + text, element );
   }
 
   return {

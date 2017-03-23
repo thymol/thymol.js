@@ -79,9 +79,7 @@
     var url = thymol.getThAttribute( thUrlAttr.value, element ), updated = false, text, newTextNode, i, iLimit, iUpper;
     if( url == null ) {
       if( !thymol.allowNullText ) {
-        if( thymol.debug ) {
-          thymol.thWindow.alert( "thymol.processText cannot process: " + thUrlAttr.name + "=\"" + thUrlAttr.value + "\"\n" + element.innerHTML );
-        }
+        thymol.error( false, "thymol.processText cannot process: " + thUrlAttr.name + "=\"" + thUrlAttr.value + "\"\n" + element.innerHTML, element );
         return updated;
       }
       url = "";
@@ -130,9 +128,7 @@
       element.removeAttribute( thUrlAttr.name );
     }
     catch( err ) {
-      if( thymol.debug ) {
-        thymol.thWindow.alert( "text replace error" );
-      }
+      thymol.error( false, "text replace error", element, err );
     }
     return updated;
   };
@@ -227,9 +223,7 @@
       element.removeAttribute( thUrlAttr.name );
     }
     else {
-      if( thymol.debug ) {
-        thymol.thWindow.alert( "thymol.processFixedValBoolAttr cannot process: " + thUrlAttr.name + "=\"" + thUrlAttr.value + "\"\n" + element.innerHTML );
-      }
+      thymol.error( false, "processFixedValBoolAttr cannot process: " + thUrlAttr.name + "=\"" + thUrlAttr.value + "\"\n" + element.innerHTML, element );
     }
   };
 
@@ -255,9 +249,7 @@
       element.removeAttribute( thUrlAttr.name );
     }
     else {
-      if( thymol.debug ) {
-        thymol.thWindow.alert( "thymol.processPairedAttr cannot process: " + thUrlAttr.name + "=\"" + thUrlAttr.value + "\"\n" + element.innerHTML );
-      }
+      thymol.error( false, "processPairedAttr cannot process: " + thUrlAttr.name + "=\"" + thUrlAttr.value + "\"\n" + element.innerHTML, element );
     }
   };
 
@@ -288,8 +280,8 @@
         }
       }
     }
-    if( !processed && thymol.debug ) {
-      thymol.thWindow.alert( "thymol.processConditional cannot process conditional: " + value + "\n" + element.innerHTML );
+    if( !processed ) {
+      thymol.error( false, "processConditional cannot process conditional: " + value + "\n" + element.innerHTML, element );
     }
     return false;
   };
@@ -408,9 +400,7 @@
       thymol.doInlineJavascript( element );
     }
     else {
-      if( thymol.debug ) {
-        thymol.thWindow.alert( "thymol.processInline cannot process scripting mode: \"" + mode + "\" - it isn't supported by version \"" + thymol.thVersion + "\"\n" );
-      }
+      thymol.error( false, "processInline cannot process scripting mode: \"" + mode + "\" - it isn't supported by version \"" + thymol.thVersion + "\"", element );
     }
     element.removeAttribute( thUrlAttr.name );
   };
@@ -495,7 +485,7 @@
   thymol.getStringView = function( param ) {
     var view = "", objType;
     if( typeof param === 'string' ) {
-      view = view + "'" + param + "'";
+      view = view + thymol.inlineQuote + param + thymol.inlineQuote;
     }
     else if( typeof param === 'number' || typeof param === 'boolean' ) {
       view = view + param;
@@ -698,9 +688,7 @@
       if( term != "" ) {
         term = " false term is: \"" + term + "\"";
       }
-      if( thymol.debug ) {
-        thymol.thWindow.alert( "thymol.processAssert assertion failure -" + argValue + term + "\n" );
-      }
+      thymol.error( false, "processAssert assertion failure -" + argValue + term, element );
     }
     element.removeAttribute( thUrlAttr.name );
   };

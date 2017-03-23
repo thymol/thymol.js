@@ -21,28 +21,28 @@ thymol.objects.thArraysObject = function() {
     if( target !== null ) {
       return toTypedArray( null, target );
     }
-    throw new thymol.ThError( "#arrays.toArray Cannot convert null to array" );
+    arraysError( "toArray Cannot convert null to array", this );
   }
 
   function toStringArray( target ) {
     if( target !== null ) {
       return toTypedArray( "string", target );
     }
-    throw new thymol.ThError( "#arrays.toStringArray Cannot convert null to array" );
+    arraysError( "toStringArray Cannot convert null to array", this );
   }
 
   function toNumberArray( target ) {
     if( target !== null ) {
       return toTypedArray( "number", target );
     }
-    throw new thymol.ThError( "#arrays.toNumberArray Cannot convert null to array" );
+    arraysError( "toNumberArray Cannot convert null to array", this );
   }
 
   function toBooleanArray( target ) {
     if( target !== null ) {
       return toTypedArray( "boolean", target );
     }
-    throw new thymol.ThError( "#arrays.toBooleanArray Cannot convert null to array" );
+    arraysError( "toBooleanArray Cannot convert null to array", this );
   }
 
   function toTypedArray( componentClass, target ) {
@@ -70,7 +70,7 @@ thymol.objects.thArraysObject = function() {
         }
       }
       catch( err ) {
-        throw new IllegalArgumentException( "#arrays.toArray Cannot convert object of class \"" + targetComponentClass.getName() + "[]\" to an array" + " of " + componentClass.getClass().getSimpleName() );
+        arraysError( "toArray Cannot convert object of class \"" + targetComponentClass.getName() + "[]\" to an array" + " of " + componentClass.getClass().getSimpleName() );
       }
       return result;
     }
@@ -105,13 +105,13 @@ thymol.objects.thArraysObject = function() {
         }
       }
       catch( err ) {
-        throw new IllegalArgumentException( "#arrays.toArray Cannot convert object of class \"" + targetComponentClass.getName() + "[]\" to an array" + " of " + componentClass.getClass().getSimpleName() );
+        arraysError( "toArray Cannot convert object of class \"" + targetComponentClass.getName() + "[]\" to an array" + " of " + componentClass.getClass().getSimpleName() );
       }
       return result;
 
     }
     else {
-      throw new thymol.ThError( "#arrays.toArray Cannot convert object of type \"" + ( typeof target ) + "\" to an array" + ( componentClass == null ? "" : ( " of " + componentClass ) ) );
+      arraysError( "toArray Cannot convert object of type \"" + ( typeof target ) + "\" to an array" + ( componentClass == null ? "" : ( " of " + componentClass ) ) );
 
     }
   }
@@ -120,7 +120,7 @@ thymol.objects.thArraysObject = function() {
     if( target !== null ) {
       return target.length;
     }
-    throw new thymol.ThError( "#arrays.length Cannot get array length of null" );
+    arraysError( "length Cannot get array length of null", this );
   }
 
   function isEmpty( target ) {
@@ -141,7 +141,7 @@ thymol.objects.thArraysObject = function() {
       }
       return false;
     }
-    throw new thymol.ThError( "#arrays.contains Cannot execute array contains: target is null" );
+    arraysError( "contains Cannot execute array contains: target is null", this );
   }
 
   function containsAll( target, elements ) {
@@ -173,11 +173,15 @@ thymol.objects.thArraysObject = function() {
         }
         return elementsArray.length === 0;
       }
-      throw new thymol.ThError( "#arrays.containsAll Cannot execute array containsAll: elements is null" );
+      arraysError( "containsAll Cannot execute array containsAll: elements is null", this );
     }
-    throw new thymol.ThError( "#arrays.containsAll Cannot execute array containsAll: target is null" );
+    arraysError( "containsAll Cannot execute array containsAll: target is null", this );
   }
 
+  function arraysError( text, element ) {
+    thymol.error( true, "#arrays." + text, element );
+  }
+  
   return {
     thExpressionObjectName : thExpressionObjectName,
     toArray : toArray,

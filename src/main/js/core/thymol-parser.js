@@ -220,8 +220,8 @@ thymol.ThParser = ( function( scope ) {
             if( !element.isBlockChild ) {
               var aValue = n1 == null ? "null" : n1;
               var bValue = n2 == null ? "null" : n2;
-              var message = "while evaluating expression: " + this.tokens[ i - 2 ].index_ + ": " + aValue + ", " + this.tokens[ i - 1 ].index_ + ": " + bValue;
-              throw new thymol.ThError( message, element, err );
+              var message = "while evaluating binary expression: " + this.tokens[ i - 2 ].index_ + ": " + aValue + ", " + this.tokens[ i - 1 ].index_ + ": " + bValue;
+              thymol.error( true, message, element, err );
             }
           }
           if( !pathMatch ) {
@@ -254,7 +254,7 @@ thymol.ThParser = ( function( scope ) {
           }
           else {
             if( !element.isBlockChild ) {
-              throw new thymol.ThError( "Exception undefined variable: " + item.index_, element );
+              thymol.error( true, "Exception undefined variable: " + item.index_, element );
             }
           }
         }
@@ -298,8 +298,8 @@ thymol.ThParser = ( function( scope ) {
             catch( err ) {
               if( !element.isBlockChild ) {
                 var aValue = n1 == null ? "null" : n1;
-                var message = "while evaluating expression: " + this.tokens[ i - 2 ].index_ + ": " + aValue;
-                throw new thymol.ThError( message, element, err );
+                var message = "while evaluating unary expression: " + this.tokens[ i - 2 ].index_ + ": " + aValue;
+                thymol.error( true, message, element, err );
               }
             }
           }
@@ -440,19 +440,19 @@ thymol.ThParser = ( function( scope ) {
           }
           else {
             if( !element.isBlockChild ) {
-              throw new thymol.ThError( f + " is not a function", element );
+              thymol.error( true, f + " is not a function", element );
             }
           }
         }
         else {
           if( !element.isBlockChild ) {
-            throw new thymol.ThError( "invalid expression item type: " + type_, element );
+            thymol.error( true, "invalid expression item type: " + type_, element );
           }
         }
       }
       if( nstack.length > 1 ) {
         if( !element.isBlockChild ) {
-          throw new thymol.ThError( "invalid Expression (parity)", element );
+          thymol.error( true, "invalid Expression (parity)", element );
         }
       }
       result = nstack[ 0 ];
@@ -602,7 +602,7 @@ thymol.ThParser = ( function( scope ) {
             inCurly = false;
             if( meta === null ) {
               var message = "bad path variable definition in expression: \"" + expression + "\" near column " + pos;
-              throw new thymol.ThError( message, element );
+              thymol.error( true, message, element );
             }
             var curlyVar = expression.substring( curlyPos, i - 1 );
             var values = [];

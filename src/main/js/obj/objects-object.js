@@ -23,7 +23,7 @@ thymol.objects.thObjectsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#objects.arrayNullSafe Target cannot be null" );
+    objectsError( "arrayNullSafe Target cannot be null", this );
   }
 
   function setNullSafe( target, defaultValue ) {
@@ -36,7 +36,11 @@ thymol.objects.thObjectsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#objects.setNullSafe Target cannot be null" );
+    objectsError( "setNullSafe Target cannot be null", this );
+  }
+
+  function objectsError( text, element ) {
+    thymol.error( true, "#objects." + text, element );
   }
 
   return {

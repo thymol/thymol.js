@@ -43,11 +43,11 @@ thymol.objects.thSetsObject = function() {
         }
       }
       else {
-        throw new thymol.ThError( "#sets.toSet Cannot convert object of type \"" + tt + "\" to a set" );
+        setsError( "toSet Cannot convert object of type \"" + tt + "\" to a set", this );
       }
       return result;
     }
-    throw new thymol.ThError( "#sets.toSet Cannot convert null to set" );
+    setsError( "toSet Cannot convert null to set", this );
   }
 
   function size( target ) {
@@ -55,10 +55,10 @@ thymol.objects.thSetsObject = function() {
       if( target instanceof thymol.ThSet ) {
         return target.size();
       }
-      throw new thymol.ThError( "#sets.size Cannot get size of non-set type \"" + ( typeof target ) + "\"" );
+      setsError( "size Cannot get size of non-set type \"" + ( typeof target ) + "\"", this );
 
     }
-    throw new thymol.ThError( "#sets.size Cannot get size of null" );
+    setsError( "size Cannot get size of null", this );
   }
 
   function isEmpty( target ) {
@@ -66,10 +66,10 @@ thymol.objects.thSetsObject = function() {
       if( target instanceof thymol.ThSet ) {
         return target.isEmpty();
       }
-      throw new thymol.ThError( "#sets.size Cannot get isEmpty of non-set type \"" + ( typeof target ) + "\"" );
+      setsError( "size Cannot get isEmpty of non-set type \"" + ( typeof target ) + "\"", this );
 
     }
-    throw new thymol.ThError( "#sets.size Cannot get isEmpty of null" );
+    setsError( "size Cannot get isEmpty of null", this );
   }
 
   function contains( target, element ) {
@@ -88,7 +88,7 @@ thymol.objects.thSetsObject = function() {
       }
       return false;
     }
-    throw new thymol.ThError( "#sets.contains Cannot execute sets contains: target is null" );
+    setsError( "contains Cannot execute sets contains: target is null", this );
   }
 
   function containsAll( target, elements ) {
@@ -122,9 +122,13 @@ thymol.objects.thSetsObject = function() {
         }
         return elementsArray.length === 0;
       }
-      throw new thymol.ThError( "#sets.containsAll Cannot execute sets containsAll: elements is null" );
+      setsError( "containsAll Cannot execute sets containsAll: elements is null", this );
     }
-    throw new thymol.ThError( "#sets.containsAll Cannot execute sets containsAll: target is null" );
+    setsError( "containsAll Cannot execute sets containsAll: target is null", this );
+  }
+
+  function setsError( text, element ) {
+    thymol.error( true, "#sets." + text, element );
   }
 
   return {

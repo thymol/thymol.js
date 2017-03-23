@@ -227,9 +227,7 @@ thymol.makeContext = function( contextNameParam, varAccessorParam ) {
           existing.push( param );
         }
         else {
-          if( thymol.debug ) {
-            thymol.thWindow.alert( "request parameters should be of type string array \"" + name + "\"" );
-          }
+          thymol.error( false, "request parameters should be of type string array \"" + name + "\"" );
         }
       }
       else {

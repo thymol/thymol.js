@@ -1,3 +1,23 @@
+thymol.handleError = function( err ) { 
+  var result = null;
+  if( !err.suppress ) {
+    if( err.doThrow ) {
+      result = err;
+    }
+    else {
+      thymol.alert( err );
+    }      
+  }
+  return result;
+}
+
+thymol.alert = function( err ) { 
+  if( thymol.debug ) {
+    thymol.thWindow.alert( err.message );
+  }
+}
+
+
 thymol.thDomParse = function( text, type ) {
   return new DOMParser().parseFromString( text, type );
 };
@@ -22,8 +42,8 @@ thymol.getFileContent = function( url, report ) {
     }      
   }
   catch( err ) {
-    if( thymol.debug && !!report ) {
-      thymol.thWindow.alert( "getFileContent failed for url: " + url + " error: " + err );
+    if( !!report ) {
+      thymol.error( true, "getFileContent failed for url: " + uri, thymol.thDocument, err );
     }
   }
   return content;
