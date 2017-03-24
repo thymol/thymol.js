@@ -20,7 +20,7 @@ thymol.objects.thIdsObject = function() {
       setLocal( str, idCount );
       return result;
     }
-    throw new thymol.ThError( "#ids.seq ID Cannot be null" );
+    idsError( "seq ID Cannot be null", this );
   }
 
   function next( id ) {
@@ -29,7 +29,7 @@ thymol.objects.thIdsObject = function() {
       var idCount = getLocal( str );
       return str + idCount;
     }
-    throw new thymol.ThError( "#ids.next ID Cannot be null" );
+    idsError( "next ID Cannot be null", this );
   }
 
   function prev( id ) {
@@ -38,7 +38,7 @@ thymol.objects.thIdsObject = function() {
       var idCount = getLocal( str );
       return str + ( idCount - 1 );
     }
-    throw new thymol.ThError( "#ids.prev ID Cannot be null" );
+    idsError( "prev ID Cannot be null", this );
   }
 
   function setLocal( str, idCount ) {
@@ -62,6 +62,10 @@ thymol.objects.thIdsObject = function() {
       thymol.objects.thIdsObject.thLocalVars[ "thIdCounts" ][ str ] = 1;
     }
     return thymol.objects.thIdsObject.thLocalVars[ "thIdCounts" ][ str ];
+  }
+
+  function idsError( text, element ) {
+    thymol.error( true, "#ids." + text, element );
   }
 
   return {

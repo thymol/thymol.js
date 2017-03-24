@@ -17,7 +17,12 @@ public class WithCases extends SeleniumCases {
 	Context withBaseContext = new Context( "tests/with/" );
 	
 	String with01ResultThymol = 		
-			"ThError: while evaluating expression: a: null, name: name";
+			"while evaluating binary expression: a: null, name: name" +
+	        "\n\nError in: target/test-classes/templates/tests/with/with01.html at line: 10 column: 1 (1tabs)";
+	
+	String with01ResultNode = 		
+			"while evaluating binary expression: a: null, name: name" +
+	        "\n\nError in: tests/with/with01.html at line: 10 column: 1 (1tabs)";
 	
 	String with01ResultThymeleaf =			
 			"<h2>HTTP ERROR 500</h2>\n" +
@@ -54,8 +59,11 @@ public class WithCases extends SeleniumCases {
 	public void with01() {
 		localise( withContext );
 		String result = getResult( "with01.html", ResultMode.ALERT );
-		if( expectThymolResult() || expectNodeResult() ) {
+		if( expectThymolResult() ) {
 			assertEquals( with01ResultThymol, result );			
+		}
+		else if( expectNodeResult() ) {
+			assertEquals( with01ResultNode, result );			
 		}
 		else {			
 			String subs = result.substring( 0, result.indexOf( "\tat" ) );

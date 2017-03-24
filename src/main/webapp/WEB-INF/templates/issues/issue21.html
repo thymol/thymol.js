@@ -1,0 +1,11 @@
+<html>
+  <head>
+    <script src="${thInstall}/thymol.js" data-thymol-load="page-data.js" data-thymol-parameters="thymol.inlineQuote=%22"></script>    
+  </head>
+  <body>
+    <script th:inline="javascript">
+      window.foo = /*[[ ${foo} ]]*/ 'bar';
+      window.console.log( "window.foo is: " + window.foo );
+    </script>
+  </body>
+</html>

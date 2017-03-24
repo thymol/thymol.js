@@ -44,7 +44,7 @@ thymol.objects.thAggregatesObject = function() {
             result += target[ i ];
           }
           else {
-            throw new thymol.ThError( "#aggregates." + label + " Cannot aggregate on object containing nulls" );
+            aggregatesError( "Cannot aggregate on object containing nulls", this );
           }
         }
       }
@@ -62,7 +62,7 @@ thymol.objects.thAggregatesObject = function() {
             }
           }
           else {
-            throw new thymol.ThError( "#aggregates." + label + " Cannot aggregate on object containing nulls" );
+            aggregatesError( "Cannot aggregate on object containing nulls", this );
           }
           if( process ) {
             result += value;
@@ -72,15 +72,19 @@ thymol.objects.thAggregatesObject = function() {
       }
       if( doAvg ) {
         if( count == 0 ) {
-          throw new thymol.ThError( "#aggregates." + label + " Cannot get size of object" );
+          aggregatesError( "Cannot get size of object", this );
         }
         result = result / count;
       }
       return result;
     }
-    throw new thymol.ThError( "#aggregates." + label + " Cannot aggregate on null" );
+    aggregatesError( "Cannot aggregate on null", this );
   }
 
+  function aggregatesError( text, element ) {
+    thymol.error( true, "#aggregates." + " " + text, element );
+  }
+  
   return {
     thExpressionObjectName : thExpressionObjectName,
     sum : sum,

@@ -53,16 +53,16 @@ thymol.objects.thMessagesObject = function() {
       if( arguments.length > 0 ) {
         return msgWithParams( arguments[ 0 ], Array.prototype.slice.call( arguments, 1 ) );
       }
-      throw new thymol.ThError( "#messages.msg Invoked with no arguments!" );
+      messagesError( "msg Invoked with no arguments!", this );
     }
-    throw new thymol.ThError( "#messages.msg Target cannot be null" );
+    messagesError( "msg Target cannot be null", this );
   }
 
   function msgWithParams( target, params ) {
     if( target !== null ) {
       return thymol.getMessage( target, params, true );
     }
-    throw new thymol.ThError( "#messages.msgWithParams Target cannot be null" );
+    messagesError( "msgWithParams Target cannot be null", this );
   }
 
   function msgOrNull() {
@@ -70,16 +70,16 @@ thymol.objects.thMessagesObject = function() {
       if( arguments.length > 0 ) {
         return msgOrNullWithParams( arguments[ 0 ], Array.prototype.slice.call( arguments, 1 ) );
       }
-      throw new thymol.ThError( "#messages.msgOrNull Invoked with no arguments!" );
+      messagesError( "msgOrNull Invoked with no arguments!", this );
     }
-    throw new thymol.ThError( "#messages.msgOrNull Target cannot be null" );
+    messagesError( "msgOrNull Target cannot be null", this );
   }
 
   function msgOrNullWithParams( target, params ) {
     if( target !== null ) {
       return thymol.getMessage( target, params, false );
     }
-    throw new thymol.ThError( "#messages.msgOrNullWithParams Target cannot be null" );
+    messagesError( "msgOrNullWithParams Target cannot be null", this );
   }
 
   function arrayMsg() {
@@ -87,9 +87,9 @@ thymol.objects.thMessagesObject = function() {
       if( arguments.length > 0 ) {
         return arrayMsgWithParams( arguments[ 0 ], Array.prototype.slice.call( arguments, 1 ) );
       }
-      throw new thymol.ThError( "#messages.arrayMsg Invoked with no arguments!" );
+      messagesError( "arrayMsg Invoked with no arguments!", this );
     }
-    throw new thymol.ThError( "#messages.arrayMsg Target cannot be null" );
+    messagesError( "arrayMsg Target cannot be null", this );
   }
 
   function arrayMsgWithParams( target, params ) {
@@ -100,7 +100,7 @@ thymol.objects.thMessagesObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#messages.arrayMsgWithParams Target cannot be null" );
+    messagesError( "arrayMsgWithParams Target cannot be null", this );
   }
 
   function setMsg() {
@@ -108,9 +108,9 @@ thymol.objects.thMessagesObject = function() {
       if( arguments.length > 0 ) {
         return setMsgWithParams( arguments[ 0 ], Array.prototype.slice.call( arguments, 1 ) );
       }
-      throw new thymol.ThError( "#messages.setMsg Invoked with no arguments!" );
+      messagesError( "setMsg Invoked with no arguments!", this );
     }
-    throw new thymol.ThError( "#messages.setMsg Target cannot be null" );
+    messagesError( "setMsg Target cannot be null", this );
   }
 
   function setMsgWithParams( target, params ) {
@@ -123,7 +123,7 @@ thymol.objects.thMessagesObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#messages.setMsgWithParams Target cannot be null" );
+    messagesError( "setMsgWithParams Target cannot be null", this );
   }
 
   function arrayMsgOrNull() {
@@ -131,9 +131,9 @@ thymol.objects.thMessagesObject = function() {
       if( arguments.length > 0 ) {
         return arrayMsgOrNullWithParams( arguments[ 0 ], Array.prototype.slice.call( arguments, 1 ) );
       }
-      throw new thymol.ThError( "#messages.arrayMsgOrNull Invoked with no arguments!" );
+      messagesError( "arrayMsgOrNull Invoked with no arguments!", this );
     }
-    throw new thymol.ThError( "#messages.arrayMsgOrNull Target cannot be null" );
+    messagesError( "arrayMsgOrNull Target cannot be null", this );
   }
 
   function arrayMsgOrNullWithParams( target, params ) {
@@ -144,7 +144,7 @@ thymol.objects.thMessagesObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#messages.arrayMsgOrNullWithParams Target cannot be null" );
+    messagesError( "arrayMsgOrNullWithParams Target cannot be null", this );
   }
 
   function setMsgOrNull() {
@@ -152,9 +152,9 @@ thymol.objects.thMessagesObject = function() {
       if( arguments.length > 0 ) {
         return setMsgOrNullWithParams( arguments[ 0 ], Array.prototype.slice.call( arguments, 1 ) );
       }
-      throw new thymol.ThError( "#messages.setMsgOrNull Invoked with no arguments!" );
+      messagesError( "setMsgOrNull Invoked with no arguments!", this );
     }
-    throw new thymol.ThError( "#messages.setMsgOrNull Target cannot be null" );
+    messagesError( "setMsgOrNull Target cannot be null", this );
   }
 
   function setMsgOrNullWithParams( target, params ) {
@@ -167,7 +167,11 @@ thymol.objects.thMessagesObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#messages.setMsgOrNullWithParams Target cannot be null" );
+    messagesError( "setMsgOrNullWithParams Target cannot be null", this );
+  }
+
+  function messagesError( text, element ) {
+    thymol.error( true, "#messages." + text, element );
   }
 
   return {

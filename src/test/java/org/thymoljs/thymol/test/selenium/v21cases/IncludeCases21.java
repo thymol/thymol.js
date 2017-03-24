@@ -107,7 +107,12 @@ public class IncludeCases21 extends SeleniumCases {
 			"\n\n";	 			
 
 	String include10ResultThymol = 		
-			"ThError: getImportNode cannot match fragment: \"frag-1\"";	 			
+			"getImportNode cannot match fragment: \"frag-1\"" +
+	        "Error in: target/test-classes/templates/tests21/include/include10.html at line: 11 column: 2";	 			
+	
+	String include10ResultNode = 		
+			"getImportNode cannot match fragment: \"frag-1\"" +
+	        "Error in: tests21/include/include10.html at line: 11 column: 2";	 			
 	
 	String include10ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
@@ -148,7 +153,12 @@ public class IncludeCases21 extends SeleniumCases {
 			"\n\n";	 			
 
 	String include14ResultThymol = 		
-			"ThError: getImportNode cannot match fragment: \"frag-1\"";	 			
+			"getImportNode cannot match fragment: \"frag-1\"" +
+	        "\n\nError in: target/test-classes/templates/tests21/include/include14.html at line: 11 column: 2";	 			
+	
+	String include14ResultNode = 		
+			"getImportNode cannot match fragment: \"frag-1\"" +
+	        "\n\nError in: tests21/include/include14.html at line: 11 column: 2";	 			
 	
 	String include14ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
@@ -156,7 +166,12 @@ public class IncludeCases21 extends SeleniumCases {
 			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mss2\", which is not specified at the fragment selection. (include14:11)\n";
 
 	String include15ResultThymol = 		
-			"ThError: getImportNode cannot match fragment: \"frag-1\"";	 			
+			"getImportNode cannot match fragment: \"frag-1\"" +
+	        "\n\nError in: target/test-classes/templates/tests21/include/include15.html at line: 11 column: 2";	 			
+	
+	String include15ResultNode = 		
+			"getImportNode cannot match fragment: \"frag-1\"" +
+	        "\n\nError in: tests21/include/include15.html at line: 11 column: 2";	 			
 	
 	String include15ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
@@ -208,7 +223,12 @@ public class IncludeCases21 extends SeleniumCases {
 			"\n\n";	 			
 
 	String include20ResultThymol = 		
-			"ThError: getImportNode cannot match fragment: \"%frag-1\"";	 			
+			"getImportNode cannot match fragment: \"%frag-1\"" +
+	        "\n\nError in: target/test-classes/templates/tests21/include/include20.html at line: 11 column: 2";	 			
+	
+	String include20ResultNode = 		
+			"getImportNode cannot match fragment: \"%frag-1\"" +
+	        "\n\nError in: tests21/include/include20.html at line: 11 column: 2";	 			
 	
 	String include20ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
@@ -216,7 +236,12 @@ public class IncludeCases21 extends SeleniumCases {
 			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Cannot resolve fragment. Signature \"frag-1 (mesg,mss2)\" declares parameter \"mss2\", which is not specified at the fragment selection. (include20:11)\n";
 
 	String include21ResultThymol = 		
-			"ThError: getImportNode cannot match fragment: \"footer%frag-1\"";	 			
+			"getImportNode cannot match fragment: \"footer%frag-1\"" +
+	        "\n\nError in: target/test-classes/templates/tests21/include/include21.html at line: 11 column: 2";	 			
+	
+	String include21ResultNode = 		
+			"getImportNode cannot match fragment: \"footer%frag-1\"" +
+	        "\n\nError in: tests21/include/include21.html at line: 11 column: 2";	 			
 	
 	String include21ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
@@ -298,8 +323,11 @@ public class IncludeCases21 extends SeleniumCases {
 	public void include10() {
 		localise( includeContext );
 		String result = getResult( "include10.html", ResultMode.ALERT );
-		if( expectThymolResult() || expectNodeResult() ) {
+		if( expectThymolResult() ) {
 			assertEquals( include10ResultThymol, clean( result ) );			
+		}
+		else if( expectNodeResult() ) {
+			assertEquals( include10ResultNode, clean( result ) );			
 		}
 		else {			
 			String subs = result.substring( 0, result.indexOf( "\tat" ) );
@@ -332,8 +360,11 @@ public class IncludeCases21 extends SeleniumCases {
 	public void include14() {
 		localise( includeContext );
 		String result = getResult( "include14.html", ResultMode.ALERT );
-		if( expectThymolResult() || expectNodeResult() ) {
+		if( expectThymolResult() ) {
 			assertEquals( clean( include14ResultThymol ), clean( result ) );			
+		}
+		else if( expectNodeResult() ) {
+			assertEquals( clean( include14ResultNode ), clean( result ) );			
 		}
 		else {			
 			String subs = result.substring( 0, result.indexOf( "\tat" ) );
@@ -345,8 +376,11 @@ public class IncludeCases21 extends SeleniumCases {
 	public void include15() {
 		localise( includeContext );
 		String result = getResult( "include15.html", ResultMode.ALERT );
-		if( expectThymolResult() || expectNodeResult() ) {
+		if( expectThymolResult() ) {
 			assertEquals( clean( include15ResultThymol ), clean( result ) );			
+		}
+		else if( expectNodeResult() ) {
+			assertEquals( clean( include15ResultNode ), clean( result ) );			
 		}
 		else {			
 			String subs = result.substring( 0, result.indexOf( "\tat" ) );
@@ -386,8 +420,11 @@ public class IncludeCases21 extends SeleniumCases {
 	public void include20() {
 		localise( includeContext );
 		String result = getResult( "include20.html", ResultMode.ALERT );
-		if( expectThymolResult() || expectNodeResult() ) {
+		if( expectThymolResult() ) {
 			assertEquals( clean( include20ResultThymol ), clean( result ) );			
+		}
+		else if( expectNodeResult() ) {
+			assertEquals( clean( include20ResultNode ), clean( result ) );			
 		}
 		else {			
 			String subs = result.substring( 0, result.indexOf( "\tat" ) );
@@ -399,8 +436,11 @@ public class IncludeCases21 extends SeleniumCases {
 	public void include21() {
 		localise( includeContext );
 		String result = getResult( "include21.html", ResultMode.ALERT );
-		if( expectThymolResult() || expectNodeResult() ) {
+		if( expectThymolResult() ) {
 			assertEquals( clean( include21ResultThymol ), clean( result ) );			
+		}
+		else if( expectNodeResult() ) {
+			assertEquals( clean( include21ResultNode ), clean( result ) );			
 		}
 		else {			
 			String subs = result.substring( 0, result.indexOf( "\tat" ) );

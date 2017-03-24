@@ -66,7 +66,7 @@ thymol.objects.thBoolsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#bools.arrayIsTrue Target cannot be null" );
+    boolsError( "arrayIsTrue Target cannot be null", this );
   }
 
   function setIsTrue( target ) {
@@ -79,7 +79,7 @@ thymol.objects.thBoolsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#bools.setIsTrue Target cannot be null" );
+    boolsError( "setIsTrue Target cannot be null", this );
   }
 
   function isFalse( target ) {
@@ -94,7 +94,7 @@ thymol.objects.thBoolsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#bools.arrayIsFalse Target cannot be null" );
+    boolsError( "arrayIsFalse Target cannot be null", this );
   }
 
   function setIsFalse( target ) {
@@ -107,7 +107,7 @@ thymol.objects.thBoolsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#bools.setIsFalse Target cannot be null" );
+    boolsError( "setIsFalse Target cannot be null", this );
   }
 
   function arrayAnd( target ) {
@@ -119,7 +119,7 @@ thymol.objects.thBoolsObject = function() {
       }
       return true;
     }
-    throw new thymol.ThError( "#bools.arrayAnd Target cannot be null" );
+    boolsError( "arrayAnd Target cannot be null", this );
   }
 
   function setAnd( target ) {
@@ -133,7 +133,7 @@ thymol.objects.thBoolsObject = function() {
       }
       return true;
     }
-    throw new thymol.ThError( "#bools.setAnd Target cannot be null" );
+    boolsError( "setAnd Target cannot be null", this );
   }
 
   function arrayOr( target ) {
@@ -145,7 +145,7 @@ thymol.objects.thBoolsObject = function() {
       }
       return false;
     }
-    throw new thymol.ThError( "#bools.arrayOr Target cannot be null" );
+    boolsError( "arrayOr Target cannot be null", this );
   }
 
   function setOr( target ) {
@@ -159,7 +159,11 @@ thymol.objects.thBoolsObject = function() {
       }
       return false;
     }
-    throw new thymol.ThError( "#bools.setOr Target cannot be null" );
+    boolsError( "setOr Target cannot be null", this );
+  }
+
+  function boolsError( text, element ) {
+    thymol.error( true, "#bools." + text, element );
   }
 
   return {

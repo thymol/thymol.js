@@ -17,7 +17,12 @@ public class AssertCases21 extends SeleniumCases {
 	Context assertBaseContext = new Context( "tests21/assert/" );
 	
 	String assert01ResultThymol = 		
-			"thymol.processAssert assertion failure - false term is: \"${not_onevar01}\"";	 
+			"processAssert assertion failure - false term is: \"${not_onevar01}\"" +
+	        "Error in: target/test-classes/templates/tests21/assert/assert01.html at line: 9 column: 0";	 
+	
+	String assert01ResultNode = 		
+			"processAssert assertion failure - false term is: \"${not_onevar01}\"" +
+	        "Error in: tests21/assert/assert01.html at line: 9 column: 0";	 
 	
 	String assert01ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
@@ -25,7 +30,12 @@ public class AssertCases21 extends SeleniumCases {
 			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardAssertAttrProcessor' (assert01:9)\n";
 
 	String assert02ResultThymol = 		
-			"thymol.processAssert assertion failure - false term is: \"${not_onevar01}\"";	 		
+			"processAssert assertion failure - false term is: \"${not_onevar01}\"" +
+	        "Error in: target/test-classes/templates/tests21/assert/assert02.html at line: 10 column: 2";	 		
+	
+	String assert02ResultNode = 		
+			"processAssert assertion failure - false term is: \"${not_onevar01}\"" +
+	        "Error in: tests21/assert/assert02.html at line: 10 column: 2";	 		
 	
 	String assert02ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
@@ -33,7 +43,12 @@ public class AssertCases21 extends SeleniumCases {
 			"</p><pre>    Server Error</pre><p></p><h3>Caused by:</h3><pre>org.thymeleaf.exceptions.TemplateProcessingException: Error during execution of processor 'org.thymeleaf.standard.processor.attr.StandardAssertAttrProcessor' (assert02:10)\n";
 
 	String assert03ResultThymol = 		
-			"thymol.processAssert assertion failure - list is: ${onevar01},${threevar} false term is: \"${threevar}\"";
+			"processAssert assertion failure - list is: ${onevar01},${threevar} false term is: \"${threevar}\"" +
+	        "Error in: target/test-classes/templates/tests21/assert/assert03.html at line: 10 column: 2";
+	
+	String assert03ResultNode = 		
+			"processAssert assertion failure - list is: ${onevar01},${threevar} false term is: \"${threevar}\"" +
+	        "Error in: tests21/assert/assert03.html at line: 10 column: 2";
 	
 	String assert03ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
@@ -48,10 +63,15 @@ public class AssertCases21 extends SeleniumCases {
 			"\n\n";	 			
 
 	String assert05ResultThymol = 		
-			"thymol.processAssert assertion failure - list is: ${onevar01},(${twovar01}< 10) false term is: \"(${twovar01}< 10)\"";	 			
+			"processAssert assertion failure - list is: ${onevar01},(${twovar01} < 10) false term is: \"(${twovar01} < 10)\""+
+	        "Error in: target/test-classes/templates/tests21/assert/assert05.html at line: 10 column: 2";	 			
 	
 	String assert05ResultNode = 		
-			"thymol.processAssert assertion failure - list is: ${onevar01},(${twovar01} &lt; 10) false term is: \"(${twovar01} &lt; 10)\"";	 			
+			"processAssert assertion failure - list is: ${onevar01},(${twovar01} &lt; 10) false term is: \"(${twovar01} &lt; 10)\""+
+	        "Error in: tests21/assert/assert05.html at line: 10 column: 2";	 			
+	
+//	String assert05ResultNode = 		
+//			"thymol.processAssert assertion failure - list is: ${onevar01},(${twovar01} &lt; 10) false term is: \"(${twovar01} &lt; 10)\"";	 			
 	
 	String assert05ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
@@ -87,10 +107,15 @@ public class AssertCases21 extends SeleniumCases {
 			"\n\n";	 			
 
 	String assert10ResultThymol = 		
-			"thymol.processAssert assertion failure - false term is: \"*{value} > 25\"";	 			
+			"processAssert assertion failure - false term is: \"*{value} > 25\""+
+	        "Error in: target/test-classes/templates/tests21/assert/assert10.html at line: 10 column: 2";	 			
 	
 	String assert10ResultNode = 		
-			"thymol.processAssert assertion failure - false term is: \"*{value} &gt; 25\"";	 			
+			"processAssert assertion failure - false term is: \"*{value} &gt; 25\""+
+	        "Error in: tests21/assert/assert10.html at line: 10 column: 2";	 			
+	
+//	String assert10ResultNode = 		
+//			"thymol.processAssert assertion failure - false term is: \"*{value} &gt; 25\"";	 			
 	
 	String assert10ResultThymeleaf = 		
 			"<h2>HTTP ERROR 500</h2>\n" +
@@ -114,8 +139,11 @@ public class AssertCases21 extends SeleniumCases {
 	public void assert01() {
 		localise( assertContext );
 		String result = getResult( "assert01.html", ResultMode.ALERT );
-		if( expectThymolResult() || expectNodeResult() ) {
+		if( expectThymolResult() ) {
 			assertEquals( assert01ResultThymol, clean( result ) );			
+		}
+		else if( expectNodeResult() ) {
+			assertEquals( assert01ResultNode, clean( result ) );			
 		}
 		else {			
 			String subs = result.substring( 0, result.indexOf( "\tat" ) );
@@ -127,8 +155,11 @@ public class AssertCases21 extends SeleniumCases {
 	public void assert02() {
 		localise( assertContext );
 		String result = getResult( "assert02.html", ResultMode.ALERT );
-		if( expectThymolResult() || expectNodeResult() ) {
+		if( expectThymolResult() ) {
 			assertEquals( assert02ResultThymol, clean( result ) );			
+		}
+		else if( expectNodeResult() ) {
+			assertEquals( assert02ResultNode, clean( result ) );			
 		}
 		else {			
 			String subs = result.substring( 0, result.indexOf( "\tat" ) );
@@ -140,8 +171,11 @@ public class AssertCases21 extends SeleniumCases {
 	public void assert03() {
 		localise( assertContext );
 		String result = getResult( "assert03.html", ResultMode.ALERT );
-		if( expectThymolResult() || expectNodeResult() ) {
+		if( expectThymolResult() ) {
 			assertEquals( assert03ResultThymol, clean( result ) );			
+		}
+		else if( expectNodeResult() ) {
+			assertEquals( assert03ResultNode, clean( result ) );			
 		}
 		else {			
 			String subs = result.substring( 0, result.indexOf( "\tat" ) );
@@ -161,7 +195,7 @@ public class AssertCases21 extends SeleniumCases {
 		localise( assertContext );
 		String result = getResult( "assert05.html", ResultMode.ALERT );
 		if( expectThymolResult() ) {
-			assertEquals( assert05ResultThymol, clean( result ) );			
+			assertEquals( clean( assert05ResultThymol ), clean( result ) );			
 		}
 		else if( expectNodeResult() ) {
 			assertEquals( assert05ResultNode, clean( result ) );			

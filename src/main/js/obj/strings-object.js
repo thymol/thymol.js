@@ -186,7 +186,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throwAbbreviateException( "abbreviate", maxSize );
+    throwAbbreviateException( "abbreviate", maxSize, this );
   }
 
   function arrayAbbreviate( target, maxSize ) {
@@ -200,7 +200,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throwAbbreviateException( "arrayAbbreviate", maxSize );
+    throwAbbreviateException( "arrayAbbreviate", maxSize, this );
   }
 
   function setAbbreviate( target, maxSize ) {
@@ -216,11 +216,11 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throwAbbreviateException( "setAbbreviate", maxSize );
+    throwAbbreviateException( "setAbbreviate", maxSize, this );
   }
 
-  function throwAbbreviateException( source, maxSize ) {
-    throw new thymol.ThError( "#strings." + source + " Maximum size must be greater than or equal to 3 but was: \"" + maxSize + "\"" );
+  function throwAbbreviateException( source, maxSize, element ) {
+    stringsError( "" + source + " Maximum size must be greater than or equal to 3 but was: \"" + maxSize + "\"", element );
   }
 
   function equals( o1, o2 ) {
@@ -248,9 +248,9 @@ thymol.objects.thStringsObject = function() {
       if( fragment !== null ) {
         return target.toString().indexOf( fragment ) >= 0;
       }
-      throw new thymol.ThError( "#strings.contains Fragment cannot be null" );
+      stringsError( "contains Fragment cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.contains Cannot apply contains on null" );
+    stringsError( "contains Cannot apply contains on null", this );
   }
 
   function arrayContains( target, fragment ) {
@@ -261,7 +261,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.arrayContains Cannot apply arrayContains on null" );
+    stringsError( "arrayContains Cannot apply arrayContains on null", this );
   }
 
   function setContains( target, fragment ) {
@@ -274,7 +274,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.setContains Cannot apply setContains on null" );
+    stringsError( "setContains Cannot apply setContains on null", this );
   }
 
   function containsIgnoreCase( target, fragment ) {
@@ -282,9 +282,9 @@ thymol.objects.thStringsObject = function() {
       if( fragment !== null ) {
         return target.toString().toLowerCase().indexOf( fragment.toLowerCase() ) >= 0;
       }
-      throw new thymol.ThError( "#strings.containsIgnoreCase Fragment cannot be null" );
+      stringsError( "containsIgnoreCase Fragment cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.containsIgnoreCase Cannot apply containsIgnoreCase on null" );
+    stringsError( "containsIgnoreCase Cannot apply containsIgnoreCase on null", this );
   }
 
   function arrayContainsIgnoreCase( target, fragment ) {
@@ -295,7 +295,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.arrayContainsIgnoreCase Cannot apply arrayContainsIgnoreCase on null" );
+    stringsError( "arrayContainsIgnoreCase Cannot apply arrayContainsIgnoreCase on null", this );
   }
 
   function setContainsIgnoreCase( target, fragment ) {
@@ -308,7 +308,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.setContainsIgnoreCase Cannot apply setContainsIgnoreCase on null" );
+    stringsError( "setContainsIgnoreCase Cannot apply setContainsIgnoreCase on null", this );
   }
 
   function startsWith( target, prefix ) {
@@ -316,9 +316,9 @@ thymol.objects.thStringsObject = function() {
       if( prefix !== null ) {
         return target.toString().indexOf( prefix ) === 0;
       }
-      throw new thymol.ThError( "#strings.startsWith Prefix cannot be null" );
+      stringsError( "startsWith Prefix cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.startsWith Cannot apply startsWith on null" );
+    stringsError( "startsWith Cannot apply startsWith on null", this );
   }
 
   function arrayStartsWith( target, prefix ) {
@@ -329,7 +329,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.arrayStartsWith Target cannot be null" );
+    stringsError( "arrayStartsWith Target cannot be null", this );
   }
 
   function setStartsWith( target, prefix ) {
@@ -342,7 +342,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.setStartsWith Target cannot be null" );
+    stringsError( "setStartsWith Target cannot be null", this );
   }
 
   function endsWith( target, suffix ) {
@@ -351,9 +351,9 @@ thymol.objects.thStringsObject = function() {
         var str = target.toString();
         return str.indexOf( suffix ) === ( str.length - suffix.length );
       }
-      throw new thymol.ThError( "#strings.startsWith Suffix cannot be null" );
+      stringsError( "startsWith Suffix cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.endsWith Cannot apply endsWith on null" );
+    stringsError( "endsWith Cannot apply endsWith on null", this );
   }
 
   function arrayEndsWith( target, suffix ) {
@@ -364,7 +364,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.arrayEndsWith Target cannot be null" );
+    stringsError( "arrayEndsWith Target cannot be null", this );
   }
 
   function setEndsWith( target, suffix ) {
@@ -377,14 +377,14 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.setEndsWith Target cannot be null" );
+    stringsError( "setEndsWith Target cannot be null", this );
   }
 
   function substring( target, start, end ) {
     if( target !== null ) {
       return target.toString().substring( start, end );
     }
-    throw new thymol.ThError( "#strings.substring Target cannot be null" );
+    stringsError( "substring Target cannot be null", this );
   }
 
   function arraySubstring( target, start, end ) {
@@ -395,7 +395,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.arraySubstring Target cannot be null" );
+    stringsError( "arraySubstring Target cannot be null", this );
   }
 
   function setSubstring( target, start, end ) {
@@ -408,7 +408,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.setSubstring Target cannot be null" );
+    stringsError( "setSubstring Target cannot be null", this );
   }
 
   function substringAfter( target, substr ) {
@@ -421,9 +421,9 @@ thymol.objects.thStringsObject = function() {
         }
         return str.substring( indx + substr.length );
       }
-      throw new thymol.ThError( "#strings.substringAfter Parameter substring cannot be null" );
+      stringsError( "substringAfter Parameter substring cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.substringAfter Cannot apply substringAfter on null" );
+    stringsError( "substringAfter Cannot apply substringAfter on null", this );
   }
 
   function arraySubstringAfter( target, substr ) {
@@ -434,7 +434,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.arraySubstringAfter Cannot apply arraySubstringAfter on null" );
+    stringsError( "arraySubstringAfter Cannot apply arraySubstringAfter on null", this );
   }
 
   function setSubstringAfter( target, substr ) {
@@ -447,7 +447,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.setSubstringAfter Cannot apply setSubstringAfter on null" );
+    stringsError( "setSubstringAfter Cannot apply setSubstringAfter on null", this );
   }
 
   function substringBefore( target, substr ) {
@@ -460,9 +460,9 @@ thymol.objects.thStringsObject = function() {
         }
         return str.substring( 0, indx );
       }
-      throw new thymol.ThError( "#strings.substringBefore Parameter substring cannot be null" );
+      stringsError( "substringBefore Parameter substring cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.substringBefore Cannot apply substringBefore on null" );
+    stringsError( "substringBefore Cannot apply substringBefore on null", this );
   }
 
   function arraySubstringBefore( target, substr ) {
@@ -473,7 +473,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.arraySubstringBefore Cannot apply arraySubstringBefore on null" );
+    stringsError( "arraySubstringBefore Cannot apply arraySubstringBefore on null", this );
   }
 
   function setSubstringBefore( target, substr ) {
@@ -486,7 +486,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.setSubstringBefore Cannot apply setSubstringBefore on null" );
+    stringsError( "setSubstringBefore Cannot apply setSubstringBefore on null", this );
   }
 
   function prepend( target, prefix ) {
@@ -494,9 +494,9 @@ thymol.objects.thStringsObject = function() {
       if( prefix !== null ) {
         return prefix.toString() + target.toString();
       }
-      throw new thymol.ThError( "#strings.prepend Prefix cannot be null" );
+      stringsError( "prepend Prefix cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.prepend Cannot apply prepend on null" );
+    stringsError( "prepend Cannot apply prepend on null", this );
   }
 
   function arrayPrepend( target, prefix ) {
@@ -507,7 +507,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.arrayPrepend Cannot apply arrayPrepend on null" );
+    stringsError( "arrayPrepend Cannot apply arrayPrepend on null", this );
   }
 
   function setPrepend( target, prefix ) {
@@ -520,7 +520,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.setPrepend Cannot apply setPrepend on null" );
+    stringsError( "setPrepend Cannot apply setPrepend on null", this );
   }
 
   function repeat( target, times ) {
@@ -536,9 +536,9 @@ thymol.objects.thStringsObject = function() {
       if( suffix !== null ) {
         return target.toString() + suffix.toString();
       }
-      throw new thymol.ThError( "#strings.append Suffix cannot be null" );
+      stringsError( "append Suffix cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.append Cannot apply append on null" );
+    stringsError( "append Cannot apply append on null", this );
   }
 
   function concat() {
@@ -572,7 +572,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.arrayAppend Target cannot be null" );
+    stringsError( "arrayAppend Target cannot be null", this );
   }
 
   function setAppend( target, suffix ) {
@@ -585,7 +585,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.setAppend Target cannot be null" );
+    stringsError( "setAppend Target cannot be null", this );
   }
 
   function indexOf( target, fragment ) {
@@ -595,9 +595,9 @@ thymol.objects.thStringsObject = function() {
         var indx = str.indexOf( fragment );
         return indx;
       }
-      throw new thymol.ThError( "#strings.indexOf Fragment cannot be null" );
+      stringsError( "indexOf Fragment cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.indexOf Cannot apply indexOf on null" );
+    stringsError( "indexOf Cannot apply indexOf on null", this );
   }
 
   function arrayIndexOf( target, fragment ) {
@@ -608,7 +608,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.arrayIndexOf Cannot apply arrayIndexOf on null" );
+    stringsError( "arrayIndexOf Cannot apply arrayIndexOf on null", this );
   }
 
   function setIndexOf( target, fragment ) {
@@ -621,7 +621,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.setIndexOf Cannot apply setIndexOf on null" );
+    stringsError( "setIndexOf Cannot apply setIndexOf on null", this );
   }
 
   function isEmpty( target ) {
@@ -647,7 +647,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.arrayIsEmpty Target cannot be null" );
+    stringsError( "arrayIsEmpty Target cannot be null", this );
   }
 
   function setIsEmpty( target ) {
@@ -660,7 +660,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.setIsEmpty Target cannot be null" );
+    stringsError( "setIsEmpty Target cannot be null", this );
   }
 
   function arrayJoin( stringArray, separator ) {
@@ -676,9 +676,9 @@ thymol.objects.thStringsObject = function() {
         }
         return result;
       }
-      throw new thymol.ThError( "#strings.arrayJoin Separator cannot be null" );
+      stringsError( "arrayJoin Separator cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.arrayJoin Cannot apply join on null" );
+    stringsError( "arrayJoin Cannot apply join on null", this );
   }
 
   function setJoin( stringSet, separator ) {
@@ -696,9 +696,9 @@ thymol.objects.thStringsObject = function() {
         }
         return result;
       }
-      throw new thymol.ThError( "#strings.setJoin Separator cannot be null" );
+      stringsError( "setJoin Separator cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.setJoin Cannot apply join on null" );
+    stringsError( "setJoin Cannot apply join on null", this );
   }
 
   function doRegExpify( target, flags ) {
@@ -725,9 +725,9 @@ thymol.objects.thStringsObject = function() {
       if( separator !== null ) {
         return doSplit( target, separator );
       }
-      throw new thymol.ThError( "#strings.arraySplit Separator cannot be null" );
+      stringsError( "arraySplit Separator cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.arraySplit Cannot apply split on null" );
+    stringsError( "arraySplit Cannot apply split on null", this );
   }
 
   function setSplit( target, separator ) {
@@ -740,16 +740,16 @@ thymol.objects.thStringsObject = function() {
         }
         return result;
       }
-      throw new thymol.ThError( "#strings.setSplit Separator cannot be null" );
+      stringsError( "setSplit Separator cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.setSplit Cannot apply split on null" );
+    stringsError( "setSplit Cannot apply split on null", this );
   }
 
   function length( target ) {
     if( target !== null ) {
       return target.toString().length;
     }
-    throw new thymol.ThError( "#strings.length Cannot apply length on null" );
+    stringsError( "length Cannot apply length on null", this );
   }
 
   function arrayLength( target ) {
@@ -760,7 +760,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.arrayLength Target cannot be null" );
+    stringsError( "arrayLength Target cannot be null", this );
   }
 
   function setLength( target ) {
@@ -773,7 +773,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.setLength Target cannot be null" );
+    stringsError( "setLength Target cannot be null", this );
   }
 
   function getReplacer( target ) {
@@ -790,11 +790,11 @@ thymol.objects.thStringsObject = function() {
           var aft = unescapeXml( after );
           return target.replace( re, aft );
         }
-        throw new thymol.ThError( "#strings.replace After cannot be null" );
+        stringsError( "replace After cannot be null", this );
       }
-      throw new thymol.ThError( "#strings.replace Before cannot be null" );
+      stringsError( "replace Before cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.replace Cannot apply replace on null" );
+    stringsError( "replace Cannot apply replace on null", this );
   }
 
   function arrayReplace( target, before, after ) {
@@ -810,11 +810,11 @@ thymol.objects.thStringsObject = function() {
           }
           return result;
         }
-        throw new thymol.ThError( "#strings.arrayReplace After cannot be null" );
+        stringsError( "arrayReplace After cannot be null", this );
       }
-      throw new thymol.ThError( "#strings.arrayReplace Before cannot be null" );
+      stringsError( "arrayReplace Before cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.arrayReplace Cannot apply replace on null" );
+    stringsError( "arrayReplace Cannot apply replace on null", this );
   }
 
   function setReplace( target, before, after ) {
@@ -832,11 +832,11 @@ thymol.objects.thStringsObject = function() {
           }
           return result;
         }
-        throw new thymol.ThError( "#strings.setReplace Array of 'after' values cannot be null" );
+        stringsError( "setReplace Array of 'after' values cannot be null", this );
       }
-      throw new thymol.ThError( "#strings.setReplace Array of 'before' values cannot be null" );
+      stringsError( "setReplace Array of 'before' values cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.setReplace Cannot apply replace on null" );
+    stringsError( "setReplace Cannot apply replace on null", this );
   }
 
   function multipleReplace( target, before, after ) {
@@ -856,17 +856,17 @@ thymol.objects.thStringsObject = function() {
                 }
                 return result;
               }
-              throw new thymol.ThError( "#strings.multipleReplace Arrays of 'before' and 'after' values must have the same length" );
+              stringsError( "multipleReplace Arrays of 'before' and 'after' values must have the same length", this );
             }
-            throw new thymol.ThError( "#strings.multipleReplace After must be an array type" );
+            stringsError( "multipleReplace After must be an array type", this );
           }
-          throw new thymol.ThError( "#strings.multipleReplace After cannot be null" );
+          stringsError( "multipleReplace After cannot be null", this );
         }
-        throw new thymol.ThError( "#strings.multipleReplace Before must be an array type" );
+        stringsError( "multipleReplace Before must be an array type", this );
       }
-      throw new thymol.ThError( "#strings.multipleReplace Before cannot be null" );
+      stringsError( "multipleReplace Before cannot be null", this );
     }
-    throw new thymol.ThError( "#strings.multipleReplace Target cannot be null" );
+    stringsError( "multipleReplace Target cannot be null", this );
   }
 
   function arrayMultipleReplace( target, before, after ) {
@@ -877,7 +877,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.arrayMultipleReplace Target cannot be null" );
+    stringsError( "arrayMultipleReplace Target cannot be null", this );
   }
 
   function setMultipleReplace( target, before, after ) {
@@ -890,7 +890,7 @@ thymol.objects.thStringsObject = function() {
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.setMultipleReplace Target cannot be null" );
+    stringsError( "setMultipleReplace Target cannot be null", this );
   }
 
   function toUpperCase( target ) {
@@ -1633,7 +1633,7 @@ return target;
       }
       return targetString;
     }
-    throw new thymol.ThError( "#strings.defaultString defaultValue cannot be null" );
+    stringsError( "defaultString defaultValue cannot be null", this );
   }
 
   function doArrayDefaultString( target, defaultValue ) {
@@ -1651,14 +1651,14 @@ return target;
     if( defaultValue !== null && typeof defaultValue !== "undefined" ) {
       return doArrayDefaultString( target, defaultValue );
     }
-    throw new thymol.ThError( "#strings.arrayDefaultString defaultValue cannot be null" );
+    stringsError( "arrayDefaultString defaultValue cannot be null", this );
   }
 
   function listDefaultString( target, defaultValue ) {
     if( defaultValue !== null && typeof defaultValue !== "undefined" ) {
       return doArrayDefaultString( target, defaultValue );
     }
-    throw new thymol.ThError( "#strings.listDefaultString defaultValue cannot be null" );
+    stringsError( "listDefaultString defaultValue cannot be null", this );
   }
 
   function setDefaultString( target, defaultValue ) {
@@ -1674,7 +1674,11 @@ return target;
       }
       return result;
     }
-    throw new thymol.ThError( "#strings.setDefaultString defaultValue cannot be null" );
+    stringsError( "setDefaultString defaultValue cannot be null", this );
+  }
+
+  function stringsError( text, element ) {
+    thymol.error( true, "#strings." + text, element );
   }
 
   return {

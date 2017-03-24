@@ -9,7 +9,7 @@ public class Context extends JsonObject< String, Object > {
 	private static final long serialVersionUID = -2285295650947509633L;
 
 	public boolean initialised = false;
-	
+
 	public Context() {
 		super();
 	}
@@ -76,13 +76,17 @@ public class Context extends JsonObject< String, Object > {
 		if( locale != null ) {
 			thiz.setLocale( locale );
 		}
+		com.google.gson.JsonObject request = this.getRequest();
+		if( request != null ) {
+			thiz.setRequest( request );
+		}
 		com.google.gson.JsonObject session = this.getSession();
 		if( session != null ) {
 			thiz.setSession( session );
 		}
 		com.google.gson.JsonObject context = this.getContext();
 		if( context != null ) {
-			thiz.setSession( context );
+			thiz.setContext( context );
 		}
 		return thiz;
 	}
@@ -94,9 +98,13 @@ public class Context extends JsonObject< String, Object > {
 		if( variables != null ) {
 			thiz.setVariables( variables );
 		}
-		Locale locale = (Locale)that.get( "locale" );
+		Locale locale = ( Locale )that.get( "locale" );
 		if( locale != null ) {
 			thiz.setLocale( locale );
+		}
+		com.google.gson.JsonObject request = ( com.google.gson.JsonObject )that.get( "request" );
+		if( request != null ) {
+			thiz.setRequest( request );
 		}
 		com.google.gson.JsonObject session = ( com.google.gson.JsonObject )that.get( "session" );
 		if( session != null ) {
@@ -149,11 +157,11 @@ public class Context extends JsonObject< String, Object > {
 	}
 
 	/*
-			HttpSession session = ctx.getHttpSession();
-			
-			session.setAttribute( "a", "Some text" );
-			session.setAttribute( "b", 123 );
-			session.setAttribute( "c", "Hello" );
+	HttpSession session = ctx.getHttpSession();
+	
+	session.setAttribute( "a", "Some text" );
+	session.setAttribute( "b", 123 );
+	session.setAttribute( "c", "Hello" );
 	*/
 	public com.google.gson.JsonObject getSession() {
 		return ( com.google.gson.JsonObject )this.get( "session" );
@@ -161,6 +169,22 @@ public class Context extends JsonObject< String, Object > {
 
 	public Context setSession( com.google.gson.JsonObject session ) {
 		this.put( "session", session );
+		return this;
+	}
+
+	/*
+	HttpServletRequest request = ctx.getRequest();
+	
+	request.setAttribute( "a", "Some text" );
+	request.setAttribute( "b", 123 );
+	request.setAttribute( "c", "Hello" );
+	*/
+	public com.google.gson.JsonObject getRequest() {
+		return ( com.google.gson.JsonObject )this.get( "request" );
+	}
+
+	public Context setRequest( com.google.gson.JsonObject request ) {
+		this.put( "request", request );
 		return this;
 	}
 

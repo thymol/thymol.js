@@ -20,10 +20,10 @@ thymol.objects.thMapsObject = function() {
       if( target instanceof thymol.ThMap ) {
         return target.size();
       }
-      throw new thymol.ThError( "#maps.size Cannot get size of non-map type \"" + ( typeof target ) + "\"" );
+      mapsError( "size Cannot get size of non-map type \"" + ( typeof target ) + "\"", this );
 
     }
-    throw new thymol.ThError( "#maps.size Cannot get size of null" );
+    mapsError( "size Cannot get size of null", this );
   }
 
   function isEmpty( target ) {
@@ -31,10 +31,10 @@ thymol.objects.thMapsObject = function() {
       if( target instanceof thymol.ThMap ) {
         return target.isEmpty();
       }
-      throw new thymol.ThError( "#maps.size Cannot get isEmpty of non-map type \"" + ( typeof target ) + "\"" );
+      mapsError( "size Cannot get isEmpty of non-map type \"" + ( typeof target ) + "\"", this );
 
     }
-    throw new thymol.ThError( "#maps.size Cannot get isEmpty of null" );
+    mapsError( "size Cannot get isEmpty of null", this );
   }
 
   function containsKey( target, key ) {
@@ -42,10 +42,10 @@ thymol.objects.thMapsObject = function() {
       if( target instanceof thymol.ThMap ) {
         return target.containsKey( key );
       }
-      throw new thymol.ThError( "#maps.size Cannot get containsKey of non-map type \"" + ( typeof target ) + "\"" );
+      mapsError( "size Cannot get containsKey of non-map type \"" + ( typeof target ) + "\"", this );
 
     }
-    throw new thymol.ThError( "#maps.containsKey Cannot execute map containsKey: target is null" );
+    mapsError( "containsKey Cannot execute map containsKey: target is null", this );
   }
 
   function containsValue( target, value ) {
@@ -53,10 +53,10 @@ thymol.objects.thMapsObject = function() {
       if( target instanceof thymol.ThMap ) {
         return target.containsValue( value );
       }
-      throw new thymol.ThError( "#maps.size Cannot get containsValue of non-map type \"" + ( typeof target ) + "\"" );
+      mapsError( "size Cannot get containsValue of non-map type \"" + ( typeof target ) + "\"", this );
 
     }
-    throw new thymol.ThError( "#maps.containsKey Cannot execute map containsValue: target is null" );
+    mapsError( "containsKey Cannot execute map containsValue: target is null", this );
   }
 
   function containsAllKeys( target, keys ) {
@@ -66,11 +66,11 @@ thymol.objects.thMapsObject = function() {
         if( keys instanceof thymol.ThSet || keys instanceof Array || ptc === '[object Array]' ) {
           return target.containsAll( keys );
         }
-        throw new thymol.ThError( "#maps.size Cannot get containsAllKeys with non-collection type \"" + ptc + "\"" );
+        mapsError( "size Cannot get containsAllKeys with non-collection type \"" + ptc + "\"", this );
       }
-      throw new thymol.ThError( "#maps.size Cannot get containsAllKeys of non-map type \"" + ( typeof target ) + "\"" );
+      mapsError( "size Cannot get containsAllKeys of non-map type \"" + ( typeof target ) + "\"", this );
     }
-    throw new thymol.ThError( "#maps.containsKey Cannot execute map containsAllKeys: target is null" );
+    mapsError( "containsKey Cannot execute map containsAllKeys: target is null", this );
   }
 
   function containsAllValues( target, values ) {
@@ -99,11 +99,15 @@ thymol.objects.thMapsObject = function() {
           }
           return true;
         }
-        throw new thymol.ThError( "#maps.size Cannot get containsAllValues with non-collection type \"" + ptc + "\"" );
+        mapsError( "size Cannot get containsAllValues with non-collection type \"" + ptc + "\"", this );
       }
-      throw new thymol.ThError( "#maps.size Cannot get containsAllValues of non-map type \"" + ( typeof target ) + "\"" );
+      mapsError( "size Cannot get containsAllValues of non-map type \"" + ( typeof target ) + "\"", this );
     }
-    throw new thymol.ThError( "#maps.containsKey Cannot execute map containsAllValues: target is null" );
+    mapsError( "containsKey Cannot execute map containsAllValues: target is null", this );
+  }
+
+  function mapsError( text, element ) {
+    thymol.error( true, "#maps." + text, element );
   }
 
   return {
