@@ -86,7 +86,8 @@ thymol = function() {
         return thymol.thDocument;
     }
     function reset() {
-        thymol.thCache = {};
+        thymol.thFileCache = {};
+        thymol.thFragmentCache = {};
         var accessor = undefined, i, iLimit, j, jLimit;
         if (typeof thVars !== "undefined") {
             delete thVars;
@@ -186,6 +187,7 @@ thymol = function() {
         thymol.localMessages = Thymol.prototype.getThParam("thLocalMessages", true, false, thymol.thDefaultLocalMessages);
         thymol.disableMessages = Thymol.prototype.getThParam("thDisableMessages", true, false, thymol.thDefaultDisableMessages);
         thymol.templateSuffix = Thymol.prototype.getThParam("thTemplateSuffix", false, false, thymol.thDefaultTemplateSuffix);
+        thymol.inlineQuote = Thymol.prototype.getThParam("thDefaultInlineQuote", false, false, thymol.thDefaultInlineQuote);
         thymol.scriptPath = "";
         if (typeof thymol.thScriptPath !== "undefined") {
             thymol.scriptPath = Thymol.prototype.getThParam("thScriptPath", false, true, thymol.thScriptPath);
@@ -289,7 +291,7 @@ thymol = function() {
                 if (!!parameters) {
                     var splits = parameters.split(",");
                     for (var j = 0, jLimit = splits.length; j < jLimit; j++) {
-                        thymol.ThUtils.loadScript(splits[j]);
+                        loadScript(splits[j]);
                     }
                 }
             }
@@ -452,6 +454,10 @@ thymol = function() {
             thymol.templateSuffix = setThParam(name, value);
             break;
 
+          case "thInlineQuote":
+            thymol.inlineQuote = setThParam(name, value);
+            break;
+
           case "thLocalMessages":
             thymol.localMessages = setThParam(name, getBooleanValue(value));
             break;
@@ -497,7 +503,16 @@ thymol = function() {
             break;
 
           default:
-            ctx.createVariable(name, value, isReq);
+            {
+                if (name.startsWith("thymol.")) {
+                    var endw = name.substring(7);
+                    if (thymol.hasOwnProperty(endw)) {
+                        thymol[endw] = value;
+                    }
+                } else {
+                    ctx.createVariable(name, value, isReq);
+                }
+            }
         }
     }
     function setThParam(name, value) {
@@ -584,7 +599,7 @@ thymol = function() {
                     lp = result.lastIndexOf("__");
                 }
                 if (lp <= 0) {
-                    throw new thymol.ThError("Mismatched pre-processing indicators", element);
+                    thymol.error(true, "Mismatched pre-processing indicators", element);
                 }
                 var head = result.substring(0, fp);
                 var centre = result.substring(fp + 2, lp);
@@ -814,8 +829,8 @@ thymol = function() {
                         }
                     } else {
                         subs = "";
-                        if (thymol.debug && !lenient) {
-                            thymol.thWindow.alert('thymol variable substitution failed: "' + initial + '"');
+                        if (!lenient) {
+                            thymol.error(false, 'variable substitution failed: "' + initial + '"', element);
                         }
                     }
                     saved = argValue;
@@ -1039,7 +1054,7 @@ thymol = function() {
     function getProperties(propFile) {
         var props = null;
         var messages = [];
-        props = thymol.readFile(propFile);
+        props = getFile(propFile);
         if (!!props) {
             var splits = props.split("\n");
             if (splits.length > 0) {
@@ -1118,15 +1133,7 @@ thymol = function() {
                     }
                 }
             } catch (err) {
-                if (thymol.debug) {
-                    if (err instanceof thymol.ThError) {
-                        if (!err.suppress) {
-                            thymol.thWindow.alert(err);
-                        }
-                    } else {
-                        thymol.thWindow.alert(err);
-                    }
-                }
+                thymol.alert(err);
             }
         },
         processChildren: function(rootNode) {
@@ -1263,9 +1270,7 @@ thymol = function() {
             if (tha !== null) {
                 tha.disable();
             } else {
-                if (thymol.debug) {
-                    thymol.thWindow.alert('cannot disable unknown attribute "' + attrName + '"');
-                }
+                thymol.error(false, 'cannot disable unknown attribute "' + attrName + '"');
             }
         },
         getThAttrByName: function(name) {
@@ -1529,16 +1534,14 @@ thymol = function() {
                         importError = null;
                         if (filePart != "") {
                             fileName = filePart + thymol.templateSuffix;
-                            var textContent = thymol.readFile(fileName);
+                            var textContent = getFile(fileName);
                             content = thymol.thDomParse(textContent, "text/html");
                             fragment = Thymol.prototype.getImportNode(element, filePart, fragmentName, fragmentPart, argsCount, content, false);
                         } else {
                             fragment = Thymol.prototype.getImportNode(element, filePart, fragmentName, fragmentPart, argsCount, thymol.thDocument, false);
                         }
                         if (fragment == null) {
-                            if (thymol.debug) {
-                                thymol.thWindow.alert("thymol.processImport fragment import failed: " + filePart + " fragment: " + fragmentPart);
-                            }
+                            thymol.error(false, "processImport fragment import failed: " + filePart + " fragment: " + fragmentPart, element);
                         } else {
                             importNode = fragment;
                         }
@@ -1553,9 +1556,9 @@ thymol = function() {
         },
         getFromCache: function(element, filePart, fragmentName) {
             var content = null;
-            if (thymol.thCache[filePart] != null) {
+            if (thymol.thFragmentCache[filePart] != null) {
                 var signature = Thymol.prototype.getFragmentSignature(fragmentName, element.thLocalVars);
-                content = thymol.thCache[filePart][signature];
+                content = thymol.thFragmentCache[filePart][signature];
             }
             return content;
         },
@@ -1593,16 +1596,16 @@ thymol = function() {
                     result = fragment;
                 } else {
                     if (!element.isBlockChild) {
-                        throw new thymol.ThError('getImportNode cannot match fragment: "' + fragmentName + '"', element);
+                        thymol.error(true, 'getImportNode cannot match fragment: "' + fragmentName + '"', element);
                     }
                 }
             }
             if (matched) {
                 var signature = Thymol.prototype.getFragmentSignature(fragmentName, element.thLocalVars);
-                if (thymol.thCache[filePart] == null) {
-                    thymol.thCache[filePart] = new Object();
+                if (thymol.thFragmentCache[filePart] == null) {
+                    thymol.thFragmentCache[filePart] = new Object();
                 }
-                thymol.thCache[filePart][signature] = result;
+                thymol.thFragmentCache[filePart][signature] = result;
                 newElement = result.cloneNode(true);
                 if (newElement.nodeType === ELEMENT_NODE) {
                     newElement.removeAttribute(thymol.thFragment.name);
@@ -1610,6 +1613,16 @@ thymol = function() {
                     if (fragment !== null) {
                         fragment.removeAttribute(thymol.thFragment.name);
                         fragment.removeAttribute(thymol.thFragment.synonym);
+                    }
+                    var fragState = null;
+                    if (filePart == "" && !!element.state) {
+                        fragState = element.state;
+                    } else {
+                        fragState = new ThState(filePart, content);
+                    }
+                    var elements = newElement.getElementsByTagName("*");
+                    for (var k = 0, kLimit = elements.length; k < kLimit; k++) {
+                        elements[k].state = fragState;
                     }
                 }
                 result = newElement;
@@ -2015,6 +2028,7 @@ thymol = function() {
                 if (node.nodeType === ELEMENT_NODE) {
                     if (old.thLocalVars !== null) {
                         node.thLocalVars = old.thLocalVars;
+                        node.state = old.state;
                     }
                 }
                 if (old.childNodes !== null) {
@@ -2132,15 +2146,140 @@ thymol = function() {
             }
         }
     }
-    function ThError(message, element, source) {
+    function getFile(file, report) {
+        var content = thymol.thFragmentCache[file];
+        if (content == null) {
+            content = thymol.readFile(file, report);
+            thymol.thFragmentCache[file] = content;
+        }
+        return content;
+    }
+    var globalEval = function() {
+        var isIndirectEvalGlobal = function(original, Object) {
+            try {
+                return (1, eval)("Object") === original;
+            } catch (err) {
+                return false;
+            }
+        }(Object, 123);
+        if (isIndirectEvalGlobal) {
+            return function(expression) {
+                return (1, eval)(expression);
+            };
+        } else if (typeof thymol.thWindow.execScript !== "undefined") {
+            return function(expression) {
+                return thymol.thWindow.execScript(expression);
+            };
+        }
+    }();
+    function loadScript(file) {
+        var script = Thymol.prototype.getFilePath(file);
+        globalEval(getFile(script));
+    }
+    function diffTail(region, path) {
+        var result = path;
+        if (!!region) {
+            var regParts = region.split("/");
+            if (!!path) {
+                var pathParts = path.split("/");
+                for (var k = 0, kLimit = pathParts.length; k < kLimit; k++) {
+                    if (pathParts[k] !== regParts[k]) {
+                        break;
+                    }
+                }
+                if (k < kLimit) {
+                    result = pathParts.slice(k).join("/");
+                }
+            }
+        }
+        return result;
+    }
+    function pointInCode(element) {
+        var elements = element.state.dom.getElementsByTagName("*");
+        var count = 0;
+        for (var k = 0, kLimit = elements.length; k < kLimit; k++) {
+            if (element.tagName === elements[k].tagName) {
+                count++;
+                if (element.isSameNode(elements[k])) {
+                    break;
+                }
+            }
+        }
+        var lineInFile = undefined;
+        var columnInFile = undefined;
+        var tabsBeforeColumnInFile = undefined;
+        if (count >= 0) {
+            var html = element.state.content.toLowerCase();
+            var result;
+            var tag = "<" + element.tagName.toLowerCase();
+            result = findNthOccurence(html, tag, count, 0, html.length);
+            var elementPosition = result.nextPosition;
+            var startPosition = 0;
+            if (count > 0) {
+                result = findNthOccurence(html, "\n", -1, 0, elementPosition);
+                startPosition = result.position;
+                lineInFile = result.matchCount + 1;
+                result = findNthOccurence(html, "\t", -1, startPosition, elementPosition);
+                tabsBeforeColumnInFile = result.matchCount;
+            }
+            columnInFile = elementPosition - startPosition;
+        }
+        return {
+            line: lineInFile,
+            column: columnInFile,
+            tabs: tabsBeforeColumnInFile
+        };
+    }
+    function findNthOccurence(range, item, n, start, stop) {
+        var position = start;
+        var nextPosition = -1;
+        var matchCount = 0;
+        while (true) {
+            nextPosition = range.indexOf(item, position);
+            if (nextPosition >= 0) {
+                if (nextPosition >= stop) {
+                    break;
+                }
+                matchCount++;
+                if (matchCount === n) {
+                    break;
+                }
+                position = nextPosition + 1;
+            } else {
+                break;
+            }
+        }
+        return {
+            position: position,
+            nextPosition: nextPosition,
+            matchCount: matchCount
+        };
+    }
+    function error(doThrow, text, element, source) {
+        var exception = thymol.handleError(new thymol.ThError(doThrow, text, element, source));
+        if (!!exception) {
+            throw exception;
+        }
+    }
+    function ThError(doThrow, text, element, source) {
         this.name = "ThError";
-        this.message = message || "Default Message";
+        this.doThrow = doThrow;
         if (element !== null && typeof element !== "undefined" && element.isBlockChild) {
             this.suppress = true;
         } else {
-            this.element = element || {};
             this.suppress = false;
         }
+        this.element = element || {};
+        var message = text || "Default Message";
+        if (!this.element.state) {
+            this.element.state = new thymol.ThState("", thymol.thDocument);
+        }
+        this.point = {};
+        if (!!this.element.state) {
+            this.point = pointInCode(this.element);
+            message += "\n\nError in: " + diffTail(thymol.location, this.element.state.file) + " at line: " + this.point.line + " column: " + this.point.column + (this.point.tabs > 0 ? " (" + this.point.tabs + "tabs)" : "");
+        }
+        this.message = message;
         if (!!source) {
             if (!!source.stack) {
                 this.stack = source.stack;
@@ -2149,6 +2288,19 @@ thymol = function() {
     }
     ThError.prototype = new Error();
     ThError.prototype.constructor = ThError;
+    function ThState(filePart, domArg) {
+        var fileName = filePart;
+        if (filePart != "") {
+            if (!filePart.endsWith(thymol.templateSuffix)) {
+                fileName = fileName + thymol.templateSuffix;
+            }
+        } else {
+            fileName = thymol.templateName + thymol.templateSuffix;
+        }
+        this.file = fileName;
+        this.content = getFile(fileName);
+        this.dom = domArg;
+    }
     function ThParam(valueArg) {
         this.value = valueArg;
         this.globalValue;
@@ -2215,7 +2367,7 @@ thymol = function() {
             attrList.push(this);
         }
         this.process = function() {
-            thymol.thWindow.alert('unsupported processing function for attribute "' + this.name + '"');
+            thymol.error(false, 'unsupported processing function for attribute "' + this.name + '"');
         };
         if (!(typeof func === "undefined")) {
             this.process = func;
@@ -2245,7 +2397,7 @@ thymol = function() {
         this.endName = "/" + tha.name;
         this.endSynonym = "/" + tha.synonym;
         this.process = function() {
-            thymol.thWindow.alert('unsupported processing function for element "' + this.name + '"');
+            thymol.error(false, 'unsupported processing function for element "' + this.name + '"');
         };
         if (!(typeof func === "undefined")) {
             this.process = func;
@@ -2440,6 +2592,7 @@ thymol = function() {
     return {
         Thymol: Thymol,
         ThError: ThError,
+        ThState: ThState,
         ThParam: ThParam,
         ThAttr: ThAttr,
         ThElement: ThElement,
@@ -2449,7 +2602,6 @@ thymol = function() {
         ThVarsAccessor: ThVarsAccessor,
         ThClass: ThClass,
         fileSystem: thymol.fileSystem,
-        readFile: thymol.readFile,
         getFileContent: thymol.getFileContent,
         getXMLHttpRequest: thymol.getXMLHttpRequest,
         thDomParse: thymol.thDomParse,
@@ -2479,6 +2631,7 @@ thymol = function() {
         thDefaultLocalMessages: thymol.thDefaultLocalMessages,
         thDefaultDisableMessages: thymol.thDefaultDisableMessages,
         thDefaultTemplateSuffix: thymol.thDefaultTemplateSuffix,
+        thDefaultInlineQuote: thymol.thDefaultInlineQuote,
         thThymeleafPrefixList: thymol.thThymeleafPrefixList,
         thDisabledList: thymol.thDisabledList,
         thThymeleafElementsList: thymol.thThymeleafElementsList,
@@ -2506,11 +2659,14 @@ thymol = function() {
         reset: reset,
         setup: setup,
         execute: execute,
+        error: error,
         isClientSide: isClientSide,
         updatePrefix: updatePrefix,
         init: init,
         ready: ready,
         addDialect: addDialect,
+        getFile: getFile,
+        loadScript: loadScript,
         isFragmentChild: isFragmentChild,
         preProcess: preProcess,
         substitute: substitute,
@@ -2732,9 +2888,7 @@ thymol.makeContext = function(contextNameParam, varAccessorParam) {
                 if (Object.prototype.toString.call(existing) === "[object Array]") {
                     existing.push(param);
                 } else {
-                    if (thymol.debug) {
-                        thymol.thWindow.alert('request parameters should be of type string array "' + name + '"');
-                    }
+                    thymol.error(false, 'request parameters should be of type string array "' + name + '"');
                 }
             } else {
                 newArray = new Array();
@@ -3114,28 +3268,6 @@ thymol.ThUtils = function() {
         }
         return proto + stack.join("/");
     }
-    var globalEval = function() {
-        var isIndirectEvalGlobal = function(original, Object) {
-            try {
-                return (1, eval)("Object") === original;
-            } catch (err) {
-                return false;
-            }
-        }(Object, 123);
-        if (isIndirectEvalGlobal) {
-            return function(expression) {
-                return (1, eval)(expression);
-            };
-        } else if (typeof thymol.thWindow.execScript !== "undefined") {
-            return function(expression) {
-                return thymol.thWindow.execScript(expression);
-            };
-        }
-    }();
-    function loadScript(file) {
-        var script = thymol.Thymol.prototype.getFilePath(file);
-        globalEval(thymol.readFile(script));
-    }
     function unescape(text) {
         var result = text, i, iLimit, iUpper, c, cc;
         if (text !== null && typeof text !== "undefined") {
@@ -3222,7 +3354,6 @@ thymol.ThUtils = function() {
         isLiteral: isLiteral,
         isLiteralSubst: isLiteralSubst,
         resolvePath: resolvePath,
-        loadScript: loadScript,
         unescape: unescape,
         unicodeUnescape: unicodeUnescape,
         removeTag: removeTag,
@@ -3432,8 +3563,8 @@ thymol.ThParser = function(scope) {
                         if (!element.isBlockChild) {
                             var aValue = n1 == null ? "null" : n1;
                             var bValue = n2 == null ? "null" : n2;
-                            var message = "while evaluating expression: " + this.tokens[i - 2].index_ + ": " + aValue + ", " + this.tokens[i - 1].index_ + ": " + bValue;
-                            throw new thymol.ThError(message, element, err);
+                            var message = "while evaluating binary expression: " + this.tokens[i - 2].index_ + ": " + aValue + ", " + this.tokens[i - 1].index_ + ": " + bValue;
+                            thymol.error(true, message, element, err);
                         }
                     }
                     if (!pathMatch) {
@@ -3463,7 +3594,7 @@ thymol.ThParser = function(scope) {
                         nstack.push(this.functions[item.index_]);
                     } else {
                         if (!element.isBlockChild) {
-                            throw new thymol.ThError("Exception undefined variable: " + item.index_, element);
+                            thymol.error(true, "Exception undefined variable: " + item.index_, element);
                         }
                     }
                 } else if (type_ === TOP1) {
@@ -3502,8 +3633,8 @@ thymol.ThParser = function(scope) {
                         } catch (err) {
                             if (!element.isBlockChild) {
                                 var aValue = n1 == null ? "null" : n1;
-                                var message = "while evaluating expression: " + this.tokens[i - 2].index_ + ": " + aValue;
-                                throw new thymol.ThError(message, element, err);
+                                var message = "while evaluating unary expression: " + this.tokens[i - 2].index_ + ": " + aValue;
+                                thymol.error(true, message, element, err);
                             }
                         }
                     }
@@ -3632,18 +3763,18 @@ thymol.ThParser = function(scope) {
                         nstack.push(res);
                     } else {
                         if (!element.isBlockChild) {
-                            throw new thymol.ThError(f + " is not a function", element);
+                            thymol.error(true, f + " is not a function", element);
                         }
                     }
                 } else {
                     if (!element.isBlockChild) {
-                        throw new thymol.ThError("invalid expression item type: " + type_, element);
+                        thymol.error(true, "invalid expression item type: " + type_, element);
                     }
                 }
             }
             if (nstack.length > 1) {
                 if (!element.isBlockChild) {
-                    throw new thymol.ThError("invalid Expression (parity)", element);
+                    thymol.error(true, "invalid Expression (parity)", element);
                 }
             }
             result = nstack[0];
@@ -3787,7 +3918,7 @@ thymol.ThParser = function(scope) {
                         inCurly = false;
                         if (meta === null) {
                             var message = 'bad path variable definition in expression: "' + expression + '" near column ' + pos;
-                            throw new thymol.ThError(message, element);
+                            thymol.error(true, message, element);
                         }
                         var curlyVar = expression.substring(curlyPos, i - 1);
                         var values = [];
@@ -4575,9 +4706,7 @@ thymol.ThParser = function(scope) {
         var url = thymol.getThAttribute(thUrlAttr.value, element), updated = false, text, newTextNode, i, iLimit, iUpper;
         if (url == null) {
             if (!thymol.allowNullText) {
-                if (thymol.debug) {
-                    thymol.thWindow.alert("thymol.processText cannot process: " + thUrlAttr.name + '="' + thUrlAttr.value + '"\n' + element.innerHTML);
-                }
+                thymol.error(false, "thymol.processText cannot process: " + thUrlAttr.name + '="' + thUrlAttr.value + '"\n' + element.innerHTML, element);
                 return updated;
             }
             url = "";
@@ -4622,9 +4751,7 @@ thymol.ThParser = function(scope) {
             }
             element.removeAttribute(thUrlAttr.name);
         } catch (err) {
-            if (thymol.debug) {
-                thymol.thWindow.alert("text replace error");
-            }
+            thymol.error(false, "text replace error", element, err);
         }
         return updated;
     };
@@ -4710,9 +4837,7 @@ thymol.ThParser = function(scope) {
         if (val != null) {
             element.removeAttribute(thUrlAttr.name);
         } else {
-            if (thymol.debug) {
-                thymol.thWindow.alert("thymol.processFixedValBoolAttr cannot process: " + thUrlAttr.name + '="' + thUrlAttr.value + '"\n' + element.innerHTML);
-            }
+            thymol.error(false, "processFixedValBoolAttr cannot process: " + thUrlAttr.name + '="' + thUrlAttr.value + '"\n' + element.innerHTML, element);
         }
     };
     thymol.doFixedValBoolAttr = function(valParam, element, attr) {
@@ -4735,9 +4860,7 @@ thymol.ThParser = function(scope) {
             }
             element.removeAttribute(thUrlAttr.name);
         } else {
-            if (thymol.debug) {
-                thymol.thWindow.alert("thymol.processPairedAttr cannot process: " + thUrlAttr.name + '="' + thUrlAttr.value + '"\n' + element.innerHTML);
-            }
+            thymol.error(false, "processPairedAttr cannot process: " + thUrlAttr.name + '="' + thUrlAttr.value + '"\n' + element.innerHTML, element);
         }
     };
     thymol.processConditional = function(element, attr, thAttrObj) {
@@ -4765,8 +4888,8 @@ thymol.ThParser = function(scope) {
                 }
             }
         }
-        if (!processed && thymol.debug) {
-            thymol.thWindow.alert("thymol.processConditional cannot process conditional: " + value + "\n" + element.innerHTML);
+        if (!processed) {
+            thymol.error(false, "processConditional cannot process conditional: " + value + "\n" + element.innerHTML, element);
         }
         return false;
     };
@@ -4874,9 +4997,7 @@ thymol.ThParser = function(scope) {
         } else if (mode == "javascript" || mode == "dart") {
             thymol.doInlineJavascript(element);
         } else {
-            if (thymol.debug) {
-                thymol.thWindow.alert('thymol.processInline cannot process scripting mode: "' + mode + '" - it isn\'t supported by version "' + thymol.thVersion + '"\n');
-            }
+            thymol.error(false, 'processInline cannot process scripting mode: "' + mode + '" - it isn\'t supported by version "' + thymol.thVersion + '"', element);
         }
         element.removeAttribute(thUrlAttr.name);
     };
@@ -4957,7 +5078,7 @@ thymol.ThParser = function(scope) {
     thymol.getStringView = function(param) {
         var view = "", objType;
         if (typeof param === "string") {
-            view = view + "'" + param + "'";
+            view = view + thymol.inlineQuote + param + thymol.inlineQuote;
         } else if (typeof param === "number" || typeof param === "boolean") {
             view = view + param;
         } else if (typeof param === "object") {
@@ -5137,9 +5258,7 @@ thymol.ThParser = function(scope) {
             if (term != "") {
                 term = ' false term is: "' + term + '"';
             }
-            if (thymol.debug) {
-                thymol.thWindow.alert("thymol.processAssert assertion failure -" + argValue + term + "\n");
-            }
+            thymol.error(false, "processAssert assertion failure -" + argValue + term, element);
         }
         element.removeAttribute(thUrlAttr.name);
     };
@@ -5365,7 +5484,7 @@ thymol.objects.thAggregatesObject = function() {
                     if (target[i] !== null) {
                         result += target[i];
                     } else {
-                        throw new thymol.ThError("#aggregates." + label + " Cannot aggregate on object containing nulls");
+                        aggregatesError("Cannot aggregate on object containing nulls", this);
                     }
                 }
             } else {
@@ -5380,7 +5499,7 @@ thymol.objects.thAggregatesObject = function() {
                             process = target.hasOwnProperty(k) && typeof value !== "function";
                         }
                     } else {
-                        throw new thymol.ThError("#aggregates." + label + " Cannot aggregate on object containing nulls");
+                        aggregatesError("Cannot aggregate on object containing nulls", this);
                     }
                     if (process) {
                         result += value;
@@ -5390,13 +5509,16 @@ thymol.objects.thAggregatesObject = function() {
             }
             if (doAvg) {
                 if (count == 0) {
-                    throw new thymol.ThError("#aggregates." + label + " Cannot get size of object");
+                    aggregatesError("Cannot get size of object", this);
                 }
                 result = result / count;
             }
             return result;
         }
-        throw new thymol.ThError("#aggregates." + label + " Cannot aggregate on null");
+        aggregatesError("Cannot aggregate on null", this);
+    }
+    function aggregatesError(text, element) {
+        thymol.error(true, "#aggregates." + " " + text, element);
     }
     return {
         thExpressionObjectName: thExpressionObjectName,
@@ -5411,25 +5533,25 @@ thymol.objects.thArraysObject = function() {
         if (target !== null) {
             return toTypedArray(null, target);
         }
-        throw new thymol.ThError("#arrays.toArray Cannot convert null to array");
+        arraysError("toArray Cannot convert null to array", this);
     }
     function toStringArray(target) {
         if (target !== null) {
             return toTypedArray("string", target);
         }
-        throw new thymol.ThError("#arrays.toStringArray Cannot convert null to array");
+        arraysError("toStringArray Cannot convert null to array", this);
     }
     function toNumberArray(target) {
         if (target !== null) {
             return toTypedArray("number", target);
         }
-        throw new thymol.ThError("#arrays.toNumberArray Cannot convert null to array");
+        arraysError("toNumberArray Cannot convert null to array", this);
     }
     function toBooleanArray(target) {
         if (target !== null) {
             return toTypedArray("boolean", target);
         }
-        throw new thymol.ThError("#arrays.toBooleanArray Cannot convert null to array");
+        arraysError("toBooleanArray Cannot convert null to array", this);
     }
     function toTypedArray(componentClass, target) {
         if (target instanceof Array) {
@@ -5452,7 +5574,7 @@ thymol.objects.thArraysObject = function() {
                     }
                 }
             } catch (err) {
-                throw new IllegalArgumentException('#arrays.toArray Cannot convert object of class "' + targetComponentClass.getName() + '[]" to an array' + " of " + componentClass.getClass().getSimpleName());
+                arraysError('toArray Cannot convert object of class "' + targetComponentClass.getName() + '[]" to an array' + " of " + componentClass.getClass().getSimpleName());
             }
             return result;
         } else if (target instanceof Object) {
@@ -5481,18 +5603,18 @@ thymol.objects.thArraysObject = function() {
                     }
                 }
             } catch (err) {
-                throw new IllegalArgumentException('#arrays.toArray Cannot convert object of class "' + targetComponentClass.getName() + '[]" to an array' + " of " + componentClass.getClass().getSimpleName());
+                arraysError('toArray Cannot convert object of class "' + targetComponentClass.getName() + '[]" to an array' + " of " + componentClass.getClass().getSimpleName());
             }
             return result;
         } else {
-            throw new thymol.ThError('#arrays.toArray Cannot convert object of type "' + typeof target + '" to an array' + (componentClass == null ? "" : " of " + componentClass));
+            arraysError('toArray Cannot convert object of type "' + typeof target + '" to an array' + (componentClass == null ? "" : " of " + componentClass));
         }
     }
     function length(target) {
         if (target !== null) {
             return target.length;
         }
-        throw new thymol.ThError("#arrays.length Cannot get array length of null");
+        arraysError("length Cannot get array length of null", this);
     }
     function isEmpty(target) {
         return target === null || target.length <= 0;
@@ -5510,7 +5632,7 @@ thymol.objects.thArraysObject = function() {
             }
             return false;
         }
-        throw new thymol.ThError("#arrays.contains Cannot execute array contains: target is null");
+        arraysError("contains Cannot execute array contains: target is null", this);
     }
     function containsAll(target, elements) {
         if (target !== null) {
@@ -5539,9 +5661,12 @@ thymol.objects.thArraysObject = function() {
                 }
                 return elementsArray.length === 0;
             }
-            throw new thymol.ThError("#arrays.containsAll Cannot execute array containsAll: elements is null");
+            arraysError("containsAll Cannot execute array containsAll: elements is null", this);
         }
-        throw new thymol.ThError("#arrays.containsAll Cannot execute array containsAll: target is null");
+        arraysError("containsAll Cannot execute array containsAll: target is null", this);
+    }
+    function arraysError(text, element) {
+        thymol.error(true, "#arrays." + text, element);
     }
     return {
         thExpressionObjectName: thExpressionObjectName,
@@ -5589,7 +5714,7 @@ thymol.objects.thBoolsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#bools.arrayIsTrue Target cannot be null");
+        boolsError("arrayIsTrue Target cannot be null", this);
     }
     function setIsTrue(target) {
         if (target !== null) {
@@ -5601,7 +5726,7 @@ thymol.objects.thBoolsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#bools.setIsTrue Target cannot be null");
+        boolsError("setIsTrue Target cannot be null", this);
     }
     function isFalse(target) {
         return !isTrue(target);
@@ -5614,7 +5739,7 @@ thymol.objects.thBoolsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#bools.arrayIsFalse Target cannot be null");
+        boolsError("arrayIsFalse Target cannot be null", this);
     }
     function setIsFalse(target) {
         if (target !== null) {
@@ -5626,7 +5751,7 @@ thymol.objects.thBoolsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#bools.setIsFalse Target cannot be null");
+        boolsError("setIsFalse Target cannot be null", this);
     }
     function arrayAnd(target) {
         if (target !== null) {
@@ -5637,7 +5762,7 @@ thymol.objects.thBoolsObject = function() {
             }
             return true;
         }
-        throw new thymol.ThError("#bools.arrayAnd Target cannot be null");
+        boolsError("arrayAnd Target cannot be null", this);
     }
     function setAnd(target) {
         if (target !== null) {
@@ -5650,7 +5775,7 @@ thymol.objects.thBoolsObject = function() {
             }
             return true;
         }
-        throw new thymol.ThError("#bools.setAnd Target cannot be null");
+        boolsError("setAnd Target cannot be null", this);
     }
     function arrayOr(target) {
         if (target !== null) {
@@ -5661,7 +5786,7 @@ thymol.objects.thBoolsObject = function() {
             }
             return false;
         }
-        throw new thymol.ThError("#bools.arrayOr Target cannot be null");
+        boolsError("arrayOr Target cannot be null", this);
     }
     function setOr(target) {
         if (target !== null) {
@@ -5674,7 +5799,10 @@ thymol.objects.thBoolsObject = function() {
             }
             return false;
         }
-        throw new thymol.ThError("#bools.setOr Target cannot be null");
+        boolsError("setOr Target cannot be null", this);
+    }
+    function boolsError(text, element) {
+        thymol.error(true, "#bools." + text, element);
     }
     return {
         thExpressionObjectName: thExpressionObjectName,
@@ -6248,7 +6376,7 @@ thymol.objects.thIdsObject = function() {
             setLocal(str, idCount);
             return result;
         }
-        throw new thymol.ThError("#ids.seq ID Cannot be null");
+        idsError("seq ID Cannot be null", this);
     }
     function next(id) {
         if (id !== null) {
@@ -6256,7 +6384,7 @@ thymol.objects.thIdsObject = function() {
             var idCount = getLocal(str);
             return str + idCount;
         }
-        throw new thymol.ThError("#ids.next ID Cannot be null");
+        idsError("next ID Cannot be null", this);
     }
     function prev(id) {
         if (id !== null) {
@@ -6264,7 +6392,7 @@ thymol.objects.thIdsObject = function() {
             var idCount = getLocal(str);
             return str + (idCount - 1);
         }
-        throw new thymol.ThError("#ids.prev ID Cannot be null");
+        idsError("prev ID Cannot be null", this);
     }
     function setLocal(str, idCount) {
         if (!thymol.objects.thIdsObject.thLocalVars) {
@@ -6287,6 +6415,9 @@ thymol.objects.thIdsObject = function() {
         }
         return thymol.objects.thIdsObject.thLocalVars["thIdCounts"][str];
     }
+    function idsError(text, element) {
+        thymol.error(true, "#ids." + text, element);
+    }
     return {
         thExpressionObjectName: thExpressionObjectName,
         seq: seq,
@@ -6304,13 +6435,16 @@ thymol.objects.thListsObject = function() {
                     if (typeof comparator === "function") {
                         return list.sort(comparator);
                     }
-                    throw new thymol.ThError("#lists.sort Cannot execute list sort: comparator is not a function");
+                    listsError("sort Cannot execute list sort: comparator is not a function", this);
                 }
-                throw new thymol.ThError("#lists.sort Cannot execute list sort: comparator is null");
+                listsError("sort Cannot execute list sort: comparator is null", this);
             }
             return list.sort();
         }
-        throw new thymol.ThError("#lists.sort Cannot execute list sort: list is null");
+        listsError("sort Cannot execute list sort: list is null", this);
+    }
+    function listsError(text, element) {
+        thymol.error(true, "#lists." + text, element);
     }
     return {
         thExpressionObjectName: thExpressionObjectName,
@@ -6330,36 +6464,36 @@ thymol.objects.thMapsObject = function() {
             if (target instanceof thymol.ThMap) {
                 return target.size();
             }
-            throw new thymol.ThError('#maps.size Cannot get size of non-map type "' + typeof target + '"');
+            mapsError('size Cannot get size of non-map type "' + typeof target + '"', this);
         }
-        throw new thymol.ThError("#maps.size Cannot get size of null");
+        mapsError("size Cannot get size of null", this);
     }
     function isEmpty(target) {
         if (target !== null) {
             if (target instanceof thymol.ThMap) {
                 return target.isEmpty();
             }
-            throw new thymol.ThError('#maps.size Cannot get isEmpty of non-map type "' + typeof target + '"');
+            mapsError('size Cannot get isEmpty of non-map type "' + typeof target + '"', this);
         }
-        throw new thymol.ThError("#maps.size Cannot get isEmpty of null");
+        mapsError("size Cannot get isEmpty of null", this);
     }
     function containsKey(target, key) {
         if (target !== null) {
             if (target instanceof thymol.ThMap) {
                 return target.containsKey(key);
             }
-            throw new thymol.ThError('#maps.size Cannot get containsKey of non-map type "' + typeof target + '"');
+            mapsError('size Cannot get containsKey of non-map type "' + typeof target + '"', this);
         }
-        throw new thymol.ThError("#maps.containsKey Cannot execute map containsKey: target is null");
+        mapsError("containsKey Cannot execute map containsKey: target is null", this);
     }
     function containsValue(target, value) {
         if (target !== null) {
             if (target instanceof thymol.ThMap) {
                 return target.containsValue(value);
             }
-            throw new thymol.ThError('#maps.size Cannot get containsValue of non-map type "' + typeof target + '"');
+            mapsError('size Cannot get containsValue of non-map type "' + typeof target + '"', this);
         }
-        throw new thymol.ThError("#maps.containsKey Cannot execute map containsValue: target is null");
+        mapsError("containsKey Cannot execute map containsValue: target is null", this);
     }
     function containsAllKeys(target, keys) {
         if (target !== null) {
@@ -6368,11 +6502,11 @@ thymol.objects.thMapsObject = function() {
                 if (keys instanceof thymol.ThSet || keys instanceof Array || ptc === "[object Array]") {
                     return target.containsAll(keys);
                 }
-                throw new thymol.ThError('#maps.size Cannot get containsAllKeys with non-collection type "' + ptc + '"');
+                mapsError('size Cannot get containsAllKeys with non-collection type "' + ptc + '"', this);
             }
-            throw new thymol.ThError('#maps.size Cannot get containsAllKeys of non-map type "' + typeof target + '"');
+            mapsError('size Cannot get containsAllKeys of non-map type "' + typeof target + '"', this);
         }
-        throw new thymol.ThError("#maps.containsKey Cannot execute map containsAllKeys: target is null");
+        mapsError("containsKey Cannot execute map containsAllKeys: target is null", this);
     }
     function containsAllValues(target, values) {
         if (target !== null) {
@@ -6400,11 +6534,14 @@ thymol.objects.thMapsObject = function() {
                     }
                     return true;
                 }
-                throw new thymol.ThError('#maps.size Cannot get containsAllValues with non-collection type "' + ptc + '"');
+                mapsError('size Cannot get containsAllValues with non-collection type "' + ptc + '"', this);
             }
-            throw new thymol.ThError('#maps.size Cannot get containsAllValues of non-map type "' + typeof target + '"');
+            mapsError('size Cannot get containsAllValues of non-map type "' + typeof target + '"', this);
         }
-        throw new thymol.ThError("#maps.containsKey Cannot execute map containsAllValues: target is null");
+        mapsError("containsKey Cannot execute map containsAllValues: target is null", this);
+    }
+    function mapsError(text, element) {
+        thymol.error(true, "#maps." + text, element);
     }
     return {
         thExpressionObjectName: thExpressionObjectName,
@@ -6424,39 +6561,39 @@ thymol.objects.thMessagesObject = function() {
             if (arguments.length > 0) {
                 return msgWithParams(arguments[0], Array.prototype.slice.call(arguments, 1));
             }
-            throw new thymol.ThError("#messages.msg Invoked with no arguments!");
+            messagesError("msg Invoked with no arguments!", this);
         }
-        throw new thymol.ThError("#messages.msg Target cannot be null");
+        messagesError("msg Target cannot be null", this);
     }
     function msgWithParams(target, params) {
         if (target !== null) {
             return thymol.getMessage(target, params, true);
         }
-        throw new thymol.ThError("#messages.msgWithParams Target cannot be null");
+        messagesError("msgWithParams Target cannot be null", this);
     }
     function msgOrNull() {
         if (arguments !== null) {
             if (arguments.length > 0) {
                 return msgOrNullWithParams(arguments[0], Array.prototype.slice.call(arguments, 1));
             }
-            throw new thymol.ThError("#messages.msgOrNull Invoked with no arguments!");
+            messagesError("msgOrNull Invoked with no arguments!", this);
         }
-        throw new thymol.ThError("#messages.msgOrNull Target cannot be null");
+        messagesError("msgOrNull Target cannot be null", this);
     }
     function msgOrNullWithParams(target, params) {
         if (target !== null) {
             return thymol.getMessage(target, params, false);
         }
-        throw new thymol.ThError("#messages.msgOrNullWithParams Target cannot be null");
+        messagesError("msgOrNullWithParams Target cannot be null", this);
     }
     function arrayMsg() {
         if (arguments !== null) {
             if (arguments.length > 0) {
                 return arrayMsgWithParams(arguments[0], Array.prototype.slice.call(arguments, 1));
             }
-            throw new thymol.ThError("#messages.arrayMsg Invoked with no arguments!");
+            messagesError("arrayMsg Invoked with no arguments!", this);
         }
-        throw new thymol.ThError("#messages.arrayMsg Target cannot be null");
+        messagesError("arrayMsg Target cannot be null", this);
     }
     function arrayMsgWithParams(target, params) {
         if (target !== null) {
@@ -6466,16 +6603,16 @@ thymol.objects.thMessagesObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#messages.arrayMsgWithParams Target cannot be null");
+        messagesError("arrayMsgWithParams Target cannot be null", this);
     }
     function setMsg() {
         if (arguments !== null) {
             if (arguments.length > 0) {
                 return setMsgWithParams(arguments[0], Array.prototype.slice.call(arguments, 1));
             }
-            throw new thymol.ThError("#messages.setMsg Invoked with no arguments!");
+            messagesError("setMsg Invoked with no arguments!", this);
         }
-        throw new thymol.ThError("#messages.setMsg Target cannot be null");
+        messagesError("setMsg Target cannot be null", this);
     }
     function setMsgWithParams(target, params) {
         if (target !== null) {
@@ -6487,16 +6624,16 @@ thymol.objects.thMessagesObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#messages.setMsgWithParams Target cannot be null");
+        messagesError("setMsgWithParams Target cannot be null", this);
     }
     function arrayMsgOrNull() {
         if (arguments !== null) {
             if (arguments.length > 0) {
                 return arrayMsgOrNullWithParams(arguments[0], Array.prototype.slice.call(arguments, 1));
             }
-            throw new thymol.ThError("#messages.arrayMsgOrNull Invoked with no arguments!");
+            messagesError("arrayMsgOrNull Invoked with no arguments!", this);
         }
-        throw new thymol.ThError("#messages.arrayMsgOrNull Target cannot be null");
+        messagesError("arrayMsgOrNull Target cannot be null", this);
     }
     function arrayMsgOrNullWithParams(target, params) {
         if (target !== null) {
@@ -6506,16 +6643,16 @@ thymol.objects.thMessagesObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#messages.arrayMsgOrNullWithParams Target cannot be null");
+        messagesError("arrayMsgOrNullWithParams Target cannot be null", this);
     }
     function setMsgOrNull() {
         if (arguments !== null) {
             if (arguments.length > 0) {
                 return setMsgOrNullWithParams(arguments[0], Array.prototype.slice.call(arguments, 1));
             }
-            throw new thymol.ThError("#messages.setMsgOrNull Invoked with no arguments!");
+            messagesError("setMsgOrNull Invoked with no arguments!", this);
         }
-        throw new thymol.ThError("#messages.setMsgOrNull Target cannot be null");
+        messagesError("setMsgOrNull Target cannot be null", this);
     }
     function setMsgOrNullWithParams(target, params) {
         if (target !== null) {
@@ -6527,7 +6664,10 @@ thymol.objects.thMessagesObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#messages.setMsgOrNullWithParams Target cannot be null");
+        messagesError("setMsgOrNullWithParams Target cannot be null", this);
+    }
+    function messagesError(text, element) {
+        thymol.error(true, "#messages." + text, element);
     }
     return {
         thExpressionObjectName: thExpressionObjectName,
@@ -6787,7 +6927,7 @@ thymol.objects.thObjectsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#objects.arrayNullSafe Target cannot be null");
+        objectsError("arrayNullSafe Target cannot be null", this);
     }
     function setNullSafe(target, defaultValue) {
         if (target !== null) {
@@ -6799,7 +6939,10 @@ thymol.objects.thObjectsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#objects.setNullSafe Target cannot be null");
+        objectsError("setNullSafe Target cannot be null", this);
+    }
+    function objectsError(text, element) {
+        thymol.error(true, "#objects." + text, element);
     }
     return {
         thExpressionObjectName: thExpressionObjectName,
@@ -6839,29 +6982,29 @@ thymol.objects.thSetsObject = function() {
                     }
                 }
             } else {
-                throw new thymol.ThError('#sets.toSet Cannot convert object of type "' + tt + '" to a set');
+                setsError('toSet Cannot convert object of type "' + tt + '" to a set', this);
             }
             return result;
         }
-        throw new thymol.ThError("#sets.toSet Cannot convert null to set");
+        setsError("toSet Cannot convert null to set", this);
     }
     function size(target) {
         if (target !== null) {
             if (target instanceof thymol.ThSet) {
                 return target.size();
             }
-            throw new thymol.ThError('#sets.size Cannot get size of non-set type "' + typeof target + '"');
+            setsError('size Cannot get size of non-set type "' + typeof target + '"', this);
         }
-        throw new thymol.ThError("#sets.size Cannot get size of null");
+        setsError("size Cannot get size of null", this);
     }
     function isEmpty(target) {
         if (target !== null) {
             if (target instanceof thymol.ThSet) {
                 return target.isEmpty();
             }
-            throw new thymol.ThError('#sets.size Cannot get isEmpty of non-set type "' + typeof target + '"');
+            setsError('size Cannot get isEmpty of non-set type "' + typeof target + '"', this);
         }
-        throw new thymol.ThError("#sets.size Cannot get isEmpty of null");
+        setsError("size Cannot get isEmpty of null", this);
     }
     function contains(target, element) {
         if (target !== null) {
@@ -6878,7 +7021,7 @@ thymol.objects.thSetsObject = function() {
             }
             return false;
         }
-        throw new thymol.ThError("#sets.contains Cannot execute sets contains: target is null");
+        setsError("contains Cannot execute sets contains: target is null", this);
     }
     function containsAll(target, elements) {
         if (target !== null) {
@@ -6909,9 +7052,12 @@ thymol.objects.thSetsObject = function() {
                 }
                 return elementsArray.length === 0;
             }
-            throw new thymol.ThError("#sets.containsAll Cannot execute sets containsAll: elements is null");
+            setsError("containsAll Cannot execute sets containsAll: elements is null", this);
         }
-        throw new thymol.ThError("#sets.containsAll Cannot execute sets containsAll: target is null");
+        setsError("containsAll Cannot execute sets containsAll: target is null", this);
+    }
+    function setsError(text, element) {
+        thymol.error(true, "#sets." + text, element);
     }
     return {
         thExpressionObjectName: thExpressionObjectName,
@@ -6969,7 +7115,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throwAbbreviateException("abbreviate", maxSize);
+        throwAbbreviateException("abbreviate", maxSize, this);
     }
     function arrayAbbreviate(target, maxSize) {
         if (maxSize >= 3) {
@@ -6982,7 +7128,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throwAbbreviateException("arrayAbbreviate", maxSize);
+        throwAbbreviateException("arrayAbbreviate", maxSize, this);
     }
     function setAbbreviate(target, maxSize) {
         if (maxSize >= 3) {
@@ -6997,10 +7143,10 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throwAbbreviateException("setAbbreviate", maxSize);
+        throwAbbreviateException("setAbbreviate", maxSize, this);
     }
-    function throwAbbreviateException(source, maxSize) {
-        throw new thymol.ThError("#strings." + source + ' Maximum size must be greater than or equal to 3 but was: "' + maxSize + '"');
+    function throwAbbreviateException(source, maxSize, element) {
+        stringsError("" + source + ' Maximum size must be greater than or equal to 3 but was: "' + maxSize + '"', element);
     }
     function equals(o1, o2) {
         if (o1 === null) {
@@ -7023,9 +7169,9 @@ thymol.objects.thStringsObject = function() {
             if (fragment !== null) {
                 return target.toString().indexOf(fragment) >= 0;
             }
-            throw new thymol.ThError("#strings.contains Fragment cannot be null");
+            stringsError("contains Fragment cannot be null", this);
         }
-        throw new thymol.ThError("#strings.contains Cannot apply contains on null");
+        stringsError("contains Cannot apply contains on null", this);
     }
     function arrayContains(target, fragment) {
         if (target !== null) {
@@ -7035,7 +7181,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.arrayContains Cannot apply arrayContains on null");
+        stringsError("arrayContains Cannot apply arrayContains on null", this);
     }
     function setContains(target, fragment) {
         if (target !== null) {
@@ -7047,16 +7193,16 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.setContains Cannot apply setContains on null");
+        stringsError("setContains Cannot apply setContains on null", this);
     }
     function containsIgnoreCase(target, fragment) {
         if (target !== null) {
             if (fragment !== null) {
                 return target.toString().toLowerCase().indexOf(fragment.toLowerCase()) >= 0;
             }
-            throw new thymol.ThError("#strings.containsIgnoreCase Fragment cannot be null");
+            stringsError("containsIgnoreCase Fragment cannot be null", this);
         }
-        throw new thymol.ThError("#strings.containsIgnoreCase Cannot apply containsIgnoreCase on null");
+        stringsError("containsIgnoreCase Cannot apply containsIgnoreCase on null", this);
     }
     function arrayContainsIgnoreCase(target, fragment) {
         if (target !== null) {
@@ -7066,7 +7212,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.arrayContainsIgnoreCase Cannot apply arrayContainsIgnoreCase on null");
+        stringsError("arrayContainsIgnoreCase Cannot apply arrayContainsIgnoreCase on null", this);
     }
     function setContainsIgnoreCase(target, fragment) {
         if (target !== null) {
@@ -7078,16 +7224,16 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.setContainsIgnoreCase Cannot apply setContainsIgnoreCase on null");
+        stringsError("setContainsIgnoreCase Cannot apply setContainsIgnoreCase on null", this);
     }
     function startsWith(target, prefix) {
         if (target !== null) {
             if (prefix !== null) {
                 return target.toString().indexOf(prefix) === 0;
             }
-            throw new thymol.ThError("#strings.startsWith Prefix cannot be null");
+            stringsError("startsWith Prefix cannot be null", this);
         }
-        throw new thymol.ThError("#strings.startsWith Cannot apply startsWith on null");
+        stringsError("startsWith Cannot apply startsWith on null", this);
     }
     function arrayStartsWith(target, prefix) {
         if (target !== null) {
@@ -7097,7 +7243,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.arrayStartsWith Target cannot be null");
+        stringsError("arrayStartsWith Target cannot be null", this);
     }
     function setStartsWith(target, prefix) {
         if (target !== null) {
@@ -7109,7 +7255,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.setStartsWith Target cannot be null");
+        stringsError("setStartsWith Target cannot be null", this);
     }
     function endsWith(target, suffix) {
         if (target !== null) {
@@ -7117,9 +7263,9 @@ thymol.objects.thStringsObject = function() {
                 var str = target.toString();
                 return str.indexOf(suffix) === str.length - suffix.length;
             }
-            throw new thymol.ThError("#strings.startsWith Suffix cannot be null");
+            stringsError("startsWith Suffix cannot be null", this);
         }
-        throw new thymol.ThError("#strings.endsWith Cannot apply endsWith on null");
+        stringsError("endsWith Cannot apply endsWith on null", this);
     }
     function arrayEndsWith(target, suffix) {
         if (target !== null) {
@@ -7129,7 +7275,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.arrayEndsWith Target cannot be null");
+        stringsError("arrayEndsWith Target cannot be null", this);
     }
     function setEndsWith(target, suffix) {
         if (target !== null) {
@@ -7141,13 +7287,13 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.setEndsWith Target cannot be null");
+        stringsError("setEndsWith Target cannot be null", this);
     }
     function substring(target, start, end) {
         if (target !== null) {
             return target.toString().substring(start, end);
         }
-        throw new thymol.ThError("#strings.substring Target cannot be null");
+        stringsError("substring Target cannot be null", this);
     }
     function arraySubstring(target, start, end) {
         if (target !== null) {
@@ -7157,7 +7303,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.arraySubstring Target cannot be null");
+        stringsError("arraySubstring Target cannot be null", this);
     }
     function setSubstring(target, start, end) {
         if (target !== null) {
@@ -7169,7 +7315,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.setSubstring Target cannot be null");
+        stringsError("setSubstring Target cannot be null", this);
     }
     function substringAfter(target, substr) {
         if (target !== null) {
@@ -7181,9 +7327,9 @@ thymol.objects.thStringsObject = function() {
                 }
                 return str.substring(indx + substr.length);
             }
-            throw new thymol.ThError("#strings.substringAfter Parameter substring cannot be null");
+            stringsError("substringAfter Parameter substring cannot be null", this);
         }
-        throw new thymol.ThError("#strings.substringAfter Cannot apply substringAfter on null");
+        stringsError("substringAfter Cannot apply substringAfter on null", this);
     }
     function arraySubstringAfter(target, substr) {
         if (target !== null) {
@@ -7193,7 +7339,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.arraySubstringAfter Cannot apply arraySubstringAfter on null");
+        stringsError("arraySubstringAfter Cannot apply arraySubstringAfter on null", this);
     }
     function setSubstringAfter(target, substr) {
         if (target !== null) {
@@ -7205,7 +7351,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.setSubstringAfter Cannot apply setSubstringAfter on null");
+        stringsError("setSubstringAfter Cannot apply setSubstringAfter on null", this);
     }
     function substringBefore(target, substr) {
         if (target !== null) {
@@ -7217,9 +7363,9 @@ thymol.objects.thStringsObject = function() {
                 }
                 return str.substring(0, indx);
             }
-            throw new thymol.ThError("#strings.substringBefore Parameter substring cannot be null");
+            stringsError("substringBefore Parameter substring cannot be null", this);
         }
-        throw new thymol.ThError("#strings.substringBefore Cannot apply substringBefore on null");
+        stringsError("substringBefore Cannot apply substringBefore on null", this);
     }
     function arraySubstringBefore(target, substr) {
         if (target !== null) {
@@ -7229,7 +7375,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.arraySubstringBefore Cannot apply arraySubstringBefore on null");
+        stringsError("arraySubstringBefore Cannot apply arraySubstringBefore on null", this);
     }
     function setSubstringBefore(target, substr) {
         if (target !== null) {
@@ -7241,16 +7387,16 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.setSubstringBefore Cannot apply setSubstringBefore on null");
+        stringsError("setSubstringBefore Cannot apply setSubstringBefore on null", this);
     }
     function prepend(target, prefix) {
         if (target !== null) {
             if (prefix !== null) {
                 return prefix.toString() + target.toString();
             }
-            throw new thymol.ThError("#strings.prepend Prefix cannot be null");
+            stringsError("prepend Prefix cannot be null", this);
         }
-        throw new thymol.ThError("#strings.prepend Cannot apply prepend on null");
+        stringsError("prepend Cannot apply prepend on null", this);
     }
     function arrayPrepend(target, prefix) {
         if (target !== null) {
@@ -7260,7 +7406,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.arrayPrepend Cannot apply arrayPrepend on null");
+        stringsError("arrayPrepend Cannot apply arrayPrepend on null", this);
     }
     function setPrepend(target, prefix) {
         if (target !== null) {
@@ -7272,7 +7418,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.setPrepend Cannot apply setPrepend on null");
+        stringsError("setPrepend Cannot apply setPrepend on null", this);
     }
     function repeat(target, times) {
         var result = "";
@@ -7286,9 +7432,9 @@ thymol.objects.thStringsObject = function() {
             if (suffix !== null) {
                 return target.toString() + suffix.toString();
             }
-            throw new thymol.ThError("#strings.append Suffix cannot be null");
+            stringsError("append Suffix cannot be null", this);
         }
-        throw new thymol.ThError("#strings.append Cannot apply append on null");
+        stringsError("append Cannot apply append on null", this);
     }
     function concat() {
         var result = "";
@@ -7318,7 +7464,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.arrayAppend Target cannot be null");
+        stringsError("arrayAppend Target cannot be null", this);
     }
     function setAppend(target, suffix) {
         if (target !== null) {
@@ -7330,7 +7476,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.setAppend Target cannot be null");
+        stringsError("setAppend Target cannot be null", this);
     }
     function indexOf(target, fragment) {
         if (target !== null) {
@@ -7339,9 +7485,9 @@ thymol.objects.thStringsObject = function() {
                 var indx = str.indexOf(fragment);
                 return indx;
             }
-            throw new thymol.ThError("#strings.indexOf Fragment cannot be null");
+            stringsError("indexOf Fragment cannot be null", this);
         }
-        throw new thymol.ThError("#strings.indexOf Cannot apply indexOf on null");
+        stringsError("indexOf Cannot apply indexOf on null", this);
     }
     function arrayIndexOf(target, fragment) {
         if (target !== null) {
@@ -7351,7 +7497,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.arrayIndexOf Cannot apply arrayIndexOf on null");
+        stringsError("arrayIndexOf Cannot apply arrayIndexOf on null", this);
     }
     function setIndexOf(target, fragment) {
         if (target !== null) {
@@ -7363,7 +7509,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.setIndexOf Cannot apply setIndexOf on null");
+        stringsError("setIndexOf Cannot apply setIndexOf on null", this);
     }
     function isEmpty(target) {
         if (target !== null) {
@@ -7386,7 +7532,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.arrayIsEmpty Target cannot be null");
+        stringsError("arrayIsEmpty Target cannot be null", this);
     }
     function setIsEmpty(target) {
         if (target !== null) {
@@ -7398,7 +7544,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.setIsEmpty Target cannot be null");
+        stringsError("setIsEmpty Target cannot be null", this);
     }
     function arrayJoin(stringArray, separator) {
         if (stringArray !== null) {
@@ -7413,9 +7559,9 @@ thymol.objects.thStringsObject = function() {
                 }
                 return result;
             }
-            throw new thymol.ThError("#strings.arrayJoin Separator cannot be null");
+            stringsError("arrayJoin Separator cannot be null", this);
         }
-        throw new thymol.ThError("#strings.arrayJoin Cannot apply join on null");
+        stringsError("arrayJoin Cannot apply join on null", this);
     }
     function setJoin(stringSet, separator) {
         if (stringSet !== null) {
@@ -7432,9 +7578,9 @@ thymol.objects.thStringsObject = function() {
                 }
                 return result;
             }
-            throw new thymol.ThError("#strings.setJoin Separator cannot be null");
+            stringsError("setJoin Separator cannot be null", this);
         }
-        throw new thymol.ThError("#strings.setJoin Cannot apply join on null");
+        stringsError("setJoin Cannot apply join on null", this);
     }
     function doRegExpify(target, flags) {
         var result = target.toString();
@@ -7458,9 +7604,9 @@ thymol.objects.thStringsObject = function() {
             if (separator !== null) {
                 return doSplit(target, separator);
             }
-            throw new thymol.ThError("#strings.arraySplit Separator cannot be null");
+            stringsError("arraySplit Separator cannot be null", this);
         }
-        throw new thymol.ThError("#strings.arraySplit Cannot apply split on null");
+        stringsError("arraySplit Cannot apply split on null", this);
     }
     function setSplit(target, separator) {
         if (target !== null) {
@@ -7472,15 +7618,15 @@ thymol.objects.thStringsObject = function() {
                 }
                 return result;
             }
-            throw new thymol.ThError("#strings.setSplit Separator cannot be null");
+            stringsError("setSplit Separator cannot be null", this);
         }
-        throw new thymol.ThError("#strings.setSplit Cannot apply split on null");
+        stringsError("setSplit Cannot apply split on null", this);
     }
     function length(target) {
         if (target !== null) {
             return target.toString().length;
         }
-        throw new thymol.ThError("#strings.length Cannot apply length on null");
+        stringsError("length Cannot apply length on null", this);
     }
     function arrayLength(target) {
         if (target !== null) {
@@ -7490,7 +7636,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.arrayLength Target cannot be null");
+        stringsError("arrayLength Target cannot be null", this);
     }
     function setLength(target) {
         if (target !== null) {
@@ -7502,7 +7648,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.setLength Target cannot be null");
+        stringsError("setLength Target cannot be null", this);
     }
     function getReplacer(target) {
         var bfr = target.replace(/[$]/g, "[$]").replace(/[*]/g, "[*]").replace(/[\']/g, "[']").replace(/[+]/g, "[+]").replace(/[\(]/g, "[(]").replace(/[\)]/g, "[)]");
@@ -7517,11 +7663,11 @@ thymol.objects.thStringsObject = function() {
                     var aft = unescapeXml(after);
                     return target.replace(re, aft);
                 }
-                throw new thymol.ThError("#strings.replace After cannot be null");
+                stringsError("replace After cannot be null", this);
             }
-            throw new thymol.ThError("#strings.replace Before cannot be null");
+            stringsError("replace Before cannot be null", this);
         }
-        throw new thymol.ThError("#strings.replace Cannot apply replace on null");
+        stringsError("replace Cannot apply replace on null", this);
     }
     function arrayReplace(target, before, after) {
         if (target !== null) {
@@ -7536,11 +7682,11 @@ thymol.objects.thStringsObject = function() {
                     }
                     return result;
                 }
-                throw new thymol.ThError("#strings.arrayReplace After cannot be null");
+                stringsError("arrayReplace After cannot be null", this);
             }
-            throw new thymol.ThError("#strings.arrayReplace Before cannot be null");
+            stringsError("arrayReplace Before cannot be null", this);
         }
-        throw new thymol.ThError("#strings.arrayReplace Cannot apply replace on null");
+        stringsError("arrayReplace Cannot apply replace on null", this);
     }
     function setReplace(target, before, after) {
         if (target !== null) {
@@ -7557,11 +7703,11 @@ thymol.objects.thStringsObject = function() {
                     }
                     return result;
                 }
-                throw new thymol.ThError("#strings.setReplace Array of 'after' values cannot be null");
+                stringsError("setReplace Array of 'after' values cannot be null", this);
             }
-            throw new thymol.ThError("#strings.setReplace Array of 'before' values cannot be null");
+            stringsError("setReplace Array of 'before' values cannot be null", this);
         }
-        throw new thymol.ThError("#strings.setReplace Cannot apply replace on null");
+        stringsError("setReplace Cannot apply replace on null", this);
     }
     function multipleReplace(target, before, after) {
         if (target !== null) {
@@ -7580,17 +7726,17 @@ thymol.objects.thStringsObject = function() {
                                 }
                                 return result;
                             }
-                            throw new thymol.ThError("#strings.multipleReplace Arrays of 'before' and 'after' values must have the same length");
+                            stringsError("multipleReplace Arrays of 'before' and 'after' values must have the same length", this);
                         }
-                        throw new thymol.ThError("#strings.multipleReplace After must be an array type");
+                        stringsError("multipleReplace After must be an array type", this);
                     }
-                    throw new thymol.ThError("#strings.multipleReplace After cannot be null");
+                    stringsError("multipleReplace After cannot be null", this);
                 }
-                throw new thymol.ThError("#strings.multipleReplace Before must be an array type");
+                stringsError("multipleReplace Before must be an array type", this);
             }
-            throw new thymol.ThError("#strings.multipleReplace Before cannot be null");
+            stringsError("multipleReplace Before cannot be null", this);
         }
-        throw new thymol.ThError("#strings.multipleReplace Target cannot be null");
+        stringsError("multipleReplace Target cannot be null", this);
     }
     function arrayMultipleReplace(target, before, after) {
         if (target !== null) {
@@ -7600,7 +7746,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.arrayMultipleReplace Target cannot be null");
+        stringsError("arrayMultipleReplace Target cannot be null", this);
     }
     function setMultipleReplace(target, before, after) {
         if (target !== null) {
@@ -7612,7 +7758,7 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.setMultipleReplace Target cannot be null");
+        stringsError("setMultipleReplace Target cannot be null", this);
     }
     function toUpperCase(target) {
         var result = null;
@@ -8264,7 +8410,7 @@ thymol.objects.thStringsObject = function() {
             }
             return targetString;
         }
-        throw new thymol.ThError("#strings.defaultString defaultValue cannot be null");
+        stringsError("defaultString defaultValue cannot be null", this);
     }
     function doArrayDefaultString(target, defaultValue) {
         if (target == null || typeof target === "undefined") {
@@ -8280,13 +8426,13 @@ thymol.objects.thStringsObject = function() {
         if (defaultValue !== null && typeof defaultValue !== "undefined") {
             return doArrayDefaultString(target, defaultValue);
         }
-        throw new thymol.ThError("#strings.arrayDefaultString defaultValue cannot be null");
+        stringsError("arrayDefaultString defaultValue cannot be null", this);
     }
     function listDefaultString(target, defaultValue) {
         if (defaultValue !== null && typeof defaultValue !== "undefined") {
             return doArrayDefaultString(target, defaultValue);
         }
-        throw new thymol.ThError("#strings.listDefaultString defaultValue cannot be null");
+        stringsError("listDefaultString defaultValue cannot be null", this);
     }
     function setDefaultString(target, defaultValue) {
         if (defaultValue !== null && typeof defaultValue !== "undefined") {
@@ -8301,7 +8447,10 @@ thymol.objects.thStringsObject = function() {
             }
             return result;
         }
-        throw new thymol.ThError("#strings.setDefaultString defaultValue cannot be null");
+        stringsError("setDefaultString defaultValue cannot be null", this);
+    }
+    function stringsError(text, element) {
+        thymol.error(true, "#strings." + text, element);
     }
     return {
         thExpressionObjectName: thExpressionObjectName,
@@ -8438,12 +8587,30 @@ thymol.thObjectsConfigureModules = function() {
     });
 };
 
+thymol.handleError = function(err) {
+    var result = null;
+    if (!err.suppress) {
+        if (err.doThrow) {
+            result = err;
+        } else {
+            thymol.alert(err);
+        }
+    }
+    return result;
+};
+
+thymol.alert = function(err) {
+    if (thymol.debug) {
+        thymol.thWindow.alert(err.message);
+    }
+};
+
 thymol.readFile = function(uri, report) {
     try {
         return thymol.fileSystem.readFileSync(uri, "UTF-8");
     } catch (err) {
-        if (thymol.debug && !!report) {
-            thymol.thWindow.alert("readFile failed for uri: " + uri + " error: " + err);
+        if (!!report) {
+            thymol.error(true, "readFile failed for uri: " + uri, thymol.thDocument, err);
         }
     }
 };

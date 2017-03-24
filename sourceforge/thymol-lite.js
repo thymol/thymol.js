@@ -86,7 +86,8 @@ thymol = function() {
         return thymol.thDocument;
     }
     function reset() {
-        thymol.thCache = {};
+        thymol.thFileCache = {};
+        thymol.thFragmentCache = {};
         var accessor = undefined, i, iLimit, j, jLimit;
         if (typeof thVars !== "undefined") {
             delete thVars;
@@ -186,6 +187,7 @@ thymol = function() {
         thymol.localMessages = Thymol.prototype.getThParam("thLocalMessages", true, false, thymol.thDefaultLocalMessages);
         thymol.disableMessages = Thymol.prototype.getThParam("thDisableMessages", true, false, thymol.thDefaultDisableMessages);
         thymol.templateSuffix = Thymol.prototype.getThParam("thTemplateSuffix", false, false, thymol.thDefaultTemplateSuffix);
+        thymol.inlineQuote = Thymol.prototype.getThParam("thDefaultInlineQuote", false, false, thymol.thDefaultInlineQuote);
         thymol.scriptPath = "";
         if (typeof thymol.thScriptPath !== "undefined") {
             thymol.scriptPath = Thymol.prototype.getThParam("thScriptPath", false, true, thymol.thScriptPath);
@@ -289,7 +291,7 @@ thymol = function() {
                 if (!!parameters) {
                     var splits = parameters.split(",");
                     for (var j = 0, jLimit = splits.length; j < jLimit; j++) {
-                        thymol.ThUtils.loadScript(splits[j]);
+                        loadScript(splits[j]);
                     }
                 }
             }
@@ -452,6 +454,10 @@ thymol = function() {
             thymol.templateSuffix = setThParam(name, value);
             break;
 
+          case "thInlineQuote":
+            thymol.inlineQuote = setThParam(name, value);
+            break;
+
           case "thLocalMessages":
             thymol.localMessages = setThParam(name, getBooleanValue(value));
             break;
@@ -497,7 +503,16 @@ thymol = function() {
             break;
 
           default:
-            ctx.createVariable(name, value, isReq);
+            {
+                if (name.startsWith("thymol.")) {
+                    var endw = name.substring(7);
+                    if (thymol.hasOwnProperty(endw)) {
+                        thymol[endw] = value;
+                    }
+                } else {
+                    ctx.createVariable(name, value, isReq);
+                }
+            }
         }
     }
     function setThParam(name, value) {
@@ -584,7 +599,7 @@ thymol = function() {
                     lp = result.lastIndexOf("__");
                 }
                 if (lp <= 0) {
-                    throw new thymol.ThError("Mismatched pre-processing indicators", element);
+                    thymol.error(true, "Mismatched pre-processing indicators", element);
                 }
                 var head = result.substring(0, fp);
                 var centre = result.substring(fp + 2, lp);
@@ -814,8 +829,8 @@ thymol = function() {
                         }
                     } else {
                         subs = "";
-                        if (thymol.debug && !lenient) {
-                            thymol.thWindow.alert('thymol variable substitution failed: "' + initial + '"');
+                        if (!lenient) {
+                            thymol.error(false, 'variable substitution failed: "' + initial + '"', element);
                         }
                     }
                     saved = argValue;
@@ -1039,7 +1054,7 @@ thymol = function() {
     function getProperties(propFile) {
         var props = null;
         var messages = [];
-        props = thymol.readFile(propFile);
+        props = getFile(propFile);
         if (!!props) {
             var splits = props.split("\n");
             if (splits.length > 0) {
@@ -1118,15 +1133,7 @@ thymol = function() {
                     }
                 }
             } catch (err) {
-                if (thymol.debug) {
-                    if (err instanceof thymol.ThError) {
-                        if (!err.suppress) {
-                            thymol.thWindow.alert(err);
-                        }
-                    } else {
-                        thymol.thWindow.alert(err);
-                    }
-                }
+                thymol.alert(err);
             }
         },
         processChildren: function(rootNode) {
@@ -1263,9 +1270,7 @@ thymol = function() {
             if (tha !== null) {
                 tha.disable();
             } else {
-                if (thymol.debug) {
-                    thymol.thWindow.alert('cannot disable unknown attribute "' + attrName + '"');
-                }
+                thymol.error(false, 'cannot disable unknown attribute "' + attrName + '"');
             }
         },
         getThAttrByName: function(name) {
@@ -1529,16 +1534,14 @@ thymol = function() {
                         importError = null;
                         if (filePart != "") {
                             fileName = filePart + thymol.templateSuffix;
-                            var textContent = thymol.readFile(fileName);
+                            var textContent = getFile(fileName);
                             content = thymol.thDomParse(textContent, "text/html");
                             fragment = Thymol.prototype.getImportNode(element, filePart, fragmentName, fragmentPart, argsCount, content, false);
                         } else {
                             fragment = Thymol.prototype.getImportNode(element, filePart, fragmentName, fragmentPart, argsCount, thymol.thDocument, false);
                         }
                         if (fragment == null) {
-                            if (thymol.debug) {
-                                thymol.thWindow.alert("thymol.processImport fragment import failed: " + filePart + " fragment: " + fragmentPart);
-                            }
+                            thymol.error(false, "processImport fragment import failed: " + filePart + " fragment: " + fragmentPart, element);
                         } else {
                             importNode = fragment;
                         }
@@ -1553,9 +1556,9 @@ thymol = function() {
         },
         getFromCache: function(element, filePart, fragmentName) {
             var content = null;
-            if (thymol.thCache[filePart] != null) {
+            if (thymol.thFragmentCache[filePart] != null) {
                 var signature = Thymol.prototype.getFragmentSignature(fragmentName, element.thLocalVars);
-                content = thymol.thCache[filePart][signature];
+                content = thymol.thFragmentCache[filePart][signature];
             }
             return content;
         },
@@ -1593,16 +1596,16 @@ thymol = function() {
                     result = fragment;
                 } else {
                     if (!element.isBlockChild) {
-                        throw new thymol.ThError('getImportNode cannot match fragment: "' + fragmentName + '"', element);
+                        thymol.error(true, 'getImportNode cannot match fragment: "' + fragmentName + '"', element);
                     }
                 }
             }
             if (matched) {
                 var signature = Thymol.prototype.getFragmentSignature(fragmentName, element.thLocalVars);
-                if (thymol.thCache[filePart] == null) {
-                    thymol.thCache[filePart] = new Object();
+                if (thymol.thFragmentCache[filePart] == null) {
+                    thymol.thFragmentCache[filePart] = new Object();
                 }
-                thymol.thCache[filePart][signature] = result;
+                thymol.thFragmentCache[filePart][signature] = result;
                 newElement = result.cloneNode(true);
                 if (newElement.nodeType === ELEMENT_NODE) {
                     newElement.removeAttribute(thymol.thFragment.name);
@@ -1610,6 +1613,16 @@ thymol = function() {
                     if (fragment !== null) {
                         fragment.removeAttribute(thymol.thFragment.name);
                         fragment.removeAttribute(thymol.thFragment.synonym);
+                    }
+                    var fragState = null;
+                    if (filePart == "" && !!element.state) {
+                        fragState = element.state;
+                    } else {
+                        fragState = new ThState(filePart, content);
+                    }
+                    var elements = newElement.getElementsByTagName("*");
+                    for (var k = 0, kLimit = elements.length; k < kLimit; k++) {
+                        elements[k].state = fragState;
                     }
                 }
                 result = newElement;
@@ -2015,6 +2028,7 @@ thymol = function() {
                 if (node.nodeType === ELEMENT_NODE) {
                     if (old.thLocalVars !== null) {
                         node.thLocalVars = old.thLocalVars;
+                        node.state = old.state;
                     }
                 }
                 if (old.childNodes !== null) {
@@ -2132,15 +2146,140 @@ thymol = function() {
             }
         }
     }
-    function ThError(message, element, source) {
+    function getFile(file, report) {
+        var content = thymol.thFragmentCache[file];
+        if (content == null) {
+            content = thymol.readFile(file, report);
+            thymol.thFragmentCache[file] = content;
+        }
+        return content;
+    }
+    var globalEval = function() {
+        var isIndirectEvalGlobal = function(original, Object) {
+            try {
+                return (1, eval)("Object") === original;
+            } catch (err) {
+                return false;
+            }
+        }(Object, 123);
+        if (isIndirectEvalGlobal) {
+            return function(expression) {
+                return (1, eval)(expression);
+            };
+        } else if (typeof thymol.thWindow.execScript !== "undefined") {
+            return function(expression) {
+                return thymol.thWindow.execScript(expression);
+            };
+        }
+    }();
+    function loadScript(file) {
+        var script = Thymol.prototype.getFilePath(file);
+        globalEval(getFile(script));
+    }
+    function diffTail(region, path) {
+        var result = path;
+        if (!!region) {
+            var regParts = region.split("/");
+            if (!!path) {
+                var pathParts = path.split("/");
+                for (var k = 0, kLimit = pathParts.length; k < kLimit; k++) {
+                    if (pathParts[k] !== regParts[k]) {
+                        break;
+                    }
+                }
+                if (k < kLimit) {
+                    result = pathParts.slice(k).join("/");
+                }
+            }
+        }
+        return result;
+    }
+    function pointInCode(element) {
+        var elements = element.state.dom.getElementsByTagName("*");
+        var count = 0;
+        for (var k = 0, kLimit = elements.length; k < kLimit; k++) {
+            if (element.tagName === elements[k].tagName) {
+                count++;
+                if (element.isSameNode(elements[k])) {
+                    break;
+                }
+            }
+        }
+        var lineInFile = undefined;
+        var columnInFile = undefined;
+        var tabsBeforeColumnInFile = undefined;
+        if (count >= 0) {
+            var html = element.state.content.toLowerCase();
+            var result;
+            var tag = "<" + element.tagName.toLowerCase();
+            result = findNthOccurence(html, tag, count, 0, html.length);
+            var elementPosition = result.nextPosition;
+            var startPosition = 0;
+            if (count > 0) {
+                result = findNthOccurence(html, "\n", -1, 0, elementPosition);
+                startPosition = result.position;
+                lineInFile = result.matchCount + 1;
+                result = findNthOccurence(html, "\t", -1, startPosition, elementPosition);
+                tabsBeforeColumnInFile = result.matchCount;
+            }
+            columnInFile = elementPosition - startPosition;
+        }
+        return {
+            line: lineInFile,
+            column: columnInFile,
+            tabs: tabsBeforeColumnInFile
+        };
+    }
+    function findNthOccurence(range, item, n, start, stop) {
+        var position = start;
+        var nextPosition = -1;
+        var matchCount = 0;
+        while (true) {
+            nextPosition = range.indexOf(item, position);
+            if (nextPosition >= 0) {
+                if (nextPosition >= stop) {
+                    break;
+                }
+                matchCount++;
+                if (matchCount === n) {
+                    break;
+                }
+                position = nextPosition + 1;
+            } else {
+                break;
+            }
+        }
+        return {
+            position: position,
+            nextPosition: nextPosition,
+            matchCount: matchCount
+        };
+    }
+    function error(doThrow, text, element, source) {
+        var exception = thymol.handleError(new thymol.ThError(doThrow, text, element, source));
+        if (!!exception) {
+            throw exception;
+        }
+    }
+    function ThError(doThrow, text, element, source) {
         this.name = "ThError";
-        this.message = message || "Default Message";
+        this.doThrow = doThrow;
         if (element !== null && typeof element !== "undefined" && element.isBlockChild) {
             this.suppress = true;
         } else {
-            this.element = element || {};
             this.suppress = false;
         }
+        this.element = element || {};
+        var message = text || "Default Message";
+        if (!this.element.state) {
+            this.element.state = new thymol.ThState("", thymol.thDocument);
+        }
+        this.point = {};
+        if (!!this.element.state) {
+            this.point = pointInCode(this.element);
+            message += "\n\nError in: " + diffTail(thymol.location, this.element.state.file) + " at line: " + this.point.line + " column: " + this.point.column + (this.point.tabs > 0 ? " (" + this.point.tabs + "tabs)" : "");
+        }
+        this.message = message;
         if (!!source) {
             if (!!source.stack) {
                 this.stack = source.stack;
@@ -2149,6 +2288,19 @@ thymol = function() {
     }
     ThError.prototype = new Error();
     ThError.prototype.constructor = ThError;
+    function ThState(filePart, domArg) {
+        var fileName = filePart;
+        if (filePart != "") {
+            if (!filePart.endsWith(thymol.templateSuffix)) {
+                fileName = fileName + thymol.templateSuffix;
+            }
+        } else {
+            fileName = thymol.templateName + thymol.templateSuffix;
+        }
+        this.file = fileName;
+        this.content = getFile(fileName);
+        this.dom = domArg;
+    }
     function ThParam(valueArg) {
         this.value = valueArg;
         this.globalValue;
@@ -2215,7 +2367,7 @@ thymol = function() {
             attrList.push(this);
         }
         this.process = function() {
-            thymol.thWindow.alert('unsupported processing function for attribute "' + this.name + '"');
+            thymol.error(false, 'unsupported processing function for attribute "' + this.name + '"');
         };
         if (!(typeof func === "undefined")) {
             this.process = func;
@@ -2245,7 +2397,7 @@ thymol = function() {
         this.endName = "/" + tha.name;
         this.endSynonym = "/" + tha.synonym;
         this.process = function() {
-            thymol.thWindow.alert('unsupported processing function for element "' + this.name + '"');
+            thymol.error(false, 'unsupported processing function for element "' + this.name + '"');
         };
         if (!(typeof func === "undefined")) {
             this.process = func;
@@ -2440,6 +2592,7 @@ thymol = function() {
     return {
         Thymol: Thymol,
         ThError: ThError,
+        ThState: ThState,
         ThParam: ThParam,
         ThAttr: ThAttr,
         ThElement: ThElement,
@@ -2449,7 +2602,6 @@ thymol = function() {
         ThVarsAccessor: ThVarsAccessor,
         ThClass: ThClass,
         fileSystem: thymol.fileSystem,
-        readFile: thymol.readFile,
         getFileContent: thymol.getFileContent,
         getXMLHttpRequest: thymol.getXMLHttpRequest,
         thDomParse: thymol.thDomParse,
@@ -2479,6 +2631,7 @@ thymol = function() {
         thDefaultLocalMessages: thymol.thDefaultLocalMessages,
         thDefaultDisableMessages: thymol.thDefaultDisableMessages,
         thDefaultTemplateSuffix: thymol.thDefaultTemplateSuffix,
+        thDefaultInlineQuote: thymol.thDefaultInlineQuote,
         thThymeleafPrefixList: thymol.thThymeleafPrefixList,
         thDisabledList: thymol.thDisabledList,
         thThymeleafElementsList: thymol.thThymeleafElementsList,
@@ -2506,11 +2659,14 @@ thymol = function() {
         reset: reset,
         setup: setup,
         execute: execute,
+        error: error,
         isClientSide: isClientSide,
         updatePrefix: updatePrefix,
         init: init,
         ready: ready,
         addDialect: addDialect,
+        getFile: getFile,
+        loadScript: loadScript,
         isFragmentChild: isFragmentChild,
         preProcess: preProcess,
         substitute: substitute,
@@ -2732,9 +2888,7 @@ thymol.makeContext = function(contextNameParam, varAccessorParam) {
                 if (Object.prototype.toString.call(existing) === "[object Array]") {
                     existing.push(param);
                 } else {
-                    if (thymol.debug) {
-                        thymol.thWindow.alert('request parameters should be of type string array "' + name + '"');
-                    }
+                    thymol.error(false, 'request parameters should be of type string array "' + name + '"');
                 }
             } else {
                 newArray = new Array();
@@ -3114,28 +3268,6 @@ thymol.ThUtils = function() {
         }
         return proto + stack.join("/");
     }
-    var globalEval = function() {
-        var isIndirectEvalGlobal = function(original, Object) {
-            try {
-                return (1, eval)("Object") === original;
-            } catch (err) {
-                return false;
-            }
-        }(Object, 123);
-        if (isIndirectEvalGlobal) {
-            return function(expression) {
-                return (1, eval)(expression);
-            };
-        } else if (typeof thymol.thWindow.execScript !== "undefined") {
-            return function(expression) {
-                return thymol.thWindow.execScript(expression);
-            };
-        }
-    }();
-    function loadScript(file) {
-        var script = thymol.Thymol.prototype.getFilePath(file);
-        globalEval(thymol.readFile(script));
-    }
     function unescape(text) {
         var result = text, i, iLimit, iUpper, c, cc;
         if (text !== null && typeof text !== "undefined") {
@@ -3222,7 +3354,6 @@ thymol.ThUtils = function() {
         isLiteral: isLiteral,
         isLiteralSubst: isLiteralSubst,
         resolvePath: resolvePath,
-        loadScript: loadScript,
         unescape: unescape,
         unicodeUnescape: unicodeUnescape,
         removeTag: removeTag,
@@ -3432,8 +3563,8 @@ thymol.ThParser = function(scope) {
                         if (!element.isBlockChild) {
                             var aValue = n1 == null ? "null" : n1;
                             var bValue = n2 == null ? "null" : n2;
-                            var message = "while evaluating expression: " + this.tokens[i - 2].index_ + ": " + aValue + ", " + this.tokens[i - 1].index_ + ": " + bValue;
-                            throw new thymol.ThError(message, element, err);
+                            var message = "while evaluating binary expression: " + this.tokens[i - 2].index_ + ": " + aValue + ", " + this.tokens[i - 1].index_ + ": " + bValue;
+                            thymol.error(true, message, element, err);
                         }
                     }
                     if (!pathMatch) {
@@ -3463,7 +3594,7 @@ thymol.ThParser = function(scope) {
                         nstack.push(this.functions[item.index_]);
                     } else {
                         if (!element.isBlockChild) {
-                            throw new thymol.ThError("Exception undefined variable: " + item.index_, element);
+                            thymol.error(true, "Exception undefined variable: " + item.index_, element);
                         }
                     }
                 } else if (type_ === TOP1) {
@@ -3502,8 +3633,8 @@ thymol.ThParser = function(scope) {
                         } catch (err) {
                             if (!element.isBlockChild) {
                                 var aValue = n1 == null ? "null" : n1;
-                                var message = "while evaluating expression: " + this.tokens[i - 2].index_ + ": " + aValue;
-                                throw new thymol.ThError(message, element, err);
+                                var message = "while evaluating unary expression: " + this.tokens[i - 2].index_ + ": " + aValue;
+                                thymol.error(true, message, element, err);
                             }
                         }
                     }
@@ -3632,18 +3763,18 @@ thymol.ThParser = function(scope) {
                         nstack.push(res);
                     } else {
                         if (!element.isBlockChild) {
-                            throw new thymol.ThError(f + " is not a function", element);
+                            thymol.error(true, f + " is not a function", element);
                         }
                     }
                 } else {
                     if (!element.isBlockChild) {
-                        throw new thymol.ThError("invalid expression item type: " + type_, element);
+                        thymol.error(true, "invalid expression item type: " + type_, element);
                     }
                 }
             }
             if (nstack.length > 1) {
                 if (!element.isBlockChild) {
-                    throw new thymol.ThError("invalid Expression (parity)", element);
+                    thymol.error(true, "invalid Expression (parity)", element);
                 }
             }
             result = nstack[0];
@@ -3787,7 +3918,7 @@ thymol.ThParser = function(scope) {
                         inCurly = false;
                         if (meta === null) {
                             var message = 'bad path variable definition in expression: "' + expression + '" near column ' + pos;
-                            throw new thymol.ThError(message, element);
+                            thymol.error(true, message, element);
                         }
                         var curlyVar = expression.substring(curlyPos, i - 1);
                         var values = [];
@@ -4575,9 +4706,7 @@ thymol.ThParser = function(scope) {
         var url = thymol.getThAttribute(thUrlAttr.value, element), updated = false, text, newTextNode, i, iLimit, iUpper;
         if (url == null) {
             if (!thymol.allowNullText) {
-                if (thymol.debug) {
-                    thymol.thWindow.alert("thymol.processText cannot process: " + thUrlAttr.name + '="' + thUrlAttr.value + '"\n' + element.innerHTML);
-                }
+                thymol.error(false, "thymol.processText cannot process: " + thUrlAttr.name + '="' + thUrlAttr.value + '"\n' + element.innerHTML, element);
                 return updated;
             }
             url = "";
@@ -4622,9 +4751,7 @@ thymol.ThParser = function(scope) {
             }
             element.removeAttribute(thUrlAttr.name);
         } catch (err) {
-            if (thymol.debug) {
-                thymol.thWindow.alert("text replace error");
-            }
+            thymol.error(false, "text replace error", element, err);
         }
         return updated;
     };
@@ -4710,9 +4837,7 @@ thymol.ThParser = function(scope) {
         if (val != null) {
             element.removeAttribute(thUrlAttr.name);
         } else {
-            if (thymol.debug) {
-                thymol.thWindow.alert("thymol.processFixedValBoolAttr cannot process: " + thUrlAttr.name + '="' + thUrlAttr.value + '"\n' + element.innerHTML);
-            }
+            thymol.error(false, "processFixedValBoolAttr cannot process: " + thUrlAttr.name + '="' + thUrlAttr.value + '"\n' + element.innerHTML, element);
         }
     };
     thymol.doFixedValBoolAttr = function(valParam, element, attr) {
@@ -4735,9 +4860,7 @@ thymol.ThParser = function(scope) {
             }
             element.removeAttribute(thUrlAttr.name);
         } else {
-            if (thymol.debug) {
-                thymol.thWindow.alert("thymol.processPairedAttr cannot process: " + thUrlAttr.name + '="' + thUrlAttr.value + '"\n' + element.innerHTML);
-            }
+            thymol.error(false, "processPairedAttr cannot process: " + thUrlAttr.name + '="' + thUrlAttr.value + '"\n' + element.innerHTML, element);
         }
     };
     thymol.processConditional = function(element, attr, thAttrObj) {
@@ -4765,8 +4888,8 @@ thymol.ThParser = function(scope) {
                 }
             }
         }
-        if (!processed && thymol.debug) {
-            thymol.thWindow.alert("thymol.processConditional cannot process conditional: " + value + "\n" + element.innerHTML);
+        if (!processed) {
+            thymol.error(false, "processConditional cannot process conditional: " + value + "\n" + element.innerHTML, element);
         }
         return false;
     };
@@ -4874,9 +4997,7 @@ thymol.ThParser = function(scope) {
         } else if (mode == "javascript" || mode == "dart") {
             thymol.doInlineJavascript(element);
         } else {
-            if (thymol.debug) {
-                thymol.thWindow.alert('thymol.processInline cannot process scripting mode: "' + mode + '" - it isn\'t supported by version "' + thymol.thVersion + '"\n');
-            }
+            thymol.error(false, 'processInline cannot process scripting mode: "' + mode + '" - it isn\'t supported by version "' + thymol.thVersion + '"', element);
         }
         element.removeAttribute(thUrlAttr.name);
     };
@@ -4957,7 +5078,7 @@ thymol.ThParser = function(scope) {
     thymol.getStringView = function(param) {
         var view = "", objType;
         if (typeof param === "string") {
-            view = view + "'" + param + "'";
+            view = view + thymol.inlineQuote + param + thymol.inlineQuote;
         } else if (typeof param === "number" || typeof param === "boolean") {
             view = view + param;
         } else if (typeof param === "object") {
@@ -5137,9 +5258,7 @@ thymol.ThParser = function(scope) {
             if (term != "") {
                 term = ' false term is: "' + term + '"';
             }
-            if (thymol.debug) {
-                thymol.thWindow.alert("thymol.processAssert assertion failure -" + argValue + term + "\n");
-            }
+            thymol.error(false, "processAssert assertion failure -" + argValue + term, element);
         }
         element.removeAttribute(thUrlAttr.name);
     };
@@ -5345,6 +5464,24 @@ thymol.objects.thHttpServletRequestObject = function() {
     };
 }();
 
+thymol.handleError = function(err) {
+    var result = null;
+    if (!err.suppress) {
+        if (err.doThrow) {
+            result = err;
+        } else {
+            thymol.alert(err);
+        }
+    }
+    return result;
+};
+
+thymol.alert = function(err) {
+    if (thymol.debug) {
+        thymol.thWindow.alert(err.message);
+    }
+};
+
 thymol.thDomParse = function(text, type) {
     return new DOMParser().parseFromString(text, type);
 };
@@ -5367,8 +5504,8 @@ thymol.getFileContent = function(url, report) {
             content = xhr.responseText;
         }
     } catch (err) {
-        if (thymol.debug && !!report) {
-            thymol.thWindow.alert("getFileContent failed for url: " + url + " error: " + err);
+        if (!!report) {
+            thymol.error(true, "getFileContent failed for url: " + uri, thymol.thDocument, err);
         }
     }
     return content;
