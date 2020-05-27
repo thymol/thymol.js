@@ -92,9 +92,19 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
   thymol.objects = {};
   thymol.varParExpr = /([^(]*)\s*[(]([^)]*?)[)]/;
   
-  const varRefExpr = /([$#]{.*?})/, literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/, startParserLevelCommentExpr = /^\s*\/\*\s*$/, endParserLevelCommentExpr = /^\s*\*\/\s*$/, startParserLevelCommentExpr2 = /^\/\*[^\/].*/, endParserLevelCommentExpr2 = /.*[^\/]\*\/$/, prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//, 
-  varExpr3 = /[^\$\*#@]{1}\{(.*)\}$/, // Retain the content
-  nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/, numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/, domSelectExpr = /([\/]{1,2})?([A-Za-z0-9_\-]*(?:[\(][\)])?)?([^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*(?:[\.\/#]?[^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*)*)?([\[][^\]]*?[\]])?/, litSubstExpr = /\.*?([\|][^\|]*?[\|])\.*?/;
+  const 
+  	varRefExpr = /([$#]{.*?})/,
+  	literalTokenExpr = /^[a-zA-Z0-9\[\]\.\-_]*$/,
+  	startParserLevelCommentExpr = /^\s*\/\*\s*$/,
+  	endParserLevelCommentExpr = /^\s*\*\/\s*$/,
+  	startParserLevelCommentExpr2 = /^\/\*[^\/].*/,
+  	endParserLevelCommentExpr2 = /.*[^\/]\*\/$/,
+  	prototypeOnlyCommentEscpExpr = /\/\*\/(.*)\/\*\//, 
+  	varExpr3 = /[^\$\*#@]{1}\{(.*)\}$/, // Retain the content
+  	nonURLExpr = /[\$\*#]{1}\{(?:!?[^}]*)\}/,
+  	numericExpr = /^[+\-]?[0-9]*?[.]?[0-9]*?$/,
+  	domSelectExpr = /([\/]{1,2})?([A-Za-z0-9_\-]*(?:[\(][\)])?)?([^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*(?:[\.\/#]?[^\[]\S[A-Za-z0-9_\-]*(?:[\(][\)])?[\/]*)*)?([\[][^\]]*?[\]])?/,
+  	litSubstExpr = /\.*?([\|][^\|]*?[\|])\.*?/;
 
   function Thymol() {
     // Empty apart from this!
@@ -556,7 +566,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
   function setControl( ctx, name, value, isReq ) {
     switch( name ) {
       case "thPrefix":
-        updatePrefix(value)
+        updatePrefix( value );
         break;
       case "thDataPrefix":
         thymol.dataPrefix = setThParam( name, value );
@@ -762,7 +772,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
           }
         }
         else {
-          if( varName.charAt( 0 ) === '#' ) {
+          if( varName.charAt( 0 ) === "#" ) {
             if( "#object" === varName ) {
               if( element.thObjectVar ) {
                 subs = element.thObjectVar;
@@ -826,10 +836,10 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
           if( thymol.useFullURLPath ) {
             head = thymol.root + thymol.resourcePath;
             if( head != "" ) {
-              if( head.charAt( head.length - 1 ) !== '/' ) {
-                head = head + '/';
+              if (head.charAt(head.length - 1) !== "/") {
+                head = head + "/";
               }
-              if( result.charAt( 0 ) === '/' ) {
+              if (result.charAt(0) === "/") {
                 result = head + result.substring( 1 );
               }
               else {
@@ -848,7 +858,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
 
   function getExpression( argValue, element ) {
     var result = argValue, subst = false, initial, shortCut, args, negate, token, lsp;
-    if( typeof argValue === 'string' ) {
+    if (typeof argValue === "string") {
       initial = argValue.trim();
       result = initial;
       if( result ) {        
@@ -884,7 +894,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
         else {
           initial = thymol.ThUtils.unParenthesise( result );
           negate = false;
-          if( initial.charAt( 0 ) == '!' ) {
+          if (initial.charAt(0) == "!") {
             negate = true;
             initial = initial.substring( 1, initial.length );
             initial = thymol.ThUtils.unParenthesise( initial );
@@ -900,7 +910,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
           if( !subst ) {
             lsp = initial.match( litSubstExpr );
             if( lsp && lsp.length > 0 ) {
-              if( thymol.ThUtils.charOcurrences( lsp[ 1 ], '\'' ) < 2 ) { // No contained literals
+              if( thymol.ThUtils.charOcurrences( lsp[ 1 ], "'" ) < 2 ) { // No contained literals
                 initial = Thymol.prototype.doLiteralSubstExpr( initial, lsp[ 1 ] );
               }
             }
@@ -914,20 +924,20 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
           if( result == initial && ( typeof result == typeof initial ) ) { // Unsubstituted
             result = null;
           }
-          else if( typeof result === 'string' ) {
+          else if( typeof result === "string" ) {
             if( !lsp ) {
               result = result.replace( /[\\][\\]/g, "\\" );
             }
-            result = result.replace( /&#39;/g, "\'" ).replace( /&apos;/gi, "\'" );
+            result = result.replace( /&#39;/g, "'" ).replace( /&apos;/gi, "'" );
           }
           if( negate ) {
-            if( typeof result === 'boolean' ) {
+            if( typeof result === "boolean" ) {
               result = !result;
             }
-            else if( typeof result === 'number' ) {
+            else if( typeof result === "number" ) {
               result = ( result == 0 );
             }
-            else if( typeof result === 'string' ) {
+            else if( typeof result === "string" ) {
               result = !thymol.ThUtils.testLiteralFalse( result );
             }
           }
@@ -972,7 +982,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
       if( args != null && args.length > 0 ) {
         if( args.length == 3 ) { // Found an embedded expression
           token = args[ 1 ];
-          token = token.replace( /[$]/g, "[$]" ).replace( /[*]/g, "[*]" ).replace( /[\']/g, "[\']" ).replace( /[+]/g, "[\+]" ).replace( /[\(]/g, "[\(]" ).replace( /[\)]/g, "[\)]" );
+          token = token.replace( /[$]/g, "[$]" ).replace( /[*]/g, "[*]" ).replace( /[\']/g, "[']" ).replace( /[+]/g, "[+]" ).replace( /[\(]/g, "[(]" ).replace( /[\)]/g, "[)]" );
           re = new RegExp( token );
           subs = thymol.getExpression( args[ 2 ], element );
           if( subs != args[ 2 ] ) {
@@ -984,7 +994,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
           else {
             subs = ""; // Substitution failed
             if( !lenient ) {
-              thymol.error( false, "variable substitution failed: \"" + initial + "\"", element );
+              thymol.error( false, 'variable substitution failed: "' + initial + '"', element );
             }
           }
           saved = argValue;
@@ -1052,12 +1062,12 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
       if( typeof param === "boolean" ) {
         flag = param;
       }
-      else if( typeof param === 'number' ) {
+      else if( typeof param === "number" ) {
         flag = param != 0;
       }
       else {
         val = param;
-        if( Object.prototype.toString.call( val ) === '[object Array]' ) {
+        if( Object.prototype.toString.call( val ) === "[object Array]" ) {
           if( val.length === 1 ) {
             val = val[ 0 ];
           }
@@ -1065,13 +1075,13 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
             val = true;
           }
         }
-        if( typeof val === 'boolean' ) {
+        if( typeof val === "boolean" ) {
           flag = val;
         }
-        else if( typeof val === 'number' ) {
+        else if( typeof val === "number" ) {
           flag = ( val != 0 );
         }
-        else if( typeof val === 'string' ) {
+        else if( typeof val === "string" ) {
           args = val.match( nonURLExpr );
           if( args ) {
             val = args[ 1 ];
@@ -1299,6 +1309,32 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
         var kc = 0;
         for( var k = 0, kLimit = elements.length; k < kLimit; k++ ) {
           var elem2 = elements[ kc ];
+          if( elem2.hasAttribute( "thScript" ) ) {                
+              if( !!elem2.textContent ) {
+                  globalEval( elem2.textContent );
+              }
+              else if( !!elem2.src ) {
+                  loadScript( elem2.src );
+              }
+              else {
+                  var dtl = elem2.getAttribute( "data-thymol-load" );
+                  if ( !!dtl ) {
+                      var splits = dtl.split( "," );
+                      for( var j = 0, jLimit = splits.length; j < jLimit; j++ ) {
+                          loadScript( splits[ j ] );
+                      }
+                  }
+              }
+              elem2.parentNode.removeChild( elem2 );
+              elements = rootNode.getElementsByTagName( "*" );                        
+          }
+          else {
+              kc++;
+          }
+      }
+      kc = 0;
+      for (var k = 0, kLimit = elements.length; k < kLimit; k++) {
+          var elem2 = elements[kc];
           var elName = elem2.nodeName.toLowerCase();
           if( elName == thymol.thBlock.name || elName == thymol.thBlock.synonym ) {
             thymol.ThUtils.removeTag( elem2 );
@@ -1467,7 +1503,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
         tha.disable();
       }
       else {
-        thymol.error( false, "cannot disable unknown attribute \"" + attrName + "\"" );
+        thymol.error( false, 'cannot disable unknown attribute "' + attrName + '"' );
       }
     },
 
@@ -2329,6 +2365,9 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
             node.thLocalVars = old.thLocalVars;
             node.state = old.state;
           }
+          if ( node.nodeName.toLowerCase() == "script" ) {
+            node.setAttribute( "thScript", "true" );
+          }
         }
         if( old.childNodes !== null ) {
           cNodes = old.childNodes.length;
@@ -2338,6 +2377,9 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
               if( iNode !== null ) {
                 aNode = this.doClone( iNode, targetDoc );
                 if( aNode !== null ) {
+                  if (aNode.nodeName.toLowerCase() == "script") {
+                      aNode.setAttribute( "thScript", "true" );
+                  }                                                                        
                   node.appendChild( aNode );
                 }
               }
@@ -2496,7 +2538,8 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
 
   function loadScript( file ) {
     var script = Thymol.prototype.getFilePath( file );
-    globalEval( getFile( script ) );
+    var content = getFile( script );
+    globalEval( content );
   }
   
   function diffTail( region, path ) {
@@ -2552,7 +2595,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
         line : lineInFile,
         column : columnInFile,
         tabs : tabsBeforeColumnInFile
-    }
+    };
   }  
   
   function findNthOccurence( range, item, n, start, stop ) {
@@ -2563,7 +2606,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
       nextPosition = range.indexOf( item, position );
       if( nextPosition >= 0 ) {
         if( nextPosition >= stop ) {
-          break
+          break;
         }                    
         matchCount++;
         if( matchCount === n ) {
@@ -2579,7 +2622,7 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
       position: position,
       nextPosition: nextPosition,
       matchCount: matchCount
-    }    
+    };    
   }
   
   function error( doThrow, text, element, source ) {
@@ -2936,7 +2979,6 @@ https://www.w3.org/TR/1998/REC-DOM-Level-1-19981001/level-one-core.html#ID-19506
   function ThClass( nValue ) {
     this.name = nValue;
   }
-  ;
 
   return {
 
