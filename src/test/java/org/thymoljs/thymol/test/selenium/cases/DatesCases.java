@@ -41,6 +41,14 @@ public class DatesCases extends SeleniumCases {
 			"\n" +
 	        "\t\t<p>12/Oct/1732 00:00</p>\n" +
 	        "\t\t<p>1732-12/10</p>\n" +
+	        "\t\t<p>12 October 1732 00:00:00 GMT-0001</p>\n" +
+	        "\t\n" +
+			"\n\n";	
+	
+	String dates02NodeResult =
+			"\n" +
+	        "\t\t<p>12/Oct/1732 00:00</p>\n" +
+	        "\t\t<p>1732-12/10</p>\n" +
 	        "\t\t<p>12 October 1732 00:00:00 GMT</p>\n" +
 	        "\t\n" +
 			"\n\n";	
@@ -264,13 +272,16 @@ public class DatesCases extends SeleniumCases {
 	public void dates02() {
 		localise( dates01Context );
 		String result;
+		String ref;
 		if( expectNodeResult() ) {
 			result = getResult( "dates02node.html", ResultMode.HTML );			
+			ref = dates02NodeResult;
 		}
 		else {
 			result = getResult( "dates02.html", ResultMode.HTML );
+			ref = dates02Result;
 		}
-		assertEquals( clean( dates02Result ), clean( result ) );
+		assertEquals( clean( ref ), clean( result ) );
 	}
 
 	private Context getDates03Context() {

@@ -36,14 +36,22 @@ public class CalendarsCases extends SeleniumCases {
 			"\t\t<p>12 October 1732 00:00:00 GMT</p>\n" +
 			"\t\n" +
 			"\n\n";	
-		
+	
 	String calendars02Result =
-			"\n" +
-	        "\t\t<p>12/Oct/1732 00:00</p>\n" +
-	        "\t\t<p>1732-12/10</p>\n" +
-	        "\t\t<p>12 October 1732 00:00:00 GMT</p>\n" +
-	        "\t\n" +
-			"\n\n";	
+		"\n" +
+        "\t\t<p>12/Oct/1732 00:00</p>\n" +
+        "\t\t<p>1732-12/10</p>\n" +
+        "\t\t<p>12 October 1732 00:00:00 GMT-0001</p>\n" +
+        "\t\n" +
+		"\n\n";	
+	
+	String calendars02NodeResult =
+		"\n" +
+        "\t\t<p>12/Oct/1732 00:00</p>\n" +
+        "\t\t<p>1732-12/10</p>\n" +
+        "\t\t<p>12 October 1732 00:00:00 GMT</p>\n" +
+        "\t\n" +
+		"\n\n";	
 		
 	String calendars03ResultThymol =
 			"\n" +
@@ -265,13 +273,16 @@ public class CalendarsCases extends SeleniumCases {
 	public void calendars02() {
 		localise( calendars01Context );
 		String result;
+		String ref;
 		if( expectNodeResult() ) {
 			result = getResult( "calendars02node.html", ResultMode.HTML );			
+			ref = calendars02NodeResult;
 		}
 		else {
 			result = getResult( "calendars02.html", ResultMode.HTML );
+			ref = calendars02Result;
 		}
-		assertEquals( clean( calendars02Result ), clean( result ) );
+		assertEquals( clean( ref ), clean( result ) );
 	}
 
 	private Context getCalendars03Context() {
