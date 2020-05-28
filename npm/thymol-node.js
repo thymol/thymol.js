@@ -1,6 +1,6 @@
 /*-------------------- Thymol - the flavour of Thymeleaf --------------------*
 
-   Thymol version 2.0.1-pre.6 Copyright (C) 2012-2017 James J. Benson
+   Thymol version 2.0.1-pre.7 Copyright (C) 2012-2020 James J. Benson
    jjbenson .AT. users.sf.net (http://www.thymoljs.org/)
 
    Licensed under the Apache License, Version 2.0 (the "License");
@@ -17,6 +17,7 @@
 
  *---------------------------------------------------------------------------*/
 
+
 thymol = function() {
     const ELEMENT_NODE = 1;
     const TEXT_NODE = 3;
@@ -29,7 +30,7 @@ thymol = function() {
     const SHOW_ALL = -1;
     const SHOW_TEXT = 4;
     const SHOW_COMMENT = 128;
-    thymol.thVersion = "2.0.1-pre.6";
+    thymol.thVersion = "2.0.1-pre.7";
     thymol.thReleaseDate = "not yet!";
     thymol.thURL = "http://www.thymoljs.org";
     thymol.thAltURL = "http://www.thymeleaf.org";
@@ -1113,6 +1114,29 @@ thymol = function() {
                 var kc = 0;
                 for (var k = 0, kLimit = elements.length; k < kLimit; k++) {
                     var elem2 = elements[kc];
+                    if (elem2.hasAttribute("thScript")) {
+                        if (!!elem2.textContent) {
+                            globalEval(elem2.textContent);
+                        } else if (!!elem2.src) {
+                            loadScript(elem2.src);
+                        } else {
+                            var dtl = elem2.getAttribute("data-thymol-load");
+                            if (!!dtl) {
+                                var splits = dtl.split(",");
+                                for (var j = 0, jLimit = splits.length; j < jLimit; j++) {
+                                    loadScript(splits[j]);
+                                }
+                            }
+                        }
+                        elem2.parentNode.removeChild(elem2);
+                        elements = rootNode.getElementsByTagName("*");
+                    } else {
+                        kc++;
+                    }
+                }
+                kc = 0;
+                for (var k = 0, kLimit = elements.length; k < kLimit; k++) {
+                    var elem2 = elements[kc];
                     var elName = elem2.nodeName.toLowerCase();
                     if (elName == thymol.thBlock.name || elName == thymol.thBlock.synonym) {
                         thymol.ThUtils.removeTag(elem2);
@@ -2030,6 +2054,9 @@ thymol = function() {
                         node.thLocalVars = old.thLocalVars;
                         node.state = old.state;
                     }
+                    if (node.nodeName.toLowerCase() == "script") {
+                        node.setAttribute("thScript", "true");
+                    }
                 }
                 if (old.childNodes !== null) {
                     cNodes = old.childNodes.length;
@@ -2039,6 +2066,9 @@ thymol = function() {
                             if (iNode !== null) {
                                 aNode = this.doClone(iNode, targetDoc);
                                 if (aNode !== null) {
+                                    if (aNode.nodeName.toLowerCase() == "script") {
+                                        aNode.setAttribute("thScript", "true");
+                                    }
                                     node.appendChild(aNode);
                                 }
                             }
@@ -2174,7 +2204,8 @@ thymol = function() {
     }();
     function loadScript(file) {
         var script = Thymol.prototype.getFilePath(file);
-        globalEval(getFile(script));
+        var content = getFile(script);
+        globalEval(content);
     }
     function diffTail(region, path) {
         var result = path;
