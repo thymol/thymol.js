@@ -22,7 +22,7 @@
 		<icu4j-version>58.1</icu4j-version>
 		<javagalician-version>1.1</javagalician-version>
 		<slf4j-version>1.7.21</slf4j-version>
-		<junit-version>4.12</junit-version>
+		<junit-version>4.13.1</junit-version>
 		<selenium-java-version>3.0.1</selenium-java-version>
 		<!--jetty-version>9.3.13.v20161014</jetty-version-->
 		<jetty-version>9.2.15.v20160210</jetty-version>
